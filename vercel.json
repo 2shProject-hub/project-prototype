@@ -1,8 +1,5 @@
 {
-  "buildCommand": "npm run build:web",
+  "buildCommand": null,
   "outputDirectory": "dist",
-  "framework": null,
-  "env": {
-    "CI": "1"
-  }
+  "framework": null
 }
