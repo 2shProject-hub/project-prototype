@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "project-prototype",
-    "slug": "project-prototype",
+    "name": "K-Chao 리뉴얼 프로토타입",
+    "slug": "kchao-reproto",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
