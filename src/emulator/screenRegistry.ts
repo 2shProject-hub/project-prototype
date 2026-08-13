@@ -85,23 +85,13 @@ export const SCREEN_REGISTRY: ScreenMeta[] = [
   },
   {
     id: 'grammar-detail',
-    label: '8-1. 학습 상세 소개 - 문법',
+    label: '8. 학습 상세 소개',
     category: '신규',
     description: '문법과 표현 학습을 위한 상세 소개 화면. 문법 규칙 배지·타이틀·설명, 유튜브 스타일 영상 썸네일(탭 시 전체화면 재생), 2열 규칙 표, 받침 쌍 시각화가 포함된 보충 설명을 제공한다.',
     devNotes: "참고: Source B 문법과 표현 1 (C:\\dev\\kchao-lesson1-main\\src\\lessonData.js)\n- SESSION1.grammar 데이터 참조 (ruleTable, supplement 포함)\n- 영상: assets/M_1_L1_1080p.mp4 (require로 로드)\n- 전체화면 Modal: Platform.OS === 'web'에서 React.createElement('video', ...) 사용\n- 하단 고정: 다음 버튼",
     designNotes: '배지: tealSoft 배경, teal 텍스트, borderRadius 20\n영상 썸네일: aspectRatio 16/9, 반투명 오버레이 + 재생 버튼\n규칙 표: 2열 flex, tealSoft 헤더\n보충 설명: tealSoft 배경 블록, 받침 시각화 카드(흰 배경+shadow)\n요약 버튼: teal 배경 flex row',
     sourceAFile: undefined,
     sourceBRef: 'GrammarDetailStage',
-  },
-  {
-    id: 'word-detail',
-    label: '8-2. 학습 상세 소개 - 단어',
-    category: '신규',
-    description: '단어 학습을 위한 상세 소개 화면. 추후 단어 중심 콘텐츠로 변경 예정이며, 현재는 문법 상세 소개 화면과 동일한 내용으로 구성되어 있다.',
-    devNotes: "참고: GrammarDetailStage와 동일한 구조\n- 추후 단어 학습 콘텐츠로 교체 예정\n- SESSION1.grammar 데이터 임시 참조",
-    designNotes: '문법 상세 소개(8-1)와 동일한 디자인\n추후 단어 중심 레이아웃으로 변경 예정',
-    sourceAFile: undefined,
-    sourceBRef: 'WordDetailStage',
   },
 ];
 
