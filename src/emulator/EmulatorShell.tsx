@@ -17,6 +17,8 @@ import { SentenceBuildStage } from '../screens/SentenceBuildStage';
 import { SentenceBuildStage2 } from '../screens/SentenceBuildStage2';
 import { VocabWordbookStage } from '../screens/VocabWordbookStage';
 import { GrammarDetailStage } from '../screens/GrammarDetailStage';
+import { QuickReviewStage } from '../screens/QuickReviewStage';
+import { CultureStage } from '../screens/CultureStage';
 import { WordDetailStage } from '../screens/WordDetailStage';
 import { defaultSessionState } from '../data/lessonData';
 import { useLang, type Lang } from '../components/LangContext';
@@ -84,6 +86,20 @@ function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate
         <SentenceBuildStage2
           onComplete={() => onNavigate('home')}
           onBack={() => onNavigate('home')}
+        />
+      );
+    case 'quick-review':
+      return (
+        <QuickReviewStage
+          onPressConfirm={() => onNavigate('home')}
+          onClose={() => onNavigate('home')}
+        />
+      );
+    case 'culture':
+      return (
+        <CultureStage
+          onPressConfirm={() => onNavigate('home')}
+          onClose={() => onNavigate('home')}
         />
       );
     case 'grammar-detail':

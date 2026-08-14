@@ -38,3 +38,7 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# large media assets (commit separately or use LFS)
+assets/*.mp4
+assets/*.mov

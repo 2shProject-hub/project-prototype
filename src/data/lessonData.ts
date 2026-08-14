@@ -223,6 +223,99 @@ export const SESSION1 = {
   },
 };
 
+// ─── 퀵리뷰 데이터 (ADMIN 연동 전 목업) ─────────────────────────────
+export interface QuickReviewItem {
+  id: number;
+  activityQuestionNo: number;  // Source A: activityQuestionNo (API 응답 기준)
+  typeLabel: string;           // 화면에 표시할 문항 유형 레이블
+  typeLabelVi?: string;
+  question: string;            // 제시 질문
+  questionVi?: string;
+  answer: string;              // 정답 텍스트
+  answerVi?: string;
+  context?: string;            // 부가 설명 (optional)
+  contextVi?: string;
+}
+
+export interface QuickReviewData {
+  sessionLabel: string;  // 예: "1차시에서"
+  sessionLabelVi?: string;
+  title: string;
+  titleVi?: string;
+  subtitle: string;
+  subtitleVi?: string;
+  nextLabel: string;     // 하단 버튼 텍스트
+  nextLabelVi?: string;
+  items: QuickReviewItem[];  // MIN 1 ~ MAX 10
+}
+
+export const MOCK_QUICK_REVIEW: QuickReviewData = {
+  sessionLabel: '1차시에서',
+  sessionLabelVi: 'Trong bài 1',
+  title: '1차시에서 배운 내용을 기억해봐요.',
+  titleVi: 'Hãy nhớ lại những gì đã học trong bài 1.',
+  subtitle: '질문에 대한 답을 떠올린 후에, 눌러서 정답을 확인해 보세요.',
+  subtitleVi: 'Hãy nghĩ về câu trả lời, rồi nhấn để kiểm tra đáp án.',
+  nextLabel: '2차시 시작하기',
+  nextLabelVi: 'Bắt đầu bài 2',
+  items: [
+    {
+      id: 1,
+      activityQuestionNo: 1,
+      typeLabel: '단어(VT-KOR)',
+      typeLabelVi: 'Từ vựng (VT-HÀN)',
+      question: '"Việt Nam"은 한국어로 뭐에요?',
+      questionVi: '"Việt Nam" tiếng Hàn là gì?',
+      answer: '베트남',
+      answerVi: '베트남',
+      context: '1과 핵심 어휘 15개 중 하나에요.',
+      contextVi: 'Đây là một trong 15 từ vựng trọng tâm của bài 1.',
+    },
+    {
+      id: 2,
+      activityQuestionNo: 2,
+      typeLabel: '단어(KOR-VT)',
+      typeLabelVi: 'Từ vựng (HÀN-VT)',
+      question: '"프랑스 사람"은 베트남어로 뭐에요?',
+      questionVi: '"프랑스 사람" tiếng Việt là gì?',
+      answer: 'người Pháp',
+      answerVi: 'người Pháp',
+      context: '1과 핵심 어휘 15개 중 하나에요.',
+      contextVi: 'Đây là một trong 15 từ vựng trọng tâm của bài 1.',
+    },
+    {
+      id: 3,
+      activityQuestionNo: 3,
+      typeLabel: '문법·받침 O',
+      typeLabelVi: 'Ngữ pháp·có phụ âm cuối',
+      question: '받침이 있는 "학생" 뒤에는 이에요, 예요 중 뭘 붙일까요?',
+      questionVi: 'Sau danh từ có phụ âm cuối như "학생", dùng 이에요 hay 예요?',
+      answer: '이에요 → 학생이에요',
+      answerVi: '이에요 → 학생이에요',
+    },
+    {
+      id: 4,
+      activityQuestionNo: 4,
+      typeLabel: '문법·받침 X',
+      typeLabelVi: 'Ngữ pháp·không có phụ âm cuối',
+      question: '받침이 없는 "기자" 뒤에는 뭘 붙일까요?',
+      questionVi: 'Sau danh từ không có phụ âm cuối như "기자", dùng gì?',
+      answer: '예요 → 기자예요',
+      answerVi: '예요 → 기자예요',
+    },
+    {
+      id: 5,
+      activityQuestionNo: 5,
+      typeLabel: '응용·자기소개',
+      typeLabelVi: 'Ứng dụng·tự giới thiệu',
+      question: '구조로 나의 자기소개 문장을 완성해보세요. "저는 ___이에요/예요."',
+      questionVi: 'Hãy hoàn thành câu tự giới thiệu theo cấu trúc: "저는 ___이에요/예요."',
+      answer: '예) 저는 베트남 사람이에요.',
+      answerVi: 'Ví dụ: 저는 베트남 사람이에요.',
+    },
+  ],
+};
+
 export type SessionState = {
   stage: Stage;
   visited: Stage[];
@@ -337,5 +430,94 @@ export const MOCK_ADMIN_WORDBOOK_ACTIVITY = {
       ]
     }
   ]
+};
+
+// ─── 문화 액티비티 데이터 (ADMIN 연동 전 목업) ───────────────────────
+// Source A 이식 기준: activityNo / activityQuestionNo 구조 유지
+
+export type CultureMediaType = 'image' | 'video';
+
+export interface CultureSubItem {
+  no: string;           // "01", "02" 등 교재 번호
+  title: string;        // 소항목 제목
+  titleVi?: string;
+  imageUri?: string;    // 삽화 이미지 URI (ADMIN 등록값, 프로토타입에선 undefined)
+  description: string;
+  descriptionVi?: string;
+}
+
+export interface CultureContentItem {
+  activityQuestionNo: number;   // Source A: activityQuestionNo
+  icon?: string;                // 이모지 아이콘
+  title: string;                // 내용 제목
+  titleVi?: string;
+  pageRef?: string;             // 교재 페이지 참조 (예: "p35")
+  description: string;          // 본문 설명
+  descriptionVi?: string;
+  subItems?: CultureSubItem[];  // 교재 번호별 세부 항목 (optional)
+}
+
+export interface CultureActivityData {
+  activityNo: number;           // Source A: activityNo
+  typeLabel: string;            // 화면 상단 타입 배지 (예: "Type 2 - 6단계: 문화 학습")
+  typeLabelVi?: string;
+  title: string;                // 화면 제목
+  titleVi?: string;
+  heroMedia?: {
+    type: CultureMediaType;
+    source?: any;               // 로컬 require() 에셋 (프로토타입용)
+    uri?: string;               // 원격 URL (ADMIN 등록값, 이식 후 사용)
+  };
+  contents: CultureContentItem[];
+}
+
+export const MOCK_CULTURE_ACTIVITY: CultureActivityData = {
+  activityNo: 30,
+  typeLabel: 'Type 2 - 6단계: 문화 학습',
+  typeLabelVi: 'Type 2 - Bước 6: Học văn hóa',
+  title: '문화',
+  titleVi: 'Văn hóa',
+  heroMedia: { type: 'image', source: undefined },
+  contents: [
+    {
+      activityQuestionNo: 1,
+      icon: '🤝',
+      title: '재미있는 한국의 상황별 인사말',
+      titleVi: 'Những lời chào thú vị theo tình huống tại Hàn Quốc',
+      pageRef: 'p35',
+      description: '재미있는 인사말을 배워볼까요?',
+      descriptionVi: 'Cùng học những lời chào thú vị nhé?',
+      subItems: [
+        {
+          no: '01',
+          title: '선물을 받았을 때',
+          titleVi: 'Khi nhận quà',
+          description: '선물을 받았을 때 한국 사람들은 고마움을 표현하고자 "고맙습니다.", "감사합니다."라고 인사합니다. 또 달고 미안한 마음을 "뭘 이런 걸 다..."라고도 표현합니다.',
+          descriptionVi: 'Khi nhận quà, người Hàn Quốc thường nói "고맙습니다." hoặc "감사합니다." để bày tỏ lòng biết ơn. Họ cũng có thể nói "뭘 이런 걸 다..." để thể hiện sự ngại ngùng và cảm ơn.',
+        },
+        {
+          no: '02',
+          title: '전화를 끊을 때',
+          titleVi: 'Khi kết thúc cuộc gọi',
+          description: '헤어질 때 "안녕히 계세요.", "안녕히 가세요."라고 인사를 합니다. 하지만 전화를 끊을 때는 "그럼 들어가세요."라고 인사를 합니다.',
+          descriptionVi: 'Khi chia tay, người Hàn Quốc nói "안녕히 계세요." hoặc "안녕히 가세요." Nhưng khi kết thúc cuộc gọi điện thoại, họ nói "그럼 들어가세요."',
+        },
+        {
+          no: '03',
+          title: '식사에 초대했을 때',
+          titleVi: 'Khi mời ăn cơm',
+          description: '집으로 초대한 손님에게 음식을 대접할 때 "차린 것은 없지만 많이 드세요."라고 겸손하게 인사합니다.',
+          descriptionVi: 'Khi đãi khách tại nhà, người Hàn Quốc khiêm tốn nói "차린 것은 없지만 많이 드세요." (Không có gì nhiều nhưng mời ăn thoải mái).',
+        },
+        {
+          no: '04',
+          title: '중요한 일이 있을 때',
+          titleVi: 'Khi có việc quan trọng',
+          description: '시험을 보거나 면접을 보는 등 중요한 일이 있는 사람에게 "좋은 꿈 꿔!"라고 인사를 합니다. 한국에서는 좋은 꿈이 현실에 대한 예언이나 징조를 내포하고 있다고 여기는 전통적인 생각이 남아있기 때문입니다.',
+          descriptionVi: 'Với người sắp thi hoặc phỏng vấn, người Hàn Quốc nói "좋은 꿈 꿔!" (Nằm mơ đẹp nhé!). Vì trong truyền thống Hàn Quốc, giấc mơ đẹp được coi là điềm lành cho những điều sắp diễn ra.',
+        },
+      ],
+    },
+  ],
 };
 

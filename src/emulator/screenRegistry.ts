@@ -93,6 +93,26 @@ export const SCREEN_REGISTRY: ScreenMeta[] = [
     sourceAFile: undefined,
     sourceBRef: 'GrammarDetailStage',
   },
+  {
+    id: 'quick-review',
+    label: '9. 퀵리뷰',
+    category: '신규',
+    description: '이전 학습(차시 또는 레슨)에서 학습한 내용에 대한 확인을 통해 이전 학습을 기억하고 있는지 확인하는 템플릿. 문항 카드를 순서대로 확인하며 "기억나요" / "기억이 안 나요"로 응답하고, 전체 완료 후 다음 차시로 진행한다.',
+    devNotes: '참고: C:\\dev\\kchao-lesson1-main 2차시 퀵리뷰\n- MOCK_QUICK_REVIEW 데이터 사용 (ADMIN 연동 전 목업)\n- 문항 수: MIN 1 ~ MAX 10\n- 문항 진행: 1번부터 순서대로 잠금 해제\n- 완료 조건: 모든 문항에 응답 완료\n- props: onNext / onBack / data(optional)',
+    designNotes: '상단 배지: tealSoft 배경, "퀵 리뷰" 텍스트\n활성 카드: teal 보더 1.5px, 정답 박스(tealSoft)\n잠긴 카드: line 보더, muted 텍스트\n기억나요 버튼: teal 배경\n기억이 안 나요: 테두리 버튼\n하단: 전체 완료 시 다음 차시 버튼 활성화',
+    sourceAFile: undefined,
+    sourceBRef: 'QuickReviewStage',
+  },
+  {
+    id: 'culture',
+    label: '10. 문화',
+    category: '신규',
+    description: '별도 오프라인으로 제공되는 교재에서 확인 가능한 한국 문화 정보를 앱에서도 확인할 수 있는 화면. 히어로 이미지/영상, 교재 연계 콘텐츠 카드(번호별 항목 포함)로 구성된다.',
+    devNotes: 'MOCK_CULTURE_ACTIVITY 데이터 사용 (ADMIN 연동 전 목업)\n- activityNo / activityQuestionNo 구조로 Source A 이식 기준 준수\n- heroMedia: type(image|video) + uri(ADMIN 등록값, 미등록 시 플레이스홀더)\n- contents[].subItems: 교재 번호별 세부 항목 (선택적)\n- 스크롤 끝까지 읽으면 확인 버튼 활성화\n- props: onPressConfirm / onClose',
+    designNotes: '타입 배지: tealSoft 배경, teal 텍스트\n히어로: aspectRatio 16/9, borderRadius 12\n콘텐츠 카드: surface 배경, line 보더, borderRadius 16\n세부 항목 번호: teal 배경 32×32 badge\n하단 버튼: 스크롤 완료 전 비활성(line 배경), 완료 후 teal 배경',
+    sourceAFile: undefined,
+    sourceBRef: 'CultureStage',
+  },
 ];
 
 export function getScreen(id: string): ScreenMeta | undefined {
