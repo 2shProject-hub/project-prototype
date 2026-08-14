@@ -46,6 +46,18 @@ export const SESSION1 = {
       descVi: 'Bạn có thể tìm hiểu 15 từ vựng về quốc gia và quốc tịch.',
     },
   },
+  intro2: {
+    badge: '문법과 표현',
+    badgeVi: 'Ngữ pháp và biểu đạt',
+    speech: '지금부터 문법을\n함께 배워볼 거예요!',
+    speechVi: 'Từ bây giờ chúng ta sẽ\ncùng nhau học ngữ pháp nhé!',
+    achievement: {
+      label: '학습 성과',
+      labelVi: 'Kết quả học tập',
+      desc: '이에요/예요 문법 규칙을 이해하고 활용할 수 있어요.',
+      descVi: 'Bạn có thể hiểu và sử dụng quy tắc ngữ pháp 이에요/예요.',
+    },
+  },
   mission: {
     ko: '나라와 국적 표현을 익혀서 한국어로 나를 소개해요.',
     vi: 'Học cách diễn đạt về quốc gia và quốc tịch để giới thiệu bản thân bằng tiếng Hàn.',

@@ -12,6 +12,7 @@ import { SCREEN_REGISTRY, getScreen } from './screenRegistry';
 import { HomeScreen } from '../screens/HomeScreen';
 import { MissionStage } from '../screens/MissionStage';
 import { IntroStage } from '../screens/IntroStage';
+import { IntroStage2 } from '../screens/IntroStage2';
 import { WordBuildStage } from '../screens/WordBuildStage';
 import { SentenceBuildStage } from '../screens/SentenceBuildStage';
 import { SentenceBuildStage2 } from '../screens/SentenceBuildStage2';
@@ -65,6 +66,13 @@ function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate
         <IntroStage
           onNext={() => onNavigate('home')}
           onBack={() => onNavigate('vocab-wordbook')}
+        />
+      );
+    case 'intro-2':
+      return (
+        <IntroStage2
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
         />
       );
     case 'word-build':

@@ -54,6 +54,16 @@ export const SCREEN_REGISTRY: ScreenMeta[] = [
     sourceBRef: 'IntroStage',
   },
   {
+    id: 'intro-2',
+    label: '4-2. 학습 소개 2',
+    category: '신규',
+    description: '문법 학습 시작 전 캐릭터(K-Chao 고양이)가 말풍선으로 학습 내용을 안내하는 인트로 화면. 캐릭터 일러스트와 말풍선으로 친근한 분위기를 연출한다.',
+    devNotes: '- SESSION1.intro2 데이터 참조 (badge, speech, achievement)\n- 캐릭터 이미지: assets/character-kchao.png\n- 말풍선: tealSoft 배경, teal 보더, 하단 꼬리 삼각형\n- ActivityLayout 패턴: 프로그레스바 + X 버튼',
+    designNotes: '말풍선: tealSoft 배경, teal 1.5px 보더, borderRadius 20, 꼬리 아래 방향\n캐릭터: 220×220px, contain 모드\n배지: tealSoft 배경, teal 텍스트\n학습 성과 카드: #F0FAFA 배경, teal 체크 원형 아이콘',
+    sourceAFile: undefined,
+    sourceBRef: 'IntroStage2',
+  },
+  {
     id: 'word-build',
     label: '5. 단어 만들기',
     category: '신규',
