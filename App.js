@@ -6,6 +6,19 @@ import { StatusBar } from 'expo-status-bar';
 // 네이티브: 추후 실제 앱 네비게이션으로 교체 예정
 export default function App() {
   if (Platform.OS === 'web') {
+    const isRecording = typeof window !== 'undefined' && window.location.search.includes('recording=true');
+    if (isRecording) {
+      const { LangProvider } = require('./src/components/LangContext');
+      const { BridgeStage } = require('./src/screens/BridgeStage');
+      return (
+        <LangProvider>
+          <BridgeStage
+            onPressConfirm={() => {}}
+            onClose={() => {}}
+          />
+        </LangProvider>
+      );
+    }
     return <EmulatorShell />;
   }
   // 네이티브 환경에서는 에뮬레이터 없이 HomeScreen 직접 표시

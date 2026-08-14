@@ -21,6 +21,7 @@ import { GrammarDetailStage } from '../screens/GrammarDetailStage';
 import { QuickReviewStage } from '../screens/QuickReviewStage';
 import { CultureStage } from '../screens/CultureStage';
 import { WordDetailStage } from '../screens/WordDetailStage';
+import { VideoBridgeStage } from '../screens/VideoBridgeStage';
 import { defaultSessionState } from '../data/lessonData';
 import { useLang, type Lang } from '../components/LangContext';
 
@@ -54,13 +55,29 @@ function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate
           onBack={() => onNavigate('home')}
         />
       );
-    case 'bridge':
+    case 'bridge-vocab-grammar':
       return (
         <BridgeStage
           onPressConfirm={() => onNavigate('home')}
           onClose={() => onNavigate('home')}
         />
       );
+    case 'bridge-grammar-listening':
+    case 'bridge-grammar-speaking':
+    case 'bridge-grammar-writing': {
+      const bridgeDataMap: Record<string, import('../data/lessonData').BridgeData> = {
+        'bridge-grammar-listening': require('../data/lessonData').MOCK_BRIDGE_GRAMMAR_LISTENING,
+        'bridge-grammar-speaking':  require('../data/lessonData').MOCK_BRIDGE_GRAMMAR_SPEAKING,
+        'bridge-grammar-writing':   require('../data/lessonData').MOCK_BRIDGE_GRAMMAR_WRITING,
+      };
+      return (
+        <BridgeStage
+          data={bridgeDataMap[screenId]}
+          onPressConfirm={() => onNavigate('home')}
+          onClose={() => onNavigate('home')}
+        />
+      );
+    }
     case 'vocab-wordbook':
       return (
         <VocabWordbookStage
@@ -122,6 +139,13 @@ function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate
         <WordDetailStage
           onNext={() => onNavigate('home')}
           onBack={() => onNavigate('home')}
+        />
+      );
+    case 'video-bridge':
+      return (
+        <VideoBridgeStage
+          onPressConfirm={() => onNavigate('home')}
+          onClose={() => onNavigate('home')}
         />
       );
     default:

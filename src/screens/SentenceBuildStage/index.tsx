@@ -304,7 +304,7 @@ export function SentenceBuildStage({ onComplete, onBack }: Props) {
               disabled={!allFilled}
               activeOpacity={0.85}
             >
-              <Text style={styles.ctaBtnText}>{pick(lang, '문장 완성', 'Hoàn thành câu')}</Text>
+              <Text style={styles.ctaBtnText}>{pick(lang, '확인', 'Xác nhận')}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity

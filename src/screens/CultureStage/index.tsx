@@ -204,7 +204,7 @@ export function CultureStage({
           activeOpacity={read ? 0.8 : 1}
         >
           <Text style={[s.confirmBtnText, !read && s.confirmBtnTextDisabled]}>
-            {pick(lang, '확인', 'Xác nhận')}
+            {pick(lang, '다음', '다음')} →
           </Text>
         </TouchableOpacity>
       </View>

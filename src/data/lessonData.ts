@@ -224,59 +224,158 @@ export const SESSION1 = {
 };
 
 // ─── 브릿지 스테이지 데이터 (ADMIN 연동 전 목업) ────────────────────
-// 단어 액티비티 → 문법 액티비티 전환 시 맥락을 이어주는 브릿지 화면
+// 학습 단계 전환 시 맥락을 이어주는 브릿지 화면 (4종)
+//
+// bridgeType 별 전환 방향:
+//   'vocab-to-grammar'        : 어휘 → 문법
+//   'grammar-to-listening'    : 문법 → 듣고 말하기
+//   'grammar-to-speaking'     : 문법 → 말하기
+//   'grammar-to-writing'      : 문법 → 읽고 쓰기
+//
 // 이식 가이드:
-//   - learnedWords: ADMIN API에서 직전 단어 액티비티의 학습 완료 단어 목록으로 교체
-//   - example.highlight: 실제 학습 단어 중 문법 예문에 사용할 1개 단어로 동적 선택
-//   - activityNo: ADMIN API 응답의 activityNo 값 사용
+//   - learnedChips: ADMIN API 직전 액티비티의 학습 완료 항목으로 동적 교체
+//   - example.highlight: 예문에 쓸 대표 항목 자동 선택
+//   - activityNo: ADMIN API 응답값 사용
 
-export interface BridgeWord {
-  ko: string;
-  vi: string;
+export type BridgeType =
+  | 'vocab-to-grammar'
+  | 'grammar-to-listening'
+  | 'grammar-to-speaking'
+  | 'grammar-to-writing';
+
+export interface BridgeChip {
+  ko: string;     // 칩 메인 텍스트 (어휘 또는 문법 패턴)
+  vi?: string;    // 베트남어 서브 텍스트 (어휘 칩에만 사용, 문법 칩은 생략)
 }
 
 export interface BridgeData {
   activityNo: number;
-  learnedWords: BridgeWord[];    // 직전 단어 액티비티에서 학습한 단어 목록 (MAX 5)
-  bridgeMessage: string;         // 브릿지 안내 메시지
+  bridgeType: BridgeType;        // 전환 유형 — 칩 스타일 및 아이콘 결정에 사용
+  fromLabel: string;             // 출발 영역 레이블 (예: "어휘", "문법")
+  fromLabelVi: string;
+  toLabel: string;               // 도착 영역 레이블 (예: "문법", "듣고 말하기")
+  toLabelVi: string;
+  learnedChips: BridgeChip[];    // 직전 액티비티에서 학습한 항목 (MAX 4)
+  bridgeMessage: string;
   bridgeMessageVi: string;
   example: {
-    prefix: string;              // 문장 앞 고정 요소 (예: "저는")
+    prefix: string;              // 문장 앞 고정 요소
     prefixVi: string;
-    highlight: string;           // 하이라이트 단어 — 직전 단어 액티비티에서 학습한 어휘
+    highlight: string;           // 하이라이트 요소 — 직전에 학습한 어휘/패턴
     highlightVi: string;
-    suffix: string;              // 새로 배울 문법 요소 (예: "이에요")
+    suffix: string;              // 새로 적용할 문법/활동 요소
     full: string;                // 완성 문장
     fullVi: string;
   };
-  grammarLabel: string;          // 문법 구조 배지 (예: "N + 이에요 / 예요")
-  grammarLabelVi: string;
+  nextLabel: string;             // 다음 활동 영역 배지 텍스트
+  nextLabelVi: string;
   ctaLabel: string;
   ctaLabelVi: string;
 }
 
-export const MOCK_BRIDGE: BridgeData = {
+// ── A. 어휘 → 문법 ─────────────────────────────────────────────────
+// 단어 액티비티에서 배운 어휘를 문법 예문의 핵심 요소로 재활용
+export const MOCK_BRIDGE_VOCAB_GRAMMAR: BridgeData = {
   activityNo: 31,
-  learnedWords: [
+  bridgeType: 'vocab-to-grammar',
+  fromLabel: '어휘',       fromLabelVi: 'Từ vựng',
+  toLabel: '문법',         toLabelVi: 'Ngữ pháp',
+  learnedChips: [
     { ko: '베트남 사람', vi: 'người Việt Nam' },
-    { ko: '한국 사람', vi: 'người Hàn Quốc' },
-    { ko: '기자', vi: 'phóng viên' },
+    { ko: '한국 사람',   vi: 'người Hàn Quốc' },
+    { ko: '기자',        vi: 'phóng viên' },
   ],
   bridgeMessage: '방금 배운 단어로\n문법을 배워볼까요?',
   bridgeMessageVi: 'Hãy học ngữ pháp\nbằng từ vừa học nhé!',
   example: {
-    prefix: '저는',
-    prefixVi: 'Tôi',
-    highlight: '베트남 사람',
-    highlightVi: 'người Việt Nam',
+    prefix: '저는', prefixVi: 'Tôi',
+    highlight: '베트남 사람', highlightVi: 'người Việt Nam',
     suffix: '이에요.',
     full: '저는 베트남 사람이에요.',
     fullVi: 'Tôi là người Việt Nam.',
   },
-  grammarLabel: 'N + 이에요 / 예요',
-  grammarLabelVi: 'N + 이에요 / 예요',
-  ctaLabel: '문법 배우러 가기',
-  ctaLabelVi: 'Đi học ngữ pháp',
+  nextLabel: 'N + 이에요 / 예요',
+  nextLabelVi: 'N + 이에요 / 예요',
+  ctaLabel: '다음',
+  ctaLabelVi: '다음',
+};
+
+// ── B. 문법 → 듣고 말하기 ──────────────────────────────────────────
+// 배운 문법 패턴을 실제 음성으로 듣고 따라 말하는 활동으로 연결
+export const MOCK_BRIDGE_GRAMMAR_LISTENING: BridgeData = {
+  activityNo: 32,
+  bridgeType: 'grammar-to-listening',
+  fromLabel: '문법',           fromLabelVi: 'Ngữ pháp',
+  toLabel: '듣고 말하기',      toLabelVi: 'Nghe và nói',
+  learnedChips: [
+    { ko: 'N + 이에요 / 예요' },
+    { ko: '저는 N이에요.' },
+  ],
+  bridgeMessage: '배운 문법을 귀로 듣고\n소리 내어 따라해봐요!',
+  bridgeMessageVi: 'Hãy nghe và lặp lại\nnhững gì vừa học nhé!',
+  example: {
+    prefix: '저는', prefixVi: 'Tôi',
+    highlight: '기자', highlightVi: 'phóng viên',
+    suffix: '예요.',
+    full: '저는 기자예요.',
+    fullVi: 'Tôi là phóng viên.',
+  },
+  nextLabel: '🎧 듣고 말하기',
+  nextLabelVi: '🎧 Nghe và nói',
+  ctaLabel: '다음',
+  ctaLabelVi: '다음',
+};
+
+// ── C. 문법 → 말하기 ───────────────────────────────────────────────
+// 배운 문법 패턴을 스스로 말하는 발화 연습 활동으로 연결
+export const MOCK_BRIDGE_GRAMMAR_SPEAKING: BridgeData = {
+  activityNo: 33,
+  bridgeType: 'grammar-to-speaking',
+  fromLabel: '문법',       fromLabelVi: 'Ngữ pháp',
+  toLabel: '말하기',       toLabelVi: 'Nói',
+  learnedChips: [
+    { ko: 'N + 이에요 / 예요' },
+    { ko: '저는 N이에요.' },
+  ],
+  bridgeMessage: '이제 배운 문법으로\n직접 말해봐요!',
+  bridgeMessageVi: 'Bây giờ hãy tự nói\nbằng ngữ pháp đã học!',
+  example: {
+    prefix: '저는', prefixVi: 'Tôi',
+    highlight: '베트남 사람', highlightVi: 'người Việt Nam',
+    suffix: '이에요.',
+    full: '저는 베트남 사람이에요.',
+    fullVi: 'Tôi là người Việt Nam.',
+  },
+  nextLabel: '🎤 말하기',
+  nextLabelVi: '🎤 Nói',
+  ctaLabel: '다음',
+  ctaLabelVi: '다음',
+};
+
+// ── D. 문법 → 읽고 쓰기 ───────────────────────────────────────────
+// 배운 문법 패턴을 읽고 직접 써보는 활동으로 연결
+export const MOCK_BRIDGE_GRAMMAR_WRITING: BridgeData = {
+  activityNo: 34,
+  bridgeType: 'grammar-to-writing',
+  fromLabel: '문법',           fromLabelVi: 'Ngữ pháp',
+  toLabel: '읽고 쓰기',        toLabelVi: 'Đọc và viết',
+  learnedChips: [
+    { ko: 'N + 이에요 / 예요' },
+    { ko: '저는 N이에요.' },
+  ],
+  bridgeMessage: '배운 문법으로\n읽고 써봐요!',
+  bridgeMessageVi: 'Hãy đọc và viết\nbằng ngữ pháp đã học!',
+  example: {
+    prefix: '저는', prefixVi: 'Tôi',
+    highlight: '학생', highlightVi: 'học sinh',
+    suffix: '이에요.',
+    full: '저는 학생이에요.',
+    fullVi: 'Tôi là học sinh.',
+  },
+  nextLabel: '✏️ 읽고 쓰기',
+  nextLabelVi: '✏️ Đọc và viết',
+  ctaLabel: '다음',
+  ctaLabelVi: '다음',
 };
 
 // ─── 퀵리뷰 데이터 (ADMIN 연동 전 목업) ─────────────────────────────
@@ -312,8 +411,8 @@ export const MOCK_QUICK_REVIEW: QuickReviewData = {
   titleVi: 'Hãy nhớ lại những gì đã học trong bài 1.',
   subtitle: '질문에 대한 답을 떠올린 후에, 눌러서 정답을 확인해 보세요.',
   subtitleVi: 'Hãy nghĩ về câu trả lời, rồi nhấn để kiểm tra đáp án.',
-  nextLabel: '2차시 시작하기',
-  nextLabelVi: 'Bắt đầu bài 2',
+  nextLabel: '다음',
+  nextLabelVi: '다음',
   items: [
     {
       id: 1,
@@ -575,5 +674,27 @@ export const MOCK_CULTURE_ACTIVITY: CultureActivityData = {
       ],
     },
   ],
+};
+
+// ────────────────────────────────────────────────────────────────
+// 영상 브릿지 (VideoBridgeStage)
+// Source A 참고: act01 / intro_video / PreviewVideo1
+// ────────────────────────────────────────────────────────────────
+
+export interface VideoBridgeData {
+  activityNo: number;
+  title: string;
+  titleVi: string;
+  // ADMIN 등록 원격 영상 URL. 미등록 시 프로토타입은 로컬 에셋으로 fallback.
+  videoUri?: string;
+  // 자막 SRT URL (선택). 미등록 시 자막 없음.
+  subtitleUri?: string;
+}
+
+export const MOCK_VIDEO_BRIDGE: VideoBridgeData = {
+  activityNo: 1,
+  title: '오늘의 학습을 시작해볼까요?',
+  titleVi: 'Hãy bắt đầu bài học hôm nay nhé!',
+  // videoUri 미설정 → 프로토타입에서 로컬 MP4 에셋 사용
 };
 
