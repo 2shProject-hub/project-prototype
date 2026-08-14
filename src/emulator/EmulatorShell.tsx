@@ -11,6 +11,7 @@ import { SCREEN_REGISTRY, getScreen } from './screenRegistry';
 // 화면 컴포넌트 임포트
 import { HomeScreen } from '../screens/HomeScreen';
 import { MissionStage } from '../screens/MissionStage';
+import { BridgeStage } from '../screens/BridgeStage';
 import { IntroStage } from '../screens/IntroStage';
 import { IntroStage2 } from '../screens/IntroStage2';
 import { WordBuildStage } from '../screens/WordBuildStage';
@@ -52,6 +53,13 @@ function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate
           sessionId={1}
           onNext={() => onNavigate('vocab-wordbook')}
           onBack={() => onNavigate('home')}
+        />
+      );
+    case 'bridge':
+      return (
+        <BridgeStage
+          onPressConfirm={() => onNavigate('home')}
+          onClose={() => onNavigate('home')}
         />
       );
     case 'vocab-wordbook':

@@ -235,6 +235,62 @@ export const SESSION1 = {
   },
 };
 
+// ─── 브릿지 스테이지 데이터 (ADMIN 연동 전 목업) ────────────────────
+// 단어 액티비티 → 문법 액티비티 전환 시 맥락을 이어주는 브릿지 화면
+// 이식 가이드:
+//   - learnedWords: ADMIN API에서 직전 단어 액티비티의 학습 완료 단어 목록으로 교체
+//   - example.highlight: 실제 학습 단어 중 문법 예문에 사용할 1개 단어로 동적 선택
+//   - activityNo: ADMIN API 응답의 activityNo 값 사용
+
+export interface BridgeWord {
+  ko: string;
+  vi: string;
+}
+
+export interface BridgeData {
+  activityNo: number;
+  learnedWords: BridgeWord[];    // 직전 단어 액티비티에서 학습한 단어 목록 (MAX 5)
+  bridgeMessage: string;         // 브릿지 안내 메시지
+  bridgeMessageVi: string;
+  example: {
+    prefix: string;              // 문장 앞 고정 요소 (예: "저는")
+    prefixVi: string;
+    highlight: string;           // 하이라이트 단어 — 직전 단어 액티비티에서 학습한 어휘
+    highlightVi: string;
+    suffix: string;              // 새로 배울 문법 요소 (예: "이에요")
+    full: string;                // 완성 문장
+    fullVi: string;
+  };
+  grammarLabel: string;          // 문법 구조 배지 (예: "N + 이에요 / 예요")
+  grammarLabelVi: string;
+  ctaLabel: string;
+  ctaLabelVi: string;
+}
+
+export const MOCK_BRIDGE: BridgeData = {
+  activityNo: 31,
+  learnedWords: [
+    { ko: '베트남 사람', vi: 'người Việt Nam' },
+    { ko: '한국 사람', vi: 'người Hàn Quốc' },
+    { ko: '기자', vi: 'phóng viên' },
+  ],
+  bridgeMessage: '방금 배운 단어로\n문법을 배워볼까요?',
+  bridgeMessageVi: 'Hãy học ngữ pháp\nbằng từ vừa học nhé!',
+  example: {
+    prefix: '저는',
+    prefixVi: 'Tôi',
+    highlight: '베트남 사람',
+    highlightVi: 'người Việt Nam',
+    suffix: '이에요.',
+    full: '저는 베트남 사람이에요.',
+    fullVi: 'Tôi là người Việt Nam.',
+  },
+  grammarLabel: 'N + 이에요 / 예요',
+  grammarLabelVi: 'N + 이에요 / 예요',
+  ctaLabel: '문법 배우러 가기',
+  ctaLabelVi: 'Đi học ngữ pháp',
+};
+
 // ─── 퀵리뷰 데이터 (ADMIN 연동 전 목업) ─────────────────────────────
 export interface QuickReviewItem {
   id: number;
