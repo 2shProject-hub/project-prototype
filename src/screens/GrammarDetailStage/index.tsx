@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
-  View, Text, TouchableOpacity, StyleSheet, ScrollView, Modal, Platform,
+  View, Text, TouchableOpacity, StyleSheet, ScrollView, Platform,
 } from 'react-native';
 
 // Metro가 빌드 시 asset을 처리하도록 모듈 최상단에서 require
-const VIDEO_ASSET = require('../../../assets/M_1_L1_1080p.mp4');
+const VIDEO_ASSET = require('../../../assets/grammar_video.mp4');
+const NEXT_AUDIO = require('../../../assets/sounds/tutor_sentence.wav') as string;
 import { colors, shadow } from '../../theme/colors';
 import { SESSION1 } from '../../data/lessonData';
 import { useLang, pick } from '../../components/LangContext';
@@ -94,6 +95,28 @@ const bp = StyleSheet.create({
 export function GrammarDetailStage({ onNext, onBack }: Props) {
   const { lang } = useLang();
   const [showVideo, setShowVideo] = useState(false);
+  const [isNavigating, setIsNavigating] = useState(false);
+  const nextAudioRef = useRef<HTMLAudioElement | null>(null);
+
+  const handleNext = () => {
+    if (isNavigating) return;
+    setIsNavigating(true);
+
+    if (Platform.OS !== 'web') {
+      onNext();
+      return;
+    }
+
+    try {
+      const audio = new Audio(NEXT_AUDIO);
+      audio.volume = 0.9;
+      nextAudioRef.current = audio;
+      audio.play().catch(() => { onNext(); });
+      audio.onended = () => { onNext(); };
+    } catch {
+      onNext();
+    }
+  };
 
   // video asset - Expo Web resolves require() to a URL
   const videoSrc = Platform.OS === 'web' ? VIDEO_ASSET : null;
@@ -114,31 +137,27 @@ export function GrammarDetailStage({ onNext, onBack }: Props) {
         <Text style={styles.title}>{g.title}</Text>
         <Text style={styles.rule}>{pick(lang, g.rule, g.ruleVi)}</Text>
 
-        {/* ── 영상 썸네일 ── */}
-        <TouchableOpacity
-          style={styles.videoThumb}
-          onPress={() => setShowVideo(true)}
-          activeOpacity={0.9}
-        >
-          {/* 썸네일 배경 */}
-          <View style={styles.videoThumbBg}>
-            <Text style={styles.videoThumbEmoji}>🍲</Text>
-          </View>
-          {/* 플레이 버튼 */}
-          <View style={styles.playBtn}>
-            <Text style={styles.playBtnIcon}>▶</Text>
-          </View>
-          {/* 하단 오버레이 */}
-          <View style={styles.videoOverlay}>
-            <View style={styles.videoProgress}>
-              <View style={styles.videoProgressFill} />
-            </View>
-            <View style={styles.videoMeta}>
-              <Text style={styles.videoTime}>00:03 / 1:52</Text>
-              <Text style={styles.videoCC}>CC</Text>
-            </View>
-          </View>
-        </TouchableOpacity>
+        {/* ── 영상 플레이어 ── */}
+        <View style={styles.videoThumb}>
+          {showVideo && Platform.OS === 'web' ? (
+            <WebVideoPlayer src={videoSrc!} />
+          ) : (
+            <TouchableOpacity
+              style={styles.videoThumbInner}
+              onPress={() => setShowVideo(true)}
+              activeOpacity={0.9}
+            >
+              {/* 썸네일 배경 */}
+              <View style={styles.videoThumbBg}>
+                <Text style={styles.videoThumbEmoji}>🎬</Text>
+              </View>
+              {/* 플레이 버튼 */}
+              <View style={styles.playBtn}>
+                <Text style={styles.playBtnIcon}>▶</Text>
+              </View>
+            </TouchableOpacity>
+          )}
+        </View>
 
         {/* ── 규칙 표 ── */}
         <View style={styles.ruleTable}>
@@ -199,26 +218,18 @@ export function GrammarDetailStage({ onNext, onBack }: Props) {
 
       {/* ── 하단 다음 버튼 ── */}
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.nextBtn} onPress={onNext} activeOpacity={0.85}>
-          <Text style={styles.nextBtnText}>{pick(lang, '다음  →', 'Tiếp theo  →')}</Text>
+        <TouchableOpacity
+          style={[styles.nextBtn, isNavigating && styles.nextBtnDisabled]}
+          onPress={handleNext}
+          activeOpacity={isNavigating ? 1 : 0.85}
+          disabled={isNavigating}
+        >
+          <Text style={[styles.nextBtnText, isNavigating && styles.nextBtnTextDisabled]}>
+            {pick(lang, '다음  →', 'Tiếp theo  →')}
+          </Text>
         </TouchableOpacity>
       </View>
 
-      {/* ── 영상 전체화면 모달 ── */}
-      <Modal visible={showVideo} transparent={false} animationType="fade" statusBarTranslucent>
-        <View style={styles.videoModal}>
-          <TouchableOpacity style={styles.videoCloseBtn} onPress={() => setShowVideo(false)} activeOpacity={0.8}>
-            <Text style={styles.videoCloseBtnText}>✕</Text>
-          </TouchableOpacity>
-          {Platform.OS === 'web' && videoSrc ? (
-            <WebVideoPlayer src={videoSrc} />
-          ) : (
-            <View style={styles.videoPlaceholder}>
-              <Text style={styles.videoPlaceholderText}>영상 재생 (모바일 앱에서 지원)</Text>
-            </View>
-          )}
-        </View>
-      </Modal>
     </View>
   );
 }
@@ -247,11 +258,15 @@ const styles = StyleSheet.create({
     fontSize: 15, color: '#3D4B57', lineHeight: 24, marginBottom: 18,
   },
 
-  // ── Video Thumbnail ──
+  // ── Video Player ──
   videoThumb: {
     borderRadius: 12, overflow: 'hidden',
     aspectRatio: 16 / 9, marginBottom: 20,
+    backgroundColor: '#1A2B3C',
     ...shadow.card,
+  },
+  videoThumbInner: {
+    flex: 1,
   },
   videoThumbBg: {
     ...StyleSheet.absoluteFillObject,
@@ -353,20 +368,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.teal, borderRadius: 14,
     paddingVertical: 15, alignItems: 'center',
   },
+  nextBtnDisabled: { backgroundColor: colors.line },
   nextBtnText: { color: '#fff', fontSize: 16, fontWeight: '700' },
+  nextBtnTextDisabled: { color: colors.muted },
 
-  // ── Video Modal ──
-  videoModal: {
-    flex: 1, backgroundColor: '#000',
-    alignItems: 'center', justifyContent: 'center',
-  },
-  videoCloseBtn: {
-    position: 'absolute', top: 40, right: 20, zIndex: 10,
-    width: 40, height: 40, borderRadius: 20,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    alignItems: 'center', justifyContent: 'center',
-  },
-  videoCloseBtnText: { fontSize: 18, color: '#fff', fontWeight: '700' },
-  videoPlaceholder: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  videoPlaceholderText: { color: '#fff', fontSize: 16 },
 });

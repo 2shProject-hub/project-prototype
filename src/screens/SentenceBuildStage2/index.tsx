@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import {
-  View, Text, TouchableOpacity, StyleSheet, TextInput, Modal,
+  View, Text, TouchableOpacity, StyleSheet, TextInput,
 } from 'react-native';
 import { colors, shadow } from '../../theme/colors';
 import { SESSION1 } from '../../data/lessonData';
 import { useLang, pick } from '../../components/LangContext';
 import { ActivityHeader } from '../../components/ActivityHeader';
+import { useSfx } from '../../hooks/useSfx';
 
 interface Props {
   onComplete: () => void;
@@ -29,6 +30,7 @@ function shuffle<T>(arr: T[]): T[] {
 
 export function SentenceBuildStage2({ onComplete, onBack }: Props) {
   const { lang } = useLang();
+  const sfx = useSfx();
 
   const [quizIdx, setQuizIdx] = useState(0);
   const [shuffledTiles, setShuffledTiles] = useState<string[]>([]);
@@ -65,11 +67,11 @@ export function SentenceBuildStage2({ onComplete, onBack }: Props) {
   const checkAnswer = (answer: string) => {
     const isCorrect = answer.trim() === quiz.ko;
     if (isCorrect) {
-      setFeedback('correct');
+      sfx.play('correct'); setFeedback('correct');
     } else {
       const newFail = failCount + 1;
       setFailCount(newFail);
-      setFeedback(newFail >= FAIL_MAX ? 'wrong' : 'retry');
+      sfx.play('incorrect'); setFeedback(newFail >= FAIL_MAX ? 'wrong' : 'retry');
     }
   };
 
@@ -228,8 +230,8 @@ export function SentenceBuildStage2({ onComplete, onBack }: Props) {
         )}
       </View>
 
-      {/* ── 피드백 모달 ── */}
-      <Modal visible={feedback !== null} transparent animationType="slide">
+      {/* ── 피드백 모달 (absolute — 에뮬레이터 프레임 안에 표시) ── */}
+      {feedback !== null && (
         <View style={styles.modalBackdrop}>
           <View style={styles.modalSheet}>
             {feedback === 'correct' && (
@@ -269,7 +271,7 @@ export function SentenceBuildStage2({ onComplete, onBack }: Props) {
             )}
           </View>
         </View>
-      </Modal>
+      )}
     </View>
   );
 }
@@ -384,7 +386,7 @@ const styles = StyleSheet.create({
   modeBtnText: { fontSize: 13, color: colors.muted, fontWeight: '600' },
 
   // ── Feedback Modal ──
-  modalBackdrop: { flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.35)' },
+  modalBackdrop: { position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.35)' },
   modalSheet: {
     backgroundColor: '#fff', borderTopLeftRadius: 24, borderTopRightRadius: 24,
     paddingHorizontal: 24, paddingTop: 28, paddingBottom: 36,

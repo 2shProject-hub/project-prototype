@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import {
-  View, Text, TouchableOpacity, StyleSheet, TextInput, Modal,
+  View, Text, TouchableOpacity, StyleSheet, TextInput,
   Animated, Easing,
 } from 'react-native';
 import { colors, shadow } from '../../theme/colors';
 import { SESSION1, WORD_BUILD_DISTRACTOR_COUNT } from '../../data/lessonData';
 import { useLang, pick } from '../../components/LangContext';
 import { ActivityHeader } from '../../components/ActivityHeader';
+import { useSfx } from '../../hooks/useSfx';
 
 interface Props {
   onComplete: () => void;
@@ -30,6 +31,7 @@ function shuffle<T>(arr: T[]): T[] {
 
 export function WordBuildStage({ onComplete, onBack }: Props) {
   const { lang } = useLang();
+  const sfx = useSfx();
 
   const [quizIdx, setQuizIdx] = useState(0);
   const [shuffledTiles, setShuffledTiles] = useState<string[]>([]);
@@ -103,10 +105,12 @@ export function WordBuildStage({ onComplete, onBack }: Props) {
   const onConfirm = () => {
     const built = selected.map(i => shuffledTiles[i]).join('');
     if (built === quiz.ko) {
+      sfx.play('correct');
       setFeedback('correct');
     } else {
       const newFail = failCount + 1;
       setFailCount(newFail);
+      sfx.play('incorrect');
       setFeedback(newFail >= FAIL_MAX ? 'wrong' : 'retry');
     }
   };
@@ -133,10 +137,12 @@ export function WordBuildStage({ onComplete, onBack }: Props) {
   // ── 키보드 확인 ────────────────────────────────────────────────
   const onKeyboardConfirm = () => {
     if (keyboardText.trim() === quiz.ko) {
+      sfx.play('correct');
       setFeedback('correct');
     } else {
       const newFail = failCount + 1;
       setFailCount(newFail);
+      sfx.play('incorrect');
       setFeedback(newFail >= FAIL_MAX ? 'wrong' : 'retry');
     }
   };
@@ -314,8 +320,8 @@ export function WordBuildStage({ onComplete, onBack }: Props) {
         </View>
       )}
 
-      {/* ── 피드백 모달 ── */}
-      <Modal visible={feedback !== null} transparent animationType="slide">
+      {/* ── 피드백 모달 (absolute — 에뮬레이터 프레임 안에 표시) ── */}
+      {feedback !== null && (
         <View style={styles.modalBackdrop}>
           <View style={styles.modalSheet}>
             {feedback === 'correct' && (
@@ -353,7 +359,7 @@ export function WordBuildStage({ onComplete, onBack }: Props) {
             )}
           </View>
         </View>
-      </Modal>
+      )}
     </View>
   );
 }
@@ -591,7 +597,8 @@ const styles = StyleSheet.create({
 
   // ── Feedback Modal ──
   modalBackdrop: {
-    flex: 1,
+    position: 'absolute',
+    top: 0, bottom: 0, left: 0, right: 0,
     justifyContent: 'flex-end',
     backgroundColor: 'rgba(0,0,0,0.35)',
   },

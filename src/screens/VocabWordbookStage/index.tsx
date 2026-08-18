@@ -1,17 +1,45 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { ScrollView, View, Text, TouchableOpacity, StyleSheet, Modal, Platform } from 'react-native';
 import { colors } from '../../theme/colors';
 import { SESSION1, STAGE_ORDER, STAGE_LABELS, MOCK_ADMIN_WORDBOOK_ACTIVITY } from '../../data/lessonData';
 import { useLang, pick } from '../../components/LangContext';
+import { useSfx } from '../../hooks/useSfx';
 
 interface Props {
   onNext: () => void;
   onBack: () => void;
 }
 
+const QUIZ_ENTRY_AUDIO = require('../../../assets/sounds/tutor_word_6.wav') as string;
+
 export function VocabWordbookStage({ onNext, onBack }: Props) {
   const { lang } = useLang();
-  
+  const sfx = useSfx();
+
+  const [isNavigating, setIsNavigating] = useState(false);
+  const quizAudioRef = useRef<HTMLAudioElement | null>(null);
+
+  const handleQuizEntry = () => {
+    if (isNavigating) return;
+    setIsNavigating(true);
+    sfx.play();
+
+    if (Platform.OS !== 'web') {
+      onNext();
+      return;
+    }
+
+    try {
+      const audio = new Audio(QUIZ_ENTRY_AUDIO);
+      audio.volume = 0.9;
+      quizAudioRef.current = audio;
+      audio.play().catch(() => { onNext(); });
+      audio.onended = () => { onNext(); };
+    } catch {
+      onNext();
+    }
+  };
+
   const activityData = MOCK_ADMIN_WORDBOOK_ACTIVITY;
   const words = activityData.questions.map(q => {
     const item = q.questionItems.find(i => i.itemCd === 'speaking_word') || {};
@@ -115,7 +143,7 @@ export function VocabWordbookStage({ onNext, onBack }: Props) {
           <Text style={styles.speedLabel}>재생 배속</Text>
           <TouchableOpacity
             style={styles.speedToggle}
-            onPress={() => setShowSpeedPicker(p => !p)}
+            onPress={() => { sfx.play(); setShowSpeedPicker(p => !p); }}
             activeOpacity={0.7}
           >
             <Text style={styles.speedToggleText}>{speed.toFixed(1)}x</Text>
@@ -128,7 +156,7 @@ export function VocabWordbookStage({ onNext, onBack }: Props) {
               <TouchableOpacity
                 key={s}
                 style={[styles.speedOption, speed === s && styles.speedOptionActive]}
-                onPress={() => { setSpeed(s); setShowSpeedPicker(false); }}
+                onPress={() => { sfx.play(); setSpeed(s); setShowSpeedPicker(false); }}
                 activeOpacity={0.7}
               >
                 <Text style={[styles.speedOptionText, speed === s && styles.speedOptionTextActive]}>
@@ -143,21 +171,21 @@ export function VocabWordbookStage({ onNext, onBack }: Props) {
         <View style={styles.tabList} role="tablist">
           <TouchableOpacity
             style={[styles.tabItem, tab === 'all' && styles.tabItemActive]}
-            onPress={() => setTab('all')}
+            onPress={() => { sfx.play(); setTab('all'); }}
             activeOpacity={0.7}
           >
             <Text style={[styles.tabText, tab === 'all' && styles.tabTextActive]}>전체 보기</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.tabItem, tab === 'ko' && styles.tabItemActive]}
-            onPress={() => setTab('ko')}
+            onPress={() => { sfx.play(); setTab('ko'); }}
             activeOpacity={0.7}
           >
             <Text style={[styles.tabText, tab === 'ko' && styles.tabTextActive]}>한국어 보기</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.tabItem, tab === 'vi' && styles.tabItemActive]}
-            onPress={() => setTab('vi')}
+            onPress={() => { sfx.play(); setTab('vi'); }}
             activeOpacity={0.7}
           >
             <Text style={[styles.tabText, tab === 'vi' && styles.tabTextActive]}>베트남어 보기</Text>
@@ -190,6 +218,7 @@ export function VocabWordbookStage({ onNext, onBack }: Props) {
           <TouchableOpacity
             style={[styles.ctaBtn, { backgroundColor: colors.teal, flex: 1.2 }]}
             onPress={() => {
+              sfx.play();
               setPronIdx(0);
               setShowPronModal(true);
             }}
@@ -198,11 +227,15 @@ export function VocabWordbookStage({ onNext, onBack }: Props) {
             <Text style={styles.ctaBtnText}>단어 발음하기</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.ctaBtn, { backgroundColor: '#FFFFFF', borderColor: colors.line, borderWidth: 1, flex: 1 }]}
-            onPress={onNext}
-            activeOpacity={0.85}
+            style={[styles.ctaBtn, { flex: 1 }, isNavigating
+              ? { backgroundColor: colors.line, borderColor: colors.line, borderWidth: 1 }
+              : { backgroundColor: '#FFFFFF', borderColor: colors.line, borderWidth: 1 }
+            ]}
+            onPress={handleQuizEntry}
+            activeOpacity={isNavigating ? 1 : 0.85}
+            disabled={isNavigating}
           >
-            <Text style={[styles.ctaBtnText, { color: colors.ink }]}>바로 문제 풀기</Text>
+            <Text style={[styles.ctaBtnText, { color: isNavigating ? colors.muted : colors.ink }]}>바로 문제 풀기</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -225,7 +258,7 @@ export function VocabWordbookStage({ onNext, onBack }: Props) {
             <View style={styles.pronCard}>
               <Text style={styles.pronCardEmoji}>📖</Text>
               <View style={styles.pronWordRow}>
-                <TouchableOpacity style={styles.pronSpeaker} onPress={() => speakKo(words[pronIdx].ko)}>
+                <TouchableOpacity style={styles.pronSpeaker} onPress={() => speakKo(words[pronIdx].ko)} activeOpacity={0.7}>
                   <Text style={styles.pronSpeakerEmoji}>🔊</Text>
                 </TouchableOpacity>
                 <Text style={styles.pronWordKo}>{words[pronIdx].ko}</Text>
@@ -236,14 +269,14 @@ export function VocabWordbookStage({ onNext, onBack }: Props) {
 
           {/* 모달 하단 마이크 조작영역 */}
           <View style={styles.pronFooter}>
-            <TouchableOpacity style={styles.skipBtn} onPress={handleNextPron}>
+            <TouchableOpacity style={styles.skipBtn} onPress={() => { sfx.play(); handleNextPron(); }}>
               <Text style={styles.skipText}>발음 평가를 하기 어려운 상황이에요</Text>
               <Text style={styles.skipLink}>건너뛰기</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={[styles.micBtn, isRecording && styles.micBtnRecording]}
-              onPress={isRecording ? stopRecording : startRecording}
+              onPress={() => { sfx.play(); isRecording ? stopRecording() : startRecording(); }}
               activeOpacity={0.8}
             >
               <Text style={styles.micIcon}>{isRecording ? '⏹️' : '🎤'}</Text>
@@ -279,13 +312,13 @@ export function VocabWordbookStage({ onNext, onBack }: Props) {
               <View style={styles.resultActionRow}>
                 <TouchableOpacity
                   style={[styles.resultBtn, { backgroundColor: '#e2f4f4' }]}
-                  onPress={() => setShowResultModal(false)}
+                  onPress={() => { sfx.play(); setShowResultModal(false); }}
                 >
                   <Text style={[styles.resultBtnText, { color: colors.teal }]}>다시 발음</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[styles.resultBtn, { backgroundColor: colors.teal }]}
-                  onPress={handleNextPron}
+                  onPress={() => { sfx.play(); handleNextPron(); }}
                 >
                   <Text style={[styles.resultBtnText, { color: '#ffffff' }]}>다음 단어</Text>
                 </TouchableOpacity>

@@ -11,12 +11,17 @@ import { SCREEN_REGISTRY, getScreen } from './screenRegistry';
 // 화면 컴포넌트 임포트
 import { HomeScreen } from '../screens/HomeScreen';
 import { MissionStage } from '../screens/MissionStage';
+import { MissionTutorStage } from '../screens/MissionTutorStage';
+import { MissionTutorPrevStage } from '../screens/MissionTutorPrevStage';
+import { MissionTutorPrevViStage } from '../screens/MissionTutorPrevViStage';
 import { BridgeStage } from '../screens/BridgeStage';
 import { IntroStage } from '../screens/IntroStage';
+import { IntroTutorStage } from '../screens/IntroTutorStage';
 import { WordBuildStage } from '../screens/WordBuildStage';
 import { SentenceBuildStage } from '../screens/SentenceBuildStage';
 import { SentenceBuildStage2 } from '../screens/SentenceBuildStage2';
 import { VocabWordbookStage } from '../screens/VocabWordbookStage';
+import { VocabWordbookVoiceStage } from '../screens/VocabWordbookVoiceStage';
 import { GrammarDetailStage } from '../screens/GrammarDetailStage';
 import { QuickReviewStage } from '../screens/QuickReviewStage';
 import { CultureStage } from '../screens/CultureStage';
@@ -51,7 +56,31 @@ function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate
       return (
         <MissionStage
           sessionId={1}
+          onNext={() => onNavigate('quick-review')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'mission-tutor':
+      return (
+        <MissionTutorStage
+          sessionId={1}
           onNext={() => onNavigate('vocab-wordbook')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'mission-tutor-prev':
+      return (
+        <MissionTutorPrevStage
+          sessionId={1}
+          onNext={() => onNavigate('quick-review')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'mission-tutor-prev-vi':
+      return (
+        <MissionTutorPrevViStage
+          sessionId={1}
+          onNext={() => onNavigate('quick-review')}
           onBack={() => onNavigate('home')}
         />
       );
@@ -81,6 +110,13 @@ function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate
     case 'vocab-wordbook':
       return (
         <VocabWordbookStage
+          onNext={() => onNavigate('word-build')}
+          onBack={() => onNavigate('mission')}
+        />
+      );
+    case 'vocab-wordbook-voice':
+      return (
+        <VocabWordbookVoiceStage
           onNext={() => onNavigate('intro')}
           onBack={() => onNavigate('mission')}
         />
@@ -90,6 +126,13 @@ function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate
         <IntroStage
           onNext={() => onNavigate('home')}
           onBack={() => onNavigate('vocab-wordbook')}
+        />
+      );
+    case 'intro-tutor':
+      return (
+        <IntroTutorStage
+          onNext={() => onNavigate('vocab-wordbook')}
+          onBack={() => onNavigate('quick-review')}
         />
       );
     case 'word-build':
@@ -116,7 +159,7 @@ function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate
     case 'quick-review':
       return (
         <QuickReviewStage
-          onPressConfirm={() => onNavigate('home')}
+          onPressConfirm={() => onNavigate('intro-tutor')}
           onClose={() => onNavigate('home')}
         />
       );
@@ -130,7 +173,7 @@ function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate
     case 'grammar-detail':
       return (
         <GrammarDetailStage
-          onNext={() => onNavigate('home')}
+          onNext={() => onNavigate('sentence-build')}
           onBack={() => onNavigate('home')}
         />
       );

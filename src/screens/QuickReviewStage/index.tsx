@@ -6,6 +6,7 @@ import { colors } from '../../theme/colors';
 import { MOCK_QUICK_REVIEW, type QuickReviewItem } from '../../data/lessonData';
 import { ActivityHeader } from '../../components/ActivityHeader';
 import { useLang, pick } from '../../components/LangContext';
+import { useSfx } from '../../hooks/useSfx';
 
 // ─── Props — Source A ActivityLayout 이식 기준으로 네이밍 정렬 ──────
 // 이식 시: onPressConfirm → ActivityLayout.onPressConfirm
@@ -134,6 +135,7 @@ export function QuickReviewStage({
   data = MOCK_QUICK_REVIEW,
 }: QuickReviewStageProps) {
   const { lang } = useLang();
+  const sfx = useSfx();
   const items = data.items.slice(0, 10); // MAX 10
 
   // Source A 패턴: complete: boolean 기반 상태 배열
@@ -183,9 +185,9 @@ export function QuickReviewStage({
               runState={runStates[i]}
               isActive={i === activeIndex}
               lang={lang}
-              onReveal={() => updateRunState(i, { revealed: true })}
-              onRemembered={() => handleResponse(i, true)}
-              onForgot={() => handleResponse(i, false)}
+              onReveal={() => { sfx.play(); updateRunState(i, { revealed: true }); }}
+              onRemembered={() => { sfx.play(); handleResponse(i, true); }}
+              onForgot={() => { sfx.play(); handleResponse(i, false); }}
             />
           ))}
         </View>
@@ -213,7 +215,7 @@ export function QuickReviewStage({
       <View style={s.footer}>
         <TouchableOpacity
           style={[s.nextBtn, isConfirmDisabled && s.nextBtnDisabled]}
-          onPress={isConfirmDisabled ? undefined : onPressConfirm}
+          onPress={isConfirmDisabled ? undefined : () => { sfx.play(); onPressConfirm(); }}
           activeOpacity={isConfirmDisabled ? 1 : 0.8}
         >
           <Text style={[s.nextBtnText, isConfirmDisabled && s.nextBtnTextDisabled]}>
