@@ -698,3 +698,581 @@ export const MOCK_VIDEO_BRIDGE: VideoBridgeData = {
   // videoUri 미설정 → 프로토타입에서 로컬 MP4 에셋 사용
 };
 
+// ─── 설명 슬라이드 데이터 ────────────────────────────────────────────
+// Source B (batchim-grammar-steps.html) 9단계 콘텐츠 기반 목업
+// 이식 시: imageUri → ADMIN 등록 이미지 URL로 교체
+
+export interface SlideItem {
+  /** 로컬 require() 또는 { uri: string } — undefined 이면 플레이스홀더 표시 */
+  image?: number | { uri: string };
+  /** 이미지 하단 설명 텍스트 */
+  text: string;
+}
+
+export interface SlideExplainData {
+  activityNo: number;
+  badge: string;
+  title: string;
+  slides: SlideItem[];
+}
+
+export const MOCK_SLIDE_EXPLAIN: SlideExplainData = {
+  activityNo: 35,
+  badge: '문법과 표현 1',
+  title: '저는 N이에요/예요',
+  slides: [
+    {
+      image: require('../../assets/slide-explain-1.png'),
+      text: "-이에요/-예요는 이름이나 국적 등을 말할 때 써요. '~이다'라는 뜻이고, 영어의 am/is/are와 비슷해요. 앞 단어에 받침이 있으면 -이에요, 받침이 없으면 -예요를 써요.",
+    },
+    {
+      image: require('../../assets/slide-explain-2.png'),
+      text: '글자 밑에 빨간 표시를 보세요. 저게 "받침"이에요. 받침이 있는 글자도 있고, 없는 글자도 있어요.',
+    },
+    {
+      image: require('../../assets/slide-explain-3.png'),
+      text: '위의 두 이름 중에서 받침이 있는 것은 무엇일까요? "유진", "타오"',
+    },
+    {
+      image: require('../../assets/slide-explain-4.png'),
+      text: '"유진"은 받침이 있어요. "타오"는 받침이 없어요.',
+    },
+    {
+      image: require('../../assets/slide-explain-5.png'),
+      text: '받침이 있으면 "-이에요"를 붙여요: 유진 + -이에요 = 유진이에요',
+    },
+    {
+      image: require('../../assets/slide-explain-6.png'),
+      text: '문장으로 써볼까요? "안녕하세요? 저는 유진이에요."',
+    },
+    {
+      image: require('../../assets/slide-explain-7.png'),
+      text: '받침이 없으면 "-예요"를 붙여요: 타오 + -예요 = 타오예요',
+    },
+    {
+      image: require('../../assets/slide-explain-8.png'),
+      text: '문장으로 써볼까요? "반가워요. 저는 타오예요."',
+    },
+    {
+      image: require('../../assets/slide-explain-9.png'),
+      text: '정리해요: 받침 있으면 "-이에요", 받침 없으면 "-예요"!',
+    },
+  ],
+};
+
+// ────────────────────────────────────────────────────────────────
+// 말하기 상세 소개 데이터 (SpeakingDetailStage)
+// 교재: 『ULIS Genie K 한국어 초급 1』 p.7 (말하기 구성), p.24 (말하기 1) 기반
+// ────────────────────────────────────────────────────────────────
+
+export interface DialogueLine {
+  id: number;
+  speaker: string;
+  speakerRole?: string;
+  textKo: string;
+  textVi: string;
+  isUserSpeaker?: boolean;
+}
+
+export interface SpeakingKeyTip {
+  titleKo: string;
+  titleVi: string;
+  descKo: string;
+  descVi: string;
+}
+
+export interface SpeakingDrillItem {
+  no: number;
+  name: string;
+  country: string;
+  countryVi: string;
+  flagEmoji: string;
+}
+
+export interface SpeakingExplainData {
+  activityNo: number;
+  badgeKo: string;
+  badgeVi: string;
+  titleKo: string;
+  titleVi: string;
+  situation: {
+    titleKo: string;
+    titleVi: string;
+    descKo: string;
+    descVi: string;
+  };
+  dialogue: DialogueLine[];
+  keyTips: SpeakingKeyTip[];
+  drill: {
+    instructionKo: string;
+    instructionVi: string;
+    items: SpeakingDrillItem[];
+  };
+}
+
+export const MOCK_SPEAKING_EXPLAIN: SpeakingExplainData = {
+  activityNo: 40,
+  badgeKo: '말하기 1',
+  badgeVi: 'Luyện nói 1',
+  titleKo: '친구와 인사하고 국적을 물어봐요',
+  titleVi: 'Chào hỏi và hỏi quốc tịch của bạn bè',
+  situation: {
+    titleKo: '새로운 친구와의 첫 만남',
+    titleVi: 'Gặp gỡ người bạn mới',
+    descKo: '흐엉과 민호가 처음 만나서 반갑게 인사하고 서로의 이름과 국적을 소개하는 상황이에요.',
+    descVi: 'Hương và Minho lần đầu gặp nhau, vui vẻ chào hỏi và giới thiệu tên cũng như quốc tịch của nhau.',
+  },
+  dialogue: [
+    {
+      id: 1,
+      speaker: '흐엉',
+      speakerRole: '베트남 학생',
+      textKo: '안녕하세요?',
+      textVi: 'Xin chào?',
+      isUserSpeaker: false,
+    },
+    {
+      id: 2,
+      speaker: '민호',
+      speakerRole: '한국 친구',
+      textKo: '안녕하세요? 저는 민호예요. 이름이 뭐예요?',
+      textVi: 'Xin chào? Tôi là Minho. Bạn tên là gì?',
+      isUserSpeaker: true,
+    },
+    {
+      id: 3,
+      speaker: '흐엉',
+      speakerRole: '베트남 학생',
+      textKo: '저는 흐엉이에요. 반가워요. 민호 씨, 어느 나라 사람이에요?',
+      textVi: 'Tôi là Hương. Rất vui được gặp bạn. Minho, bạn là người nước nào?',
+      isUserSpeaker: false,
+    },
+    {
+      id: 4,
+      speaker: '민호',
+      speakerRole: '한국 친구',
+      textKo: '저는 한국 사람이에요. 만나서 반가워요.',
+      textVi: 'Tôi là người Hàn Quốc. Rất vui được gặp bạn.',
+      isUserSpeaker: true,
+    },
+  ],
+  keyTips: [
+    {
+      titleKo: '어느 나라 사람이에요?',
+      titleVi: 'Bạn là người nước nào?',
+      descKo: '상대방의 국적을 정중하게 물어볼 때 사용하는 핵심 표현이에요.',
+      descVi: 'Mẫu câu cốt lõi dùng để hỏi quốc tịch của đối phương một cách lịch sự.',
+    },
+    {
+      titleKo: "호칭 '씨'",
+      titleVi: "Hậu tố xưng hô '씨'",
+      descKo: '상대방의 이름 뒤에 붙여 존중과 예의를 표현해요. (예: 민호 씨, 흐엉 씨)',
+      descVi: 'Gắn sau tên người để thể hiện sự tôn trọng và lịch sự (Anh, Chị, Bạn...).',
+    },
+  ],
+  drill: {
+    instructionKo: '그림을 보고 친구와 이야기해 보세요.',
+    instructionVi: 'Hãy nhìn tranh và luyện nói cùng bạn nhé.',
+    items: [
+      {
+        no: 1,
+        name: '로빈',
+        country: '캐나다 사람',
+        countryVi: 'người Canada',
+        flagEmoji: '🇨🇦',
+      },
+      {
+        no: 2,
+        name: '팅팅',
+        country: '중국 사람',
+        countryVi: 'người Trung Quốc',
+        flagEmoji: '🇨🇳',
+      },
+    ],
+  },
+};
+
+// ────────────────────────────────────────────────────────────────
+// 읽고 쓰기 상세 소개 데이터 (ReadWriteDetailStage)
+// 교재: 『ULIS Genie K 한국어 초급 1』 p.8 (읽고 쓰기 구성), p.31 (읽고 쓰기 1) 기반
+// ────────────────────────────────────────────────────────────────
+
+export interface ReadingKeyPoint {
+  no: number;
+  labelKo: string;
+  labelVi: string;
+  questionKo: string;
+  questionVi: string;
+}
+
+export interface WritingFrameStep {
+  step: number;
+  titleKo: string;
+  titleVi: string;
+  exampleKo: string;
+  exampleVi: string;
+  slotGuideKo: string;
+  slotGuideVi: string;
+}
+
+export interface ReadWriteExplainData {
+  activityNo: number;
+  badgeKo: string;
+  badgeVi: string;
+  titleKo: string;
+  titleVi: string;
+  preReading: {
+    titleKo: string;
+    titleVi: string;
+    descKo: string;
+    descVi: string;
+    characterName: string;
+    characterRole: string;
+    characterRoleVi: string;
+    clueQuestions: string[];
+    clueQuestionsVi: string[];
+  };
+  readingPoints: ReadingKeyPoint[];
+  writingFramework: {
+    titleKo: string;
+    titleVi: string;
+    descKo: string;
+    descVi: string;
+    steps: WritingFrameStep[];
+  };
+}
+
+export const MOCK_READ_WRITE_EXPLAIN: ReadWriteExplainData = {
+  activityNo: 50,
+  badgeKo: '읽고 쓰기',
+  badgeVi: 'Đọc và viết',
+  titleKo: '글을 읽고 나를 소개하는 글을 써요',
+  titleVi: 'Đọc bài và viết bài tự giới thiệu bản thân',
+  preReading: {
+    titleKo: '읽기 전 유추하기',
+    titleVi: 'Dự đoán trước khi đọc',
+    descKo: '그림을 보고 어떤 사람이 쓴 글인지, 어떤 내용이 담겨 있을지 미리 생각해 봐요.',
+    descVi: 'Hãy nhìn tranh và suy nghĩ trước xem bài viết của ai và có nội dung gì nhé.',
+    characterName: '세나',
+    characterRole: '한국어 선생님',
+    characterRoleVi: 'Giáo viên tiếng Hàn',
+    clueQuestions: [
+      '세나 씨는 어느 나라 사람일까요?',
+      '세나 씨의 직업은 무엇일까요?',
+    ],
+    clueQuestionsVi: [
+      'Sena là người nước nào?',
+      'Nghề nghiệp của Sena là gì?',
+    ],
+  },
+  readingPoints: [
+    {
+      no: 1,
+      labelKo: '이름 확인',
+      labelVi: 'Xác nhận tên',
+      questionKo: '글쓴이의 이름이 무엇인지 찾아봐요.',
+      questionVi: 'Hãy tìm tên của người viết bài.',
+    },
+    {
+      no: 2,
+      labelKo: '국적 확인',
+      labelVi: 'Xác nhận quốc tịch',
+      questionKo: '어느 나라 사람인지 문장을 확인해요.',
+      questionVi: 'Kiểm tra câu văn xem là người nước nào.',
+    },
+    {
+      no: 3,
+      labelKo: '직업 확인',
+      labelVi: 'Xác nhận nghề nghiệp',
+      questionKo: '어떤 일을 하는 사람인지 파악해요.',
+      questionVi: 'Nắm bắt xem người đó làm công việc gì.',
+    },
+  ],
+  writingFramework: {
+    titleKo: '나만의 자기소개 글쓰기 프레임워크',
+    titleVi: 'Khung tự giới thiệu bản thân',
+    descKo: '읽은 글의 구조를 바탕으로 나를 소개하는 4단계 문장을 완성해 봐요.',
+    descVi: 'Dựa trên cấu trúc bài đã đọc, hãy hoàn thành 4 câu tự giới thiệu nhé.',
+    steps: [
+      {
+        step: 1,
+        titleKo: '인사하기',
+        titleVi: 'Chào hỏi',
+        exampleKo: '안녕하세요?',
+        exampleVi: 'Xin chào?',
+        slotGuideKo: '반가운 인사말로 글을 시작해요.',
+        slotGuideVi: 'Bắt đầu bài viết bằng lời chào vui vẻ.',
+      },
+      {
+        step: 2,
+        titleKo: '이름 소개',
+        titleVi: 'Giới thiệu tên',
+        exampleKo: '저는 세나예요. (저는 [이름]이에요/예요.)',
+        exampleVi: 'Tôi là Sena. (Tôi là [Tên].)',
+        slotGuideKo: '받침 여부에 맞춰 이에요/예요를 붙여요.',
+        slotGuideVi: 'Gắn 이에요/예요 tùy thuộc vào phụ âm cuối.',
+      },
+      {
+        step: 3,
+        titleKo: '국적 & 직업 소개',
+        titleVi: 'Giới thiệu quốc tịch & nghề nghiệp',
+        exampleKo: '저는 한국 사람이에요. 저는 선생님이에요.',
+        exampleVi: 'Tôi là người Hàn Quốc. Tôi là giáo viên.',
+        slotGuideKo: '나의 나라와 직업 단어를 넣어 문장을 만들어요.',
+        slotGuideVi: 'Điền quốc gia và nghề nghiệp của mình vào câu.',
+      },
+      {
+        step: 4,
+        titleKo: '끝인사',
+        titleVi: 'Lời chào kết',
+        exampleKo: '만나서 반가워요.',
+        exampleVi: 'Rất vui được gặp bạn.',
+        slotGuideKo: '친근한 마무리 인사로 글을 마쳐요.',
+        slotGuideVi: 'Kết thúc bài viết bằng lời chào thân thiện.',
+      },
+    ],
+  },
+};
+
+// ────────────────────────────────────────────────────────────────
+// 듣고 말하기 상세 소개 데이터 (ListenSpeakDetailStage)
+// 교재: 『ULIS Genie K 한국어 초급 1』 p.9 (듣고 말하기 구성), p.32 (듣고 말하기 1) 기반
+// ────────────────────────────────────────────────────────────────
+
+export interface ListeningCharacter {
+  name: string;
+  roleKo: string;
+  roleVi: string;
+  avatarEmoji: string;
+  bgTag: string;
+}
+
+export interface ListeningMissionPoint {
+  no: number;
+  icon: string;
+  titleKo: string;
+  titleVi: string;
+  descKo: string;
+  descVi: string;
+}
+
+export interface SpeakingQuestionPreview {
+  no: number;
+  questionKo: string;
+  questionVi: string;
+  sampleAnswerKo: string;
+  sampleAnswerVi: string;
+}
+
+export interface ListenSpeakExplainData {
+  activityNo: number;
+  badgeKo: string;
+  badgeVi: string;
+  titleKo: string;
+  titleVi: string;
+  situation: {
+    titleKo: string;
+    titleVi: string;
+    descKo: string;
+    descVi: string;
+    characters: ListeningCharacter[];
+  };
+  audioTrack: {
+    trackName: string;
+    durationDescKo: string;
+    durationDescVi: string;
+  };
+  listeningMission: {
+    titleKo: string;
+    titleVi: string;
+    points: ListeningMissionPoint[];
+  };
+  speakingPreview: {
+    titleKo: string;
+    titleVi: string;
+    descKo: string;
+    descVi: string;
+    questions: SpeakingQuestionPreview[];
+  };
+}
+
+export const MOCK_LISTEN_SPEAK_EXPLAIN: ListenSpeakExplainData = {
+  activityNo: 60,
+  badgeKo: '듣고 말하기',
+  badgeVi: 'Nghe và nói',
+  titleKo: '대화를 듣고 질문에 답해요',
+  titleVi: 'Nghe hội thoại và trả lời câu hỏi',
+  situation: {
+    titleKo: '민호와 유진의 첫 만남 대화',
+    titleVi: 'Cuộc gặp gỡ đầu tiên giữa Minho và Yujin',
+    descKo: '학교에서 민호와 유진이 처음 만나 인사를 나누고 서로의 이름과 국적을 이야기하는 음원이에요.',
+    descVi: 'Đây là đoạn ghi âm Minho và Yujin lần đầu gặp nhau ở trường, chào hỏi và nói về tên cũng như quốc tịch.',
+    characters: [
+      {
+        name: '민호',
+        roleKo: '한국 친구',
+        roleVi: 'Bạn Hàn Quốc',
+        avatarEmoji: '👨‍🎓',
+        bgTag: '한국 학생',
+      },
+      {
+        name: '유진',
+        roleKo: '외국인 유학생',
+        roleVi: 'Du học sinh nước ngoài',
+        avatarEmoji: '👩‍🎓',
+        bgTag: '신입생',
+      },
+    ],
+  },
+  audioTrack: {
+    trackName: 'Tr. 1',
+    durationDescKo: '약 30초 대화 음원',
+    durationDescVi: 'Đoạn hội thoại khoảng 30 giây',
+  },
+  listeningMission: {
+    titleKo: '청취 집중 미션',
+    titleVi: 'Nhiệm vụ tập trung khi nghe',
+    points: [
+      {
+        no: 1,
+        icon: '🏷️',
+        titleKo: '인물의 이름 매칭',
+        titleVi: 'Nối tên nhân vật',
+        descKo: '각 사람이 누구인지 목소리와 이름을 연결해 봐요.',
+        descVi: 'Hãy nối giọng nói với tên của từng người.',
+      },
+      {
+        no: 2,
+        icon: '🌍',
+        titleKo: '국적 정보 파악',
+        titleVi: 'Nắm bắt thông tin quốc tịch',
+        descKo: '유진이 어느 나라 사람인지 주의 깊게 들어봐요.',
+        descVi: 'Hãy lắng nghe xem Yujin là người nước nào nhé.',
+      },
+    ],
+  },
+  speakingPreview: {
+    titleKo: '들으면서 말하기 미션 예고',
+    titleVi: 'Xem trước nhiệm vụ luyện nói',
+    descKo: '음원을 들은 후 아래 3가지 질문에 자신의 목소리로 대답하는 활동이 이어집니다.',
+    descVi: 'Sau khi nghe, bạn sẽ trả lời 3 câu hỏi dưới đây bằng giọng nói của mình.',
+    questions: [
+      {
+        no: 1,
+        questionKo: '안녕하세요?',
+        questionVi: 'Xin chào?',
+        sampleAnswerKo: '안녕하세요! / 반갑습니다.',
+        sampleAnswerVi: 'Xin chào! / Rất vui được gặp bạn.',
+      },
+      {
+        no: 2,
+        questionKo: '이름이 뭐예요?',
+        questionVi: 'Bạn tên là gì?',
+        sampleAnswerKo: '저는 [이름]이에요/예요.',
+        sampleAnswerVi: 'Tôi là [Tên].',
+      },
+      {
+        no: 3,
+        questionKo: '어느 나라 사람이에요?',
+        questionVi: 'Bạn là người nước nào?',
+        sampleAnswerKo: '저는 [나라] 사람이에요.',
+        sampleAnswerVi: 'Tôi là người [Quốc gia].',
+      },
+    ],
+  },
+};
+
+// ────────────────────────────────────────────────────────────────
+// 초급 맞춤형 활동 설명 데이터 (15-1, 16-1, 17-1)
+// 초급 1 학습자의 인지 부하를 줄이고 시각적 직관성을 극대화한 단순화 데이터
+// ────────────────────────────────────────────────────────────────
+
+export const MOCK_SPEAKING_EASY = {
+  badgeKo: '말하기',
+  badgeVi: 'Luyện nói',
+  titleKo: '친구와 이야기해요!',
+  titleVi: 'Cùng trò chuyện với bạn nhé!',
+  dialoguePairs: [
+    {
+      id: 1,
+      speaker: '흐엉',
+      avatar: '👩',
+      textKo: '민호 씨, 어느 나라 사람이에요?',
+      textVi: 'Minho, bạn là người nước nào?',
+      isLeft: true,
+    },
+    {
+      id: 2,
+      speaker: '민호',
+      avatar: '👨',
+      textKo: '저는 한국 사람이에요.',
+      textVi: 'Tôi là người Hàn Quốc.',
+      isLeft: false,
+    },
+  ],
+  substitutionDrill: {
+    guideKo: '친구 이름을 넣어서 말해 봐요!',
+    guideVi: 'Hãy thay tên và quốc tịch của bạn vào nhé!',
+    items: [
+      { id: 1, flag: '🇨🇦', name: '로빈', country: '캐나다', sentenceKo: '저는 캐나다 사람이에요.' },
+      { id: 2, flag: '🇨🇳', name: '팅팅', country: '중국', sentenceKo: '저는 중국 사람이에요.' },
+    ],
+  },
+  keyPointKo: '어느 나라 사람이에요? = Bạn là người nước nào?',
+};
+
+export const MOCK_READ_WRITE_EASY = {
+  badgeKo: '읽고 쓰기',
+  badgeVi: 'Đọc và viết',
+  titleKo: '읽고 내 카드를 만들어요!',
+  titleVi: 'Đọc và tạo thẻ của mình nhé!',
+  readingCard: {
+    titleKo: '세나의 자기소개',
+    titleVi: 'Bài tự giới thiệu của Sena',
+    avatar: '👩‍🏫',
+    lines: [
+      { ko: '안녕하세요? 저는 세나예요.', vi: 'Xin chào? Tôi là Sena.' },
+      { ko: '저는 한국 사람이에요.', vi: 'Tôi là người Hàn Quốc.' },
+      { ko: '저는 선생님이에요.', vi: 'Tôi là giáo viên.' },
+    ],
+  },
+  writingCard: {
+    titleKo: '내 카드 완성하기',
+    titleVi: 'Hoàn thành thẻ của tôi',
+    slots: [
+      { labelKo: '이름', labelVi: 'Tên', placeholderKo: '저는 [ 흐엉 ]이에요.' },
+      { labelKo: '국적', labelVi: 'Quốc tịch', placeholderKo: '저는 [ 베트남 ] 사람이에요.' },
+      { labelKo: '직업', labelVi: 'Nghề nghiệp', placeholderKo: '저는 [ 학생 ]이에요.' },
+    ],
+  },
+};
+
+export const MOCK_LISTEN_SPEAK_EASY = {
+  badgeKo: '듣고 말하기',
+  badgeVi: 'Nghe và nói',
+  titleKo: '듣고 말해 봐요!',
+  titleVi: 'Cùng nghe và nói nhé!',
+  step1Listening: {
+    titleKo: '1. 귀 기울여 들어요 🎧',
+    titleVi: '1. Lắng nghe thật kỹ 🎧',
+    characters: [
+      { name: '민호', flag: '🇰🇷', tagKo: '한국' },
+      { name: '유진', flag: '🇻🇳', tagKo: '베트남' },
+    ],
+    missionKo: '누가 한국 사람인지 맞춰 봐요!',
+    missionVi: 'Hãy đoán xem ai là người Hàn Quốc nhé!',
+  },
+  step2Speaking: {
+    titleKo: '2. 마이크로 말해요 🎙️',
+    titleVi: '2. Nói vào micro 🎙️',
+    questionKo: '“어느 나라 사람이에요?”',
+    questionVi: '“Bạn là người nước nào?”',
+    answerGuideKo: '“저는 [ 베트남 ] 사람이에요!”',
+    answerGuideVi: '“Tôi là người Việt Nam!”',
+  },
+};
+
+
+
+
+

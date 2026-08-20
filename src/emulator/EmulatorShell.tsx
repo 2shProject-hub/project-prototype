@@ -27,6 +27,13 @@ import { QuickReviewStage } from '../screens/QuickReviewStage';
 import { CultureStage } from '../screens/CultureStage';
 import { WordDetailStage } from '../screens/WordDetailStage';
 import { VideoBridgeStage } from '../screens/VideoBridgeStage';
+import { SlideExplainStage } from '../screens/SlideExplainStage';
+import { SpeakingDetailStage } from '../screens/SpeakingDetailStage';
+import { SpeakingDetailEasyStage } from '../screens/SpeakingDetailEasyStage';
+import { ReadWriteDetailStage } from '../screens/ReadWriteDetailStage';
+import { ReadWriteDetailEasyStage } from '../screens/ReadWriteDetailEasyStage';
+import { ListenSpeakDetailStage } from '../screens/ListenSpeakDetailStage';
+import { ListenSpeakDetailEasyStage } from '../screens/ListenSpeakDetailEasyStage';
 import { defaultSessionState } from '../data/lessonData';
 import { useLang, type Lang } from '../components/LangContext';
 
@@ -184,11 +191,60 @@ function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate
           onBack={() => onNavigate('home')}
         />
       );
+    case 'slide-explain':
+      return (
+        <SlideExplainStage
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
     case 'video-bridge':
       return (
         <VideoBridgeStage
           onPressConfirm={() => onNavigate('home')}
           onClose={() => onNavigate('home')}
+        />
+      );
+    case 'speaking-detail':
+      return (
+        <SpeakingDetailStage
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'speaking-detail-easy':
+      return (
+        <SpeakingDetailEasyStage
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'read-write-detail':
+      return (
+        <ReadWriteDetailStage
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'read-write-detail-easy':
+      return (
+        <ReadWriteDetailEasyStage
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'listen-speak-detail':
+      return (
+        <ListenSpeakDetailStage
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'listen-speak-detail-easy':
+      return (
+        <ListenSpeakDetailEasyStage
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
         />
       );
     default:
