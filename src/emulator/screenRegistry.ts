@@ -12,34 +12,87 @@ export interface ScreenMeta {
   sourceBRef?: string;
 }
 
-export const SCREEN_REGISTRY: ScreenMeta[] = [
+import { FLOW_SCREEN_REGISTRY } from '../flow/flowRegistry';
+
+export const BASE_SCREEN_REGISTRY: ScreenMeta[] = [
   {
     id: 'home',
-    label: '1. 나의 코스',
+    label: '1. 홈 화면 / 코스 안내',
     category: '수정',
     description: '학습자가 앱 진입 시 처음 만나는 화면. 1과 전체 차시 목록과 진도를 한눈에 보여주며, 현재 학습 가능한 차시로 빠르게 진입할 수 있도록 유도한다.',
-    devNotes: '참고 파일: src/screens/home/Home.tsx (Source A)\n- SESSIONS 배열로 차시 카드 렌더링\n- sessionProgress() 함수로 각 차시 진행률 계산\n- unlocked 조건: 현재는 1차시만 열림 (서버 API 연동 후 동적 처리 예정)\n- BottomNav 공통 컴포넌트 사용',
-    designNotes: '브랜드 컬러: --teal #00a8a6\n카드 모서리: borderRadius 16\n영웅 섹션 배경: tealSoft (#ddfbfa)\n그림자: shadow.card 토큰 사용\n하단 네비: 높이 56px, 상단 1px 보더',
+    devNotes: '참고 파일: src/screens/home/Home.tsx (Source A)\n- SESSIONS 배열로 차시 카드 렌더링\n- sessionProgress() 함수로 각 차시 진행률 계산',
+    designNotes: '브랜드 컬러: --teal #00a8a6\n카드 모서리: borderRadius 16',
     sourceAFile: 'src/screens/home/Home.tsx',
     sourceBRef: 'HomeScreen',
   },
   {
     id: 'mission',
-    label: '2. 학습 미션',
+    label: '2. 학습 목표',
     category: '신규',
-    description: '차시 학습 시작 전 미션과 목표를 명확하게 인지시키는 신규 도입 화면. 학습자가 이번 차시에서 배울 내용과 산출물을 미리 확인하고 동기를 갖고 시작하도록 돕는다.',
-    devNotes: '참고 파일: Source A에는 해당 화면 없음 (신규 구현)\n- sessionId prop으로 차시별 미션 텍스트 동적 표시\n- SESSION1.mission 데이터 참조\n- subTitles.ko / subTitles.vi로 다국어 처리\n- LangContext useLang() 훅으로 언어 전환',
-    designNotes: '히어로 배너: tealSoft 배경, 보더 #b3f0ef\n미션 텍스트: fontSize 17, fontWeight 700, 최대 2줄\n불릿 리스트: teal 색 원형 도트 + 텍스트\n학습 시작 CTA: teal 배경, borderRadius 16',
+    description: '차시 학습 시작 전 미션과 목표를 명확하게 인지시키는 도입 화면. 이번 차시에서 배울 어휘/문법 목표를 안내한다.',
+    devNotes: 'sessionId prop으로 차시별 미션 텍스트 동적 표시',
+    designNotes: '히어로 배너: tealSoft 배경, 보더 #b3f0ef',
     sourceAFile: undefined,
     sourceBRef: 'MissionStage',
   },
   {
+    id: 'video-bridge',
+    label: '16. 문법 강의 영상',
+    category: '수정',
+    description: '문법 강의 영상(assets/grammer_mov.mp4)을 시청하는 화면. 영상 시청 완료 후 다음으로 이동.',
+    devNotes: 'assets/grammer_mov.mp4 전체화면 재생 및 시청 완료 시 다음 활성화',
+    designNotes: '다크 테마 비디오 플레이어',
+    sourceAFile: 'src/screens/activity/preview/PreviewVideo1.tsx',
+    sourceBRef: 'VideoBridgeStage',
+  },
+  {
+    id: 'slide-explain',
+    label: '17. 문법 슬라이드식 수업',
+    category: '수정',
+    description: '슬라이드와 설명 텍스트를 넘기며 문법 규칙을 순서대로 확인하는 활동.',
+    devNotes: 'MOCK_SLIDE_EXPLAIN 데이터 참조',
+    designNotes: '슬라이드 카드 및 넘기기 인터랙션',
+    sourceAFile: undefined,
+    sourceBRef: 'SlideExplainStage',
+  },
+  {
+    id: 'sentence-build',
+    label: '21. 문법 ACTIVITY 1 (오디오 조합)',
+    category: '수정',
+    description: '음원을 듣고 제시된 단어 카드를 순서대로 선택하여 문장을 완성하는 활동.',
+    devNotes: 'SESSION1.sentenceBuildQuiz 데이터 참조',
+    designNotes: '단어 타일 및 조합 슬롯',
+    sourceAFile: undefined,
+    sourceBRef: 'SentenceBuildStage',
+  },
+  {
+    id: 'sentence-build-2',
+    label: '22. 문법 ACTIVITY 2 (해석 조합)',
+    category: '수정',
+    description: '베트남어 문장을 보고 한국어 문장 단어 카드를 조합하는 활동.',
+    devNotes: 'SESSION1.sentenceBuildQuiz 데이터 참조',
+    designNotes: '지문 카드 및 단어 타일',
+    sourceAFile: undefined,
+    sourceBRef: 'SentenceBuildStage2',
+  },
+  {
+    id: 'quick-review',
+    label: '27. 2차시 진입 퀵리뷰',
+    category: '수정',
+    description: '2차시 진입 시 이전 차시(1차시) 학습 내용에 대한 기억 여부를 확인하는 퀵리뷰 템플릿.',
+    devNotes: 'MOCK_QUICK_REVIEW 데이터 사용, 1번 문항부터 순서대로 진행',
+    designNotes: '문항 카드, 기억나요 / 기억이 안 나요 버튼',
+    sourceAFile: undefined,
+    sourceBRef: 'QuickReviewStage',
+  },
+  // ─── [기타 프로토타입 템플릿 목록] ───────────────────────────
+  {
     id: 'mission-tutor',
     label: '2-1. 학습 미션(튜터)',
     category: '신규',
-    description: '차시 학습 시작 전 미션과 목표를 명확하게 인지시키는 신규 도입 화면. 학습자가 이번 차시에서 배울 내용과 산출물을 미리 확인하고 동기를 갖고 시작하도록 돕는다.',
-    devNotes: '참고 파일: Source A에는 해당 화면 없음 (신규 구현)\n- sessionId prop으로 차시별 미션 텍스트 동적 표시\n- SESSION1.mission 데이터 참조\n- subTitles.ko / subTitles.vi로 다국어 처리\n- LangContext useLang() 훅으로 언어 전환',
-    designNotes: '히어로 배너: tealSoft 배경, 보더 #b3f0ef\n미션 텍스트: fontSize 17, fontWeight 700, 최대 2줄\n불릿 리스트: teal 색 원형 도트 + 텍스트\n학습 시작 CTA: teal 배경, borderRadius 16',
+    description: '차시 학습 시작 전 AI 튜터가 미션과 목표를 음성과 말풍선으로 안내하는 화면.',
+    devNotes: 'MissionTutorStage',
+    designNotes: 'AI 튜터 아바타 및 말풍선',
     sourceAFile: undefined,
     sourceBRef: 'MissionTutorStage',
   },
@@ -435,8 +488,98 @@ export const SCREEN_REGISTRY: ScreenMeta[] = [
     sourceAFile: undefined,
     sourceBRef: 'ListenSpeakDetailEasyStage',
   },
+  {
+    id: 'speaking-video-demo',
+    label: '15-V. 말하기(영상 시연형)',
+    category: '신규',
+    description: '한국어를 전혀 읽지 못하는 베트남인 초급 학습자를 위한 15초 숏폼 모션 비디오 데모 화면. 텍스트 설명 대신 영상 시연과 3단계 픽토그램 행동 카드(듣기→마이크→말하기)로 말하기 활동 조작법을 직관적으로 안내한다.',
+    devNotes: [
+      '■ 데이터: MOCK_SPEAKING_VIDEO_DEMO (lessonData.ts)',
+      '- videoSrc: assets/video_bridge_intro.mp4 (웹 require 연동)',
+      '- actionSteps: 3단계 행동 가이드 (듣기 👂, 마이크 터치 🎙️, 따라 말하기 🗣️)',
+      '- props: onNext / onBack',
+    ].join('\n'),
+    designNotes: [
+      '■ 상단: ActivityHeader (프로그레스바 50% + X 버튼)',
+      '■ 배지: tealSoft bg ("15초 영상 가이드") + "15s Demo" 배지',
+      '■ 영상 플레이어: aspectRatio 16/9, 탭 시 재생 + 자막 하이라이트 박스',
+      '■ 3단계 행동 카드: 번호 원형 배지(teal bg) + 픽토그램 아이콘',
+      '■ 하단 CTA: teal 배경 ("지금 말하기 시작하기 →")',
+    ].join('\n'),
+    sourceAFile: undefined,
+    sourceBRef: 'SpeakingVideoDemoStage',
+  },
+  {
+    id: 'speaking-audio-tutor',
+    label: '15-A. 말하기(음성 튜터형)',
+    category: '신규',
+    description: '한국어를 전혀 읽지 못하는 베트남인 초급 학습자를 위한 AI 튜터 보이스 안내 화면. 화면 진입 시 친근한 AI 튜터 아바타가 베트남어 음성으로 활동 목표를 설명하고, 3대 픽토그램 가이드(귀 기울이기→입 열기→국적 말하기)와 다시 듣기(Nghe lại)를 제공한다.',
+    devNotes: [
+      '■ 데이터: MOCK_SPEAKING_AUDIO_TUTOR (lessonData.ts)',
+      '- tutorSpeechVi: 베트남어 안내 대사 및 오디오 파형 인터랙션',
+      '- guideChips: 3대 시각 픽토그램 카드',
+      '- props: onNext / onBack',
+    ].join('\n'),
+    designNotes: [
+      '■ 상단: ActivityHeader (프로그레스바 50% + X 버튼)',
+      '■ 튜터 카드: #F0FAFA bg, 👩‍🏫 아바타 + 오디오 파형 바 + 🔄 다시 듣기 버튼',
+      '■ 튜터 말풍선: 베트남어 대사 강조 (14px bold)',
+      '■ 픽토그램 가이드: 3개 카드 그리드',
+      '■ 하단 CTA: teal 배경 ("말하기 연습 시작하기 →")',
+    ].join('\n'),
+    sourceAFile: undefined,
+    sourceBRef: 'SpeakingAudioTutorStage',
+  },
+  {
+    id: 'read-write-visual-slide',
+    label: '16-S. 읽고 쓰기(3컷 슬라이드)',
+    category: '신규',
+    description: '한국어를 전혀 읽지 못하는 베트남인 초급 학습자를 위한 3컷 그림 카드 슬라이드 화면. 텍스트 없이 그림 1장 + 음성 1개로 1컷 만남 -> 2컷 읽기 -> 3컷 쓰기의 3단계를 시각적으로 전달한다.',
+    devNotes: [
+      '■ 데이터: MOCK_READ_WRITE_VISUAL_SLIDE (lessonData.ts)',
+      '- slides: 3컷 그림 카드 (세나 만남 👩‍🏫, 소개글 읽기 📖, 내 카드 채우기 ✏️)',
+      '- 컷별 베트남어 음성 청취 버튼 + 이전/다음 슬라이드 탐색',
+      '- props: onNext / onBack',
+    ].join('\n'),
+    designNotes: [
+      '■ 상단: ActivityHeader (프로그레스바 65% + X 버튼)',
+      '■ 슬라이드 카드: #FFFFFF bg + #BFE8E6 보더, 180px 일러스트 영역 + 음성 버튼',
+      '■ 하단 점 인디케이터: 3단계 진행 표시',
+      '■ 네비게이션: ‹ 이전 / 다음 컷 ›',
+      '■ 하단 CTA: 마지막 슬라이드 도달 시 teal 활성화 ("읽고 쓰기 시작하기 →")',
+    ].join('\n'),
+    sourceAFile: undefined,
+    sourceBRef: 'ReadWriteVisualSlideStage',
+  },
+  {
+    id: 'listen-speak-interactive-try',
+    label: '17-T. 듣고 말하기(체험 가이드)',
+    category: '신규',
+    description: '한국어를 전혀 읽지 못하는 베트남인 초급 학습자를 위한 1회 체험 튜토리얼 화면. 1단계 스피커 버튼 탭(듣기 체험) ➡️ 2단계 마이크 버튼 탭(말하기 체험) ➡️ 튜토리얼 완료 축하 배지 제공 후 본 학습으로 진입한다.',
+    devNotes: [
+      '■ 데이터: MOCK_LISTEN_SPEAK_INTERACTIVE_TRY (lessonData.ts)',
+      '- 3단계 상태 머신: step1 (스피커) -> step2 (마이크) -> completed (성공)',
+      '- 버튼 탭 시 펄스 및 음성/녹음 인터랙션 시뮬레이션',
+      '- props: onNext / onBack',
+    ].join('\n'),
+    designNotes: [
+      '■ 상단: ActivityHeader (프로그레스바 80% + X 버튼)',
+      '■ 1단계 스피커 카드: tealSoft 대형 버튼 + 소리 재생 피드백',
+      '■ 2단계 마이크 카드: 앰버/레드 대형 마이크 버튼 + 녹음 피드백',
+      '■ 성공 카드: #ECFDF5 bg, 🎉 축하 배지',
+      '■ 하단 CTA: 완료 후 teal 활성화 ("듣고 말하기 시작하기 →")',
+    ].join('\n'),
+    sourceAFile: undefined,
+    sourceBRef: undefined,
+  },
+];
+
+export const SCREEN_REGISTRY: ScreenMeta[] = [
+  ...FLOW_SCREEN_REGISTRY,
+  ...BASE_SCREEN_REGISTRY,
 ];
 
 export function getScreen(id: string): ScreenMeta | undefined {
   return SCREEN_REGISTRY.find((s) => s.id === id);
 }
+
