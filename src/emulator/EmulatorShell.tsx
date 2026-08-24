@@ -30,12 +30,19 @@ import { VideoBridgeStage } from '../screens/VideoBridgeStage';
 import { SlideExplainStage } from '../screens/SlideExplainStage';
 import { SpeakingDetailStage } from '../screens/SpeakingDetailStage';
 import { SpeakingDetailEasyStage } from '../screens/SpeakingDetailEasyStage';
+import { SpeakingVideoDemoStage } from '../screens/SpeakingVideoDemoStage';
+import { SpeakingAudioTutorStage } from '../screens/SpeakingAudioTutorStage';
 import { ReadWriteDetailStage } from '../screens/ReadWriteDetailStage';
 import { ReadWriteDetailEasyStage } from '../screens/ReadWriteDetailEasyStage';
+import { ReadWriteVisualSlideStage } from '../screens/ReadWriteVisualSlideStage';
 import { ListenSpeakDetailStage } from '../screens/ListenSpeakDetailStage';
 import { ListenSpeakDetailEasyStage } from '../screens/ListenSpeakDetailEasyStage';
+import { ListenSpeakInteractiveTryStage } from '../screens/ListenSpeakInteractiveTryStage';
 import { defaultSessionState } from '../data/lessonData';
 import { useLang, type Lang } from '../components/LangContext';
+
+// Flow 모듈 (독립 분리된 템플릿 및 렌더러)
+import { renderFlowScreen, FLOW_OPTIONS } from '../flow';
 
 // ─── 디바이스 프리셋 ───────────────────────────────────────────────
 const DEVICES = [
@@ -50,6 +57,13 @@ const DEVICES = [
 function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate: (id: string) => void }) {
   const [sessions] = useState({ 1: defaultSessionState() });
 
+  // 1. Flow 전용 템플릿 화면 위임 처리
+  const flowElement = renderFlowScreen({ screenId, onNavigate });
+  if (flowElement) {
+    return flowElement;
+  }
+
+  // 2. 기본 프로토타입 화면 분기
   switch (screenId) {
     case 'home':
       return (
@@ -63,7 +77,7 @@ function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate
       return (
         <MissionStage
           sessionId={1}
-          onNext={() => onNavigate('quick-review')}
+          onNext={() => onNavigate('preview-word')}
           onBack={() => onNavigate('home')}
         />
       );
@@ -152,15 +166,29 @@ function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate
     case 'sentence-build':
       return (
         <SentenceBuildStage
-          onComplete={() => onNavigate('home')}
-          onBack={() => onNavigate('home')}
+          onComplete={() => onNavigate('sentence-build-2')}
+          onBack={() => onNavigate('grammar-act-start')}
         />
       );
     case 'sentence-build-2':
       return (
         <SentenceBuildStage2
-          onComplete={() => onNavigate('home')}
-          onBack={() => onNavigate('home')}
+          onComplete={() => onNavigate('eval-start')}
+          onBack={() => onNavigate('sentence-build')}
+        />
+      );
+    case 'video-bridge':
+      return (
+        <VideoBridgeStage
+          onPressConfirm={() => onNavigate('slide-explain')}
+          onClose={() => onNavigate('grammar-start')}
+        />
+      );
+    case 'slide-explain':
+      return (
+        <SlideExplainStage
+          onNext={() => onNavigate('grammar-act-start')}
+          onBack={() => onNavigate('video-bridge')}
         />
       );
     case 'quick-review':
@@ -219,6 +247,20 @@ function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate
           onBack={() => onNavigate('home')}
         />
       );
+    case 'speaking-video-demo':
+      return (
+        <SpeakingVideoDemoStage
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'speaking-audio-tutor':
+      return (
+        <SpeakingAudioTutorStage
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
     case 'read-write-detail':
       return (
         <ReadWriteDetailStage
@@ -233,6 +275,13 @@ function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate
           onBack={() => onNavigate('home')}
         />
       );
+    case 'read-write-visual-slide':
+      return (
+        <ReadWriteVisualSlideStage
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
     case 'listen-speak-detail':
       return (
         <ListenSpeakDetailStage
@@ -243,6 +292,13 @@ function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate
     case 'listen-speak-detail-easy':
       return (
         <ListenSpeakDetailEasyStage
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'listen-speak-interactive-try':
+      return (
+        <ListenSpeakInteractiveTryStage
           onNext={() => onNavigate('home')}
           onBack={() => onNavigate('home')}
         />
@@ -298,9 +354,244 @@ const ls = StyleSheet.create({
   labelActive: { color: colors.teal },
 });
 
+// ─── 화면 선택 콤보박스 ──────────────────────────────────────────
+function ScreenComboBox({
+  currentScreenId,
+  onSelectScreen,
+}: {
+  currentScreenId: string;
+  onSelectScreen: (id: string) => void;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const currentScreen = getScreen(currentScreenId) ?? SCREEN_REGISTRY[0];
+
+  const sortedRegistry = [...SCREEN_REGISTRY].sort((a, b) => {
+    const numA = parseFloat(a.label.match(/^[\d.]+/)?.[0] ?? '9999');
+    const numB = parseFloat(b.label.match(/^[\d.]+/)?.[0] ?? '9999');
+    if (numA !== numB) return numA - numB;
+    return a.label.localeCompare(b.label, 'ko');
+  });
+
+  return (
+    <View style={combo.container}>
+      {/* 콤보박스 선택 헤더 */}
+      <TouchableOpacity
+        style={[combo.trigger, isOpen && combo.triggerOpen]}
+        onPress={() => setIsOpen(!isOpen)}
+        activeOpacity={0.7}
+      >
+        <View style={combo.triggerContent}>
+          <Text style={combo.triggerLabel} numberOfLines={1}>
+            {currentScreen.label}
+          </Text>
+          <View style={[shell.categoryBadge, currentScreen.category === '신규' && shell.badgeNew, currentScreen.category === '수정' && shell.badgeMod]}>
+            <Text style={shell.categoryBadgeText}>{currentScreen.category}</Text>
+          </View>
+        </View>
+        <Text style={combo.arrowIcon}>{isOpen ? '▲' : '▼'}</Text>
+      </TouchableOpacity>
+
+      {/* 드롭다운 리스트 */}
+      {isOpen && (
+        <View style={combo.dropdown}>
+          <ScrollView
+            style={combo.listScroll}
+            nestedScrollEnabled
+            showsVerticalScrollIndicator={true}
+          >
+            {sortedRegistry.map((s) => {
+              const isSelected = s.id === currentScreenId;
+              return (
+                <TouchableOpacity
+                  key={s.id}
+                  style={[combo.optionItem, isSelected && combo.optionItemActive]}
+                  onPress={() => {
+                    onSelectScreen(s.id);
+                    setIsOpen(false);
+                  }}
+                  activeOpacity={0.7}
+                >
+                  <Text
+                    style={[combo.optionLabel, isSelected && combo.optionLabelActive]}
+                    numberOfLines={1}
+                  >
+                    {s.label}
+                  </Text>
+                  <View
+                    style={[
+                      shell.categoryBadge,
+                      s.category === '신규' && shell.badgeNew,
+                      s.category === '수정' && shell.badgeMod,
+                    ]}
+                  >
+                    <Text style={shell.categoryBadgeText}>{s.category}</Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        </View>
+      )}
+    </View>
+  );
+}
+
+const combo = StyleSheet.create({
+  container: {
+    width: '100%',
+    position: 'relative',
+    zIndex: 10,
+  },
+  trigger: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+    paddingVertical: 9,
+    borderRadius: 10,
+    backgroundColor: '#f9fafb',
+    borderWidth: 1,
+    borderColor: colors.line,
+  },
+  triggerOpen: {
+    borderColor: colors.teal,
+    backgroundColor: colors.tealSoft,
+  },
+  triggerContent: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginRight: 6,
+    gap: 4,
+  },
+  triggerLabel: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: colors.ink,
+    flex: 1,
+  },
+  arrowIcon: {
+    fontSize: 10,
+    color: colors.muted,
+    marginLeft: 2,
+  },
+  dropdown: {
+    marginTop: 4,
+    backgroundColor: colors.surface,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: colors.line,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 8,
+    maxHeight: 320,
+    overflow: 'hidden',
+  },
+  listScroll: {
+    maxHeight: 320,
+  },
+  optionItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f3f4f6',
+    gap: 6,
+  },
+  optionItemActive: {
+    backgroundColor: colors.tealSoft,
+  },
+  optionLabel: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: colors.ink,
+    flex: 1,
+  },
+  optionLabelActive: {
+    fontWeight: '700',
+    color: colors.teal,
+  },
+});
+
+function FlowComboBox({
+  currentFlowId,
+  onSelectFlow,
+}: {
+  currentFlowId: string;
+  onSelectFlow: (targetScreenId: string, flowId: string) => void;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const currentFlow = FLOW_OPTIONS.find((f) => f.id === currentFlowId) ?? FLOW_OPTIONS[0];
+
+  return (
+    <View style={combo.container}>
+      <TouchableOpacity
+        style={[combo.trigger, isOpen && combo.triggerOpen]}
+        onPress={() => setIsOpen(!isOpen)}
+        activeOpacity={0.7}
+      >
+        <View style={combo.triggerContent}>
+          <Text style={combo.triggerLabel} numberOfLines={1}>
+            {currentFlow.label}
+          </Text>
+          {currentFlow.badge && (
+            <View style={[shell.categoryBadge, shell.badgeNew]}>
+              <Text style={shell.categoryBadgeText}>{currentFlow.badge}</Text>
+            </View>
+          )}
+        </View>
+        <Text style={combo.arrowIcon}>{isOpen ? '▲' : '▼'}</Text>
+      </TouchableOpacity>
+
+      {isOpen && (
+        <View style={combo.dropdown}>
+          <ScrollView
+            style={combo.listScroll}
+            nestedScrollEnabled
+            showsVerticalScrollIndicator={true}
+          >
+            {FLOW_OPTIONS.map((f) => {
+              const isSelected = f.id === currentFlowId;
+              return (
+                <TouchableOpacity
+                  key={f.id}
+                  style={[combo.optionItem, isSelected && combo.optionItemActive]}
+                  onPress={() => {
+                    onSelectFlow(f.targetScreenId, f.id);
+                    setIsOpen(false);
+                  }}
+                  activeOpacity={0.7}
+                >
+                  <Text
+                    style={[combo.optionLabel, isSelected && combo.optionLabelActive]}
+                    numberOfLines={1}
+                  >
+                    {f.label}
+                  </Text>
+                  {f.badge && (
+                    <View style={[shell.categoryBadge, shell.badgeNew]}>
+                      <Text style={shell.categoryBadgeText}>{f.badge}</Text>
+                    </View>
+                  )}
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        </View>
+      )}
+    </View>
+  );
+}
+
 export function EmulatorShell() {
   const [deviceId, setDeviceId] = useState('iphone15');
   const [screenId, setScreenId] = useState('home');
+  const [flowId, setFlowId] = useState('session-1');
   const [infoTab, setInfoTab] = useState<'desc' | 'dev' | 'design'>('desc');
 
   const device = DEVICES.find((d) => d.id === deviceId) ?? DEVICES[0];
@@ -352,24 +643,18 @@ export function EmulatorShell() {
             ))}
 
             <View style={shell.divider} />
+            <Text style={shell.panelTitle}>화면 Flow</Text>
+            <FlowComboBox
+              currentFlowId={flowId}
+              onSelectFlow={(targetScreenId, selectedFlowId) => {
+                setFlowId(selectedFlowId);
+                setScreenId(targetScreenId);
+              }}
+            />
+
+            <View style={shell.divider} />
             <Text style={shell.panelTitle}>화면 선택</Text>
-            {SCREEN_REGISTRY.map((s) => (
-              <TouchableOpacity
-                key={s.id}
-                style={[shell.selectItem, screenId === s.id && shell.selectItemActive]}
-                onPress={() => setScreenId(s.id)}
-                activeOpacity={0.7}
-              >
-                <View style={shell.screenItemTop}>
-                  <Text style={[shell.selectItemLabel, screenId === s.id && shell.selectItemLabelActive]}>
-                    {s.label}
-                  </Text>
-                  <View style={[shell.categoryBadge, s.category === '신규' && shell.badgeNew, s.category === '수정' && shell.badgeMod]}>
-                    <Text style={shell.categoryBadgeText}>{s.category}</Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            ))}
+            <ScreenComboBox currentScreenId={screenId} onSelectScreen={setScreenId} />
           </ScrollView>
         </View>
 
