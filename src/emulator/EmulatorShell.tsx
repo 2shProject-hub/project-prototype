@@ -52,6 +52,9 @@ import { ListenTyping1 } from '../screens/ListenTyping1';
 import { SentenceSelect1 } from '../screens/SentenceSelect1';
 import { SpeakingEvalStage } from '../screens/SpeakingEvalStage';
 import { LearningReportStage } from '../screens/LearningReportStage';
+import { CompletionCelebrationVocabStage } from '../screens/CompletionCelebrationVocabStage';
+import { CompletionCelebrationGrammarStage } from '../screens/CompletionCelebrationGrammarStage';
+import { CompletionCelebrationClassStage } from '../screens/CompletionCelebrationClassStage';
 import { defaultSessionState, LEARNING_FLOW } from '../data/lessonData';
 import { useLang, type Lang } from '../components/LangContext';
 
@@ -477,6 +480,45 @@ function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate
       return (
         <LearningReportStage
           data={reportData}
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'completion-celebration-vocab':
+      return (
+        <CompletionCelebrationVocabStage
+          title="대단해요!"
+          titleVi="Tuyệt vời!"
+          description="오늘의 단어를 모두 학습했어요.\n이제 문법을 배워볼까요?"
+          descriptionVi="Bạn đã học xong tất cả các từ vựng hôm nay.\nBây giờ, chúng ta cùng học ngữ pháp nhé!"
+          nextButtonText="확인"
+          nextButtonTextVi="Xác nhận"
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'completion-celebration-grammar':
+      return (
+        <CompletionCelebrationGrammarStage
+          title="대단해요!"
+          titleVi="Tuyệt vời!"
+          description="오늘의 단어를 모두 학습했어요.\n이제 문법을 배워볼까요?"
+          descriptionVi="Bạn đã học xong tất cả các từ vựng hôm nay.\nBây giờ, chúng ta cùng học ngữ pháp nhé!"
+          nextButtonText="확인"
+          nextButtonTextVi="Xác nhận"
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'completion-celebration-class':
+      return (
+        <CompletionCelebrationClassStage
+          title="대단해요!"
+          titleVi="Tuyệt vời!"
+          description="오늘의 단어를 모두 학습했어요.\n이제 문법을 배워볼까요?"
+          descriptionVi="Bạn đã học xong tất cả các từ vựng hôm nay.\nBây giờ, chúng ta cùng học ngữ pháp nhé!"
+          nextButtonText="확인"
+          nextButtonTextVi="Xác nhận"
           onNext={() => onNavigate('home')}
           onBack={() => onNavigate('home')}
         />

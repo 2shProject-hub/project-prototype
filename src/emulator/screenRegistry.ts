@@ -760,6 +760,36 @@ export const BASE_SCREEN_REGISTRY: ScreenMeta[] = [
     sourceAFile: 'src/screens/LearningReportStage/index.tsx',
     sourceBRef: 'LearningReportStage',
   },
+  {
+    id: 'completion-celebration-vocab',
+    label: '17-1. 완료 축하 화면(단어)',
+    category: '신규',
+    description: '단어 학습 완료 시 축하와 격려를 표현하는 화면. 파티클 애니메이션과 함께 "대단해요!" 메시지 표시.',
+    devNotes: 'CompletionCelebrationVocabStage / props: title, titleVi, description, descriptionVi, nextButtonText, nextButtonTextVi, onNext, onBack / CSS 파티클 애니메이션(60개 이모지) / 다국어 지원',
+    designNotes: '상단: 파티클 애니메이션(🎉✨🎊 이모지) / 아이콘 원형 배경(tealSoft) / 제목("대단해요!") / 설명 텍스트 / 하단: 확인 버튼(teal 배경)',
+    sourceAFile: undefined,
+    sourceBRef: 'CompletionCelebrationVocabStage',
+  },
+  {
+    id: 'completion-celebration-grammar',
+    label: '17-2. 완료 축하 화면(문법)',
+    category: '신규',
+    description: '문법 학습 완료 시 축하와 격려를 표현하는 화면. 파티클 애니메이션과 함께 "대단해요!" 메시지 표시.',
+    devNotes: 'CompletionCelebrationGrammarStage / props: title, titleVi, description, descriptionVi, nextButtonText, nextButtonTextVi, onNext, onBack / CSS 파티클 애니메이션(60개 이모지) / 다국어 지원',
+    designNotes: '상단: 파티클 애니메이션(🎉✨🎊 이모지) / 아이콘 원형 배경(tealSoft) / 제목("대단해요!") / 설명 텍스트 / 하단: 확인 버튼(teal 배경)',
+    sourceAFile: undefined,
+    sourceBRef: 'CompletionCelebrationGrammarStage',
+  },
+  {
+    id: 'completion-celebration-class',
+    label: '17-3. 완료 축하 화면(수업)',
+    category: '신규',
+    description: '수업 전체 완료 시 축하와 격려를 표현하는 화면. 파티클 애니메이션과 함께 "대단해요!" 메시지 표시.',
+    devNotes: 'CompletionCelebrationClassStage / props: title, titleVi, description, descriptionVi, nextButtonText, nextButtonTextVi, onNext, onBack / CSS 파티클 애니메이션(60개 이모지) / 다국어 지원',
+    designNotes: '상단: 파티클 애니메이션(🎉✨🎊 이모지) / 아이콘 원형 배경(tealSoft) / 제목("대단해요!") / 설명 텍스트 / 하단: 확인 버튼(teal 배경)',
+    sourceAFile: undefined,
+    sourceBRef: 'CompletionCelebrationClassStage',
+  },
 ];
 
 export const SCREEN_REGISTRY: ScreenMeta[] = [
