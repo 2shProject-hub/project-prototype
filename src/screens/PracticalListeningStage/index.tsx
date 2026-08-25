@@ -5,7 +5,7 @@
  * - KO/VI 다국어 지원
  */
 import { useState, useRef } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Platform, Image } from 'react-native';
 import { colors } from '../../theme/colors';
 import { useLang, pick } from '../../components/LangContext';
 import { ActivityHeader } from '../../components/ActivityHeader';
@@ -117,9 +117,13 @@ export function PracticalListeningStage({ onNext, onBack, data }: Props) {
         <Text style={s.title}>{pick(lang, d.title, d.titleVi)}</Text>
         <Text style={s.subtitle}>{pick(lang, d.subtitle, d.subtitleVi)}</Text>
 
-        {/* 캐릭터 일러스트 영역 */}
+        {/* 캐릭터 일러스트 */}
         <View style={s.illustContainer}>
-          <Text style={s.illustEmoji}>👩‍🦰👩</Text>
+          <Image
+            source={require('../../../assets/practical-listening-illust.png')}
+            style={s.illustImage}
+            resizeMode="contain"
+          />
         </View>
 
         {/* 문장 카드 목록 */}
@@ -183,11 +187,12 @@ const s = StyleSheet.create({
 
   illustContainer: {
     alignItems: 'center',
-    paddingVertical: 16,
-    backgroundColor: colors.tealSoft,
-    borderRadius: 16,
+    paddingVertical: 8,
   },
-  illustEmoji: { fontSize: 60 },
+  illustImage: {
+    width: '100%',
+    height: 180,
+  },
 
   card: {
     flexDirection: 'row',
