@@ -32,18 +32,33 @@ export const WORD_BUILD_DISTRACTOR_COUNT = 3;
 
 export const SESSION1 = {
   intro: {
-    badge: '오늘의 단어',
-    badgeVi: 'Từ vựng hôm nay',
-    icon: '📖',
-    title: '나라와 국적 단어를 살펴봐요',
-    titleVi: 'Hãy xem từ vựng về quốc gia và quốc tịch',
-    subtitle: '단어를 하나씩 눈으로 확인하고 소리 내어 읽어봐요.',
-    subtitleVi: 'Hãy nhìn từng từ bằng mắt và đọc to lên.',
+    badge: '문법과 표현 1',
+    badgeVi: 'Ngữ pháp và biểu thức 1',
+    icon: '✏️',
+    title: '저는 N이에요/예요 표현을 배워요',
+    titleVi: 'Tôi học cách diễn đạt N이에요/예요',
+    subtitle: '받침 확인 > 뜻 고르기 > 문장 만들기 순서로 연습해요.',
+    subtitleVi: 'Thực hành theo thứ tự: xác nhận phụ âm > chọn nghĩa > tạo câu.',
     achievement: {
       label: '학습 성과',
       labelVi: 'Kết quả học tập',
-      desc: '나라와 국적 단어 15개를 알아볼 수 있어요.',
-      descVi: 'Bạn có thể tìm hiểu 15 từ vựng về quốc gia và quốc tịch.',
+      desc: '\'이에요/예요\'를 구분해 이름과 국적을 말할 수 있어요.',
+      descVi: 'Bạn có thể phân biệt \'이에요/예요\' và nói tên, quốc tịch.',
+    },
+  },
+  introEvaluation: {
+    badge: '실전평가',
+    badgeVi: 'Đánh giá thực tế',
+    icon: '🎤',
+    title: '자기소개 문장을 직접 말해봐요',
+    titleVi: 'Hãy nói câu tự giới thiệu của bạn',
+    subtitle: '배운 표현을 사용해 자연스럽게 말해봅시다.',
+    subtitleVi: 'Hãy nói một cách tự nhiên bằng cách sử dụng các biểu thức đã học.',
+    achievement: {
+      label: '학습 성과',
+      labelVi: 'Kết quả học tập',
+      desc: '이름과 국적을 말하며 자기소개 문장을 말할 수 있어요.',
+      descVi: 'Bạn có thể nói câu tự giới thiệu với tên và quốc tịch.',
     },
   },
   mission: {
@@ -67,24 +82,10 @@ export const SESSION1 = {
   sentenceBuildQuiz: [
     {
       id: 1,
-      vi: 'Tuân là người Việt Nam.',
-      ko: '튀안은 베트남 사람이에요.',
-      answerWords: ['튀안은', '베트남', '사람이에요'],
-      distractors: ['한국', '기자예요'],
-    },
-    {
-      id: 2,
       vi: 'Tôi là người Hàn Quốc.',
       ko: '저는 한국 사람이에요.',
       answerWords: ['저는', '한국', '사람이에요'],
       distractors: ['베트남', '의사예요'],
-    },
-    {
-      id: 3,
-      vi: 'Cô ấy là phóng viên.',
-      ko: '그녀는 기자예요.',
-      answerWords: ['그녀는', '기자예요'],
-      distractors: ['의사예요', '학생이에요'],
     },
     {
       id: 4,
@@ -1271,6 +1272,204 @@ export const MOCK_LISTEN_SPEAK_EASY = {
     answerGuideVi: '“Tôi là người Việt Nam!”',
   },
 };
+
+// ────────────────────────────────────────────────────────────────
+// A형: 15초 영상 시연형 데이터 (SpeakingVideoDemoStage)
+// 한국어를 전혀 모르는 베트남인 초급자를 위한 숏폼 모션 비디오 데모 데이터
+// ────────────────────────────────────────────────────────────────
+
+export interface VideoActionStep {
+  step: number;
+  icon: string;
+  actionKo: string;
+  actionVi: string;
+  tipKo: string;
+  tipVi: string;
+}
+
+export interface SpeakingVideoDemoData {
+  activityNo: number;
+  badgeKo: string;
+  badgeVi: string;
+  titleKo: string;
+  titleVi: string;
+  videoSubtitleKo: string;
+  videoSubtitleVi: string;
+  actionSteps: VideoActionStep[];
+  videoDurationText: string;
+}
+
+export const MOCK_SPEAKING_VIDEO_DEMO: SpeakingVideoDemoData = {
+  activityNo: 70,
+  badgeKo: '15초 영상 가이드',
+  badgeVi: 'Video hướng dẫn 15s',
+  titleKo: '영상으로 말하기 방법을 봐요!',
+  titleVi: 'Xem cách luyện nói qua video!',
+  videoSubtitleKo: '“어느 나라 사람이에요?” → 마이크 누르고 “저는 베트남 사람이에요” 말하기',
+  videoSubtitleVi: '“Bạn là người nước nào?” → Bấm micro và nói “Tôi là người Việt Nam”',
+  videoDurationText: '15s Demo',
+  actionSteps: [
+    {
+      step: 1,
+      icon: '👂',
+      actionKo: '질문 듣기',
+      actionVi: 'Nghe câu hỏi',
+      tipKo: '친구가 묻는 질문을 잘 들어요.',
+      tipVi: 'Lắng nghe câu hỏi của bạn bè.',
+    },
+    {
+      step: 2,
+      icon: '🎙️',
+      actionKo: '마이크 터치',
+      actionVi: 'Bấm micro',
+      tipKo: '화면의 마이크 버튼을 눌러요.',
+      tipVi: 'Bấm vào nút micro trên màn hình.',
+    },
+    {
+      step: 3,
+      icon: '🗣️',
+      actionKo: '따라 말하기',
+      actionVi: 'Nói theo mẫu',
+      tipKo: '내 나라를 크게 말해요!',
+      tipVi: 'Nói to quốc gia của mình!',
+    },
+  ],
+};
+
+// ────────────────────────────────────────────────────────────────
+// B형: 음성 튜터 안내형 데이터 (SpeakingAudioTutorStage)
+// ────────────────────────────────────────────────────────────────
+
+export const MOCK_SPEAKING_AUDIO_TUTOR = {
+  badgeKo: '음성 튜터 가이드',
+  badgeVi: 'Hướng dẫn bằng giọng nói AI',
+  titleKo: '튜터의 설명을 듣고 따라해요!',
+  titleVi: 'Lắng nghe gia sư và nói theo nhé!',
+  tutorSpeechKo: '안녕하세요! 이번 활동에서는 친구의 질문을 잘 듣고, 내 국적을 한국어로 말해보는 연습을 해요. 준비되었나요?',
+  tutorSpeechVi: 'Xin chào! Trong bài học này, bạn sẽ lắng nghe câu hỏi của bạn bè và luyện nói quốc tịch của mình bằng tiếng Hàn nhé. Bạn đã sẵn sàng chưa?',
+  guideChips: [
+    { id: 1, icon: '🎧', titleKo: '1. 귀 기울이기', titleVi: '1. Lắng nghe', descKo: '질문을 들어요', descVi: 'Nghe câu hỏi' },
+    { id: 2, icon: '🗣️', titleKo: '2. 입 열기', titleVi: '2. Mở miệng', descKo: '소리 내어 말해요', descVi: 'Nói thành tiếng' },
+    { id: 3, icon: '🇻🇳', titleKo: '3. 내 나라 말하기', titleVi: '3. Nói quốc tịch', descKo: '베트남 사람이에요', descVi: 'người Việt Nam' },
+  ],
+};
+
+// ────────────────────────────────────────────────────────────────
+// C형: 3컷 시각 슬라이드형 데이터 (ReadWriteVisualSlideStage)
+// ────────────────────────────────────────────────────────────────
+
+export const MOCK_READ_WRITE_VISUAL_SLIDE = {
+  badgeKo: '3컷 그림 가이드',
+  badgeVi: 'Hướng dẫn 3 bước bằng tranh',
+  titleKo: '그림으로 보는 읽고 쓰기!',
+  titleVi: 'Xem cách đọc và viết qua tranh!',
+  slides: [
+    {
+      step: 1,
+      titleKo: '1. 새 친구 세나를 만나요',
+      titleVi: '1. Gặp gỡ cô giáo Sena',
+      emoji: '👩‍🏫',
+      captionKo: '세나 선생님이 자신을 소개해요.',
+      captionVi: 'Cô giáo Sena tự giới thiệu về mình.',
+      audioTextVi: 'Cô giáo Sena giới thiệu bản thân.',
+    },
+    {
+      step: 2,
+      titleKo: '2. 소개글을 눈으로 읽어요',
+      titleVi: '2. Đọc bài giới thiệu',
+      emoji: '📖',
+      captionKo: '이름과 나라를 확인해 봐요.',
+      captionVi: 'Hãy tìm tên và quốc gia của cô giáo.',
+      audioTextVi: 'Đọc tên và quốc tịch của cô giáo.',
+    },
+    {
+      step: 3,
+      titleKo: '3. 내 프로필 카드를 채워요',
+      titleVi: '3. Điền thẻ của chính bạn',
+      emoji: '✏️',
+      captionKo: '나의 이름과 나라를 써 봐요!',
+      captionVi: 'Hãy viết tên và quốc gia của bạn nhé!',
+      audioTextVi: 'Viết tên và quốc gia của bạn vào thẻ.',
+    },
+  ],
+};
+
+// ────────────────────────────────────────────────────────────────
+// D형: 1회 인터랙티브 체험형 데이터 (ListenSpeakInteractiveTryStage)
+// ────────────────────────────────────────────────────────────────
+
+export const MOCK_LISTEN_SPEAK_INTERACTIVE_TRY = {
+  badgeKo: '1회 체험 튜토리얼',
+  badgeVi: 'Trải nghiệm thử 1 lần',
+  titleKo: '직접 눌러서 연습해 봐요!',
+  titleVi: 'Bấm thử để luyện tập nhé!',
+  step1: {
+    guideKo: '먼저 스피커 버튼을 눌러 소리를 들어보세요!',
+    guideVi: 'Trước tiên hãy bấm nút loa để nghe âm thanh nhé!',
+    speakerTextKo: '“민호 씨, 어느 나라 사람이에요?”',
+    speakerTextVi: '“Minho, bạn là người nước nào?”',
+  },
+  step2: {
+    guideKo: '참 잘했어요! 이제 마이크를 눌러 대답해 보세요!',
+    guideVi: 'Làm tốt lắm! Bây giờ hãy bấm micro để trả lời nhé!',
+    sampleAnswerKo: '“저는 베트남 사람이에요!”',
+    sampleAnswerVi: '“Tôi là người Việt Nam!”',
+  },
+  successBadge: {
+    titleKo: '🎉 튜토리얼 완료! 준비 완료!',
+    titleVi: '🎉 Hoàn thành thử nghiệm! Đã sẵn sàng!',
+    descKo: '이제 실제 듣고 말하기 활동을 시작해 볼까요?',
+    descVi: 'Bây giờ hãy bắt đầu bài học chính nhé!',
+  },
+};
+
+// ────────────────────────────────────────────────────────────────
+// 학습 Flow (완전한 학습 경로)
+// ────────────────────────────────────────────────────────────────
+
+export const LEARNING_FLOW = [
+  { screenId: 'home', label: '1. 홈 화면 / 코스 안내', step: 1 },
+  { screenId: 'mission-tutor', label: '2-1. 학습 미션(튜터)', step: 2 },
+  { screenId: 'bridge-grammar-listening', label: '12-A. 브릿지 — 문법 → 듣고 말하기', step: 3 },
+  { screenId: 'intro-tutor', label: '4-1. 학습 소개(문법과 표현)', step: 4 },
+  // 세트 1
+  { screenId: 'set-wordbook-eval', label: '5-2. 단어장과 발음평가', step: 5, setNumber: 1 },
+  { screenId: 'word-vnko-select', label: '29. 베트남어 단어 보고 한국어 선택', step: 6, setNumber: 1 },
+  { screenId: 'listen-select', label: '28. 소리 듣고 단어 선택', step: 7, setNumber: 1 },
+  { screenId: 'word-sound', label: '31. 단어를 보고 음원 선택', step: 8, setNumber: 1 },
+  { screenId: 'word-letter-blank', label: '32. 소리를 듣고 빈칸 채우기', step: 9, setNumber: 1 },
+  { screenId: 'set-complete', label: '33. 세트 학습 완료 (1/3)', step: 10, setNumber: 1 },
+  // 세트 2
+  { screenId: 'set-wordbook-eval-2', label: '5-2-2. 단어장과 발음평가', step: 11, setNumber: 2 },
+  { screenId: 'word-vnko-select', label: '29. 베트남어 단어 보고 한국어 선택', step: 12, setNumber: 2 },
+  { screenId: 'listen-select', label: '28. 소리 듣고 단어 선택', step: 13, setNumber: 2 },
+  { screenId: 'word-sound', label: '31. 단어를 보고 음원 선택', step: 14, setNumber: 2 },
+  { screenId: 'word-letter-blank', label: '32. 소리를 듣고 빈칸 채우기', step: 15, setNumber: 2 },
+  { screenId: 'set-complete-2', label: '34. 세트 학습 완료 (2/3)', step: 16, setNumber: 2 },
+  // 세트 3
+  { screenId: 'set-wordbook-eval-3', label: '5-2-3. 단어장과 발음평가', step: 17, setNumber: 3 },
+  { screenId: 'word-vnko-select', label: '29. 베트남어 단어 보고 한국어 선택', step: 18, setNumber: 3 },
+  { screenId: 'listen-select', label: '28. 소리 듣고 단어 선택', step: 19, setNumber: 3 },
+  { screenId: 'word-sound', label: '31. 단어를 보고 음원 선택', step: 20, setNumber: 3 },
+  { screenId: 'word-letter-blank', label: '32. 소리를 듣고 빈칭 채우기', step: 21, setNumber: 3 },
+  { screenId: 'set-complete-3', label: '35. 세트 학습 완료 (3/3)', step: 22, setNumber: 3 },
+  // 문법 학습
+  { screenId: 'intro-tutor', label: '4-1. 학습 소개(문법과 표현)', step: 23 },
+  { screenId: 'video-bridge', label: '16. 문법 강의 영상', step: 24 },
+  { screenId: 'slide-explain', label: '17. 문법 슬라이드식 수업', step: 25 },
+  { screenId: 'intro-tutor-2', label: '4-1-2. 학습 소개(문법 퀴즈)', step: 26 },
+  { screenId: 'sentence-blank-1', label: '11. 문장 빈칸 채우기', step: 27 },
+  { screenId: 'sentence-select-1', label: '14. 뜻에 맞는 문장 고르기', step: 28 },
+  { screenId: 'sentence-build-2', label: '22. 문법 ACTIVITY 2 (해석 조합)', step: 29 },
+  { screenId: 'sentence-build', label: '9. 문장 만들기 1', step: 30 },
+  // 평가
+  { screenId: 'intro-eval', label: '4-1-3. 학습 소개(실전 평가)', step: 31 },
+  { screenId: 'speaking-eval', label: '15. 실전평가 (음성 발화)', step: 32 },
+  { screenId: 'learning-report', label: '16. 학습 리포트', step: 33 },
+  { screenId: 'home', label: '홈으로 돌아가기', step: 34, isEnd: true },
+];
+
+
 
 
 

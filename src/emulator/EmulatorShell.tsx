@@ -17,11 +17,13 @@ import { MissionTutorPrevViStage } from '../screens/MissionTutorPrevViStage';
 import { BridgeStage } from '../screens/BridgeStage';
 import { IntroStage } from '../screens/IntroStage';
 import { IntroTutorStage } from '../screens/IntroTutorStage';
+import { IntroEvalStage } from '../screens/IntroEvalStage';
 import { WordBuildStage } from '../screens/WordBuildStage';
 import { SentenceBuildStage } from '../screens/SentenceBuildStage';
 import { SentenceBuildStage2 } from '../screens/SentenceBuildStage2';
 import { VocabWordbookStage } from '../screens/VocabWordbookStage';
 import { VocabWordbookVoiceStage } from '../screens/VocabWordbookVoiceStage';
+import { SetWordbookEvalStage } from '../screens/SetWordbookEvalStage';
 import { GrammarDetailStage } from '../screens/GrammarDetailStage';
 import { QuickReviewStage } from '../screens/QuickReviewStage';
 import { CultureStage } from '../screens/CultureStage';
@@ -38,11 +40,20 @@ import { ReadWriteVisualSlideStage } from '../screens/ReadWriteVisualSlideStage'
 import { ListenSpeakDetailStage } from '../screens/ListenSpeakDetailStage';
 import { ListenSpeakDetailEasyStage } from '../screens/ListenSpeakDetailEasyStage';
 import { ListenSpeakInteractiveTryStage } from '../screens/ListenSpeakInteractiveTryStage';
-import { defaultSessionState } from '../data/lessonData';
+import { ListenSelect1 } from '../screens/ListenSelect1';
+import { WordVnKoSelect2 } from '../screens/WordVnKoSelect2';
+import { WordSound1 } from '../screens/WordSound1';
+import { WordLetterBlank } from '../screens/WordLetterBlank';
+import { SetCompleteStage } from '../screens/SetCompleteStage';
+import { PictureWord2 } from '../screens/PictureWord2';
+import { SentenceBlank1 } from '../screens/SentenceBlank1';
+import { WordBlank1 } from '../screens/WordBlank1';
+import { ListenTyping1 } from '../screens/ListenTyping1';
+import { SentenceSelect1 } from '../screens/SentenceSelect1';
+import { SpeakingEvalStage } from '../screens/SpeakingEvalStage';
+import { LearningReportStage } from '../screens/LearningReportStage';
+import { defaultSessionState, LEARNING_FLOW } from '../data/lessonData';
 import { useLang, type Lang } from '../components/LangContext';
-
-// Flow 모듈 (독립 분리된 템플릿 및 렌더러)
-import { renderFlowScreen, FLOW_OPTIONS } from '../flow';
 
 // ─── 디바이스 프리셋 ───────────────────────────────────────────────
 const DEVICES = [
@@ -57,14 +68,188 @@ const DEVICES = [
 function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate: (id: string) => void }) {
   const [sessions] = useState({ 1: defaultSessionState() });
 
-  // 1. Flow 전용 템플릿 화면 위임 처리
-  const flowElement = renderFlowScreen({ screenId, onNavigate });
-  if (flowElement) {
-    return flowElement;
-  }
+  // LEARNING_FLOW에서 현재 화면의 setNumber 추출
+  const flowScreenInfo = LEARNING_FLOW.find(s => s.screenId === screenId);
+  const currentSetNumber = flowScreenInfo?.setNumber || 1;
+  const totalSets = 3;
 
-  // 2. 기본 프로토타입 화면 분기
+  // ──── Mock 데이터 ────────────────────────────────────────────
+  const listenSelectQuestions = [
+    { no: 1, desc: '다음 음성을 듣고 맞는 단어를 선택하세요', viText: 'Nghe âm thanh và chọn từ đúng', words: ['베트남', '한국', '일본'], answer: '베트남', audioUrl: '' },
+    { no: 2, desc: '다음 음성을 듣고 맞는 단어를 선택하세요', viText: 'Nghe âm thanh và chọn từ đúng', words: ['인도네시아', '러시아', '태국'], answer: '인도네시아', audioUrl: '' },
+  ];
+
+  const wordSoundQuestions = [
+    {
+      no: 1,
+      desc: '음성을 듣고 맞는 단어를 선택하세요',
+      viText: 'Nghe âm thanh và chọn từ đúng',
+      items: [
+        { value: 1, audioSrc: '' },
+        { value: 2, audioSrc: '' },
+        { value: 3, audioSrc: '' },
+        { value: 4, audioSrc: '' },
+      ],
+      answer: 1,
+    },
+    {
+      no: 2,
+      desc: '음성을 듣고 맞는 단어를 선택하세요',
+      viText: 'Nghe âm thanh và chọn từ đúng',
+      items: [
+        { value: 1, audioSrc: '' },
+        { value: 2, audioSrc: '' },
+        { value: 3, audioSrc: '' },
+        { value: 4, audioSrc: '' },
+      ],
+      answer: 2,
+    },
+  ];
+
+  const wordLetterBlankQuestions = [
+    {
+      no: 1,
+      desc: '음성을 듣고 빈칸을 채우세요',
+      viText: 'Điền vào chỗ trống',
+      audioUrl: '',
+      answer: '베트남',
+      slots: ['_', '_', '_'],
+      tiles: ['베', '트', '남', '한', '국', '일'],
+      displayFormat: '___',
+    },
+    {
+      no: 2,
+      desc: '음성을 듣고 빈칸을 채우세요',
+      viText: 'Điền vào chỗ trống',
+      audioUrl: '',
+      answer: '한국',
+      slots: ['_', '_'],
+      tiles: ['한', '국', '베', '트', '남', '일'],
+      displayFormat: '__',
+    },
+  ];
+
+  const wordVnKoSelectQuestions = [
+    {
+      no: 1,
+      desc: '다음 베트남어 단어에 맞는 한국어를 선택하세요',
+      viText: 'Việt Nam',
+      answer: '베트남',
+      words: [
+        { text: '베트남', textVi: 'Việt Nam' },
+        { text: '한국', textVi: 'Hàn Quốc' },
+      ],
+    },
+    {
+      no: 2,
+      desc: '다음 베트남어 단어에 맞는 한국어를 선택하세요',
+      viText: 'Hàn Quốc',
+      answer: '한국',
+      words: [
+        { text: '베트남', textVi: 'Việt Nam' },
+        { text: '한국', textVi: 'Hàn Quốc' },
+      ],
+    },
+  ];
+
+  const sentenceBlankQuestions = [
+    {
+      no: 1,
+      viText: 'Tôi thích xem phim.',
+      koText: '나는 ___을 좋아해요.',
+      blankWord: '영화',
+      choices: ['영화', '책', '음악', '게임'],
+    },
+    {
+      no: 2,
+      viText: 'Tôi là người Việt Nam.',
+      koText: '나는 ___ 사람입니다.',
+      blankWord: '베트남',
+      choices: ['베트남', '한국', '일본', '태국'],
+    },
+  ];
+
+  const sentenceSelectQuestions = [
+    {
+      no: 1,
+      viSentence: 'Tôi là học sinh.',
+      koCorrectSentence: '나는 학생입니다.',
+      choices: ['나는 학생입니다.', '나는 선생님입니다.', '나는 의사입니다.'],
+    },
+    {
+      no: 2,
+      viSentence: 'Tôi đến từ Việt Nam.',
+      koCorrectSentence: '나는 베트남에서 왔어요.',
+      choices: ['나는 베트남에서 왔어요.', '나는 한국에서 왔어요.', '나는 일본에서 왔어요.'],
+    },
+  ];
+
+  const speakingEvalQuestions = [
+    {
+      step: 1,
+      totalSteps: 4,
+      sentence: '저는 ___이에요. 저는 ___에서 왔어요.',
+      sentenceVi: 'Tôi là ___. Tôi đến từ ___.',
+      blanks: [
+        { placeholder: '이름', placeholderVi: 'tên' },
+        { placeholder: '나라', placeholderVi: 'quốc gia' },
+      ],
+    },
+    {
+      step: 2,
+      totalSteps: 4,
+      sentence: '나는 ___을/를 좋아해요.',
+      sentenceVi: 'Tôi thích ___.',
+      blanks: [
+        { placeholder: '취미', placeholderVi: 'sở thích' },
+      ],
+    },
+  ];
+
+  const reportData = {
+    sessionNumber: 1,
+    sessionTitle: '저는 흐엉이에요',
+    sessionTitleVi: 'Tôi là Hương',
+    description: '나라와 국적 표현을 배웠습니다.',
+    descriptionVi: 'Bạn đã học về cách diễn đạt quốc gia và quốc tịch.',
+    vocabCount: 12,
+    speakingScore: 3,
+    speakingTotal: 4,
+    testScore: 5,
+    testTotal: 6,
+    aiFeedback: '좋은 발음으로 완성했습니다!',
+    aiFeedbackVi: 'Bạn đã hoàn thành với phát âm tốt!',
+  };
+
+  // 기본 프로토타입 화면 분기
   switch (screenId) {
+    case 'set-wordbook-eval':
+      return (
+        <SetWordbookEvalStage
+          setNumber={1}
+          totalSets={3}
+          onNext={() => onNavigate('word-vnko-select')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'set-wordbook-eval-2':
+      return (
+        <SetWordbookEvalStage
+          setNumber={2}
+          totalSets={3}
+          onNext={() => onNavigate('word-vnko-select')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'set-wordbook-eval-3':
+      return (
+        <SetWordbookEvalStage
+          setNumber={3}
+          totalSets={3}
+          onNext={() => onNavigate('word-vnko-select')}
+          onBack={() => onNavigate('home')}
+        />
+      );
     case 'home':
       return (
         <HomeScreen
@@ -156,10 +341,143 @@ function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate
           onBack={() => onNavigate('quick-review')}
         />
       );
+    case 'intro-tutor-2':
+      return (
+        <IntroTutorStage
+          onNext={() => onNavigate('grammar-detail')}
+          onBack={() => onNavigate('quick-review')}
+        />
+      );
+    case 'intro-eval':
+      return (
+        <IntroEvalStage
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('quick-review')}
+        />
+      );
     case 'word-build':
       return (
         <WordBuildStage
           onComplete={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'word-vnko-select':
+      return (
+        <WordVnKoSelect2
+          questions={wordVnKoSelectQuestions}
+          currentSetNumber={currentSetNumber}
+          totalSets={totalSets}
+          onNext={() => onNavigate('listen-select')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'listen-select':
+      return (
+        <ListenSelect1
+          questions={listenSelectQuestions}
+          currentSetNumber={currentSetNumber}
+          totalSets={totalSets}
+          onNext={() => onNavigate('word-sound')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'word-sound':
+      return (
+        <WordSound1
+          questions={wordSoundQuestions}
+          currentSetNumber={currentSetNumber}
+          totalSets={totalSets}
+          onNext={() => onNavigate('word-letter-blank')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'word-letter-blank':
+      return (
+        <WordLetterBlank
+          questions={wordLetterBlankQuestions}
+          currentSetNumber={currentSetNumber}
+          totalSets={totalSets}
+          onNext={() => {
+            if (currentSetNumber === 1) return onNavigate('set-complete');
+            if (currentSetNumber === 2) return onNavigate('set-complete-2');
+            if (currentSetNumber === 3) return onNavigate('set-complete-3');
+            return onNavigate('set-complete');
+          }}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'set-complete':
+      return (
+        <SetCompleteStage
+          setNumber={1}
+          totalSets={3}
+          onNext={() => onNavigate('set-wordbook-eval-2')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'set-complete-2':
+      return (
+        <SetCompleteStage
+          setNumber={2}
+          totalSets={3}
+          onNext={() => onNavigate('set-wordbook-eval-3')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'set-complete-3':
+      return (
+        <SetCompleteStage
+          setNumber={3}
+          totalSets={3}
+          onNext={() => onNavigate('intro-tutor')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'intro-tutor-2':
+      return (
+        <IntroTutorStage
+          sessionId={1}
+          onNext={() => onNavigate('sentence-blank-1')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'sentence-blank-1':
+      return (
+        <SentenceBlank1
+          questions={sentenceBlankQuestions}
+          onNext={() => onNavigate('sentence-select-1')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'sentence-select-1':
+      return (
+        <SentenceSelect1
+          questions={sentenceSelectQuestions}
+          onNext={() => onNavigate('sentence-build-2')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'intro-eval':
+      return (
+        <IntroEvalStage
+          onNext={() => onNavigate('speaking-eval')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'speaking-eval':
+      return (
+        <SpeakingEvalStage
+          questions={speakingEvalQuestions}
+          onNext={() => onNavigate('learning-report')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'learning-report':
+      return (
+        <LearningReportStage
+          data={reportData}
+          onNext={() => onNavigate('home')}
           onBack={() => onNavigate('home')}
         />
       );
@@ -299,6 +617,223 @@ function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate
     case 'listen-speak-interactive-try':
       return (
         <ListenSpeakInteractiveTryStage
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'listen-select-1':
+      return (
+        <ListenSelect1
+          questions={[
+            { no: 1, desc: '소리를 듣고 단어를 고르세요', words: ['베트남', '한국', '인도네시아', '러시아'], answer: '베트남', viText: 'Hãy nghe đoạn âm thanh rồi chọn từ tương ứng nhé.' },
+          ]}
+          currentSetNumber={1}
+          totalSets={3}
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'word-vn-ko-select-2':
+      return (
+        <WordVnKoSelect2
+          questions={[
+            { no: 1, desc: '', viText: 'người', answer: '사람', words: [{ text: '사람', textVi: 'người' }, { text: '학생', textVi: 'học sinh' }, { text: '선생님', textVi: 'giáo viên' }, { text: '친구', textVi: 'bạn bè' }] },
+          ]}
+          currentSetNumber={1}
+          totalSets={3}
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'word-sound-1':
+      return (
+        <WordSound1
+          questions={[
+            { no: 1, desc: '미국', viText: 'Hoa Kỳ', answer: 1, items: [{ value: 1, audioSrc: 'https://via.placeholder.com/audio?text=america' }, { value: 2, audioSrc: 'https://via.placeholder.com/audio?text=japan' }, { value: 3, audioSrc: 'https://via.placeholder.com/audio?text=korea' }, { value: 4, audioSrc: 'https://via.placeholder.com/audio?text=vietnam' }] },
+          ]}
+          currentSetNumber={1}
+          totalSets={3}
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'word-letter-blank':
+      return (
+        <WordLetterBlank
+          questions={[
+            { no: 1, desc: '단어를 완성하세요', viText: 'Hoàn thành từ', audioUrl: 'https://via.placeholder.com/audio?text=word', answer: '미국', slots: ['미', '국'], tiles: ['미', '국', '일', '본'], displayFormat: '___ ___' },
+          ]}
+          currentSetNumber={1}
+          totalSets={3}
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'set-complete':
+      return (
+        <SetCompleteStage
+          setNumber={1}
+          totalSets={3}
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'set-complete-2':
+      return (
+        <SetCompleteStage
+          setNumber={2}
+          totalSets={3}
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'set-complete-3':
+      return (
+        <SetCompleteStage
+          setNumber={3}
+          totalSets={3}
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'picture-word-2':
+      return (
+        <PictureWord2
+          questions={[
+            { no: 1, desc: '이미지에 맞는 단어를 선택하세요', imageUrl: 'https://via.placeholder.com/200?text=Vietnam', words: ['베트남', '한국', '일본'], answer: '베트남', viText: 'Việt Nam' },
+            { no: 2, desc: '다음 이미지에 맞는 단어를 선택하세요', imageUrl: 'https://via.placeholder.com/200?text=People', words: ['사람', '학생', '선생님'], answer: '사람', viText: 'người' },
+          ]}
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'sentence-blank-1':
+      return (
+        <SentenceBlank1
+          questions={[
+            { no: 1, viText: 'Tôi là người Việt Nam.', koText: '저는 _____ 사람이에요.', blankWord: '베트남', choices: ['베트남', '한국', '일본', '중국'] },
+            { no: 2, viText: 'Tôi là học sinh.', koText: '저는 _____ 이에요.', blankWord: '학생', choices: ['학생', '선생님', '의사', '회사원'] },
+          ]}
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+          currentSetNumber={1}
+          totalSets={3}
+        />
+      );
+    case 'word-blank-1':
+      return (
+        <WordBlank1
+          questions={[
+            { no: 1, viWord: 'Việt Nam', koWord: '베___', answer: '트남', choices: ['트남', '한국', '일본', '중국'] },
+            { no: 2, viWord: 'người', koWord: '사___', answer: '람', choices: ['람', '원', '님', '자'] },
+          ]}
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+          currentSetNumber={1}
+          totalSets={3}
+        />
+      );
+    case 'listen-typing-1':
+      return (
+        <ListenTyping1
+          questions={[
+            { no: 1, audioUrl: require('../../assets/sounds/word_set_1.mp3'), answer: 'Việt Nam', answerVi: '베트남', hint: '국가 이름' },
+            { no: 2, audioUrl: require('../../assets/sounds/word_set_1.mp3'), answer: 'người', answerVi: '사람', hint: '사람을 뜻하는 단어' },
+          ]}
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+          currentSetNumber={1}
+          totalSets={3}
+        />
+      );
+    case 'sentence-select-1':
+      return (
+        <SentenceSelect1
+          questions={[
+            {
+              no: 1,
+              viSentence: 'Tôi không phải là nhân viên công ty.',
+              koCorrectSentence: '저는 회사원이 아니에요.',
+              choices: ['저는 회사원이 아니에요.', '저는 회사원이에요.', '저는 학생이에요.', '저는 의사에요.']
+            },
+            {
+              no: 2,
+              viSentence: 'Tôi là người Việt Nam.',
+              koCorrectSentence: '저는 베트남 사람이에요.',
+              choices: ['저는 한국 사람이에요.', '저는 베트남 사람이에요.', '저는 일본 사람이에요.', '저는 중국 사람이에요.']
+            },
+          ]}
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+          currentSetNumber={1}
+          totalSets={3}
+        />
+      );
+    case 'speaking-eval':
+      return (
+        <SpeakingEvalStage
+          questions={[
+            {
+              step: 1,
+              totalSteps: 4,
+              sentence: '안녕하세요? 저는 _____ 사람이에요.',
+              sentenceVi: 'Xin chào? Tôi là người _____.',
+              blanks: [
+                { placeholder: '이름', placeholderVi: 'tên' },
+                { placeholder: '국적', placeholderVi: 'quốc tịch' }
+              ]
+            },
+            {
+              step: 2,
+              totalSteps: 4,
+              sentence: '저는 _____ 이에요.',
+              sentenceVi: 'Tôi là _____.',
+              blanks: [
+                { placeholder: '직업', placeholderVi: 'nghề nghiệp' }
+              ]
+            },
+            {
+              step: 3,
+              totalSteps: 4,
+              sentence: '만나서 _____ 해요.',
+              sentenceVi: 'Rất _____ gặp bạn.',
+              blanks: [
+                { placeholder: '감정', placeholderVi: 'cảm xúc' }
+              ]
+            },
+            {
+              step: 4,
+              totalSteps: 4,
+              sentence: '저는 _____ 을/를 좋아해요.',
+              sentenceVi: 'Tôi thích _____.',
+              blanks: [
+                { placeholder: '취미', placeholderVi: 'sở thích' }
+              ]
+            }
+          ]}
+          onNext={() => onNavigate('learning-report')}
+          onBack={() => onNavigate('home')}
+          currentSetNumber={1}
+          totalSets={3}
+        />
+      );
+    case 'learning-report':
+      return (
+        <LearningReportStage
+          data={{
+            sessionNumber: 1,
+            sessionTitle: '나라와 국적 소개',
+            sessionTitleVi: 'Giới thiệu quốc gia và quốc tịch',
+            description: '오늘 학습한 단어, 문법, 발음기 결정해 확인해 보세요.',
+            descriptionVi: 'Hãy xem lại từ vựng, ngữ pháp, phát âm mà bạn học hôm nay.',
+            vocabCount: 15,
+            speakingScore: 4,
+            speakingTotal: 4,
+            testScore: 6,
+            testTotal: 6,
+            aiFeedback: '오늘의 자기소개 발음을 완성했어요. 다음에는 받침 있는 단어를 정확하게 구분해 말해봅시다.',
+            aiFeedbackVi: 'Bạn đã hoàn thành bài tự giới thiệu hôm nay. Lần sau, hãy phân biệt chính xác các từ có phụ âm cuối.'
+          }}
           onNext={() => onNavigate('home')}
           onBack={() => onNavigate('home')}
         />
@@ -518,90 +1053,42 @@ const combo = StyleSheet.create({
   },
 });
 
-function FlowComboBox({
-  currentFlowId,
-  onSelectFlow,
-}: {
-  currentFlowId: string;
-  onSelectFlow: (targetScreenId: string, flowId: string) => void;
-}) {
-  const [isOpen, setIsOpen] = useState(false);
-  const currentFlow = FLOW_OPTIONS.find((f) => f.id === currentFlowId) ?? FLOW_OPTIONS[0];
-
-  return (
-    <View style={combo.container}>
-      <TouchableOpacity
-        style={[combo.trigger, isOpen && combo.triggerOpen]}
-        onPress={() => setIsOpen(!isOpen)}
-        activeOpacity={0.7}
-      >
-        <View style={combo.triggerContent}>
-          <Text style={combo.triggerLabel} numberOfLines={1}>
-            {currentFlow.label}
-          </Text>
-          {currentFlow.badge && (
-            <View style={[shell.categoryBadge, shell.badgeNew]}>
-              <Text style={shell.categoryBadgeText}>{currentFlow.badge}</Text>
-            </View>
-          )}
-        </View>
-        <Text style={combo.arrowIcon}>{isOpen ? '▲' : '▼'}</Text>
-      </TouchableOpacity>
-
-      {isOpen && (
-        <View style={combo.dropdown}>
-          <ScrollView
-            style={combo.listScroll}
-            nestedScrollEnabled
-            showsVerticalScrollIndicator={true}
-          >
-            {FLOW_OPTIONS.map((f) => {
-              const isSelected = f.id === currentFlowId;
-              return (
-                <TouchableOpacity
-                  key={f.id}
-                  style={[combo.optionItem, isSelected && combo.optionItemActive]}
-                  onPress={() => {
-                    onSelectFlow(f.targetScreenId, f.id);
-                    setIsOpen(false);
-                  }}
-                  activeOpacity={0.7}
-                >
-                  <Text
-                    style={[combo.optionLabel, isSelected && combo.optionLabelActive]}
-                    numberOfLines={1}
-                  >
-                    {f.label}
-                  </Text>
-                  {f.badge && (
-                    <View style={[shell.categoryBadge, shell.badgeNew]}>
-                      <Text style={shell.categoryBadgeText}>{f.badge}</Text>
-                    </View>
-                  )}
-                </TouchableOpacity>
-              );
-            })}
-          </ScrollView>
-        </View>
-      )}
-    </View>
-  );
-}
-
 export function EmulatorShell() {
   const [deviceId, setDeviceId] = useState('iphone15');
-  const [screenId, setScreenId] = useState('home');
-  const [flowId, setFlowId] = useState('session-1');
+  const [screenId, setScreenId] = useState('set-wordbook-eval');
   const [infoTab, setInfoTab] = useState<'desc' | 'dev' | 'design'>('desc');
+  const [flowMode, setFlowMode] = useState(false);
+  const [currentFlowStep, setCurrentFlowStep] = useState(0);
+
+  // Flow 모드일 때 현재 screenId 결정
+  const activeScreenId = flowMode ? LEARNING_FLOW[currentFlowStep]?.screenId : screenId;
 
   const device = DEVICES.find((d) => d.id === deviceId) ?? DEVICES[0];
-  const screen = getScreen(screenId);
+  const screen = getScreen(activeScreenId || screenId);
 
   // 프레임 스케일 — 최대 높이 제약에 맞춤
   const maxH = 780;
   const scale = Math.min(1, maxH / device.h);
   const frameW = device.w * scale;
   const frameH = device.h * scale;
+
+  // onNavigate 콜백 - flow 모드에 따라 다르게 처리
+  const handleNavigate = (nextScreenId: string) => {
+    if (flowMode) {
+      // flow 모드: 다음 단계로 이동
+      if (currentFlowStep < LEARNING_FLOW.length - 1) {
+        setCurrentFlowStep(currentFlowStep + 1);
+      } else {
+        // flow 끝 - 일반 모드로 복귀
+        setFlowMode(false);
+        setCurrentFlowStep(0);
+        setScreenId('home');
+      }
+    } else {
+      // 일반 모드: 단순히 screenId 변경
+      setScreenId(nextScreenId);
+    }
+  };
 
   if (Platform.OS !== 'web') return null;
 
@@ -643,18 +1130,63 @@ export function EmulatorShell() {
             ))}
 
             <View style={shell.divider} />
-            <Text style={shell.panelTitle}>화면 Flow</Text>
-            <FlowComboBox
-              currentFlowId={flowId}
-              onSelectFlow={(targetScreenId, selectedFlowId) => {
-                setFlowId(selectedFlowId);
-                setScreenId(targetScreenId);
-              }}
-            />
-
-            <View style={shell.divider} />
             <Text style={shell.panelTitle}>화면 선택</Text>
             <ScreenComboBox currentScreenId={screenId} onSelectScreen={setScreenId} />
+
+            <View style={shell.divider} />
+            <Text style={shell.panelTitle}>학습 Flow</Text>
+            {!flowMode ? (
+              <TouchableOpacity
+                style={[shell.selectItem, { backgroundColor: colors.tealSoft }]}
+                onPress={() => {
+                  setFlowMode(true);
+                  setCurrentFlowStep(0);
+                }}
+                activeOpacity={0.7}
+              >
+                <Text style={[shell.selectItemLabel, { color: colors.teal, fontWeight: '700' }]}>
+                  📚 Flow 시작
+                </Text>
+              </TouchableOpacity>
+            ) : (
+              <View>
+                <View style={[shell.selectItem, { backgroundColor: '#FFE6E6' }]}>
+                  <Text style={[shell.selectItemLabel, { color: '#D32F2F', fontWeight: '700' }]}>
+                    🎯 Step {currentFlowStep + 1}/{LEARNING_FLOW.length}
+                  </Text>
+                </View>
+                <Text style={[shell.panelTitle, { marginTop: 8, fontSize: 12 }]}>
+                  {LEARNING_FLOW[currentFlowStep]?.label || '완료'}
+                </Text>
+                <TouchableOpacity
+                  style={[shell.selectItem, { backgroundColor: '#E0E0E0', marginTop: 8 }]}
+                  onPress={() => {
+                    setFlowMode(false);
+                    setCurrentFlowStep(0);
+                  }}
+                  activeOpacity={0.7}
+                >
+                  <Text style={[shell.selectItemLabel, { color: '#424242' }]}>
+                    × Flow 종료
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[shell.selectItem, { backgroundColor: '#FFF3E0', marginTop: 8 }]}
+                  onPress={() => {
+                    if (currentFlowStep < LEARNING_FLOW.length - 1) {
+                      setCurrentFlowStep(currentFlowStep + 1);
+                    }
+                  }}
+                  disabled={currentFlowStep >= LEARNING_FLOW.length - 1}
+                  activeOpacity={0.7}
+                >
+                  <Text style={[shell.selectItemLabel, { color: '#E65100', fontWeight: '700' }]}>
+                    ⏭️ 다음 Step
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
           </ScrollView>
         </View>
 
@@ -669,7 +1201,7 @@ export function EmulatorShell() {
             </View>
             {/* 화면 렌더링 영역 */}
             <View style={[shell.deviceScreen, { width: frameW, height: frameH - 24 }]}>
-              <ScreenRenderer screenId={screenId} onNavigate={setScreenId} />
+              <ScreenRenderer screenId={activeScreenId || screenId} onNavigate={handleNavigate} />
             </View>
           </View>
 

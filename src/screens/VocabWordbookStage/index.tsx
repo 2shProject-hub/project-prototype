@@ -10,7 +10,12 @@ interface Props {
   onBack: () => void;
 }
 
-const QUIZ_ENTRY_AUDIO = require('../../../assets/sounds/tutor_word_6.wav') as string;
+let QUIZ_ENTRY_AUDIO: string | null = null;
+try {
+  QUIZ_ENTRY_AUDIO = require('../../../assets/sounds/tutor_word_6.wav') as string;
+} catch {
+  QUIZ_ENTRY_AUDIO = null;
+}
 
 export function VocabWordbookStage({ onNext, onBack }: Props) {
   const { lang } = useLang();

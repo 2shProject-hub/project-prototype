@@ -28,10 +28,12 @@ import { useLang, pick } from '../../components/LangContext';
 import { MOCK_VIDEO_BRIDGE, type VideoBridgeData } from '../../data/lessonData';
 
 // 이식 시: resolveActivityVideoSource() 반환값으로 교체
-const LOCAL_VIDEO_ASSET =
-  Platform.OS === 'web'
-    ? (require('../../../assets/video_bridge_intro.mp4') as string)
-    : null;
+let LOCAL_VIDEO_ASSET: string | null = null;
+try {
+  LOCAL_VIDEO_ASSET = Platform.OS === 'web' ? (require('../../../assets/grammer_mov.mp4') as string) : null;
+} catch {
+  LOCAL_VIDEO_ASSET = null;
+}
 
 // ─── Props ────────────────────────────────────────────────────────
 interface VideoBridgeStageProps {
