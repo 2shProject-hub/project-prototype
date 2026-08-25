@@ -56,6 +56,7 @@ export const MOCK_PRACTICAL_SPEAKING: PracticalSpeakingData = {
   subtitle: '주어진 정보를 넣어 문장을 완성한 뒤, 소리 내어 읽으세요.',
   subtitleVi: 'Điền thông tin đã cho vào câu rồi đọc to.',
   steps: [
+    // Step 1: 타오(베트남), 민준(한국)
     {
       cards: [
         {
@@ -80,46 +81,77 @@ export const MOCK_PRACTICAL_SPEAKING: PracticalSpeakingData = {
         },
       ],
     },
-    {
-      cards: [
-        {
-          blanks: [
-            { prefix: '안녕하세요? 저는', prefixVi: 'Xin chào. Tôi là', placeholder: '이름', placeholderVi: 'tên', suffix: '.', suffixVi: '.' },
-            { prefix: '저는', prefixVi: 'Tôi là', placeholder: '직업', placeholderVi: 'nghề nghiệp', suffix: '.', suffixVi: '.' },
-          ],
-          hints: [
-            { label: '이름', labelVi: 'Tên', value: '세나', valueVi: 'Sena' },
-            { label: '직업', labelVi: 'Nghề nghiệp', value: '선생님이에요', valueVi: 'là giáo viên' },
-          ],
-        },
-      ],
-    },
-    {
-      cards: [
-        {
-          blanks: [
-            { prefix: '저는', prefixVi: 'Tôi là', placeholder: '이름', placeholderVi: 'tên', suffix: '.', suffixVi: '.' },
-            { prefix: '저는', prefixVi: 'Tôi là', placeholder: '국적', placeholderVi: 'quốc tịch', suffix: '.', suffixVi: '.' },
-          ],
-          hints: [
-            { label: '이름', labelVi: 'Tên', value: '리리', valueVi: 'Lily' },
-            { label: '국적', labelVi: 'Quốc tịch', value: '중국 사람이에요', valueVi: 'là người Trung Quốc' },
-          ],
-        },
-      ],
-    },
+    // Step 2: 아영(미국), 켄(일본)
     {
       cards: [
         {
           blanks: [
             { prefix: '안녕하세요? 저는', prefixVi: 'Xin chào. Tôi là', placeholder: '이름', placeholderVi: 'tên', suffix: '.', suffixVi: '.' },
             { prefix: '저는', prefixVi: 'Tôi là', placeholder: '국적', placeholderVi: 'quốc tịch', suffix: '.', suffixVi: '.' },
-            { prefix: '저는', prefixVi: 'Tôi là', placeholder: '직업', placeholderVi: 'nghề nghiệp', suffix: '.', suffixVi: '.' },
+          ],
+          hints: [
+            { label: '이름', labelVi: 'Tên', value: '아영', valueVi: 'Ayeong' },
+            { label: '국적', labelVi: 'Quốc tịch', value: '미국', valueVi: 'Mỹ' },
+          ],
+        },
+        {
+          blanks: [
+            { prefix: '만나서 반가워요. 저는', prefixVi: 'Rất vui được gặp bạn. Tôi là', placeholder: '이름', placeholderVi: 'tên', suffix: '.', suffixVi: '.' },
+            { prefix: '저는', prefixVi: 'Tôi là', placeholder: '국적', placeholderVi: 'quốc tịch', suffix: '.', suffixVi: '.' },
+          ],
+          hints: [
+            { label: '이름', labelVi: 'Tên', value: '켄', valueVi: 'Ken' },
+            { label: '국적', labelVi: 'Quốc tịch', value: '일본', valueVi: 'Nhật Bản' },
+          ],
+        },
+      ],
+    },
+    // Step 3: 마야(인도), 루카(이탈리아)
+    {
+      cards: [
+        {
+          blanks: [
+            { prefix: '안녕하세요? 저는', prefixVi: 'Xin chào. Tôi là', placeholder: '이름', placeholderVi: 'tên', suffix: '.', suffixVi: '.' },
+            { prefix: '저는', prefixVi: 'Tôi là', placeholder: '국적', placeholderVi: 'quốc tịch', suffix: '.', suffixVi: '.' },
+          ],
+          hints: [
+            { label: '이름', labelVi: 'Tên', value: '마야', valueVi: 'Maya' },
+            { label: '국적', labelVi: 'Quốc tịch', value: '인도', valueVi: 'Ấn Độ' },
+          ],
+        },
+        {
+          blanks: [
+            { prefix: '만나서 반가워요. 저는', prefixVi: 'Rất vui được gặp bạn. Tôi là', placeholder: '이름', placeholderVi: 'tên', suffix: '.', suffixVi: '.' },
+            { prefix: '저는', prefixVi: 'Tôi là', placeholder: '국적', placeholderVi: 'quốc tịch', suffix: '.', suffixVi: '.' },
+          ],
+          hints: [
+            { label: '이름', labelVi: 'Tên', value: '루카', valueVi: 'Luca' },
+            { label: '국적', labelVi: 'Quốc tịch', value: '이탈리아', valueVi: 'Ý' },
+          ],
+        },
+      ],
+    },
+    // Step 4: 소피(프랑스), 나(자유 입력)
+    {
+      cards: [
+        {
+          blanks: [
+            { prefix: '안녕하세요? 저는', prefixVi: 'Xin chào. Tôi là', placeholder: '이름', placeholderVi: 'tên', suffix: '.', suffixVi: '.' },
+            { prefix: '저는', prefixVi: 'Tôi là', placeholder: '국적', placeholderVi: 'quốc tịch', suffix: '.', suffixVi: '.' },
+          ],
+          hints: [
+            { label: '이름', labelVi: 'Tên', value: '소피', valueVi: 'Sophie' },
+            { label: '국적', labelVi: 'Quốc tịch', value: '프랑스', valueVi: 'Pháp' },
+          ],
+        },
+        {
+          blanks: [
+            { prefix: '만나서 반가워요. 저는', prefixVi: 'Rất vui được gặp bạn. Tôi là', placeholder: '이름', placeholderVi: 'tên', suffix: '.', suffixVi: '.' },
+            { prefix: '저는', prefixVi: 'Tôi là', placeholder: '국적', placeholderVi: 'quốc tịch', suffix: '.', suffixVi: '.' },
           ],
           hints: [
             { label: '이름', labelVi: 'Tên', value: '나', valueVi: 'tôi' },
             { label: '국적', labelVi: 'Quốc tịch', value: '(내 나라)', valueVi: '(quê bạn)' },
-            { label: '직업', labelVi: 'Nghề nghiệp', value: '(내 직업)', valueVi: '(nghề bạn)' },
           ],
         },
       ],
