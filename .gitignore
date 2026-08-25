@@ -42,6 +42,5 @@ yarn-error.*
 # web build output (Vercel builds from source)
 /dist
 
-# large media assets (commit separately or use LFS)
-assets/*.mp4
-assets/*.mov
+# large media assets (40MB+ 파일만 제외)
+assets/M_1_L1_1080p.mp4
