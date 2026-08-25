@@ -39,6 +39,9 @@ yarn-error.*
 /ios
 /android
 
+# web build output (Vercel builds from source)
+/dist
+
 # large media assets (commit separately or use LFS)
 assets/*.mp4
 assets/*.mov
