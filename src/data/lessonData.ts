@@ -87,20 +87,6 @@ export const SESSION1 = {
       answerWords: ['저는', '한국', '사람이에요'],
       distractors: ['베트남', '의사예요'],
     },
-    {
-      id: 4,
-      vi: 'Anh ấy là bác sĩ.',
-      ko: '그는 의사예요.',
-      answerWords: ['그는', '의사예요'],
-      distractors: ['기자예요', '한국'],
-    },
-    {
-      id: 5,
-      vi: 'Minjeong là học sinh.',
-      ko: '민정 씨는 학생이에요.',
-      answerWords: ['민정 씨는', '학생이에요'],
-      distractors: ['의사예요', '베트남'],
-    },
   ],
   context: {
     words: [
