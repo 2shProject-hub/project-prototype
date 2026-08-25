@@ -7,14 +7,31 @@ import { ActivityHeader } from '../../components/ActivityHeader';
 
 const TUTOR_AUDIO = require('../../../assets/sounds/tutor_intro_5.wav') as string;
 
+interface IntroData {
+  badge: string;
+  badgeVi: string;
+  icon: string;
+  title: string;
+  titleVi: string;
+  subtitle: string;
+  subtitleVi: string;
+  achievement: {
+    label: string;
+    labelVi: string;
+    desc: string;
+    descVi: string;
+  };
+}
+
 interface Props {
   onNext: () => void;
   onBack: () => void;
+  introData?: IntroData;
 }
 
-export function IntroTutorStage({ onNext, onBack }: Props) {
+export function IntroTutorStage({ onNext, onBack, introData }: Props) {
   const { lang } = useLang();
-  const intro = SESSION1.intro;
+  const intro = introData ?? SESSION1.intro;
 
   const [isAudioPlaying, setIsAudioPlaying] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);

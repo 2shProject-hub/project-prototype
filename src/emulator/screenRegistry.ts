@@ -799,4 +799,3 @@ export const SCREEN_REGISTRY: ScreenMeta[] = [
 export function getScreen(id: string): ScreenMeta | undefined {
   return SCREEN_REGISTRY.find((s) => s.id === id);
 }
-

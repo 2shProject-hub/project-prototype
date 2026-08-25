@@ -342,6 +342,21 @@ function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate
         <IntroTutorStage
           onNext={() => onNavigate('vocab-wordbook')}
           onBack={() => onNavigate('quick-review')}
+          introData={{
+            badge: '문법과 표현 1',
+            badgeVi: 'Ngữ pháp & Biểu đạt 1',
+            icon: '📝',
+            title: '저는 N이에요/예요 표현을 배워요',
+            titleVi: 'Tôi học cách dùng N이에요/예요',
+            subtitle: '받침 확인 > 뜻 고르기 > 문장 만들기 순서로 연습해요',
+            subtitleVi: 'Luyện tập: kiểm tra phụ âm cuối > chọn nghĩa > tạo câu',
+            achievement: {
+              label: '학습 성과',
+              labelVi: 'Kết quả học tập',
+              desc: "'이에요/예요'를 구분해 이름과 국적을 말할 수 있어요",
+              descVi: "Bạn có thể phân biệt '이에요/예요' và nói tên, quốc tịch của mình",
+            },
+          }}
         />
       );
     case 'intro-tutor-2':
@@ -349,6 +364,21 @@ function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate
         <IntroTutorStage
           onNext={() => onNavigate('grammar-detail')}
           onBack={() => onNavigate('quick-review')}
+          introData={{
+            badge: '문법과 표현 1',
+            badgeVi: 'Ngữ pháp & Biểu đạt 1',
+            icon: '📝',
+            title: '문법 내용을 잘 이해했는지 문제를 풀면서 확인해요.',
+            titleVi: 'Hãy kiểm tra xem bạn đã hiểu nội dung ngữ pháp chưa bằng cách làm bài tập.',
+            subtitle: '',
+            subtitleVi: '',
+            achievement: {
+              label: '학습 성과',
+              labelVi: 'Kết quả học tập',
+              desc: "'이에요/예요'를 구분하여 사용할 수 있어요.",
+              descVi: "Bạn có thể phân biệt và sử dụng đúng '이에요/예요'.",
+            },
+          }}
         />
       );
     case 'intro-eval':
