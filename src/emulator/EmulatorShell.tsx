@@ -260,7 +260,7 @@ function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate
         <HomeScreen
           sessions={sessions}
           setView={(v: any) => onNavigate(v)}
-          onStartSession={() => onNavigate('mission')}
+          onStartSession={(id) => id === 2 ? onNavigate('quick-review') : onNavigate('mission')}
         />
       );
     case 'mission':

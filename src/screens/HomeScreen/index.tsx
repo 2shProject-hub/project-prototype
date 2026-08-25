@@ -170,7 +170,7 @@ export function HomeScreen({ sessions, setView, onStartSession }: Props) {
             {SESSIONS.map((s, idx) => {
               const sess = sessions[s.id];
               const completed = sess?.completed ?? false;
-              const unlocked = s.id === 1;
+              const unlocked = s.id === 1 || s.id === 2;
               const frac = sessionProgress(sess, s.id);
               const isLast = idx === SESSIONS.length - 1;
 
