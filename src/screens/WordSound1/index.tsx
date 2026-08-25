@@ -3,14 +3,13 @@
  * - 한국어/베트남어 단어 텍스트 제시
  * - 4개 음원 선택지
  * - 1번 세트에서 베트남어 안내 토스트 팝업 및 자동 음원 재생
- * - 정답/오답 피드백
+ * - 공통 ActivityHeader, CtaButton, QuizFeedbackModal 적용
  */
 import { useState, useRef, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Modal, Platform, ScrollView } from 'react-native';
-import { colors } from '../../theme/colors';
-import { useLang, pick } from '../../components/LangContext';
+import { View, Text, TouchableOpacity, StyleSheet, Platform, ScrollView } from 'react-native';
+import { colors, radius, spacing, shadow } from '../../theme';
+import { useLang, pick, ActivityHeader, CtaButton, QuizFeedbackModal } from '../../components';
 import { useSfx } from '../../hooks/useSfx';
-import { ActivityHeader } from '../../components/ActivityHeader';
 
 interface SoundItem {
   value: number;
@@ -33,7 +32,13 @@ interface Props {
   totalSets?: number;
 }
 
-export function WordSound1({ questions = [], onNext, onBack, currentSetNumber = 1, totalSets = 1 }: Props) {
+export function WordSound1({
+  questions = [],
+  onNext,
+  onBack,
+  currentSetNumber = 1,
+  totalSets = 1,
+}: Props) {
   const { lang } = useLang();
   const sfx = useSfx();
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -42,7 +47,7 @@ export function WordSound1({ questions = [], onNext, onBack, currentSetNumber = 
   const [currentIdx, setCurrentIdx] = useState(0);
   const [selectedItemValue, setSelectedItemValue] = useState<number | null>(null);
   const [showModal, setShowModal] = useState(false);
-  const [modalState, setModalState] = useState<'correct' | 'wrong' | null>(null);
+  const [isCorrect, setIsCorrect] = useState(false);
   const [playingValue, setPlayingValue] = useState<number | null>(null);
   const [showToast, setShowToast] = useState(currentSetNumber === 1);
   const [isToastAudioPlaying, setIsToastAudioPlaying] = useState(false);
@@ -82,7 +87,7 @@ export function WordSound1({ questions = [], onNext, onBack, currentSetNumber = 
       audio.onerror = () => {
         setIsToastAudioPlaying(false);
       };
-    } catch (e) {
+    } catch {
       setIsToastAudioPlaying(false);
     }
   };
@@ -105,7 +110,7 @@ export function WordSound1({ questions = [], onNext, onBack, currentSetNumber = 
     }
   }, [currentSetNumber, showToast]);
 
-  const playAudio = (audioSrc?: string) => {
+  const playAudio = (audioSrc?: string, itemVal?: number) => {
     if (!audioSrc || Platform.OS !== 'web') return;
 
     if (audioRef.current) {
@@ -115,7 +120,7 @@ export function WordSound1({ questions = [], onNext, onBack, currentSetNumber = 
     try {
       const audio = new Audio(audioSrc);
       audioRef.current = audio;
-      setPlayingValue(null);
+      if (itemVal !== undefined) setPlayingValue(itemVal);
 
       audio.play().catch(() => setPlayingValue(null));
       audio.onended = () => setPlayingValue(null);
@@ -128,27 +133,32 @@ export function WordSound1({ questions = [], onNext, onBack, currentSetNumber = 
   const handleSelectAndPlay = (item: SoundItem) => {
     if (!item) return;
     setSelectedItemValue(item.value);
-    if (!item.audioSrc) return;
-    setPlayingValue(item.value);
-    playAudio(item.audioSrc);
+    if (item.audioSrc) {
+      playAudio(item.audioSrc, item.value);
+    }
   };
 
   const handleConfirm = () => {
     if (selectedItemValue === null) return;
 
-    const isCorrect = selectedItemValue === currentQuestion.answer;
-    setModalState(isCorrect ? 'correct' : 'wrong');
+    const correct = selectedItemValue === currentQuestion.answer;
+    setIsCorrect(correct);
     setShowModal(true);
+
+    if (correct) {
+      sfx.play('correct');
+    } else {
+      sfx.play('wrong');
+    }
   };
 
-  const handleCloseModal = () => {
+  const handleNextFromModal = () => {
     setShowModal(false);
 
-    if (modalState === 'correct') {
+    if (isCorrect) {
       if (currentIdx < questions.length - 1) {
         setCurrentIdx(currentIdx + 1);
         setSelectedItemValue(null);
-        setModalState(null);
         setPlayingValue(null);
       } else {
         onNext?.();
@@ -168,11 +178,15 @@ export function WordSound1({ questions = [], onNext, onBack, currentSetNumber = 
       <ScrollView style={s.scroll} contentContainerStyle={s.content}>
         {/* 질문 제목 */}
         <View style={s.titleBox}>
-          <Text style={s.title}>{pick(lang, '단어를 보고 음원을 고르세요', 'Nhìn từ rồi chọn âm thanh đúng')}</Text>
-          <Text style={s.subtitle}>{pick(lang, 'Nhìn từ rồi chọn âm thanh đúng', '단어를 보고 음원을 고르세요')}</Text>
+          <Text style={s.title}>
+            {pick(lang, '단어를 보고 음원을 고르세요', 'Nhìn từ rồi chọn âm thanh đúng')}
+          </Text>
+          <Text style={s.subtitle}>
+            {pick(lang, 'Nhìn từ rồi chọn âm thanh đúng', '단어를 보고 음원을 고르세요')}
+          </Text>
         </View>
 
-        {/* 단어 카드 */}
+        {/* 제시 단어 카드 */}
         <View style={s.wordCardContainer}>
           <View style={s.wordCard}>
             <Text style={s.wordText}>{currentQuestion.desc}</Text>
@@ -207,211 +221,238 @@ export function WordSound1({ questions = [], onNext, onBack, currentSetNumber = 
           </View>
         )}
 
-        {/* 음원 선택지 (2x2 그리드) */}
-        <View style={[s.soundGridContainer, showToast && currentSetNumber === 1 && s.soundGridContainerWithToast]}>
-          <View style={s.soundRow}>
-            {currentQuestion.items.slice(0, 2).map((item) => (
-              <View key={item.value} style={s.soundCardWrapper}>
-                <TouchableOpacity
-                  style={[
-                    s.soundCard,
-                    selectedItemValue === item.value && s.soundCardSelected,
-                  ]}
-                  onPress={() => handleSelectAndPlay(item)}
-                  activeOpacity={0.7}
-                >
-                  <Text style={s.soundIcon}>🔊</Text>
-                </TouchableOpacity>
-              </View>
-            ))}
-          </View>
-          <View style={s.soundRow}>
-            {currentQuestion.items.slice(2, 4).map((item) => (
-              <View key={item.value} style={s.soundCardWrapper}>
-                <TouchableOpacity
-                  style={[
-                    s.soundCard,
-                    selectedItemValue === item.value && s.soundCardSelected,
-                  ]}
-                  onPress={() => handleSelectAndPlay(item)}
-                  activeOpacity={0.7}
-                >
-                  <Text style={s.soundIcon}>🔊</Text>
-                </TouchableOpacity>
-              </View>
-            ))}
-          </View>
+        {/* 음원 선택지 그리드 (2x2) */}
+        <View style={s.soundGrid}>
+          {currentQuestion.items.map((item, idx) => {
+            const isSelected = selectedItemValue === item.value;
+            const isPlaying = playingValue === item.value;
+
+            return (
+              <TouchableOpacity
+                key={item.value}
+                style={[
+                  s.soundCard,
+                  isSelected && s.soundCardSelected,
+                  isPlaying && s.soundCardPlaying,
+                ]}
+                onPress={() => handleSelectAndPlay(item)}
+                activeOpacity={0.7}
+              >
+                <View style={[s.badge, isSelected && s.badgeSelected]}>
+                  <Text style={[s.badgeText, isSelected && s.badgeTextSelected]}>
+                    {idx + 1}
+                  </Text>
+                </View>
+                <Text style={s.soundIcon}>{isPlaying ? '⏸' : '🔊'}</Text>
+                <Text style={[s.soundLabel, isSelected && s.soundLabelSelected]}>
+                  {pick(lang, `음원 ${idx + 1}`, `Âm thanh ${idx + 1}`)}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
         </View>
       </ScrollView>
 
       {/* 하단 확인 버튼 */}
       <View style={s.footer}>
-        <TouchableOpacity
-          style={[s.confirmBtn, selectedItemValue === null && s.confirmBtnDisabled]}
+        <CtaButton
+          title={pick(lang, '확인', 'Xác nhận')}
           onPress={handleConfirm}
           disabled={selectedItemValue === null}
-          activeOpacity={0.8}
-        >
-          <Text style={s.confirmBtnText}>{pick(lang, '확인', 'Xác nhận')}</Text>
-        </TouchableOpacity>
+          size="lg"
+        />
       </View>
 
-      {/* 정답/오답 모달 */}
-      <Modal visible={showModal} animationType="fade" transparent>
-        <View style={s.modalOverlay}>
-          <View style={s.modalBox}>
-            <Text style={s.modalTitle}>
-              {modalState === 'correct' ? '✅ 정답입니다!' : '❌ 오답입니다'}
-            </Text>
-            <Text style={s.modalAnswer}>{currentQuestion.desc}</Text>
-            {currentQuestion.viText && (
-              <Text style={s.modalViText}>{currentQuestion.viText}</Text>
-            )}
-            <TouchableOpacity
-              style={s.modalBtn}
-              onPress={handleCloseModal}
-              activeOpacity={0.8}
-            >
-              <Text style={s.modalBtnText}>
-                {modalState === 'correct' ? '다음' : '다시 시도'}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+      {/* 공통 정답/오답 피드백 모달 */}
+      <QuizFeedbackModal
+        visible={showModal}
+        isCorrect={isCorrect}
+        answerText={pick(lang, `음원 ${currentQuestion.answer}번`, `Âm thanh số ${currentQuestion.answer}`)}
+        explanation={currentQuestion.desc}
+        onNext={handleNextFromModal}
+        onClose={() => setShowModal(false)}
+      />
     </View>
   );
 }
 
 const s = StyleSheet.create({
-  root: { flex: 1, backgroundColor: '#FFFFFF' },
-  scroll: { flex: 1 },
-  content: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 24 },
-
+  root: {
+    flex: 1,
+    backgroundColor: colors.surface,
+  },
+  scroll: {
+    flex: 1,
+  },
+  content: {
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.lg,
+    paddingBottom: spacing.xxl,
+  },
+  container: {
+    flex: 1,
+    backgroundColor: colors.surface,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyText: {
+    fontSize: 14,
+    color: colors.muted,
+    textAlign: 'center',
+  },
+  titleBox: {
+    marginBottom: spacing.lg,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: '800',
+    color: colors.ink,
+  },
+  subtitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: colors.muted,
+    marginTop: spacing.xs,
+  },
+  wordCardContainer: {
+    alignItems: 'center',
+    marginBottom: spacing.xl,
+  },
+  wordCard: {
+    backgroundColor: colors.tealSoft,
+    borderColor: colors.teal,
+    borderWidth: 2,
+    borderRadius: radius.xl,
+    paddingVertical: spacing.xl,
+    paddingHorizontal: spacing.xxl,
+    width: '100%',
+    alignItems: 'center',
+    ...shadow.soft,
+  },
+  wordText: {
+    fontSize: 26,
+    fontWeight: '800',
+    color: colors.tealDark,
+  },
   toastBox: {
-    backgroundColor: '#e6f8f7',
+    backgroundColor: colors.bgSubtle,
+    borderRadius: radius.lg,
     borderWidth: 1.5,
-    borderColor: '#00a8a6',
-    borderRadius: 14,
-    paddingHorizontal: 16,
-    paddingTop: 14,
-    paddingBottom: 10,
-    marginBottom: 12,
+    borderColor: colors.border,
+    padding: spacing.md,
+    marginBottom: spacing.lg,
+    position: 'relative',
+    ...shadow.soft,
   },
   toastCloseBtn: {
-    position: 'absolute' as const,
-    top: 8,
-    right: 10,
-    padding: 4,
+    position: 'absolute',
+    top: spacing.sm,
+    right: spacing.sm,
+    width: 24,
+    height: 24,
+    borderRadius: radius.pill,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   toastCloseText: {
     fontSize: 14,
-    color: '#6b7280',
+    color: colors.textMuted,
     fontWeight: '700',
   },
   toastMessage: {
     fontSize: 13,
-    fontWeight: '700',
-    color: '#111827',
-    lineHeight: 19,
-    paddingRight: 20,
+    color: colors.textSecondary,
+    lineHeight: 18,
+    marginRight: spacing.xl,
+    fontWeight: '500',
   },
   toastBottomRow: {
-    alignItems: 'flex-end',
-    marginTop: 4,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: spacing.sm,
   },
   toastSpeakerBtn: {
-    padding: 4,
-    borderRadius: 8,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xxs,
+    borderRadius: radius.sm,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
   toastSpeakerPlaying: {
-    backgroundColor: '#b2ecea',
+    backgroundColor: colors.tealSoft,
+    borderColor: colors.teal,
   },
   toastSpeakerIcon: {
-    fontSize: 18,
+    fontSize: 14,
   },
-
-  titleBox: { marginBottom: 32 },
-  title: { fontSize: 18, fontWeight: '800', color: colors.ink, marginBottom: 6 },
-  subtitle: { fontSize: 14, color: colors.muted },
-
-  wordCardContainer: {
-    marginBottom: 16,
+  soundGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.md,
+    marginBottom: spacing.xl,
+    justifyContent: 'space-between',
   },
-  wordCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 14,
-    padding: 20,
-    alignItems: 'center',
-    minHeight: 98,
-    justifyContent: 'center',
-    borderWidth: 1.5,
-    borderColor: colors.teal,
-  },
-  wordText: { fontSize: 24, fontWeight: '800', color: colors.ink, textAlign: 'center' },
-
-  soundGridContainer: { gap: 16, marginBottom: 32 },
-  soundGridContainerWithToast: { marginTop: 12 },
-  soundRow: { flexDirection: 'row', gap: 16 },
-  soundCardWrapper: { flex: 1 },
   soundCard: {
+    width: '47.5%',
     backgroundColor: colors.surface,
-    borderRadius: 14,
-    padding: 20,
-    borderWidth: 2,
-    borderColor: colors.line,
+    borderRadius: radius.xl,
+    borderWidth: 1.5,
+    borderColor: colors.border,
+    paddingVertical: spacing.lg,
+    paddingHorizontal: spacing.md,
     alignItems: 'center',
     justifyContent: 'center',
-    aspectRatio: 2.04,
+    position: 'relative',
+    ...shadow.soft,
   },
   soundCardSelected: {
-    backgroundColor: '#ecfdf5',
     borderColor: colors.teal,
-    borderWidth: 2,
+    backgroundColor: colors.tealSoft,
   },
-  soundIcon: { fontSize: 36 },
-
-  footer: {
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    backgroundColor: '#FFFFFF',
+  soundCardPlaying: {
+    borderColor: colors.tealDark,
   },
-  confirmBtn: {
-    backgroundColor: colors.teal,
-    paddingVertical: 14,
-    borderRadius: 12,
-    alignItems: 'center',
-  },
-  confirmBtnDisabled: {
-    backgroundColor: '#d1d5db',
-  },
-  confirmBtnText: { fontSize: 15, fontWeight: '700', color: '#fff' },
-
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+  badge: {
+    position: 'absolute',
+    top: spacing.sm,
+    left: spacing.sm,
+    width: 22,
+    height: 22,
+    borderRadius: radius.pill,
+    backgroundColor: colors.bgSubtle,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  modalBox: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 24,
-    width: '80%',
-    maxWidth: 300,
-    alignItems: 'center',
-  },
-  modalTitle: { fontSize: 16, fontWeight: '700', color: colors.ink, marginBottom: 12 },
-  modalAnswer: { fontSize: 20, fontWeight: '800', color: colors.teal, marginBottom: 4 },
-  modalViText: { fontSize: 13, color: colors.muted, marginBottom: 16 },
-  modalBtn: {
+  badgeSelected: {
     backgroundColor: colors.teal,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 10,
   },
-  modalBtnText: { fontSize: 14, fontWeight: '700', color: '#fff' },
-
-  container: { flex: 1, backgroundColor: '#FFFFFF' },
-  emptyText: { fontSize: 14, color: colors.muted, textAlign: 'center', padding: 20 },
+  badgeText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: colors.textSecondary,
+  },
+  badgeTextSelected: {
+    color: colors.surface,
+  },
+  soundIcon: {
+    fontSize: 32,
+    marginVertical: spacing.xs,
+  },
+  soundLabel: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: colors.textSecondary,
+    marginTop: spacing.xs,
+  },
+  soundLabelSelected: {
+    color: colors.tealDark,
+  },
+  footer: {
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.lg,
+    backgroundColor: colors.surface,
+    borderTopWidth: 1,
+    borderTopColor: colors.borderLight,
+  },
 });

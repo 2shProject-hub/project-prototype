@@ -1,16 +1,14 @@
 /**
- * 1 세트 학습 완료 (SetCompleteStage)
+ * 세트 학습 완료 (SetCompleteStage)
  * - 프로그레스바 헤더
  * - 체크마크 아이콘
  * - 완료 메시지 (한국어/베트남어)
- * - 다음 버튼
- * - 자동 음원 재생
+ * - 공통 ActivityHeader, CtaButton 적용
  */
 import { useState, useRef, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
-import { colors } from '../../theme/colors';
-import { useLang, pick } from '../../components/LangContext';
-import { ActivityHeader } from '../../components/ActivityHeader';
+import { View, Text, StyleSheet, Platform } from 'react-native';
+import { colors, radius, spacing, shadow } from '../../theme';
+import { useLang, pick, ActivityHeader, CtaButton } from '../../components';
 
 interface Props {
   setNumber?: number;
@@ -19,7 +17,12 @@ interface Props {
   onBack?: () => void;
 }
 
-export function SetCompleteStage({ setNumber = 1, totalSets = 3, onNext, onBack }: Props) {
+export function SetCompleteStage({
+  setNumber = 1,
+  totalSets = 3,
+  onNext,
+  onBack,
+}: Props) {
   const { lang } = useLang();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
@@ -50,13 +53,12 @@ export function SetCompleteStage({ setNumber = 1, totalSets = 3, onNext, onBack 
       audio.onerror = () => {
         setIsAudioPlaying(false);
       };
-    } catch (e) {
+    } catch {
       setIsAudioPlaying(false);
     }
   };
 
   useEffect(() => {
-    // 화면 진입 시 500ms 후 음원 자동 재생
     const timer = setTimeout(() => {
       playAudio();
     }, 500);
@@ -82,37 +84,37 @@ export function SetCompleteStage({ setNumber = 1, totalSets = 3, onNext, onBack 
 
         {/* 텍스트 영역 */}
         <View style={s.textContainer}>
-          {/* 텍스트 1: 완료 메시지 (한국어/베트남어) */}
           <Text style={s.mainText}>
-            {pick(lang, `${setNumber} 세트 학습을 완료했습니다!`, `Bạn đã hoàn thành ${setNumber} set học rồi!`)}
+            {pick(
+              lang,
+              `${setNumber} 세트 학습을 완료했습니다!`,
+              `Bạn đã hoàn thành ${setNumber} set học rồi!`
+            )}
           </Text>
 
-          {/* 텍스트 2: 베트남어/한국어 번역 */}
-          <Text style={s.subText}>
-            {pick(lang, `Bạn đã hoàn thành ${setNumber} set học rồi!`, `${setNumber} 세트 학습을 완료했습니다!`)}
+          <Text style={s.subTextVi}>
+            {pick(
+              lang,
+              `Bạn đã hoàn thành ${setNumber} set học rồi!`,
+              `${setNumber} 세트 학습을 완료했습니다!`
+            )}
           </Text>
 
-          {/* 텍스트 3: 다음 단계 안내 */}
-          <Text style={s.subText}>
+          <Text style={s.instructionText}>
             {setNumber === totalSets
               ? pick(lang, '다음 단계로 넘어가세요.', 'Hãy chuyển sang giai đoạn tiếp theo nhé.')
-              : pick(lang, '다음 단어로 넘어가세요.', 'Hãy chuyển sang từ tiếp theo nhé.')
-            }
+              : pick(lang, '다음 단어로 넘어가세요.', 'Hãy chuyển sang từ tiếp theo nhé.')}
           </Text>
         </View>
       </View>
 
-      {/* 하단 다음 버튼 */}
+      {/* 하단 액션 버튼 */}
       <View style={s.footer}>
-        <TouchableOpacity
-          style={s.nextBtn}
+        <CtaButton
+          title={pick(lang, '다음', 'Tiếp tục')}
           onPress={onNext}
-          activeOpacity={0.8}
-        >
-          <Text style={s.nextBtnText}>
-            {pick(lang, '다음', 'Tiếp theo')} →
-          </Text>
-        </TouchableOpacity>
+          size="lg"
+        />
       </View>
     </View>
   );
@@ -121,65 +123,63 @@ export function SetCompleteStage({ setNumber = 1, totalSets = 3, onNext, onBack 
 const s = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.surface,
   },
-
   container: {
     flex: 1,
+    alignItems: 'center',
     justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 20,
+    paddingHorizontal: spacing.xl,
+    paddingBottom: spacing.xxxl,
   },
-
   iconContainer: {
-    marginBottom: 40,
-    alignItems: 'center',
+    marginBottom: spacing.xxl,
   },
   iconCircle: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: '#D0F5F3',
-    justifyContent: 'center',
+    width: 90,
+    height: 90,
+    borderRadius: radius.pill,
+    backgroundColor: colors.correctLight,
+    borderWidth: 3,
+    borderColor: colors.correct,
     alignItems: 'center',
+    justifyContent: 'center',
+    ...shadow.strong,
   },
   icon: {
-    fontSize: 48,
-    fontWeight: '800',
-    color: colors.teal,
+    fontSize: 44,
+    color: colors.correct,
+    fontWeight: '900',
   },
-
   textContainer: {
     alignItems: 'center',
-    gap: 12,
+    gap: spacing.md,
   },
   mainText: {
     fontSize: 22,
     fontWeight: '800',
-    color: colors.teal,
+    color: colors.ink,
     textAlign: 'center',
-    marginBottom: 8,
+    lineHeight: 30,
   },
-  subText: {
-    fontSize: 14,
-    color: colors.muted,
+  subTextVi: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.tealDark,
     textAlign: 'center',
+    lineHeight: 22,
   },
-
-  footer: {
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    backgroundColor: '#FFFFFF',
-  },
-  nextBtn: {
-    backgroundColor: '#E8F4F3',
-    paddingVertical: 16,
-    borderRadius: 12,
-    alignItems: 'center',
-  },
-  nextBtnText: {
+  instructionText: {
     fontSize: 15,
-    fontWeight: '700',
-    color: colors.teal,
+    color: colors.textMuted,
+    textAlign: 'center',
+    marginTop: spacing.xs,
+  },
+  footer: {
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.lg,
+    backgroundColor: colors.surface,
+    borderTopWidth: 1,
+    borderTopColor: colors.borderLight,
   },
 });

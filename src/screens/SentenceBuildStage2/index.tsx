@@ -2,10 +2,9 @@ import { useEffect, useState } from 'react';
 import {
   View, Text, TouchableOpacity, StyleSheet, TextInput,
 } from 'react-native';
-import { colors, shadow } from '../../theme/colors';
+import { colors, radius, spacing, shadow } from '../../theme';
 import { SESSION1 } from '../../data/lessonData';
-import { useLang, pick } from '../../components/LangContext';
-import { ActivityHeader } from '../../components/ActivityHeader';
+import { useLang, pick, ActivityHeader, CtaButton } from '../../components';
 import { useSfx } from '../../hooks/useSfx';
 
 interface Props {
@@ -189,25 +188,23 @@ export function SentenceBuildStage2({ onComplete, onBack }: Props) {
       {/* ── Footer ── */}
       <View style={styles.footer}>
         <View style={styles.footerRow}>
-          {inputMode === 'tile' ? (
-            <TouchableOpacity
-              style={[styles.ctaBtn, styles.ctaBtnFlex, !allFilled && styles.ctaBtnDisabled]}
-              onPress={onTileConfirm}
-              disabled={!allFilled}
-              activeOpacity={0.85}
-            >
-              <Text style={styles.ctaBtnText}>{pick(lang, '확인', 'Xác nhận')}</Text>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity
-              style={[styles.ctaBtn, styles.ctaBtnFlex, !keyboardText.trim() && styles.ctaBtnDisabled]}
-              onPress={onKeyboardConfirm}
-              disabled={!keyboardText.trim()}
-              activeOpacity={0.85}
-            >
-              <Text style={styles.ctaBtnText}>{pick(lang, '확인', 'Xác nhận')}</Text>
-            </TouchableOpacity>
-          )}
+          <View style={{ flex: 1 }}>
+            {inputMode === 'tile' ? (
+              <CtaButton
+                title={pick(lang, '확인', 'Xác nhận')}
+                onPress={onTileConfirm}
+                disabled={!allFilled}
+                size="lg"
+              />
+            ) : (
+              <CtaButton
+                title={pick(lang, '확인', 'Xác nhận')}
+                onPress={onKeyboardConfirm}
+                disabled={!keyboardText.trim()}
+                size="lg"
+              />
+            )}
+          </View>
 
           <TouchableOpacity
             style={styles.hintBtn}

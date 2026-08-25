@@ -1,8 +1,7 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import LottieView from 'lottie-react-native';
-import { colors } from '../../theme/colors';
-import { useLang, pick } from '../../components/LangContext';
-import { ActivityHeader } from '../../components/ActivityHeader';
+import { colors, radius, spacing, shadow } from '../../theme';
+import { useLang, pick, ActivityHeader, CtaButton } from '../../components';
 
 interface Props {
   title?: string;
@@ -42,9 +41,8 @@ export function CompletionCelebrationVocabStage({
           />
         </View>
 
-        {/* 메인 콘텐츠 */}
+        {/* 메인 콘텐츠 카드 */}
         <View style={s.card}>
-          {/* 축하 아이콘 */}
           <View style={s.iconContainer}>
             <Text style={s.icon}>🎉</Text>
           </View>
@@ -53,23 +51,22 @@ export function CompletionCelebrationVocabStage({
           <Text style={s.titleKo}>{title}</Text>
           <Text style={s.descriptionKo}>{description}</Text>
 
+          {/* 구분선 */}
+          <View style={s.divider} />
+
           {/* 베트남어 */}
           <Text style={s.titleVi}>{titleVi}</Text>
           <Text style={s.descriptionVi}>{descriptionVi}</Text>
         </View>
       </View>
 
-      {/* 하단 버튼 */}
+      {/* 하단 액션 버튼 */}
       <View style={s.footer}>
-        <TouchableOpacity
-          style={s.confirmBtn}
+        <CtaButton
+          title={pick(lang, nextButtonText, nextButtonTextVi)}
           onPress={onNext}
-          activeOpacity={0.8}
-        >
-          <Text style={s.confirmBtnText}>
-            {pick(lang, nextButtonText, nextButtonTextVi)}
-          </Text>
-        </TouchableOpacity>
+          size="lg"
+        />
       </View>
     </View>
   );
@@ -78,93 +75,88 @@ export function CompletionCelebrationVocabStage({
 const s = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.surface,
   },
   content: {
     flex: 1,
     alignItems: 'center',
-    paddingHorizontal: 24,
-    paddingTop: 40,
-    paddingBottom: 20,
+    justifyContent: 'center',
+    paddingHorizontal: spacing.xl,
+    paddingBottom: spacing.xxl,
   },
-
   lottieContainer: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
-    height: 350,
+    height: 380,
     overflow: 'hidden',
   },
   lottieAnimation: {
     width: '100%',
     height: '100%',
   },
-
   card: {
+    width: '100%',
+    backgroundColor: colors.surface,
+    borderRadius: radius.xxl,
+    paddingVertical: spacing.xxl,
+    paddingHorizontal: spacing.xl,
     alignItems: 'center',
-    marginTop: 120,
+    borderWidth: 1.5,
+    borderColor: colors.borderLight,
+    ...shadow.strong,
   },
-
   iconContainer: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
+    width: 80,
+    height: 80,
+    borderRadius: radius.pill,
     backgroundColor: colors.tealSoft,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 24,
+    marginBottom: spacing.xl,
   },
   icon: {
-    fontSize: 60,
+    fontSize: 44,
   },
-
   titleKo: {
-    fontSize: 32,
+    fontSize: 22,
     fontWeight: '800',
     color: colors.ink,
-    marginBottom: 8,
     textAlign: 'center',
-    letterSpacing: -0.5,
+    marginBottom: spacing.xs,
   },
   descriptionKo: {
-    fontSize: 18,
-    fontWeight: '500',
-    color: colors.ink,
-    lineHeight: 26,
+    fontSize: 15,
+    fontWeight: '600',
+    color: colors.textSecondary,
     textAlign: 'center',
-    marginBottom: 20,
+    lineHeight: 22,
+  },
+  divider: {
+    width: 60,
+    height: 2,
+    backgroundColor: colors.borderLight,
+    marginVertical: spacing.lg,
   },
   titleVi: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: colors.muted,
+    fontSize: 16,
+    fontWeight: '700',
+    color: colors.tealDark,
     textAlign: 'center',
-    marginBottom: 4,
+    marginBottom: spacing.xs,
   },
   descriptionVi: {
-    fontSize: 13,
-    fontWeight: '400',
-    color: colors.muted,
-    lineHeight: 20,
+    fontSize: 14,
+    color: colors.textMuted,
     textAlign: 'center',
+    lineHeight: 20,
   },
-
   footer: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: '#FFFFFF',
-  },
-  confirmBtn: {
-    backgroundColor: colors.teal,
-    paddingVertical: 16,
-    borderRadius: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  confirmBtnText: {
-    fontSize: 16,
-    fontWeight: '800',
-    color: '#FFFFFF',
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.lg,
+    backgroundColor: colors.surface,
+    borderTopWidth: 1,
+    borderTopColor: colors.borderLight,
   },
 });

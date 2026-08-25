@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
-import { colors } from '../../theme/colors';
+import { View, Text, StyleSheet, Platform } from 'react-native';
+import { colors, radius, spacing, shadow } from '../../theme';
 import { SESSION1 } from '../../data/lessonData';
-import { useLang, pick } from '../../components/LangContext';
-import { ActivityHeader } from '../../components/ActivityHeader';
+import { useLang, pick, ActivityHeader, CtaButton } from '../../components';
 
 const TUTOR_AUDIO = require('../../../assets/sounds/tutor_intro_5.wav') as string;
 
@@ -79,15 +78,12 @@ export function IntroEvalStage({ onNext, onBack }: Props) {
 
       {/* ── 하단 CTA ── */}
       <View style={styles.footer}>
-        <TouchableOpacity
-          style={[styles.ctaBtn, isAudioPlaying && styles.ctaBtnDisabled]}
-          onPress={isAudioPlaying ? undefined : onNext}
-          activeOpacity={isAudioPlaying ? 1 : 0.85}
-        >
-          <Text style={[styles.ctaBtnText, isAudioPlaying && styles.ctaBtnTextDisabled]}>
-            {pick(lang, '다음  →', 'Tiếp theo  →')}
-          </Text>
-        </TouchableOpacity>
+        <CtaButton
+          title={pick(lang, '다음  →', 'Tiếp theo  →')}
+          onPress={onNext}
+          disabled={isAudioPlaying}
+          size="lg"
+        />
       </View>
     </View>
   );
@@ -96,129 +92,105 @@ export function IntroEvalStage({ onNext, onBack }: Props) {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.surface,
   },
-
-  // ── Content ──
   content: {
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.lg,
   },
   card: {
     alignItems: 'center',
-    gap: 20,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#EAEDF0',
-    paddingVertical: 32,
-    paddingHorizontal: 24,
+    gap: spacing.lg,
+    backgroundColor: colors.surface,
+    borderRadius: radius.xxl,
+    borderWidth: 1.5,
+    borderColor: colors.borderLight,
+    paddingVertical: spacing.xxl,
+    paddingHorizontal: spacing.xl,
+    ...shadow.card,
   },
-
   badge: {
     backgroundColor: colors.tealSoft,
-    borderRadius: 20,
-    paddingHorizontal: 14,
-    paddingVertical: 6,
+    borderRadius: radius.pill,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
   },
   badgeText: {
+    color: colors.tealDark,
     fontSize: 13,
     fontWeight: '700',
-    color: colors.teal,
   },
-
   iconCircle: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: colors.tealSoft,
+    width: 68,
+    height: 68,
+    borderRadius: radius.pill,
+    backgroundColor: colors.bgSubtle,
     alignItems: 'center',
     justifyContent: 'center',
   },
   iconEmoji: {
-    fontSize: 36,
+    fontSize: 34,
   },
-
   title: {
     fontSize: 22,
-    fontWeight: '700',
+    fontWeight: '800',
     color: colors.ink,
     textAlign: 'center',
-    lineHeight: 32,
+    lineHeight: 28,
   },
   subtitle: {
-    fontSize: 14,
-    fontWeight: '400',
-    color: colors.teal,
+    fontSize: 15,
+    color: colors.textMuted,
     textAlign: 'center',
     lineHeight: 22,
+    marginTop: -spacing.xs,
   },
-
   achievementCard: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 12,
-    backgroundColor: '#F0FAFA',
-    borderRadius: 12,
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    alignSelf: 'stretch',
+    alignItems: 'center',
+    gap: spacing.md,
+    backgroundColor: colors.bgSubtle,
+    borderRadius: radius.lg,
+    padding: spacing.md,
+    width: '100%',
+    borderWidth: 1,
+    borderColor: colors.border,
   },
   checkCircle: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: colors.teal,
+    width: 32,
+    height: 32,
+    borderRadius: radius.pill,
+    backgroundColor: colors.correctLight,
+    borderWidth: 1.5,
+    borderColor: colors.correct,
     alignItems: 'center',
     justifyContent: 'center',
-    flexShrink: 0,
-    marginTop: 1,
   },
   checkMark: {
-    color: '#FFFFFF',
-    fontSize: 14,
-    fontWeight: '700',
+    color: colors.correct,
+    fontWeight: '900',
+    fontSize: 16,
   },
   achievementText: {
     flex: 1,
-    gap: 3,
+    gap: 2,
   },
   achievementLabel: {
     fontSize: 14,
     fontWeight: '700',
-    color: colors.ink,
+    color: colors.textPrimary,
   },
   achievementDesc: {
-    fontSize: 13,
-    fontWeight: '400',
-    color: colors.muted,
-    lineHeight: 20,
+    fontSize: 12,
+    color: colors.textMuted,
   },
-
-  // ── Footer ──
   footer: {
-    padding: 16,
-    paddingBottom: 20,
-    backgroundColor: '#FFFFFF',
-  },
-  ctaBtn: {
-    backgroundColor: colors.teal,
-    borderRadius: 16,
-    paddingVertical: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  ctaBtnDisabled: {
-    backgroundColor: colors.line,
-  },
-  ctaBtnText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '700',
-  },
-  ctaBtnTextDisabled: {
-    color: colors.muted,
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.lg,
+    backgroundColor: colors.surface,
+    borderTopWidth: 1,
+    borderTopColor: colors.borderLight,
   },
 });

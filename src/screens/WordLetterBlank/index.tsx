@@ -2,17 +2,13 @@
  * 소리를 듣고 빈칸을 채우기 (WordLetterBlank)
  * - 프로그레스바 헤더
  * - 1번 세트에서 베트남어 안내 토스트 팝업 및 자동 음원 재생
- * - 음성 재생 버튼
- * - 빈칸 채우기 보드
- * - 글자 타일
- * - 정답/오답 피드백
+ * - 공통 ActivityHeader, AudioPlayButton, CtaButton, QuizFeedbackModal 적용
  */
 import { useState, useRef, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Modal, Platform, ScrollView } from 'react-native';
-import { colors } from '../../theme/colors';
-import { useLang, pick } from '../../components/LangContext';
+import { View, Text, TouchableOpacity, StyleSheet, Platform, ScrollView } from 'react-native';
+import { colors, radius, spacing, shadow } from '../../theme';
+import { useLang, pick, ActivityHeader, CtaButton, QuizFeedbackModal, AudioPlayButton } from '../../components';
 import { useSfx } from '../../hooks/useSfx';
-import { ActivityHeader } from '../../components/ActivityHeader';
 
 interface Question {
   no: number;
@@ -33,7 +29,13 @@ interface Props {
   totalSets?: number;
 }
 
-export function WordLetterBlank({ questions = [], onNext, onBack, currentSetNumber = 1, totalSets = 1 }: Props) {
+export function WordLetterBlank({
+  questions = [],
+  onNext,
+  onBack,
+  currentSetNumber = 1,
+  totalSets = 1,
+}: Props) {
   const { lang } = useLang();
   const sfx = useSfx();
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -43,7 +45,7 @@ export function WordLetterBlank({ questions = [], onNext, onBack, currentSetNumb
   const [selectedTiles, setSelectedTiles] = useState<string[]>([]);
   const [usedTileIndices, setUsedTileIndices] = useState<Set<number>>(new Set());
   const [showModal, setShowModal] = useState(false);
-  const [modalState, setModalState] = useState<'correct' | 'wrong' | null>(null);
+  const [isCorrect, setIsCorrect] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [showToast, setShowToast] = useState(currentSetNumber === 1);
   const [isToastAudioPlaying, setIsToastAudioPlaying] = useState(false);
@@ -83,7 +85,7 @@ export function WordLetterBlank({ questions = [], onNext, onBack, currentSetNumb
       audio.onerror = () => {
         setIsToastAudioPlaying(false);
       };
-    } catch (e) {
+    } catch {
       setIsToastAudioPlaying(false);
     }
   };
@@ -128,6 +130,7 @@ export function WordLetterBlank({ questions = [], onNext, onBack, currentSetNumb
 
   const handleSelectTile = (tileIndex: number) => {
     if (usedTileIndices.has(tileIndex)) return;
+    if (selectedTiles.length >= currentQuestion.slots.length) return;
 
     const newUsedIndices = new Set(usedTileIndices);
     newUsedIndices.add(tileIndex);
@@ -151,33 +154,33 @@ export function WordLetterBlank({ questions = [], onNext, onBack, currentSetNumb
     if (selectedTiles.length !== currentQuestion.slots.length) return;
 
     const userAnswer = selectedTiles.join('');
-    const isCorrect = userAnswer === currentQuestion.answer;
-
-    setModalState(isCorrect ? 'correct' : 'wrong');
+    const correct = userAnswer === currentQuestion.answer;
+    setIsCorrect(correct);
     setShowModal(true);
+
+    if (correct) {
+      sfx.play('correct');
+    } else {
+      sfx.play('wrong');
+    }
   };
 
-  const handleCloseModal = () => {
+  const handleNextFromModal = () => {
     setShowModal(false);
 
-    if (modalState === 'correct') {
+    if (isCorrect) {
       if (currentIdx < questions.length - 1) {
         setCurrentIdx(currentIdx + 1);
         setSelectedTiles([]);
         setUsedTileIndices(new Set());
-        setModalState(null);
       } else {
         onNext?.();
       }
     }
   };
 
-  const handleReset = () => {
-    setSelectedTiles([]);
-    setUsedTileIndices(new Set());
-  };
-
   const progressPct = (currentSetNumber / totalSets) * 100;
+  const isFilled = selectedTiles.length === currentQuestion.slots.length;
 
   return (
     <View style={s.root}>
@@ -189,20 +192,23 @@ export function WordLetterBlank({ questions = [], onNext, onBack, currentSetNumb
       <ScrollView style={s.scroll} contentContainerStyle={s.content}>
         {/* 질문 제목 */}
         <View style={s.titleBox}>
-          <Text style={s.title}>{pick(lang, '소리를 듣고 빈칸을 채우세요', 'Hãy nghe đoạn âm thanh rồi điền vào chỗ trống nhé')}</Text>
-          <Text style={s.subtitle}>{pick(lang, 'Hãy nghe đoạn âm thanh rồi điền vào chỗ trống nhé', '소리를 듣고 빈칸을 채우세요')}</Text>
+          <Text style={s.title}>
+            {pick(lang, '소리를 듣고 빈칸을 채우세요', 'Hãy nghe đoạn âm thanh rồi điền vào chỗ trống nhé')}
+          </Text>
+          <Text style={s.subtitle}>
+            {pick(lang, 'Hãy nghe đoạn âm thanh rồi điền vào chỗ trống nhé', '소리를 듣고 빈칸을 채우세요')}
+          </Text>
         </View>
 
         {/* 음성 재생 버튼 */}
         <View style={s.audioBtnContainer}>
-          <TouchableOpacity
-            style={[s.audioBtn, isPlaying && s.audioBtnPlaying]}
+          <AudioPlayButton
+            isPlaying={isPlaying}
             onPress={playAudio}
+            size="lg"
+            label={pick(lang, '듣기', 'Nghe')}
             disabled={!currentQuestion.audioUrl}
-            activeOpacity={0.7}
-          >
-            <Text style={s.audioBtnIcon}>{isPlaying ? '🔊' : '🔈'}</Text>
-          </TouchableOpacity>
+          />
         </View>
 
         {/* 1번 세트 안내 토스트 팝업 */}
@@ -234,288 +240,251 @@ export function WordLetterBlank({ questions = [], onNext, onBack, currentSetNumb
         )}
 
         {/* 빈칸 채우기 보드 */}
-        <View style={[s.boardContainer, showToast && currentSetNumber === 1 && s.boardContainerWithToast]}>
-          <Text style={s.boardText}>{currentQuestion.displayFormat}</Text>
+        <View style={s.boardContainer}>
           <View style={s.slotsContainer}>
-            {currentQuestion.slots.map((slot, idx) => (
+            {currentQuestion.slots.map((slot, idx) => {
+              const filledValue = selectedTiles[idx];
+              return (
+                <TouchableOpacity
+                  key={idx}
+                  style={[s.slot, filledValue && s.slotFilled]}
+                  onPress={() => handleRemoveTile(idx)}
+                  disabled={filledValue === undefined}
+                  activeOpacity={0.7}
+                >
+                  <Text style={[s.slotText, filledValue && s.slotTextFilled]}>
+                    {filledValue || ''}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+          <Text style={s.boardHintText}>
+            {pick(lang, '글자를 탭하여 빈칸에 채우세요', 'Chạm vào chữ để điền vào chỗ trống')}
+          </Text>
+        </View>
+
+        {/* 글자 타일 목록 */}
+        <View style={s.tilesContainer}>
+          {currentQuestion.tiles.map((tile, idx) => {
+            const isUsed = usedTileIndices.has(idx);
+            return (
               <TouchableOpacity
                 key={idx}
-                style={s.slot}
-                onPress={() => handleRemoveTile(idx)}
-                disabled={selectedTiles[idx] === undefined}
+                style={[s.tile, isUsed && s.tileUsed]}
+                onPress={() => handleSelectTile(idx)}
+                disabled={isUsed}
+                activeOpacity={0.7}
               >
-                <Text style={s.slotText}>{selectedTiles[idx] || slot}</Text>
+                <Text style={[s.tileText, isUsed && s.tileTextUsed]}>
+                  {tile}
+                </Text>
               </TouchableOpacity>
-            ))}
-          </View>
+            );
+          })}
         </View>
-
-        {/* 글자 타일 */}
-        <View style={s.tilesContainer}>
-          {currentQuestion.tiles.map((tile, idx) => (
-            <TouchableOpacity
-              key={idx}
-              style={[
-                s.tile,
-                usedTileIndices.has(idx) && s.tileUsed,
-              ]}
-              onPress={() => handleSelectTile(idx)}
-              disabled={usedTileIndices.has(idx)}
-              activeOpacity={0.7}
-            >
-              <Text style={[s.tileText, usedTileIndices.has(idx) && s.tileTextUsed]}>
-                {tile}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-
-        {/* 초기화 버튼 */}
-        {selectedTiles.length > 0 && (
-          <TouchableOpacity style={s.resetBtn} onPress={handleReset} activeOpacity={0.7}>
-            <Text style={s.resetBtnText}>{pick(lang, '초기화', 'Làm lại')}</Text>
-          </TouchableOpacity>
-        )}
       </ScrollView>
 
       {/* 하단 확인 버튼 */}
       <View style={s.footer}>
-        <TouchableOpacity
-          style={[s.confirmBtn, selectedTiles.length !== currentQuestion.slots.length && s.confirmBtnDisabled]}
+        <CtaButton
+          title={pick(lang, '확인', 'Xác nhận')}
           onPress={handleConfirm}
-          disabled={selectedTiles.length !== currentQuestion.slots.length}
-          activeOpacity={0.8}
-        >
-          <Text style={s.confirmBtnText}>{pick(lang, '확인', 'Xác nhận')}</Text>
-        </TouchableOpacity>
+          disabled={!isFilled}
+          size="lg"
+        />
       </View>
 
-      {/* 정답/오답 모달 */}
-      <Modal visible={showModal} animationType="fade" transparent>
-        <View style={s.modalOverlay}>
-          <View style={s.modalBox}>
-            <Text style={s.modalTitle}>
-              {modalState === 'correct' ? '✅ 정답입니다!' : '❌ 오답입니다'}
-            </Text>
-            <Text style={s.modalAnswer}>{currentQuestion.answer}</Text>
-            {currentQuestion.viText && (
-              <Text style={s.modalViText}>{currentQuestion.viText}</Text>
-            )}
-            <TouchableOpacity
-              style={s.modalBtn}
-              onPress={handleCloseModal}
-              activeOpacity={0.8}
-            >
-              <Text style={s.modalBtnText}>
-                {modalState === 'correct' ? '다음' : '다시 시도'}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+      {/* 공통 정답/오답 피드백 모달 */}
+      <QuizFeedbackModal
+        visible={showModal}
+        isCorrect={isCorrect}
+        answerText={currentQuestion.answer}
+        explanation={currentQuestion.desc}
+        onNext={handleNextFromModal}
+        onClose={() => setShowModal(false)}
+      />
     </View>
   );
 }
 
 const s = StyleSheet.create({
-  root: { flex: 1, backgroundColor: '#FFFFFF' },
-  scroll: { flex: 1 },
-  content: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 24 },
-
+  root: {
+    flex: 1,
+    backgroundColor: colors.surface,
+  },
+  scroll: {
+    flex: 1,
+  },
+  content: {
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.lg,
+    paddingBottom: spacing.xxl,
+  },
+  container: {
+    flex: 1,
+    backgroundColor: colors.surface,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyText: {
+    fontSize: 14,
+    color: colors.muted,
+    textAlign: 'center',
+  },
+  titleBox: {
+    marginBottom: spacing.lg,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: '800',
+    color: colors.ink,
+  },
+  subtitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: colors.muted,
+    marginTop: spacing.xs,
+  },
+  audioBtnContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: spacing.lg,
+  },
   toastBox: {
-    backgroundColor: '#e6f8f7',
+    backgroundColor: colors.bgSubtle,
+    borderRadius: radius.lg,
     borderWidth: 1.5,
-    borderColor: '#00a8a6',
-    borderRadius: 14,
-    paddingHorizontal: 16,
-    paddingTop: 14,
-    paddingBottom: 10,
-    marginBottom: 12,
+    borderColor: colors.border,
+    padding: spacing.md,
+    marginBottom: spacing.lg,
+    position: 'relative',
+    ...shadow.soft,
   },
   toastCloseBtn: {
-    position: 'absolute' as const,
-    top: 8,
-    right: 10,
-    padding: 4,
+    position: 'absolute',
+    top: spacing.sm,
+    right: spacing.sm,
+    width: 24,
+    height: 24,
+    borderRadius: radius.pill,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   toastCloseText: {
     fontSize: 14,
-    color: '#6b7280',
+    color: colors.textMuted,
     fontWeight: '700',
   },
   toastMessage: {
     fontSize: 13,
-    fontWeight: '700',
-    color: '#111827',
-    lineHeight: 19,
-    paddingRight: 20,
+    color: colors.textSecondary,
+    lineHeight: 18,
+    marginRight: spacing.xl,
+    fontWeight: '500',
   },
   toastBottomRow: {
-    alignItems: 'flex-end',
-    marginTop: 4,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: spacing.sm,
   },
   toastSpeakerBtn: {
-    padding: 4,
-    borderRadius: 8,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xxs,
+    borderRadius: radius.sm,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
   toastSpeakerPlaying: {
-    backgroundColor: '#b2ecea',
+    backgroundColor: colors.tealSoft,
+    borderColor: colors.teal,
   },
   toastSpeakerIcon: {
-    fontSize: 18,
+    fontSize: 14,
   },
-
-  titleBox: { marginBottom: 32 },
-  title: { fontSize: 18, fontWeight: '800', color: colors.ink, marginBottom: 6 },
-  subtitle: { fontSize: 14, color: colors.muted },
-
-  audioBtnContainer: {
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  audioBtn: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: colors.teal,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: colors.teal,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 6,
-  },
-  audioBtnPlaying: { backgroundColor: '#0d9488' },
-  audioBtnIcon: { fontSize: 32 },
-
   boardContainer: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 14,
-    padding: 20,
+    backgroundColor: colors.surface,
+    borderRadius: radius.xl,
+    padding: spacing.xl,
+    marginBottom: spacing.xl,
     alignItems: 'center',
-    minHeight: 120,
-    justifyContent: 'center',
     borderWidth: 1.5,
-    borderColor: colors.teal,
-    marginBottom: 16,
-  },
-  boardContainerWithToast: { marginTop: 12 },
-  boardText: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: colors.ink,
-    marginBottom: 12,
+    borderColor: colors.border,
+    ...shadow.card,
   },
   slotsContainer: {
     flexDirection: 'row',
-    gap: 8,
-    flexWrap: 'wrap',
     justifyContent: 'center',
+    gap: spacing.md,
+    marginBottom: spacing.md,
   },
   slot: {
-    backgroundColor: '#EEF4FF',
-    borderWidth: 1.5,
+    width: 54,
+    height: 58,
+    borderRadius: radius.lg,
+    borderWidth: 2,
     borderColor: colors.teal,
-    borderRadius: 8,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    minWidth: 44,
+    borderStyle: 'dashed',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: colors.bgSubtle,
+  },
+  slotFilled: {
+    borderStyle: 'solid',
+    backgroundColor: colors.tealSoft,
+    borderColor: colors.tealDark,
   },
   slotText: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: colors.ink,
+    fontSize: 22,
+    fontWeight: '800',
+    color: colors.textMuted,
   },
-
+  slotTextFilled: {
+    color: colors.tealDark,
+  },
+  boardHintText: {
+    fontSize: 13,
+    color: colors.textMuted,
+    fontWeight: '500',
+  },
   tilesContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
+    gap: spacing.md,
     justifyContent: 'center',
-    marginBottom: 16,
+    marginBottom: spacing.xl,
   },
   tile: {
+    minWidth: 54,
+    height: 54,
+    paddingHorizontal: spacing.md,
+    borderRadius: radius.lg,
     backgroundColor: colors.surface,
     borderWidth: 1.5,
-    borderColor: colors.line,
-    borderRadius: 8,
-    paddingVertical: 10,
-    paddingHorizontal: 14,
-    minWidth: 48,
-    alignItems: 'center',
-  },
-  tileUsed: {
-    backgroundColor: '#f3f4f6',
-    borderColor: '#d1d5db',
-  },
-  tileText: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: colors.ink,
-  },
-  tileTextUsed: {
-    color: '#9ca3af',
-  },
-
-  resetBtn: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: colors.line,
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  resetBtnText: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: colors.muted,
-  },
-
-  footer: {
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    backgroundColor: '#FFFFFF',
-  },
-  confirmBtn: {
-    backgroundColor: colors.teal,
-    paddingVertical: 14,
-    borderRadius: 12,
-    alignItems: 'center',
-  },
-  confirmBtnDisabled: {
-    backgroundColor: '#d1d5db',
-  },
-  confirmBtnText: { fontSize: 15, fontWeight: '700', color: '#fff' },
-
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    borderColor: colors.border,
     alignItems: 'center',
     justifyContent: 'center',
+    ...shadow.soft,
   },
-  modalBox: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 24,
-    width: '80%',
-    maxWidth: 300,
-    alignItems: 'center',
+  tileUsed: {
+    backgroundColor: colors.bgDisabled,
+    borderColor: colors.borderLight,
+    opacity: 0.5,
   },
-  modalTitle: { fontSize: 16, fontWeight: '700', color: colors.ink, marginBottom: 12 },
-  modalAnswer: { fontSize: 20, fontWeight: '800', color: colors.teal, marginBottom: 4 },
-  modalViText: { fontSize: 13, color: colors.muted, marginBottom: 16 },
-  modalBtn: {
-    backgroundColor: colors.teal,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 10,
+  tileText: {
+    fontSize: 20,
+    fontWeight: '800',
+    color: colors.textPrimary,
   },
-  modalBtnText: { fontSize: 14, fontWeight: '700', color: '#fff' },
-
-  container: { flex: 1, backgroundColor: '#FFFFFF' },
-  emptyText: { fontSize: 14, color: colors.muted, textAlign: 'center', padding: 20 },
+  tileTextUsed: {
+    color: colors.textDisabled,
+  },
+  footer: {
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.lg,
+    backgroundColor: colors.surface,
+    borderTopWidth: 1,
+    borderTopColor: colors.borderLight,
+  },
 });

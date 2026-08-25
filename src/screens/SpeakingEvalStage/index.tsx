@@ -2,13 +2,12 @@
  * 실전평가 - 음성 발화 평가 (SpeakingEvalStage)
  * - 빈칸 채우기 + 음성 녹음
  * - 4단계 (1/4, 2/4, 3/4, 4/4)
- * - 다국어 지원
+ * - 공통 ActivityHeader, CtaButton 적용
  */
 import { useState, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, TextInput, Platform } from 'react-native';
-import { colors } from '../../theme/colors';
-import { useLang, pick } from '../../components/LangContext';
-import { ActivityHeader } from '../../components/ActivityHeader';
+import { colors, radius, spacing, shadow } from '../../theme';
+import { useLang, pick, ActivityHeader, CtaButton } from '../../components';
 
 interface BlankField {
   placeholder: string;
@@ -99,8 +98,8 @@ export function SpeakingEvalStage({
     }
   };
 
+  const progressPct = ((currentIdx + 1) / questions.length) * 100;
   const isLastStep = currentIdx === questions.length - 1;
-  const progressPct = (currentSetNumber / totalSets) * 100;
 
   return (
     <View style={s.root}>
@@ -113,7 +112,7 @@ export function SpeakingEvalStage({
         {/* 단계 표시 */}
         <View style={s.stepBox}>
           <Text style={s.stepText}>
-            {pick(lang, `실전평가 · ${currentQuestion.step}/${currentQuestion.totalSteps}`, `Đánh giá thực tế · ${currentQuestion.step}/${currentQuestion.totalSteps}`)}
+            {pick(lang, '실전평가', 'Đánh giá thực chiến')} · {currentQuestion.step}/{currentQuestion.totalSteps}
           </Text>
         </View>
 
@@ -123,7 +122,7 @@ export function SpeakingEvalStage({
           <Text style={s.subtitle}>{pick(lang, '주어진 정보를 넣어 문장을 완성한 뒤, 소리 내어 읽으세요', 'Điền thông tin được cung cấp để hoàn thành câu, sau đó đọc to lên')}</Text>
         </View>
 
-        {/* 베트남어 지문 */}
+        {/* 안내 지문 */}
         <View style={s.guidanceBox}>
           <Text style={s.guidanceLabel}>{pick(lang, '안내:', 'Hướng dẫn:')}</Text>
           {currentQuestion.blanks.map((blank, idx) => (
@@ -134,7 +133,7 @@ export function SpeakingEvalStage({
           ))}
         </View>
 
-        {/* 입력 필드들 */}
+        {/* 입력 필드 카드 */}
         <View style={s.sentenceCard}>
           <Text style={s.sentenceLabel}>{pick(lang, '한국어 문장:', 'Câu tiếng Hàn:')}</Text>
           <Text style={s.sentenceViText}>{currentQuestion.sentenceVi}</Text>
@@ -148,7 +147,7 @@ export function SpeakingEvalStage({
                 <TextInput
                   style={s.blankInput}
                   placeholder={pick(lang, '입력하세요', 'Nhập')}
-                  placeholderTextColor={colors.muted}
+                  placeholderTextColor={colors.textDisabled}
                   value={inputs[idx] || ''}
                   onChangeText={(value) => handleInputChange(idx, value)}
                 />
@@ -160,13 +159,9 @@ export function SpeakingEvalStage({
           </View>
         </View>
 
-        {/* 마이크 버튼 + 안내 */}
+        {/* 마이크 녹음 박스 */}
         <View style={s.recordingBox}>
           <View style={s.recordingControls}>
-            <TouchableOpacity style={s.smallBtn} activeOpacity={0.7}>
-              <Text style={s.smallBtnText}>테스트</Text>
-            </TouchableOpacity>
-
             <TouchableOpacity
               style={[s.micButton, isRecording && s.micButtonActive]}
               onPress={isRecording ? stopRecording : startRecording}
@@ -174,121 +169,187 @@ export function SpeakingEvalStage({
             >
               <Text style={s.micIcon}>🎤</Text>
             </TouchableOpacity>
-
-            <TouchableOpacity style={s.smallBtn} activeOpacity={0.7}>
-              <Text style={s.smallBtnText}>−</Text>
-            </TouchableOpacity>
           </View>
           <Text style={s.recordingHint}>
-            {pick(lang, '마이크를 눌러 단어 소리 내어 읽으세요', 'Nhấp vào micrô để đọc từ to lên')}
+            {pick(lang, '마이크를 눌러 단어를 소리 내어 읽으세요', 'Nhấp vào micrô để đọc từ to lên')}
           </Text>
         </View>
       </ScrollView>
 
-      {/* 하단 버튼 */}
+      {/* 하단 액션 버튼 */}
       <View style={s.footer}>
-        <TouchableOpacity
-          style={[s.nextBtn, !isInputComplete && s.nextBtnDisabled]}
+        <CtaButton
+          title={pick(lang, isLastStep ? '제출' : '다음  →', isLastStep ? 'Gửi' : 'Tiếp theo  →')}
           onPress={handleNext}
           disabled={!isInputComplete}
-          activeOpacity={0.8}
-        >
-          <Text style={s.nextBtnText}>
-            {pick(lang, isLastStep ? '제출' : '다음', isLastStep ? 'Gửi' : 'Tiếp theo')} →
-          </Text>
-        </TouchableOpacity>
+          size="lg"
+        />
       </View>
     </View>
   );
 }
 
 const s = StyleSheet.create({
-  root: { flex: 1, backgroundColor: '#FFFFFF' },
-  scroll: { flex: 1 },
-  content: { paddingHorizontal: 16, paddingTop: 16, paddingBottom: 20 },
-  container: { flex: 1, backgroundColor: '#FFFFFF' },
-  emptyText: { fontSize: 14, color: colors.muted, textAlign: 'center', padding: 20 },
-
-  stepBox: { marginBottom: 16 },
-  stepText: { fontSize: 13, fontWeight: '700', color: colors.teal },
-
-  titleBox: { marginBottom: 20 },
-  title: { fontSize: 18, fontWeight: '800', color: colors.ink, marginBottom: 4 },
-  subtitle: { fontSize: 13, fontWeight: '500', color: colors.muted, lineHeight: 18 },
-
-  guidanceBox: {
-    backgroundColor: '#F0FAFA',
-    borderRadius: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    marginBottom: 20,
-    gap: 8,
+  root: {
+    flex: 1,
+    backgroundColor: colors.surface,
   },
-  guidanceLabel: { fontSize: 13, fontWeight: '700', color: colors.ink },
-  guidanceItem: { flexDirection: 'row', gap: 8, alignItems: 'flex-start' },
-  guidanceArrow: { fontSize: 12, fontWeight: '700', color: colors.teal, marginTop: 2 },
-  guidanceText: { fontSize: 13, fontWeight: '600', color: colors.ink, flex: 1, lineHeight: 18 },
-
-  sentenceCard: {
-    backgroundColor: '#F8F9FA',
-    borderRadius: 12,
-    padding: 14,
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: colors.line,
+  scroll: {
+    flex: 1,
   },
-  sentenceLabel: { fontSize: 13, fontWeight: '700', color: colors.muted, marginBottom: 6 },
-  sentenceViText: { fontSize: 15, fontWeight: '700', color: colors.ink, marginBottom: 14, lineHeight: 20 },
-
-  blankFieldsContainer: { gap: 12 },
-  blankFieldGroup: { marginBottom: 4 },
-  blankLabel: { fontSize: 12, fontWeight: '700', color: colors.ink, marginBottom: 4 },
-  blankInput: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    fontSize: 14,
-    fontWeight: '600',
-    color: colors.ink,
-    borderWidth: 1.5,
-    borderColor: colors.line,
-    marginBottom: 4,
+  content: {
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.lg,
+    paddingBottom: spacing.xxl,
   },
-  blankSubtext: { fontSize: 11, fontWeight: '500', color: colors.muted },
-
-  recordingBox: { alignItems: 'center', marginBottom: 24 },
-  recordingControls: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 12 },
-  smallBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 6,
-    backgroundColor: '#E5E7EB',
+  container: {
+    flex: 1,
+    backgroundColor: colors.surface,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  smallBtnText: { fontSize: 18, fontWeight: '600', color: colors.ink },
+  emptyText: {
+    fontSize: 14,
+    color: colors.muted,
+    textAlign: 'center',
+  },
+  stepBox: {
+    marginBottom: spacing.xs,
+  },
+  stepText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: colors.teal,
+  },
+  titleBox: {
+    marginBottom: spacing.lg,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: '800',
+    color: colors.ink,
+    marginBottom: spacing.xs,
+  },
+  subtitle: {
+    fontSize: 13,
+    fontWeight: '500',
+    color: colors.textMuted,
+    lineHeight: 18,
+  },
+  guidanceBox: {
+    backgroundColor: colors.tealSoft,
+    borderRadius: radius.lg,
+    padding: spacing.md,
+    marginBottom: spacing.lg,
+    borderLeftWidth: 4,
+    borderLeftColor: colors.teal,
+  },
+  guidanceLabel: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: colors.tealDark,
+    marginBottom: spacing.xs,
+  },
+  guidanceItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    marginTop: spacing.xxs,
+  },
+  guidanceArrow: {
+    fontSize: 10,
+    color: colors.teal,
+  },
+  guidanceText: {
+    fontSize: 13,
+    color: colors.textSecondary,
+    fontWeight: '600',
+  },
+  sentenceCard: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.xl,
+    padding: spacing.lg,
+    marginBottom: spacing.xl,
+    borderWidth: 1.5,
+    borderColor: colors.border,
+    ...shadow.card,
+  },
+  sentenceLabel: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: colors.textMuted,
+    marginBottom: spacing.xs,
+  },
+  sentenceViText: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: colors.ink,
+    marginBottom: spacing.lg,
+  },
+  blankFieldsContainer: {
+    gap: spacing.md,
+  },
+  blankFieldGroup: {
+    gap: spacing.xs,
+  },
+  blankLabel: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: colors.textPrimary,
+  },
+  blankInput: {
+    backgroundColor: colors.bgSubtle,
+    borderRadius: radius.md,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    fontSize: 15,
+    borderWidth: 1,
+    borderColor: colors.border,
+    color: colors.textPrimary,
+  },
+  blankSubtext: {
+    fontSize: 12,
+    color: colors.textMuted,
+  },
+  recordingBox: {
+    alignItems: 'center',
+    paddingVertical: spacing.lg,
+  },
+  recordingControls: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: spacing.md,
+  },
   micButton: {
     width: 64,
     height: 64,
-    borderRadius: 32,
-    backgroundColor: colors.teal,
-    justifyContent: 'center',
-    alignItems: 'center',
+    borderRadius: radius.pill,
+    backgroundColor: colors.tealSoft,
     borderWidth: 2,
     borderColor: colors.teal,
-  },
-  micButtonActive: { backgroundColor: '#00857F', borderColor: '#00857F' },
-  micIcon: { fontSize: 32 },
-  recordingHint: { fontSize: 12, fontWeight: '500', color: colors.muted, textAlign: 'center' },
-
-  footer: { paddingHorizontal: 16, paddingVertical: 12, backgroundColor: '#FFFFFF' },
-  nextBtn: {
-    backgroundColor: colors.teal,
-    paddingVertical: 14,
-    borderRadius: 12,
     alignItems: 'center',
+    justifyContent: 'center',
+    ...shadow.soft,
   },
-  nextBtnDisabled: { backgroundColor: '#D1D5DB' },
-  nextBtnText: { fontSize: 15, fontWeight: '700', color: '#fff' },
+  micButtonActive: {
+    backgroundColor: colors.wrongLight,
+    borderColor: colors.wrong,
+  },
+  micIcon: {
+    fontSize: 28,
+  },
+  recordingHint: {
+    fontSize: 13,
+    color: colors.textMuted,
+    textAlign: 'center',
+    fontWeight: '500',
+  },
+  footer: {
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.lg,
+    backgroundColor: colors.surface,
+    borderTopWidth: 1,
+    borderTopColor: colors.borderLight,
+  },
 });

@@ -1,15 +1,7 @@
-/**
- * 완료 축하 화면 (CompletionCelebrationStage)
- * - 학습 완료 축하
- * - 파티클 애니메이션 (Lottie)
- * - 다국어 지원 (한국어/베트남어)
- * - 확인 버튼
- */
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import LottieView from 'lottie-react-native';
-import { colors } from '../../theme/colors';
-import { useLang, pick } from '../../components/LangContext';
-import { ActivityHeader } from '../../components/ActivityHeader';
+import { colors, radius, spacing, shadow } from '../../theme';
+import { useLang, pick, ActivityHeader, CtaButton } from '../../components';
 
 interface Props {
   title?: string;
@@ -23,12 +15,12 @@ interface Props {
 }
 
 export function CompletionCelebrationStage({
-  title = '대단해요!',
-  titleVi = 'Tuyệt vời!',
-  description = '오늘의 단어를 모두 학습했어요.\n이제 문법을 배워볼까요?',
-  descriptionVi = 'Bạn đã học xong tất cả các từ vựng hôm nay.\nBây giờ, chúng ta cùng học ngữ pháp nhé!',
-  nextButtonText = '확인',
-  nextButtonTextVi = 'Xác nhận',
+  title = '수고하셨습니다!',
+  titleVi = 'Chúc mừng bạn!',
+  description = '오늘의 모든 학습을 성공적으로 완료했습니다.',
+  descriptionVi = 'Bạn đã hoàn thành xuất sắc tất cả bài học hôm nay.',
+  nextButtonText = '학습 리포트 보기',
+  nextButtonTextVi = 'Xem báo cáo học tập',
   onNext,
   onBack,
 }: Props) {
@@ -38,9 +30,9 @@ export function CompletionCelebrationStage({
     <View style={s.root}>
       <ActivityHeader percentage={100} onClose={onBack || (() => {})} />
 
-      <ScrollView style={s.scroll} contentContainerStyle={s.content}>
+      <View style={s.content}>
         {/* Lottie 파티클 애니메이션 */}
-        <View style={s.lottieContainer}>
+        <View style={s.lottieContainer} pointerEvents="none">
           <LottieView
             source={require('../../../assets/particle-rain.json')}
             autoPlay
@@ -49,38 +41,33 @@ export function CompletionCelebrationStage({
           />
         </View>
 
-        {/* 메인 콘텐츠 */}
+        {/* 메인 콘텐츠 카드 */}
         <View style={s.card}>
-          {/* 축하 아이콘 */}
           <View style={s.iconContainer}>
-            <Text style={s.icon}>🎉</Text>
+            <Text style={s.icon}>🏆</Text>
           </View>
 
-          {/* 타이틀 */}
-          <Text style={s.title}>
-            {pick(lang, title, titleVi)}
-          </Text>
+          {/* 한국어 */}
+          <Text style={s.titleKo}>{title}</Text>
+          <Text style={s.descriptionKo}>{description}</Text>
 
-          {/* 설명 */}
-          <Text style={s.description}>
-            {pick(lang, description, descriptionVi)}
-          </Text>
+          {/* 구분선 */}
+          <View style={s.divider} />
+
+          {/* 베트남어 */}
+          <Text style={s.titleVi}>{titleVi}</Text>
+          <Text style={s.descriptionVi}>{descriptionVi}</Text>
         </View>
-      </ScrollView>
-
-      {/* 하단 버튼 */}
-      <View style={s.footer}>
-        <TouchableOpacity
-          style={s.confirmBtn}
-          onPress={onNext}
-          activeOpacity={0.8}
-        >
-          <Text style={s.confirmBtnText}>
-            {pick(lang, nextButtonText, nextButtonTextVi)}
-          </Text>
-        </TouchableOpacity>
       </View>
 
+      {/* 하단 액션 버튼 */}
+      <View style={s.footer}>
+        <CtaButton
+          title={pick(lang, nextButtonText, nextButtonTextVi)}
+          onPress={onNext}
+          size="lg"
+        />
+      </View>
     </View>
   );
 }
@@ -88,88 +75,88 @@ export function CompletionCelebrationStage({
 const s = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
-  },
-  scroll: {
-    flex: 1,
+    backgroundColor: colors.surface,
   },
   content: {
-    paddingHorizontal: 16,
-    paddingTop: 40,
-    paddingBottom: 20,
+    flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: spacing.xl,
+    paddingBottom: spacing.xxl,
   },
-
-  // Lottie 애니메이션 컨테이너
   lottieContainer: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
-    height: 350,
+    height: 380,
     overflow: 'hidden',
-    pointerEvents: 'none',
   },
   lottieAnimation: {
     width: '100%',
     height: '100%',
   },
-
-  // 카드
   card: {
+    width: '100%',
+    backgroundColor: colors.surface,
+    borderRadius: radius.xxl,
+    paddingVertical: spacing.xxl,
+    paddingHorizontal: spacing.xl,
     alignItems: 'center',
-    marginTop: 120,
-    backgroundColor: '#FFFFFF',
+    borderWidth: 1.5,
+    borderColor: colors.borderLight,
+    ...shadow.strong,
   },
-
-  // 아이콘
   iconContainer: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
+    width: 80,
+    height: 80,
+    borderRadius: radius.pill,
     backgroundColor: colors.tealSoft,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 24,
+    marginBottom: spacing.xl,
   },
   icon: {
-    fontSize: 60,
+    fontSize: 44,
   },
-
-  // 텍스트
-  title: {
-    fontSize: 32,
+  titleKo: {
+    fontSize: 22,
     fontWeight: '800',
     color: colors.ink,
-    marginBottom: 16,
     textAlign: 'center',
-    letterSpacing: -0.5,
+    marginBottom: spacing.xs,
   },
-  description: {
+  descriptionKo: {
     fontSize: 15,
-    fontWeight: '500',
-    color: colors.muted,
-    lineHeight: 22,
+    fontWeight: '600',
+    color: colors.textSecondary,
     textAlign: 'center',
-    marginBottom: 40,
+    lineHeight: 22,
   },
-
-  // 하단 버튼
-  footer: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: '#FFFFFF',
+  divider: {
+    width: 60,
+    height: 2,
+    backgroundColor: colors.borderLight,
+    marginVertical: spacing.lg,
   },
-  confirmBtn: {
-    backgroundColor: colors.teal,
-    paddingVertical: 16,
-    borderRadius: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  confirmBtnText: {
+  titleVi: {
     fontSize: 16,
-    fontWeight: '800',
-    color: '#FFFFFF',
+    fontWeight: '700',
+    color: colors.tealDark,
+    textAlign: 'center',
+    marginBottom: spacing.xs,
+  },
+  descriptionVi: {
+    fontSize: 14,
+    color: colors.textMuted,
+    textAlign: 'center',
+    lineHeight: 20,
+  },
+  footer: {
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.lg,
+    backgroundColor: colors.surface,
+    borderTopWidth: 1,
+    borderTopColor: colors.borderLight,
   },
 });

@@ -18,8 +18,8 @@
  */
 import React, { useRef, useState, useEffect } from 'react';
 import { ScrollView, View, Text, TouchableOpacity, StyleSheet, Modal, Platform, Animated } from 'react-native';
-import { colors } from '../../theme/colors';
-import { useLang, pick } from '../../components/LangContext';
+import { colors, radius, spacing, shadow } from '../../theme';
+import { useLang, pick, ActivityHeader, CtaButton } from '../../components';
 import { useSfx } from '../../hooks/useSfx';
 
 interface Props {
@@ -171,17 +171,10 @@ export function SetWordbookEvalStage({
 
   return (
     <View style={s.container}>
-      {/* 프로그레스 바 헤더 */}
-      <View style={s.headerBar}>
-        <View style={s.progressCenter}>
-          <View style={s.progressTrack}>
-            <View style={[s.progressFill, { width: `${progressPct}%` as `${number}%` }]} />
-          </View>
-        </View>
-        <TouchableOpacity style={s.closeBtn} onPress={onBack} activeOpacity={0.7}>
-          <Text style={s.closeBtnText}>✕</Text>
-        </TouchableOpacity>
-      </View>
+      <ActivityHeader
+        percentage={progressPct}
+        onClose={onBack || (() => {})}
+      />
 
       <ScrollView
         style={s.scroll}
@@ -310,34 +303,29 @@ export function SetWordbookEvalStage({
 
       {/* 하단 2단 고정 액션 버튼 */}
       <View style={s.bottomBar}>
-        {/* 좌측: 단어 발음하기 */}
-        <TouchableOpacity
-          style={s.pronounceBtn}
-          onPress={() => {
-            setPronIdx(0);
-            setShowPronModal(true);
-            sfx.play();
-          }}
-          activeOpacity={0.8}
-        >
-          <Text style={s.pronounceBtnText}>
-            {pick(lang, '단어 발음하기', 'Luyện phát âm')}
-          </Text>
-        </TouchableOpacity>
-
-        {/* 우측: 세트 문제 풀기 */}
-        <TouchableOpacity
-          style={s.quizBtn}
-          onPress={() => {
-            sfx.play();
-            onNext();
-          }}
-          activeOpacity={0.8}
-        >
-          <Text style={s.quizBtnText}>
-            {pick(lang, '세트 문제 풀기', 'Làm bài tập')}
-          </Text>
-        </TouchableOpacity>
+        <View style={s.btnWrapper}>
+          <CtaButton
+            title={pick(lang, '단어 발음하기', 'Luyện phát âm')}
+            onPress={() => {
+              setPronIdx(0);
+              setShowPronModal(true);
+              sfx.play();
+            }}
+            variant="primary"
+            size="lg"
+          />
+        </View>
+        <View style={s.btnWrapper}>
+          <CtaButton
+            title={pick(lang, '세트 문제 풀기', 'Làm bài tập')}
+            onPress={() => {
+              sfx.play();
+              onNext();
+            }}
+            variant="secondary"
+            size="lg"
+          />
+        </View>
       </View>
 
       {/* ─── 단어 발음평가 모달 ──────────────────────────────────────── */}
@@ -699,40 +687,15 @@ const s = StyleSheet.create({
   // 하단 고정 2단 액션 바
   bottomBar: {
     flexDirection: 'row',
-    gap: 10,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    backgroundColor: '#ffffff',
+    gap: spacing.md,
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.lg,
+    backgroundColor: colors.surface,
     borderTopWidth: 1,
-    borderTopColor: '#f1f5f9',
+    borderTopColor: colors.borderLight,
   },
-  pronounceBtn: {
+  btnWrapper: {
     flex: 1,
-    backgroundColor: '#00a8a6',
-    paddingVertical: 15,
-    borderRadius: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  pronounceBtnText: {
-    fontSize: 15,
-    fontWeight: '800',
-    color: '#ffffff',
-  },
-  quizBtn: {
-    flex: 1,
-    backgroundColor: '#ffffff',
-    borderWidth: 1.5,
-    borderColor: '#d1d5db',
-    paddingVertical: 15,
-    borderRadius: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  quizBtnText: {
-    fontSize: 15,
-    fontWeight: '800',
-    color: '#111827',
   },
 
   // 발음 평가 모달 스타일
