@@ -1449,12 +1449,13 @@ export const LEARNING_FLOW = [
   { screenId: 'sentence-select-1', label: '14. 뜻에 맞는 문장 고르기', step: 29 },
   { screenId: 'sentence-build-2', label: '10. 문장 만들기 2', step: 30 },
   { screenId: 'sentence-build-2', label: '22. 문법 ACTIVITY 2 (해석 조합)', step: 31 },
-  { screenId: 'sentence-build', label: '21. 문법 ACTIVITY 1 (오디오 조합)', step: 32 },
+  { screenId: 'sentence-build', label: '23. 문법 ACTIVITY 1 (오디오 조합)', step: 32 },
   // 평가
   { screenId: 'intro-eval', label: '4-1-3. 학습 소개(실전 평가)', step: 33 },
-  { screenId: 'speaking-eval', label: '15. 실전평가 (음성 발화)', step: 34 },
-  { screenId: 'completion-celebration-class', label: '17-3. 완료 축하 화면(수업)', step: 35 },
-  { screenId: 'learning-report', label: '16. 학습 리포트', step: 36 },
+  { screenId: 'practical-listening', label: '★ 실전 듣기', step: 34 },
+  { screenId: 'practical-speaking', label: '★ 실전 말하기', step: 35 },
+  { screenId: 'completion-celebration-class', label: '17-3. 완료 축하 화면(수업)', step: 36 },
+  { screenId: 'learning-report', label: '24. 학습 리포트', step: 37 },
 ];
 
 
