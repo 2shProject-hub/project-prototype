@@ -500,10 +500,10 @@ function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate
     case 'completion-celebration-grammar':
       return (
         <CompletionCelebrationGrammarStage
-          title="대단해요!"
-          titleVi="Tuyệt vời!"
-          description="오늘의 단어를 모두 학습했어요.\n이제 문법을 배워볼까요?"
-          descriptionVi="Bạn đã học xong tất cả các từ vựng hôm nay.\nBây giờ, chúng ta cùng học ngữ pháp nhé!"
+          title="훌륭해요!"
+          titleVi="Tuyệt lắm!"
+          description="오늘의 문법을 모두 학습했어요.\n이제 오늘 배운 내용을 실전에서 직접 말해봐요."
+          descriptionVi="Bạn đã học xong toàn bộ ngữ pháp hôm nay.\nBây giờ, hãy trực tiếp sử dụng những nội dung đã học hôm nay trong tình huống thực tế nhé."
           nextButtonText="확인"
           nextButtonTextVi="Xác nhận"
           onNext={() => onNavigate('home')}
@@ -513,10 +513,10 @@ function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate
     case 'completion-celebration-class':
       return (
         <CompletionCelebrationClassStage
-          title="대단해요!"
-          titleVi="Tuyệt vời!"
-          description="오늘의 단어를 모두 학습했어요.\n이제 문법을 배워볼까요?"
-          descriptionVi="Bạn đã học xong tất cả các từ vựng hôm nay.\nBây giờ, chúng ta cùng học ngữ pháp nhé!"
+          title="수고했어요!"
+          titleVi="Bạn đã làm rất tốt!"
+          description="오늘 수업을 모두 완료했어요.\n나의 학습 리포트를 확인해 보세요."
+          descriptionVi="Bạn đã hoàn thành toàn bộ bài học hôm nay.\nHãy xem báo cáo học tập của bạn nhé."
           nextButtonText="확인"
           nextButtonTextVi="Xác nhận"
           onNext={() => onNavigate('home')}
