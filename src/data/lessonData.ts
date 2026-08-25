@@ -32,18 +32,18 @@ export const WORD_BUILD_DISTRACTOR_COUNT = 3;
 
 export const SESSION1 = {
   intro: {
-    badge: '문법과 표현 1',
-    badgeVi: 'Ngữ pháp và biểu thức 1',
-    icon: '✏️',
-    title: '저는 N이에요/예요 표현을 배워요',
-    titleVi: 'Tôi học cách diễn đạt N이에요/예요',
-    subtitle: '받침 확인 > 뜻 고르기 > 문장 만들기 순서로 연습해요.',
-    subtitleVi: 'Thực hành theo thứ tự: xác nhận phụ âm > chọn nghĩa > tạo câu.',
+    badge: '오늘의 단어',
+    badgeVi: 'Từ vựng hôm nay',
+    icon: '📖',
+    title: '나라와 국적 단어를 살펴봐요',
+    titleVi: 'Cùng xem qua từ vựng về tên nước và quốc tịch nhé',
+    subtitle: '단어를 하나씩 눈으로 확인하고 소리 내어 읽어봐요.',
+    subtitleVi: 'Hãy nhìn từng từ và đọc to lên nhé.',
     achievement: {
       label: '학습 성과',
       labelVi: 'Kết quả học tập',
-      desc: '\'이에요/예요\'를 구분해 이름과 국적을 말할 수 있어요.',
-      descVi: 'Bạn có thể phân biệt \'이에요/예요\' và nói tên, quốc tịch.',
+      desc: '나라와 국적 단어 15개를 알아볼 수 있어요.',
+      descVi: 'Bạn có thể nhận biết 15 từ vựng về tên nước và quốc tịch.',
     },
   },
   introEvaluation: {
