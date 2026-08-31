@@ -260,41 +260,42 @@ export function ConversationPreviewStage({
           ))}
         </ScrollView>
 
-        {/* intro phase: 전체 딤 오버레이 */}
-        {phase === 'intro' && data.aiTutor && (
-          <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
-            {/* 딤 */}
-            <View style={[StyleSheet.absoluteFill, s.dim]} pointerEvents="none" />
+      </View>
 
-            {/* 타이틀 배지 */}
-            <View style={s.introBadgeWrap} pointerEvents="none">
-              <View style={s.introBadge}>
-                <Text style={s.introBadgeText}>{titleBadge}</Text>
-              </View>
-            </View>
+      {/* intro phase: 전체 딤 오버레이 (screen 루트 레벨 — ActivityHeader 포함 전체 커버) */}
+      {phase === 'intro' && data.aiTutor && (
+        <View style={[StyleSheet.absoluteFill, s.introOverlayRoot]} pointerEvents="box-none">
+          {/* 딤 */}
+          <View style={[StyleSheet.absoluteFill, s.dim]} pointerEvents="none" />
 
-            {/* AI 튜터 하단 */}
-            <View style={s.introTutorSection}>
-              <View style={s.introTutorRow}>
-                <View style={s.introTutorCard}>
-                  <Text style={s.introTutorText}>{bubbleText}</Text>
-                  <TouchableOpacity
-                    style={[s.introSpeakerBtn, tutorPlaying && s.introSpeakerBtnActive]}
-                    onPress={playTutorAudio}
-                    activeOpacity={0.7}
-                  >
-                    <Text style={s.introSpeakerIcon}>🔊</Text>
-                  </TouchableOpacity>
-                </View>
-                <Image source={TUTOR_IMAGE as any} style={s.introTutorImg} resizeMode="contain" />
-              </View>
-              <TouchableOpacity style={s.introConfirmBtn} onPress={handleConfirm} activeOpacity={0.85}>
-                <Text style={s.introConfirmBtnText}>확인</Text>
-              </TouchableOpacity>
+          {/* 타이틀 배지 */}
+          <View style={s.introBadgeWrap} pointerEvents="none">
+            <View style={s.introBadge}>
+              <Text style={s.introBadgeText}>{titleBadge}</Text>
             </View>
           </View>
-        )}
-      </View>
+
+          {/* AI 튜터 하단 */}
+          <View style={s.introTutorSection}>
+            <View style={s.introTutorRow}>
+              <View style={s.introTutorCard}>
+                <Text style={s.introTutorText}>{bubbleText}</Text>
+                <TouchableOpacity
+                  style={[s.introSpeakerBtn, tutorPlaying && s.introSpeakerBtnActive]}
+                  onPress={playTutorAudio}
+                  activeOpacity={0.7}
+                >
+                  <Text style={s.introSpeakerIcon}>🔊</Text>
+                </TouchableOpacity>
+              </View>
+              <Image source={TUTOR_IMAGE as any} style={s.introTutorImg} resizeMode="contain" />
+            </View>
+            <TouchableOpacity style={s.introConfirmBtn} onPress={handleConfirm} activeOpacity={0.85}>
+              <Text style={s.introConfirmBtnText}>확인</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
 
       {/* main phase: 하단 CTA */}
       {phase === 'main' && (
@@ -401,7 +402,7 @@ const s = StyleSheet.create({
 
   introBadgeWrap: {
     position: 'absolute',
-    top: spacing.md,
+    top: 64,
     left: 0,
     right: 0,
     alignItems: 'center',
@@ -465,6 +466,7 @@ const s = StyleSheet.create({
     justifyContent: 'center',
     ...shadow.card,
   },
+  introOverlayRoot: { zIndex: 100 },
   introConfirmBtnText: { color: colors.surface, fontSize: 16, fontWeight: '700' },
 
   // ── footer ──

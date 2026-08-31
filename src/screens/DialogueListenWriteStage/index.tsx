@@ -343,11 +343,11 @@ const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.canvas },
 
   // ── intro overlay ──
-  introOverlay: { zIndex: 10 },
+  introOverlay: { zIndex: 100 },
   introDim: { backgroundColor: 'rgba(0,0,0,0.55)' },
   introBadgeWrap: {
     position: 'absolute',
-    top: spacing.md,
+    top: 64,
     left: 0,
     right: 0,
     alignItems: 'center',
