@@ -23,66 +23,6 @@ export const BASE_SCREEN_REGISTRY: ScreenMeta[] = [
     sourceAFile: 'src/screens/home/Home.tsx',
     sourceBRef: 'HomeScreen',
   },
-  {
-    id: 'mission',
-    label: '2. 학습 목표',
-    category: '신규',
-    description: '차시 학습 시작 전 미션과 목표를 명확하게 인지시키는 도입 화면. 이번 차시에서 배울 어휘/문법 목표를 안내한다.',
-    devNotes: 'sessionId prop으로 차시별 미션 텍스트 동적 표시',
-    designNotes: '히어로 배너: tealSoft 배경, 보더 #b3f0ef',
-    sourceAFile: undefined,
-    sourceBRef: 'MissionStage',
-  },
-  {
-    id: 'video-bridge',
-    label: '16. 문법 강의 영상',
-    category: '수정',
-    description: '문법 강의 영상(assets/grammer_mov.mp4)을 시청하는 화면. 영상 시청 완료 후 다음으로 이동.',
-    devNotes: 'assets/grammer_mov.mp4 전체화면 재생 및 시청 완료 시 다음 활성화',
-    designNotes: '다크 테마 비디오 플레이어',
-    sourceAFile: 'src/screens/activity/preview/PreviewVideo1.tsx',
-    sourceBRef: 'VideoBridgeStage',
-  },
-  {
-    id: 'slide-explain',
-    label: '17. 문법 슬라이드식 수업',
-    category: '수정',
-    description: '슬라이드와 설명 텍스트를 넘기며 문법 규칙을 순서대로 확인하는 활동.',
-    devNotes: 'MOCK_SLIDE_EXPLAIN 데이터 참조',
-    designNotes: '슬라이드 카드 및 넘기기 인터랙션',
-    sourceAFile: undefined,
-    sourceBRef: 'SlideExplainStage',
-  },
-  {
-    id: 'sentence-build',
-    label: '21. 문법 ACTIVITY 1 (오디오 조합)',
-    category: '수정',
-    description: '음원을 듣고 제시된 단어 카드를 순서대로 선택하여 문장을 완성하는 활동.',
-    devNotes: 'SESSION1.sentenceBuildQuiz 데이터 참조',
-    designNotes: '단어 타일 및 조합 슬롯',
-    sourceAFile: undefined,
-    sourceBRef: 'SentenceBuildStage',
-  },
-  {
-    id: 'sentence-build-2',
-    label: '22. 문법 ACTIVITY 2 (해석 조합)',
-    category: '수정',
-    description: '베트남어 문장을 보고 한국어 문장 단어 카드를 조합하는 활동.',
-    devNotes: 'SESSION1.sentenceBuildQuiz 데이터 참조',
-    designNotes: '지문 카드 및 단어 타일',
-    sourceAFile: undefined,
-    sourceBRef: 'SentenceBuildStage2',
-  },
-  {
-    id: 'quick-review',
-    label: '27. 2차시 진입 퀵리뷰',
-    category: '수정',
-    description: '2차시 진입 시 이전 차시(1차시) 학습 내용에 대한 기억 여부를 확인하는 퀵리뷰 템플릿.',
-    devNotes: 'MOCK_QUICK_REVIEW 데이터 사용, 1번 문항부터 순서대로 진행',
-    designNotes: '문항 카드, 기억나요 / 기억이 안 나요 버튼',
-    sourceAFile: undefined,
-    sourceBRef: 'QuickReviewStage',
-  },
   // ─── [기타 프로토타입 템플릿 목록] ───────────────────────────
   {
     id: 'mission-tutor',
@@ -95,26 +35,6 @@ export const BASE_SCREEN_REGISTRY: ScreenMeta[] = [
     sourceBRef: 'MissionTutorStage',
   },
   {
-    id: 'mission-tutor-prev',
-    label: '2-2. 학습 미션(튜터) - 이전 차시',
-    category: '신규',
-    description: '이전 차시 학습 내용을 포함한 미션 안내 화면. AI 튜터가 이번 차시 학습 내용과 함께 이전 차시 복습 퀴즈가 있음을 안내한다.',
-    devNotes: '참고 파일: Source A에는 해당 화면 없음 (신규 구현)\n- MissionTutorStage 복사본\n- 음원: tutor_mission_prev.wav\n- 말풍선 3줄\n- "다음" 버튼 → quick-review 이동',
-    designNotes: '히어로 배너: tealSoft 배경, 보더 #b3f0ef\n미션 텍스트: fontSize 17, fontWeight 700, 최대 2줄\n불릿 리스트: teal 색 원형 도트 + 텍스트\n학습 시작 CTA: teal 배경, borderRadius 16',
-    sourceAFile: undefined,
-    sourceBRef: 'MissionTutorPrevStage',
-  },
-  {
-    id: 'mission-tutor-prev-vi',
-    label: '2-2. 학습 미션(튜터) - 이전 차시(베트남)',
-    category: '신규',
-    description: '이전 차시 학습 내용을 포함한 미션 안내 화면. AI 튜터 음원만 재생(말풍선 없음).',
-    devNotes: '- MissionTutorPrevStage 복사본\n- 음원: tutor_mission_prev_vi.wav\n- 말풍선 없음\n- "다음" 버튼 → quick-review 이동',
-    designNotes: 'MissionTutorPrevStage와 동일',
-    sourceAFile: undefined,
-    sourceBRef: 'MissionTutorPrevViStage',
-  },
-  {
     id: 'quick-review',
     label: '3. 퀵리뷰',
     category: '신규',
@@ -123,16 +43,6 @@ export const BASE_SCREEN_REGISTRY: ScreenMeta[] = [
     designNotes: '상단 배지: tealSoft 배경, "퀵 리뷰" 텍스트\n활성 카드: teal 보더 1.5px, 정답 박스(tealSoft)\n잠긴 카드: line 보더, muted 텍스트\n기억나요 버튼: teal 배경\n기억이 안 나요: 테두리 버튼\n하단: 전체 완료 시 다음 차시 버튼 활성화',
     sourceAFile: undefined,
     sourceBRef: 'QuickReviewStage',
-  },
-   {
-    id: 'intro',
-    label: '4. 학습 소개(단어)',
-    category: '신규',
-    description: '차시 핵심 어휘 학습 시작 전 학습 내용을 간단히 안내하는 인트로 화면. 오늘 배울 단어와 학습 성과를 미리 보여주어 학습 동기를 높인다.',
-    devNotes: '참고: Source A act31 PreviewIntro4 (src/screens/activity/preview/PreviewIntro4.tsx)\n- SESSION1.intro 데이터 참조\n- badge / icon / title / subtitle / achievement 구조\n- ActivityLayout 패턴: 프로그레스바 + X 버튼',
-    designNotes: '배지: tealSoft 배경, teal 텍스트, borderRadius 20\n아이콘: tealSoft 원형(80px), 이모지 36px\n타이틀: 22px bold, center\n학습 성과 카드: #F0FAFA 배경, teal 체크 원형 아이콘',
-    sourceAFile: 'src/screens/activity/preview/PreviewIntro4.tsx',
-    sourceBRef: 'IntroStage',
   },
   {
     id: 'intro-tutor',
@@ -163,16 +73,6 @@ export const BASE_SCREEN_REGISTRY: ScreenMeta[] = [
     designNotes: '4-1과 동일 구조 (배지: 실전평가, 아이콘: 🎤, 텍스트 변경)',
     sourceAFile: 'src/screens/IntroEvalStage/index.tsx',
     sourceBRef: 'IntroEvalStage',
-  },
-  {
-    id: 'vocab-wordbook',
-    label: '5. 오늘의 단어장',
-    category: '신규',
-    description: '한국어 단어, 베트남어 번역, 음원 등을 통해 단어를 학습하는 화면. 전체/한국어/베트남어 보기 탭 모드가 제공되며, 음성 배속 재생 조절 및 단어 발음하기 평가 기능이 포함되어 있다.',
-    devNotes: '참고: Source B 오늘의 단어 (App.jsx), Source A 단어 발음 평가 (WordPronunciation1.tsx)\n- SESSION1.context.words 데이터 바인딩\n- 재생 속도(0.5x, 1.0x, 1.5x) 음원 재생 로직 포함',
-    designNotes: '탭: selected 시 teal 보더 및 텍스트 적용\n단어 리스트: 15개 단어 로우 목록 렌더링\n하단 버튼: 단어 발음하기(Teal 배경) 및 바로 문제 풀기(테두리 버튼)',
-    sourceAFile: 'src/screens/activity/word/WordPronunciation1.tsx',
-    sourceBRef: 'vocabWordbook',
   },
   {
     id: 'set-wordbook-eval',
@@ -225,41 +125,6 @@ export const BASE_SCREEN_REGISTRY: ScreenMeta[] = [
     sourceBRef: 'WordBuildStage',
   },
   {
-    id: 'bridge-vocab-grammar',
-    label: '7. 브릿지 — 어휘 → 문법',
-    category: '신규',
-    description: '단어 액티비티 완료 후 문법 액티비티 진입 직전에 노출되는 맥락 연결 전환 화면 (A형). 직전에 학습한 어휘를 문법 예문의 핵심 요소로 재활용하여 단어→문법 학습 사이의 단절을 방지한다. Spotlight Shift + Bridge Quest 패턴 결합.',
-    devNotes: [
-      '■ 데이터: MOCK_BRIDGE_VOCAB_GRAMMAR (lessonData.ts)',
-      '- bridgeType: "vocab-to-grammar"',
-      '- learnedChips: 어휘 칩 (ko + vi 양국어 표시, teal 보더)',
-      '- 이식 시: learnedChips → ADMIN API 직전 단어 액티비티 완료 어휘 목록으로 동적 주입',
-      '',
-      '■ 칩 스타일: VocabChip — teal 보더, #F0FAFA 배경, ko(700) + vi(muted) 2줄',
-      '',
-      '■ 애니메이션 (5단계 순차): flowOpacity → chipsOpacity → highlightOpacity → suffixOpacity → ctaOpacity',
-      '- useNativeDriver: Platform.OS !== "web" 분기 (react-native-web 호환)',
-      '',
-      '■ 이식 시 주요 변경사항',
-      '1. <View style={s.screen}> → <ActivityLayout ...> 교체',
-      '2. learnedChips → ADMIN API 응답으로 동적 주입',
-      '3. onPressConfirm → 다음 문법 액티비티 네비게이션',
-    ].join('\n'),
-    designNotes: [
-      '■ 레이아웃',
-      '- 방향 배지: 📝 어휘 → 문법 (teal 보더 캡슐)',
-      '- 브릿지 메시지: 20px bold center',
-      '- 어휘 칩: teal 보더, #F0FAFA bg, ko+vi 2줄',
-      '- 구분선: line + 안내 텍스트',
-      '- 문장 연출: 고정 prefix(muted) + 하이라이트(teal) + suffix(ink)',
-      '- 완성 문장 박스: #F0FAFA bg, ko+vi 2줄',
-      '- 다음 활동 배지: tealSoft bg, teal text',
-      '- 하단 CTA: teal 배경',
-    ].join('\n'),
-    sourceAFile: undefined,
-    sourceBRef: 'BridgeStage',
-  },
-  {
     id: 'grammar-detail',
     label: '8. 학습 상세 소개',
     category: '신규',
@@ -298,61 +163,6 @@ export const BASE_SCREEN_REGISTRY: ScreenMeta[] = [
     designNotes: '타입 배지: tealSoft 배경, teal 텍스트\n히어로: aspectRatio 16/9, borderRadius 12\n콘텐츠 카드: surface 배경, line 보더, borderRadius 16\n세부 항목 번호: teal 배경 32×32 badge\n하단 버튼: 스크롤 완료 전 비활성(line 배경), 완료 후 teal 배경',
     sourceAFile: undefined,
     sourceBRef: 'CultureStage',
-  },
-  {
-    id: 'bridge-grammar-listening',
-    label: '12-A. 브릿지 — 문법 → 듣고 말하기',
-    category: '신규',
-    description: '문법 액티비티 완료 후 듣고 말하기 활동 진입 직전 노출되는 전환 화면 (B형). 배운 문법 패턴을 실제 음성으로 듣고 따라 말하는 활동으로 자연스럽게 연결한다.',
-    devNotes: [
-      '■ 데이터: MOCK_BRIDGE_GRAMMAR_LISTENING (lessonData.ts)',
-      '- bridgeType: "grammar-to-listening"',
-      '- learnedChips: 문법 패턴 칩 (ko만 표시, ink 보더)',
-      '- 이식 시: learnedChips → ADMIN API 직전 문법 액티비티의 학습 패턴 목록으로 교체',
-      '',
-      '■ 칩 스타일: GrammarChip — ink 보더, #F5F5F5 배경, ko만 표시',
-    ].join('\n'),
-    designNotes: [
-      '■ 방향 배지: 🎧 문법 → 듣고 말하기',
-      '■ 칩: ink 보더 (#F5F5F5 bg), 문법 패턴 텍스트만',
-      '■ 나머지 레이아웃은 7번(어휘→문법)과 동일',
-    ].join('\n'),
-    sourceAFile: undefined,
-    sourceBRef: 'BridgeStage',
-  },
-  {
-    id: 'bridge-grammar-speaking',
-    label: '12-B. 브릿지 — 문법 → 말하기',
-    category: '신규',
-    description: '문법 액티비티 완료 후 말하기 활동 진입 직전 노출되는 전환 화면 (C형). 배운 문법 패턴을 스스로 말하는 발화 연습 활동으로 연결한다.',
-    devNotes: [
-      '■ 데이터: MOCK_BRIDGE_GRAMMAR_SPEAKING (lessonData.ts)',
-      '- bridgeType: "grammar-to-speaking"',
-      '- learnedChips: 문법 패턴 칩 (ko만 표시, ink 보더)',
-    ].join('\n'),
-    designNotes: [
-      '■ 방향 배지: 🎤 문법 → 말하기',
-      '■ 나머지 7번(어휘→문법)과 동일',
-    ].join('\n'),
-    sourceAFile: undefined,
-    sourceBRef: 'BridgeStage',
-  },
-  {
-    id: 'bridge-grammar-writing',
-    label: '12-C. 브릿지 — 문법 → 읽고 쓰기',
-    category: '신규',
-    description: '문법 액티비티 완료 후 읽고 쓰기 활동 진입 직전 노출되는 전환 화면 (D형). 배운 문법 패턴을 읽고 직접 써보는 활동으로 연결한다.',
-    devNotes: [
-      '■ 데이터: MOCK_BRIDGE_GRAMMAR_WRITING (lessonData.ts)',
-      '- bridgeType: "grammar-to-writing"',
-      '- learnedChips: 문법 패턴 칩 (ko만 표시, ink 보더)',
-    ].join('\n'),
-    designNotes: [
-      '■ 방향 배지: ✏️ 문법 → 읽고 쓰기',
-      '■ 나머지 7번(어휘→문법)과 동일',
-    ].join('\n'),
-    sourceAFile: undefined,
-    sourceBRef: 'BridgeStage',
   },
   {
     id: 'video-bridge',
@@ -401,122 +211,6 @@ export const BASE_SCREEN_REGISTRY: ScreenMeta[] = [
     sourceBRef: 'SlideExplainStage',
   },
   {
-    id: 'speaking-detail',
-    label: '15. 말하기 상세 소개',
-    category: '신규',
-    description: '말하기 활동 진입 전 대화 맥락, 대화문 롤플레잉, 핵심 표현/문화 팁, 교체 연습 패턴을 종합적으로 안내하는 화면. 화자별 말풍선과 오디오 미리듣기, 다국어 번역, 교체 슬롯 카드로 구성된다.',
-    devNotes: [
-      '■ 데이터: MOCK_SPEAKING_EXPLAIN (lessonData.ts)',
-      '- 교재 『ULIS Genie K 한국어 초급 1』 p.7 (말하기 구성), p.24 (말하기 1) 기준',
-      '- dialogue: 화자(speaker), 한국어/베트남어 텍스트, 사용자 여부(isUserSpeaker)',
-      '- keyTips: 핵심 표현(어느 나라 사람이에요?) 및 호칭(씨) 팁',
-      '- drill: 교체 연습 아이템 목록 (이름, 국적, 국기)',
-      '- 전체 듣기 및 개별 문장 음성 피드백 인터랙션 포함',
-      '- props: onNext / onBack / data(optional)',
-    ].join('\n'),
-    designNotes: [
-      '■ 상단: ActivityHeader (프로그레스바 50% + X 버튼)',
-      '■ 배지: tealSoft 배경, teal 텍스트 ("말하기 1")',
-      '■ 상황 카드: canvas 배경, line 보더, 🤝 아이콘 + 맥락 요약',
-      '■ 대화문 프리뷰: 좌(상대방-흰색 말풍선)/우(본인-tealSoft 말풍선) 분리, 음성 스피커 버튼',
-      '■ 핵심 표현 팁: 백색 카드 그리드, teal 타이틀 + 다국어 해설',
-      '■ 교체 연습: tealSoft 배경 컨테이너 + 화이트 카드(국기, 이름, 국적 알약 배지)',
-      '■ 하단 CTA: teal 배경 ("말하기 연습 시작하기 →")',
-    ].join('\n'),
-    sourceAFile: undefined,
-    sourceBRef: 'SpeakingDetailStage',
-  },
-  {
-    id: 'read-write-detail',
-    label: '16. 읽고 쓰기 상세 소개',
-    category: '신규',
-    description: '읽고 쓰기 활동 진입 전 읽기 전 유추 스키마 활성화, 읽기 체크 포인트 가이드, 읽기 후 4단계 작문 프레임워크를 제공하는 화면. 대표 인물 프로필, 생각 칩, 정보 탐색 체크리스트, 단계별 작문 카드로 구성된다.',
-    devNotes: [
-      '■ 데이터: MOCK_READ_WRITE_EXPLAIN (lessonData.ts)',
-      '- 교재 『ULIS Genie K 한국어 초급 1』 p.8 (읽고 쓰기 구성), p.31 (읽고 쓰기 1) 기준',
-      '- preReading: 본문 등장인물(세나) 및 사전 유추 생각 질문 칩',
-      '- readingPoints: 글에서 파악해야 할 3대 정보(이름, 국적, 직업)',
-      '- writingFramework: 4단계 작문 구조(인사 → 이름 → 국적/직업 → 끝인사) 및 슬롯 작성 팁',
-      '- props: onNext / onBack / data(optional)',
-    ].join('\n'),
-    designNotes: [
-      '■ 상단: ActivityHeader (프로그레스바 65% + X 버튼)',
-      '■ 배지: tealSoft 배경, teal 텍스트 ("읽고 쓰기")',
-      '■ 유추 카드: #F0FAFA 배경, 🔍 아이콘, 세나 캐릭터 프로필 박스 + 💭 생각 칩',
-      '■ 읽기 포인트: 번호 원형 배지(teal bg) + 확인 정보 질문 카드',
-      '■ 글쓰기 프레임워크: Step 1~4 단계별 블록 카드, 탭 선택 시 teal 하이라이트',
-      '■ 하단 CTA: teal 배경 ("읽고 쓰기 시작하기 →")',
-    ].join('\n'),
-    sourceAFile: undefined,
-    sourceBRef: 'ReadWriteDetailStage',
-  },
-  {
-    id: 'listen-speak-detail',
-    label: '17. 듣고 말하기 상세 소개',
-    category: '신규',
-    description: '듣고 말하기 활동 진입 전 대화 상황 및 등장인물 프리뷰, 청취 집중 미션 안내, 듣기 후 3대 질문-응답 발화 미션을 예고하는 화면. 인물 프로필 카드, 오디오 트랙 안내 배지, 청취 포인트, 질문별 예시 답변 카드로 구성된다.',
-    devNotes: [
-      '■ 데이터: MOCK_LISTEN_SPEAK_EXPLAIN (lessonData.ts)',
-      '- 교재 『ULIS Genie K 한국어 초급 1』 p.9 (듣고 말하기 구성), p.32 (듣고 말하기 1) 기준',
-      '- situation: 대화 상황 설명 및 등장인물(민호, 유진) 프로필',
-      '- audioTrack: 오디오 트랙명(Tr. 1) 및 길이 정보',
-      '- listeningMission: 청취 집중 2대 미션 (이름 매칭, 국적 파악)',
-      '- speakingPreview: 3가지 질문-답변 발화 패턴 예고 (인사, 이름, 국적)',
-      '- props: onNext / onBack / data(optional)',
-    ].join('\n'),
-    designNotes: [
-      '■ 상단: ActivityHeader (프로그레스바 80% + X 버튼)',
-      '■ 배지: tealSoft 배경, teal 텍스트 ("듣고 말하기")',
-      '■ 상황 카드: #F8FAFC 배경, 🎧 아이콘, 민호/유진 프로필 카드(아바타 + 역할 뱃지)',
-      '■ 청취 미션: Tr.1 오디오 배지(teal bg) + 2대 미션 포인트 카드',
-      '■ 말하기 발화 예고: Q1~Q3 질문 카드, 탭 시 활성화 + 💬 대답 예시 박스',
-      '■ 하단 CTA: teal 배경 ("듣고 말하기 시작하기 →")',
-    ].join('\n'),
-    sourceAFile: undefined,
-    sourceBRef: 'ListenSpeakDetailStage',
-  },
-  {
-    id: 'speaking-detail-easy',
-    label: '15-1. 말하기 상세 소개(초급)',
-    category: '신규',
-    description: '초급 1 학습자를 위한 말하기 설명 화면. 텍스트 분량을 최소화하고 큼직한 2턴 캐릭터 말풍선과 직관적인 국기/인물 교체 카드로 구성되어 인지 부하 없이 쉽게 학습을 시작할 수 있다.',
-    devNotes: [
-      '■ 데이터: MOCK_SPEAKING_EASY (lessonData.ts)',
-      '- dialoguePairs: 핵심 2턴 대화문 (흐엉 👩 & 민호 👨)',
-      '- substitutionDrill: 🇨🇦 로빈, 🇨🇳 팅팅 탭 선택형 직관적 교체 카드',
-      '- props: onNext / onBack',
-    ].join('\n'),
-    designNotes: [
-      '■ 상단: ActivityHeader (프로그레스바 50% + X 버튼)',
-      '■ 대화 박스: #F8FAFC bg, 큼직한 아바타 + 🔊 음성 피드백 말풍선',
-      '■ 원포인트 배너: #FFFBEB bg, 💡 "어느 나라 사람이에요?" 핵심 표현',
-      '■ 교체 카드: 탭 선택 시 teal 하이라이트 + 큼직한 국기 이모지',
-      '■ 하단 CTA: teal 배경 ("말하기 연습 시작하기 →")',
-    ].join('\n'),
-    sourceAFile: undefined,
-    sourceBRef: 'SpeakingDetailEasyStage',
-  },
-  {
-    id: 'read-write-detail-easy',
-    label: '16-1. 읽고 쓰기 상세 소개(초급)',
-    category: '신규',
-    description: '초급 1 학습자를 위한 읽고 쓰기 설명 화면. 세나의 3줄 소개 읽기와 나만의 프로필 카드 완성하기(쓰기)를 2단계 직관적 탭 전환으로 제공한다.',
-    devNotes: [
-      '■ 데이터: MOCK_READ_WRITE_EASY (lessonData.ts)',
-      '- readingCard: 세나 👩‍🏫 3줄 핵심 문장 (안녕하세요? / 한국 사람이에요 / 선생님이에요)',
-      '- writingCard: 이름, 국적, 직업 3대 슬롯 빈칸 카드',
-      '- props: onNext / onBack',
-    ].join('\n'),
-    designNotes: [
-      '■ 상단: ActivityHeader (프로그레스바 65% + X 버튼)',
-      '■ 2단계 전환 탭: 📖 1. 따라 읽기 ↔ ✏️ 2. 직접 쓰기',
-      '■ 카드 디자인: #FFFFFF bg + #BFE8E6 보더, 번호 원형 불릿',
-      '■ 하단 CTA: teal 배경 ("읽고 쓰기 시작하기 →")',
-    ].join('\n'),
-    sourceAFile: undefined,
-    sourceBRef: 'ReadWriteDetailEasyStage',
-  },
-  {
     id: 'listen-speak-detail-easy',
     label: '17-1. 듣고 말하기 상세 소개(초급)',
     category: '신규',
@@ -535,69 +229,6 @@ export const BASE_SCREEN_REGISTRY: ScreenMeta[] = [
     ].join('\n'),
     sourceAFile: undefined,
     sourceBRef: 'ListenSpeakDetailEasyStage',
-  },
-  {
-    id: 'speaking-video-demo',
-    label: '15-V. 말하기(영상 시연형)',
-    category: '신규',
-    description: '한국어를 전혀 읽지 못하는 베트남인 초급 학습자를 위한 15초 숏폼 모션 비디오 데모 화면. 텍스트 설명 대신 영상 시연과 3단계 픽토그램 행동 카드(듣기→마이크→말하기)로 말하기 활동 조작법을 직관적으로 안내한다.',
-    devNotes: [
-      '■ 데이터: MOCK_SPEAKING_VIDEO_DEMO (lessonData.ts)',
-      '- videoSrc: assets/video_bridge_intro.mp4 (웹 require 연동)',
-      '- actionSteps: 3단계 행동 가이드 (듣기 👂, 마이크 터치 🎙️, 따라 말하기 🗣️)',
-      '- props: onNext / onBack',
-    ].join('\n'),
-    designNotes: [
-      '■ 상단: ActivityHeader (프로그레스바 50% + X 버튼)',
-      '■ 배지: tealSoft bg ("15초 영상 가이드") + "15s Demo" 배지',
-      '■ 영상 플레이어: aspectRatio 16/9, 탭 시 재생 + 자막 하이라이트 박스',
-      '■ 3단계 행동 카드: 번호 원형 배지(teal bg) + 픽토그램 아이콘',
-      '■ 하단 CTA: teal 배경 ("지금 말하기 시작하기 →")',
-    ].join('\n'),
-    sourceAFile: undefined,
-    sourceBRef: 'SpeakingVideoDemoStage',
-  },
-  {
-    id: 'speaking-audio-tutor',
-    label: '15-A. 말하기(음성 튜터형)',
-    category: '신규',
-    description: '한국어를 전혀 읽지 못하는 베트남인 초급 학습자를 위한 AI 튜터 보이스 안내 화면. 화면 진입 시 친근한 AI 튜터 아바타가 베트남어 음성으로 활동 목표를 설명하고, 3대 픽토그램 가이드(귀 기울이기→입 열기→국적 말하기)와 다시 듣기(Nghe lại)를 제공한다.',
-    devNotes: [
-      '■ 데이터: MOCK_SPEAKING_AUDIO_TUTOR (lessonData.ts)',
-      '- tutorSpeechVi: 베트남어 안내 대사 및 오디오 파형 인터랙션',
-      '- guideChips: 3대 시각 픽토그램 카드',
-      '- props: onNext / onBack',
-    ].join('\n'),
-    designNotes: [
-      '■ 상단: ActivityHeader (프로그레스바 50% + X 버튼)',
-      '■ 튜터 카드: #F0FAFA bg, 👩‍🏫 아바타 + 오디오 파형 바 + 🔄 다시 듣기 버튼',
-      '■ 튜터 말풍선: 베트남어 대사 강조 (14px bold)',
-      '■ 픽토그램 가이드: 3개 카드 그리드',
-      '■ 하단 CTA: teal 배경 ("말하기 연습 시작하기 →")',
-    ].join('\n'),
-    sourceAFile: undefined,
-    sourceBRef: 'SpeakingAudioTutorStage',
-  },
-  {
-    id: 'read-write-visual-slide',
-    label: '16-S. 읽고 쓰기(3컷 슬라이드)',
-    category: '신규',
-    description: '한국어를 전혀 읽지 못하는 베트남인 초급 학습자를 위한 3컷 그림 카드 슬라이드 화면. 텍스트 없이 그림 1장 + 음성 1개로 1컷 만남 -> 2컷 읽기 -> 3컷 쓰기의 3단계를 시각적으로 전달한다.',
-    devNotes: [
-      '■ 데이터: MOCK_READ_WRITE_VISUAL_SLIDE (lessonData.ts)',
-      '- slides: 3컷 그림 카드 (세나 만남 👩‍🏫, 소개글 읽기 📖, 내 카드 채우기 ✏️)',
-      '- 컷별 베트남어 음성 청취 버튼 + 이전/다음 슬라이드 탐색',
-      '- props: onNext / onBack',
-    ].join('\n'),
-    designNotes: [
-      '■ 상단: ActivityHeader (프로그레스바 65% + X 버튼)',
-      '■ 슬라이드 카드: #FFFFFF bg + #BFE8E6 보더, 180px 일러스트 영역 + 음성 버튼',
-      '■ 하단 점 인디케이터: 3단계 진행 표시',
-      '■ 네비게이션: ‹ 이전 / 다음 컷 ›',
-      '■ 하단 CTA: 마지막 슬라이드 도달 시 teal 활성화 ("읽고 쓰기 시작하기 →")',
-    ].join('\n'),
-    sourceAFile: undefined,
-    sourceBRef: 'ReadWriteVisualSlideStage',
   },
   {
     id: 'listen-speak-interactive-try',
@@ -692,7 +323,7 @@ export const BASE_SCREEN_REGISTRY: ScreenMeta[] = [
   },
   {
     id: 'picture-word-2',
-    label: '★ 30. 이미지 보고 단어 선택 (PictureWord2)',
+    label: '30. 이미지 보고 단어 선택',
     category: '신규',
     description: '이미지를 보고 해당하는 단어 선택지를 고르는 액티비티. 시각적 학습 강화.',
     devNotes: 'PictureWord2 / props: questions, onNext, onBack / 이미지 표시 및 선택지 카드',
@@ -702,7 +333,7 @@ export const BASE_SCREEN_REGISTRY: ScreenMeta[] = [
   },
   {
     id: 'sentence-blank-1',
-    label: '11. 문장 빈칸 채우기',
+    label: '18. 문장 빈칸 채우기',
     category: '신규',
     description: '베트남어 지문을 읽고 한국어 문장의 빈칸을 선택지에서 고르는 활동. 문법 이해 강화.',
     devNotes: 'SentenceBlank1 / Source A SentenceBlank1 참고 / props: questions, onNext, onBack, currentSetNumber, totalSets / 단어 선택 기반 답변 / 다국어 지원',
@@ -722,7 +353,7 @@ export const BASE_SCREEN_REGISTRY: ScreenMeta[] = [
   },
   {
     id: 'listen-typing-1',
-    label: '13. 음원 듣고 입력하기',
+    label: '19. 음원 듣고 입력하기',
     category: '신규',
     description: '음원을 듣고 베트남어/한국어를 텍스트로 입력하는 활동. 청취 및 입력 능력 강화.',
     devNotes: 'ListenTyping1 / Source A ListenTyping4 참고 / props: questions, onNext, onBack, currentSetNumber, totalSets / 텍스트 입력 기반 답변 / 음원 재생 버튼 / 힌트 표시 가능 / 다국어 지원',
@@ -732,7 +363,7 @@ export const BASE_SCREEN_REGISTRY: ScreenMeta[] = [
   },
   {
     id: 'sentence-select-1',
-    label: '14. 뜻에 맞는 문장 고르기',
+    label: '20. 뜻에 맞는 문장 고르기',
     category: '신규',
     description: '베트남어 문장을 읽고 한국어 문장 선택지 중 뜻에 맞는 것을 고르는 활동. 문장 이해력 강화.',
     devNotes: 'SentenceSelect1 / Source A SentenceBlank1 참고 / props: questions, onNext, onBack, currentSetNumber, totalSets / 문장 선택 기반 답변 (라디오 버튼) / 다국어 지원',
@@ -762,7 +393,7 @@ export const BASE_SCREEN_REGISTRY: ScreenMeta[] = [
   },
   {
     id: 'practical-listening',
-    label: '★ 실전 듣기',
+    label: '21. 실전 듣기',
     category: '신규',
     description: '문장을 듣고 핵심 단어를 확인하는 실전 듣기 활동. 스피커 아이콘 탭 시 문장 음원 재생. 이어지는 실전 말하기의 참고 문장을 미리 익힌다.',
     devNotes: 'PracticalListeningStage / props: onNext, onBack, data(optional) / 음원 재생 인터랙션 / 하이라이트 박스로 핵심 단어 표시 / KO-VI 다국어 지원',
@@ -772,7 +403,7 @@ export const BASE_SCREEN_REGISTRY: ScreenMeta[] = [
   },
   {
     id: 'practical-speaking',
-    label: '★ 실전 말하기',
+    label: '22. 실전 말하기',
     category: '신규',
     description: '빈칸을 채우고 소리 내어 말하는 실전 말하기 활동. 키보드 입력 또는 마이크 음성 인식으로 빈칸 작성. 다단계(1/N) 진행. 정/오답 평가는 추후 제공 예정.',
     devNotes: 'PracticalSpeakingStage / props: onNext, onBack, data(optional) / TextInput 빈칸 입력 / 마이크 버튼(프로토타입: 2초 후 자동 해제) / 힌트 표시 / KO-VI 다국어 지원',
@@ -782,7 +413,7 @@ export const BASE_SCREEN_REGISTRY: ScreenMeta[] = [
   },
   {
     id: 'completion-celebration-vocab',
-    label: '17-1. 완료 축하 화면(단어)',
+    label: '완료-1. 완료 축하 화면(단어)',
     category: '신규',
     description: '단어 학습 완료 시 축하와 격려를 표현하는 화면. 파티클 애니메이션과 함께 "대단해요!" 메시지 표시.',
     devNotes: 'CompletionCelebrationVocabStage / props: title, titleVi, description, descriptionVi, nextButtonText, nextButtonTextVi, onNext, onBack / CSS 파티클 애니메이션(60개 이모지) / 다국어 지원',
@@ -792,7 +423,7 @@ export const BASE_SCREEN_REGISTRY: ScreenMeta[] = [
   },
   {
     id: 'completion-celebration-grammar',
-    label: '17-2. 완료 축하 화면(문법)',
+    label: '완료-2. 완료 축하 화면(문법)',
     category: '신규',
     description: '문법 학습 완료 시 축하와 격려를 표현하는 화면. 파티클 애니메이션과 함께 "대단해요!" 메시지 표시.',
     devNotes: 'CompletionCelebrationGrammarStage / props: title, titleVi, description, descriptionVi, nextButtonText, nextButtonTextVi, onNext, onBack / CSS 파티클 애니메이션(60개 이모지) / 다국어 지원',
@@ -802,13 +433,180 @@ export const BASE_SCREEN_REGISTRY: ScreenMeta[] = [
   },
   {
     id: 'completion-celebration-class',
-    label: '17-3. 완료 축하 화면(수업)',
+    label: '완료-3. 완료 축하 화면(수업)',
     category: '신규',
     description: '수업 전체 완료 시 축하와 격려를 표현하는 화면. 파티클 애니메이션과 함께 "대단해요!" 메시지 표시.',
     devNotes: 'CompletionCelebrationClassStage / props: title, titleVi, description, descriptionVi, nextButtonText, nextButtonTextVi, onNext, onBack / CSS 파티클 애니메이션(60개 이모지) / 다국어 지원',
     designNotes: '상단: 파티클 애니메이션(🎉✨🎊 이모지) / 아이콘 원형 배경(tealSoft) / 제목("대단해요!") / 설명 텍스트 / 하단: 확인 버튼(teal 배경)',
     sourceAFile: undefined,
     sourceBRef: 'CompletionCelebrationClassStage',
+  },
+  {
+    id: 'completion-practice-listen',
+    label: '완료-4. 실전 듣기 완료',
+    category: '신규',
+    description: '실전 듣기 완료 시 축하 화면. CompletionCelebrationVocabStage를 텍스트만 변경하여 재사용.',
+    devNotes: 'CompletionCelebrationVocabStage 재사용 / description: 실전 듣기를 완료했어요!',
+    designNotes: '완료-1과 동일한 레이아웃, 텍스트만 변경.',
+    sourceAFile: undefined,
+    sourceBRef: 'CompletionCelebrationVocabStage',
+  },
+  {
+    id: 'completion-practice-read',
+    label: '완료-5. 실전 읽기 완료',
+    category: '신규',
+    description: '실전 읽기 완료 시 축하 화면. CompletionCelebrationVocabStage를 텍스트만 변경하여 재사용.',
+    devNotes: 'CompletionCelebrationVocabStage 재사용 / description: 실전 읽기 및 발음평가를 완료했어요!',
+    designNotes: '완료-1과 동일한 레이아웃, 텍스트만 변경.',
+    sourceAFile: undefined,
+    sourceBRef: 'CompletionCelebrationVocabStage',
+  },
+  {
+    id: 'completion-practice-write',
+    label: '완료-6. 실전 쓰기 완료',
+    category: '신규',
+    description: '실전 쓰기 완료 시 축하 화면. CompletionCelebrationVocabStage를 텍스트만 변경하여 재사용.',
+    devNotes: 'CompletionCelebrationVocabStage 재사용 / description: 실전 쓰기를 완료했어요!',
+    designNotes: '완료-1과 동일한 레이아웃, 텍스트만 변경.',
+    sourceAFile: undefined,
+    sourceBRef: 'CompletionCelebrationVocabStage',
+  },
+  {
+    id: 'completion-practice-check',
+    label: '완료-7. 실전 확인 완료',
+    category: '신규',
+    description: '실전 확인 완료 시 축하 화면. CompletionCelebrationVocabStage를 텍스트만 변경하여 재사용.',
+    devNotes: 'CompletionCelebrationVocabStage 재사용 / description: 실전 확인을 완료했어요!',
+    designNotes: '완료-1과 동일한 레이아웃, 텍스트만 변경.',
+    sourceAFile: undefined,
+    sourceBRef: 'CompletionCelebrationVocabStage',
+  },
+  {
+    id: 'video-ai-tutor',
+    label: '13-1. 영상과 AI튜터',
+    category: '신규',
+    description: '영상 시청 + AI튜터 말풍선/음원 안내 화면. 진입 시 음원 자동 재생, 스피커 버튼으로 반복 재생 가능.',
+    devNotes: `VideoAITutorStage / props: onNext, onBack, data(optional)
+kcho-dev 이식 시:
+- audioUri → useAudioPlayer() + resolveAudioSource()
+- videoUri → resolveActivityVideoSource()
+- bubbleKo/Vi → question.extra1 / extra2
+- ActivityHeader → ActivityLayout (step/totalSteps)`,
+    designNotes: '배지(실전 듣기) → 영상 카드(210h, 다크) → 스페이서 → AI튜터(말풍선+썸네일) → [다음] teal CTA',
+    sourceAFile: undefined,
+    sourceBRef: 'VideoAITutorStage',
+  },
+  {
+    id: 'ai-tutor-desc',
+    label: '13-2. AI튜터 설명',
+    category: '신규',
+    description: 'AI 튜터 썸네일 + 말풍선으로 학습 내용을 소개하는 화면. 진입 시 음원 자동 재생, 스피커 버튼으로 반복 재생 가능.',
+    devNotes: `AITutorDescStage / props: onNext, onBack, data(optional)
+kcho-dev 이식 시:
+- audioUri → useAudioPlayer() + resolveAudioSource()
+- bubbleKo/Vi → question.extra1 / extra2
+- ActivityHeader → ActivityLayout (step/totalSteps)`,
+    designNotes: '빈 공간(flex:1, 흰 배경) → AI튜터(말풍선+썸네일) → [다음] teal CTA / 영상 없음',
+    sourceAFile: undefined,
+    sourceBRef: 'AITutorDescStage',
+  },
+  // ─── [WordIntroSlidesStage] ──────────────────────────────
+  {
+    id: 'word-intro-slides',
+    label: '2-W. 단어 슬라이드',
+    category: '수정',
+    description: '이미지 슬라이드 뷰어(Min 1~Max 10장). AI튜터+말풍선+오디오 자동재생, [이전/넘기기] 슬라이드 네비, [다음] 마지막 슬라이드 도달 후 활성. intro(카드)/quiz(선택지)/outro(완료) 3종 콘텐츠 타입 지원.',
+    devNotes: `Source B: kchao-lesson1-feature-word-intro-slides / WordIntroTemplate.jsx
+kcho-dev 목적지: src/screens/activity/preview/PreviewWordSlides.tsx (TBD)
+templateCd: word_slides (TBD — 백오피스 협의 필요)
+
+이식 체크리스트:
+- ActivityHeader → ActivityLayout (step/totalSteps 변환)
+- onNext → navigateToNextActivityOrLessonComplete
+- new Audio() + Platform가드 → useAudioPlayer() + resolveAudioSource()
+- pick(lang, ko, vi) → useTranslation() + i18n.language 분기
+- MOCK_WORD_SLIDES → question.listItems[] API 파서
+- visitedLast 완료 조건 → completeActivity (useActivityQuestionHistory)
+
+핸드오프 문서: docs/word-slides-review.md`,
+    designNotes: `ActivityHeader: teal 프로그레스바
+슬라이드 콘텐츠: flex:1, paddingHorizontal 20
+AI튜터 행: 말풍선(shadow.soft, borderRadius 14) + 스피커 버튼(tealSoft→teal 활성) + 튜터 썸네일(64×80)
+[이전/넘기기] 네비: 비활성=bgDisabled 배경+textDisabled 텍스트
+[다음] 버튼: teal 배경 / 비활성=bgDisabled / 마지막 슬라이드 도달 후 활성
+intro 카드: shadow.card, 2열, aspectRatio 1.2
+quiz 선택지: 정답=teal 보더+tealSoft / 오답=wrong 보더+wrongLight
+outro: excellent.png 220×220 중앙`,
+    sourceAFile: 'TBD',
+    sourceBRef: 'WordIntroTemplate',
+  },
+  // ─── [ConversationPreviewStage] ─────────────────────────────
+  {
+    id: 'conversation-preview',
+    label: '대화-1. 전체 대화 듣기',
+    category: '신규',
+    description: '전체 대화문을 말풍선 목록으로 표시하고 라인별 순차 자동 재생. 활성 라인 teal 하이라이트.',
+    devNotes: `ConversationPreviewStage / props: onNext, onBack, data(optional)
+kcho-dev 이식 시:
+- templateCd: dialogue_master
+- lines[].audioSrc → resolveActivityAudioSource(actNo, filename)
+- ActivityHeader → ActivityLayout (step/totalSteps)
+- lines → activity.questions[].listItems.dialogue_content[]
+- onNext → navigateToNextActivityOrLessonComplete`,
+    designNotes: '배지(대화 듣기) → ScrollView 말풍선(left/right) → [다음] teal CTA. 활성 라인: teal border + 아바타 teal 배경.',
+    sourceAFile: 'TBD',
+    sourceBRef: 'TBD',
+  },
+  // ─── [ConversationShadowingStage] ───────────────────────────
+  {
+    id: 'conversation-shadowing',
+    label: '대화-2. 따라 말하기',
+    category: '신규',
+    description: '한 라인씩 표시하고 자동 재생 후 마이크 버튼으로 따라 말하기. 프로토타입은 2초 자동 완료.',
+    devNotes: `ConversationShadowingStage / props: onNext, onBack, data(optional)
+kcho-dev 이식 시:
+- templateCd: dialogue_speaking
+- 마이크: useAudioRecorder + recordQuestionAttempt
+- ActivityHeader → ActivityLayout (step/totalSteps)
+- lines → activity.questions[].listItems.dialogue_content[]
+- onNext → navigateToNextActivityOrLessonComplete`,
+    designNotes: '진행바(N/Total) → 현재 라인 말풍선(크게) → 마이크 버튼(80px 원) → [다음] CTA(녹음 완료 후 활성).',
+    sourceAFile: 'TBD',
+    sourceBRef: 'TBD',
+  },
+  {
+    id: 'dialogue-listen-write',
+    label: '대화-3. 실전 쓰기',
+    category: '신규',
+    description: '대화 한 줄을 듣고 단어 박스에 받아쓰는 액티비티. 음절 비교 채점 + 슬라이드업 피드백 패널.',
+    devNotes: `
+- kcho-dev 목적지: src/screens/activity/preview/PreviewDialogueListenWrite.tsx
+- templateCd: dialogue_listen_write (TBD — 백오피스 협의 필요)
+- ActivityHeader → ActivityLayout (step/totalSteps)
+- new Audio() + Platform가드 → useAudioPlayer() + resolveAudioSource()
+- sylsOf/splitWord 유틸 → 공통 util 파일로 이동 또는 인라인 유지
+- pick(lang, ko, vi) → useTranslation() + i18n 키
+- onNext → navigateToNextActivityOrLessonComplete
+- Mock lines → question.listItems[] 파서`,
+    designNotes: '튜터 아바타(폴백: tutor.png) + 🔊 재생 → tealSoft 카드 안 단어 박스(자연 줄바꿈) → 베트남어 번역 + 💡 힌트 토글 → 고정 footer [확인] → 슬라이드업 패널(오답: 정답+[다시하기][다음], 정답: [다음/완료]).',
+    sourceAFile: 'TBD',
+    sourceBRef: 'PracWrite / WordBoxes',
+  },
+  {
+    id: 'practice-check',
+    label: '대화-4. 실전 확인',
+    category: '신규',
+    description: '대화 빈칸에 알맞은 단어를 골라 완성하는 액티비티. 3세트 화면 페이지네이션 + 슬라이드업 피드백 패널.',
+    devNotes: `
+- kcho-dev 목적지: src/screens/activity/preview/PreviewPracticeCheck.tsx
+- templateCd: practice_check (TBD — 백오피스 협의 필요)
+- ActivityHeader → ActivityLayout (step/totalSteps)
+- pick(lang, ko, vi) → useTranslation() + i18n 키
+- onNext → navigateToNextActivityOrLessonComplete
+- Mock screens → question.listItems[] 파서`,
+    designNotes: '배지(실전 확인 · N/3) → 제목 → A(tealSoft)/B(warningLight) 말풍선 + 인라인 칩 → 고정 footer [확인] → 슬라이드업 패널(정답: correctLight, 오답: wrongLight + 틀린 문장 나열).',
+    sourceAFile: 'TBD',
+    sourceBRef: 'PracQuiz',
   },
 ];
 

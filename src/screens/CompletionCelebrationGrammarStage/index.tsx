@@ -1,7 +1,11 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { useRef, useEffect } from 'react';
+import { View, Text, StyleSheet, Platform, Image } from 'react-native';
 import LottieView from 'lottie-react-native';
 import { colors, radius, spacing, shadow } from '../../theme';
 import { useLang, pick, ActivityHeader, CtaButton } from '../../components';
+
+const TUTOR_IMAGE = require('../../../assets/word-slides/tutor.png') as string;
+const COMPLETE_AUDIO = require('../../../assets/sounds/complete_vi.mp3') as string;
 
 interface Props {
   title?: string;
@@ -25,6 +29,27 @@ export function CompletionCelebrationGrammarStage({
   onBack,
 }: Props) {
   const { lang } = useLang();
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    if (Platform.OS !== 'web') return;
+    const timer = setTimeout(() => {
+      try {
+        const audio = new Audio(COMPLETE_AUDIO);
+        audioRef.current = audio;
+        audio.play().catch(() => {});
+      } catch {}
+    }, 300);
+    return () => {
+      clearTimeout(timer);
+      if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
+    };
+  }, []);
+
+  const handleConfirm = () => {
+    if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
+    onNext?.();
+  };
 
   return (
     <View style={s.root}>
@@ -58,13 +83,16 @@ export function CompletionCelebrationGrammarStage({
           <Text style={s.titleVi}>{titleVi}</Text>
           <Text style={s.descriptionVi}>{descriptionVi}</Text>
         </View>
+
+        {/* AI 튜터 썸네일 */}
+        <Image source={TUTOR_IMAGE as any} style={s.tutorImage} resizeMode="contain" />
       </View>
 
       {/* 하단 액션 버튼 */}
       <View style={s.footer}>
         <CtaButton
           title={pick(lang, nextButtonText, nextButtonTextVi)}
-          onPress={onNext}
+          onPress={handleConfirm}
           size="lg"
         />
       </View>
@@ -80,9 +108,15 @@ const s = StyleSheet.create({
   content: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     paddingHorizontal: spacing.xl,
-    paddingBottom: spacing.xxl,
+    paddingTop: spacing.xl,
+    paddingBottom: 0,
+  },
+  tutorImage: {
+    width: 160,
+    height: 200,
+    alignSelf: 'center',
   },
   lottieContainer: {
     position: 'absolute',

@@ -1416,7 +1416,7 @@ export const MOCK_LISTEN_SPEAK_INTERACTIVE_TRY = {
 export const LEARNING_FLOW = [
   { screenId: 'home', label: '1. 홈 화면 / 코스 안내', step: 1 },
   { screenId: 'mission-tutor', label: '2-1. 학습 미션(튜터)', step: 2 },
-  { screenId: 'intro', label: '4. 학습 소개(단어)', step: 3 },
+  { screenId: 'word-intro-slides', label: '2-W. 단어 슬라이드', step: 3 },
   { screenId: 'video-bridge', label: '13. 영상 브릿지', step: 4 },
   // 세트 1
   { screenId: 'set-wordbook-eval', label: '5-2. 단어장과 발음평가', step: 5, setNumber: 1 },
@@ -1450,17 +1450,745 @@ export const LEARNING_FLOW = [
   { screenId: 'sentence-build-2', label: '10. 문장 만들기 2', step: 30 },
   { screenId: 'sentence-build-2', label: '22. 문법 ACTIVITY 2 (해석 조합)', step: 31 },
   { screenId: 'sentence-build', label: '23. 문법 ACTIVITY 1 (오디오 조합)', step: 32 },
-  // 평가
+  // 평가 인트로
   { screenId: 'intro-eval', label: '4-1-3. 학습 소개(실전 평가)', step: 33 },
-  { screenId: 'practical-listening', label: '★ 실전 듣기', step: 34 },
-  { screenId: 'practical-speaking', label: '★ 실전 말하기', step: 35 },
-  { screenId: 'completion-celebration-class', label: '17-3. 완료 축하 화면(수업)', step: 36 },
-  { screenId: 'learning-report', label: '24. 학습 리포트', step: 37 },
+  // 대화 실전
+  { screenId: 'video-ai-tutor', label: '13-1. 영상과 AI튜터', step: 34 },
+  { screenId: 'conversation-preview', label: '대화-1. 전체 대화 듣기', step: 35 },
+  { screenId: 'completion-practice-listen', label: '완료-4. 실전 듣기 완료', step: 36 },
+  { screenId: 'conversation-shadowing', label: '대화-2. 따라 말하기', step: 37 },
+  { screenId: 'completion-practice-read', label: '완료-5. 실전 읽기 완료', step: 38 },
+  { screenId: 'dialogue-listen-write', label: '대화-3. 실전 쓰기', step: 39 },
+  { screenId: 'completion-practice-write', label: '완료-6. 실전 쓰기 완료', step: 40 },
+  { screenId: 'practice-check', label: '대화-4. 실전 확인', step: 41 },
+  { screenId: 'completion-practice-check', label: '완료-7. 실전 확인 완료', step: 42 },
+  { screenId: 'completion-celebration-class', label: '완료-3. 완료 축하 화면(수업)', step: 43 },
+  { screenId: 'learning-report', label: '24. 학습 리포트', step: 44 },
 ];
 
+// ─── 단어 슬라이드 (Word Slides) ────────────────────────────────────────────
+// kcho-dev API: 슬라이드 = question.listItems[] { itemValue(이미지URL), extra1(오디오URL), extra2(bubble.ko), extra3(bubble.vi), itemOrd }
 
+export type WordSlideKind = 'intro' | 'quiz' | 'outro';
 
+export interface WordSlideCard {
+  ko: string;
+  vi: string;
+  image?: string;
+}
 
+export interface WordSlideEquation {
+  left: string;
+  slot: string;
+  right: string;
+}
 
+export interface WordSlide {
+  kind: WordSlideKind;
+  audio: string;
+  bubble: { ko: string; vi: string };
+  showTutor: boolean;
+  badge?: { ko: string; vi: string };
+  // intro 전용
+  title?: { ko: string; vi: string };
+  cards?: WordSlideCard[];
+  // quiz 전용
+  question?: { ko: string; vi: string };
+  choices?: string[];
+  answer?: number;
+  equation?: WordSlideEquation;
+  // outro 전용
+  image?: string;
+  // 슬라이드 전체를 대체하는 이미지 (설정 시 IntroSlide/QuizSlide/OutroSlide 대신 표시)
+  slideImage?: string;
+}
+
+export const MOCK_WORD_SLIDES: WordSlide[] = [
+  {
+    kind: 'intro',
+    audio: require('../../assets/word-slides/word-intro-1.wav') as string,
+    showTutor: true,
+    slideImage: require('../../assets/word-slides/slide-1.png') as string,
+    bubble: {
+      ko: "'베트남'은 나라이고 '베트남 사람'은 국적을 나타내요. '베트남'에 '사람'을 붙이면 국적이 돼요.",
+      vi: "'베트남' chỉ quốc gia và '베트남 사람' chỉ quốc tịch. Thêm '사람' vào tên nước là thành quốc tịch.",
+    },
+  },
+  {
+    kind: 'quiz',
+    audio: require('../../assets/word-slides/word-intro-2.wav') as string,
+    showTutor: true,
+    slideImage: require('../../assets/word-slides/slide-2.png') as string,
+    bubble: {
+      ko: "다음 문제의 답을 맞춰 보세요. 정답이에요! '베트남'은 나라이고, '베트남 사람'은 국적을 나타내요.",
+      vi: "Hãy thử trả lời câu hỏi tiếp theo. Chính xác! '베트남' là quốc gia, còn '베트남 사람' chỉ quốc tịch.",
+    },
+  },
+  {
+    kind: 'quiz',
+    audio: require('../../assets/word-slides/word-intro-3.wav') as string,
+    showTutor: true,
+    slideImage: require('../../assets/word-slides/slide-3.png') as string,
+    bubble: {
+      ko: "다음 문제도 풀어 보세요. 맞았어요! 나라 이름(한국)에 '사람'을 붙이면 국적(한국 사람)을 나타낼 수 있어요.",
+      vi: "Hãy thử câu tiếp theo. Đúng rồi! Thêm '사람' vào tên nước (한국) là thành quốc tịch (한국 사람).",
+    },
+  },
+  {
+    kind: 'outro',
+    audio: require('../../assets/word-slides/word-intro-4.wav') as string,
+    showTutor: true,
+    slideImage: require('../../assets/word-slides/slide-4.png') as string,
+    bubble: {
+      ko: '훌륭해요! 이제 더 많은 단어를 배워봐요.',
+      vi: 'Tuyệt vời! Bây giờ mình học thêm nhiều từ nữa nhé.',
+    },
+  },
+];
+
+// ────────────────────────────────────────────────────────────────
+// 영상과 AI튜터 (VideoAITutorStage)
+// kcho-dev API: videoUri, audioUri, bubbleKo, bubbleVi → question 필드로 교체
+// ────────────────────────────────────────────────────────────────
+export interface VideoAITutorData {
+  badgeKo: string;
+  badgeVi: string;
+  bubbleKo: string;
+  bubbleVi: string;
+  videoUri?: string;
+  audioUri?: string;
+}
+
+export const MOCK_VIDEO_AI_TUTOR: VideoAITutorData = {
+  badgeKo: '실전 듣기',
+  badgeVi: 'Nghe thực chiến',
+  bubbleKo: '먼저, 오늘 배운 내용을 대화문을 통해 다시 한번 잘 들어보세요.',
+  bubbleVi: 'Trước tiên, hãy nghe lại nội dung đã học hôm nay qua đoạn hội thoại nhé.',
+};
+
+// ────────────────────────────────────────────────────────────────
+// AI튜터 설명 (AITutorDescStage)
+// kcho-dev API: bubbleKo, bubbleVi, audioUri → question 필드로 교체
+// ────────────────────────────────────────────────────────────────
+export interface AITutorDescData {
+  bubbleKo: string;
+  bubbleVi: string;
+  audioUri?: string;
+}
+
+export const MOCK_AI_TUTOR_DESC: AITutorDescData = {
+  bubbleKo: '이번에는 한국어 자막과 함께 잘 들어보세요. 필요하면 베트남어 해석도 같이 볼 수 있어요.',
+  bubbleVi: 'Lần này, hãy nghe kỹ cùng với phụ đề tiếng Hàn nhé. Nếu cần, bạn cũng có thể xem thêm bản dịch tiếng Việt.',
+};
+
+// ────────────────────────────────────────────────────────────────
+// 대화문 액티비티 (ConversationPreviewStage / ConversationShadowingStage)
+// kcho-dev API: activity.questions[].listItems.dialogue_content[]
+// ────────────────────────────────────────────────────────────────
+export interface ConversationLine {
+  key: string;
+  speaker: string;       // 화자명
+  side: 'left' | 'right'; // 말풍선 정렬
+  textKo: string;
+  textVi: string;
+  audioSrc?: string;     // 프로토타입: require() 결과 / kcho-dev: CDN URL
+}
+
+export interface ConversationAiTutor {
+  bubbleKo: string;
+  bubbleVi: string;
+  audioSrc: string;
+}
+
+export interface ConversationData {
+  badgeKo: string;
+  badgeVi: string;
+  lines: ConversationLine[];
+  aiTutor?: ConversationAiTutor; // 미등록 시 인트로 스킵
+}
+
+export const MOCK_CONVERSATION: ConversationData = {
+  badgeKo: '대화 듣기',
+  badgeVi: 'Nghe hội thoại',
+  aiTutor: {
+    bubbleKo: '이번에는 한국어 자막과 함께 잘 들어보세요. 필요하면 베트남어 해석도 같이 볼 수 있어요.',
+    bubbleVi: 'Lần này hãy nghe kỹ cùng phụ đề tiếng Hàn. Nếu cần, bạn cũng có thể xem thêm bản dịch tiếng Việt.',
+    audioSrc: require('../../assets/ai-dec/ai-dec-1.mp3') as string,
+  },
+  lines: [
+    {
+      key: 'line-1',
+      speaker: '세나',
+      side: 'left',
+      textKo: '안녕하세요? 어느 나라 사람이에요?',
+      textVi: 'Xin chào? Bạn là người nước nào vậy?',
+      audioSrc: undefined,
+    },
+    {
+      key: 'line-2',
+      speaker: '민준',
+      side: 'right',
+      textKo: '저는 베트남 사람이에요.',
+      textVi: 'Tôi là người Việt Nam.',
+      audioSrc: undefined,
+    },
+    {
+      key: 'line-3',
+      speaker: '세나',
+      side: 'left',
+      textKo: '아, 그렇군요! 직업이 뭐예요?',
+      textVi: 'À, vậy à! Bạn làm nghề gì vậy?',
+      audioSrc: undefined,
+    },
+    {
+      key: 'line-4',
+      speaker: '민준',
+      side: 'right',
+      textKo: '저는 회사원이에요.',
+      textVi: 'Tôi là nhân viên công ty.',
+      audioSrc: undefined,
+    },
+  ],
+};
+
+// ─── ConversationWritingStage ─────────────────────────────────────
+// kcho-dev: dialogue_writing
+export interface WritingWord {
+  id: string;
+  text: string;
+  isPunctuation?: boolean; // true면 고정 텍스트 (사용자 입력 불필요)
+}
+
+export interface WritingLine {
+  key: string;
+  speaker: string;
+  audioSrc?: string;
+  textVi: string;
+  words: WritingWord[];
+}
+
+export interface ConversationWritingData {
+  instructionKo: string;
+  instructionVi: string;
+  lines: WritingLine[];
+}
+
+export const MOCK_CONVERSATION_WRITING: ConversationWritingData = {
+  instructionKo: '대화문을 잘 듣고 써 보세요.',
+  instructionVi: 'Nghe hội thoại và điền vào chỗ trống.',
+  lines: [
+    {
+      key: 'wl-1',
+      speaker: '세나',
+      textVi: 'Xin chào? Bạn là người nước nào vậy?',
+      words: [
+        { id: 'w1-1', text: '안녕하세요' },
+        { id: 'w1-2', text: '?', isPunctuation: true },
+        { id: 'w1-3', text: '어느' },
+        { id: 'w1-4', text: '나라' },
+        { id: 'w1-5', text: '사람이에요' },
+        { id: 'w1-6', text: '?', isPunctuation: true },
+      ],
+    },
+    {
+      key: 'wl-2',
+      speaker: '민준',
+      textVi: 'Tôi là người Việt Nam.',
+      words: [
+        { id: 'w2-1', text: '저는' },
+        { id: 'w2-2', text: '베트남' },
+        { id: 'w2-3', text: '사람이에요' },
+        { id: 'w2-4', text: '.', isPunctuation: true },
+      ],
+    },
+    {
+      key: 'wl-3',
+      speaker: '세나',
+      textVi: 'À, vậy à! Bạn làm nghề gì vậy?',
+      words: [
+        { id: 'w3-1', text: '아' },
+        { id: 'w3-2', text: ',', isPunctuation: true },
+        { id: 'w3-3', text: '그렇군요' },
+        { id: 'w3-4', text: '!', isPunctuation: true },
+        { id: 'w3-5', text: '직업이' },
+        { id: 'w3-6', text: '뭐예요' },
+        { id: 'w3-7', text: '?', isPunctuation: true },
+      ],
+    },
+    {
+      key: 'wl-4',
+      speaker: '민준',
+      textVi: 'Tôi là nhân viên công ty.',
+      words: [
+        { id: 'w4-1', text: '저는' },
+        { id: 'w4-2', text: '회사원이에요' },
+        { id: 'w4-3', text: '.', isPunctuation: true },
+      ],
+    },
+  ],
+};
+
+// ─── ConversationChoiceStage ──────────────────────────────────────
+// kcho-dev: dialogue_choice (templateCd 임시값)
+export interface TextSegment { type: 'text'; value: string; }
+export interface BlankSegment {
+  type: 'blank';
+  id: string;
+  options: [string, string];
+  answerIndex: 0 | 1;
+}
+export type ChoiceSegment = TextSegment | BlankSegment;
+
+export interface ChoiceLine {
+  key: string;
+  speaker: 'A' | 'B';
+  segments: ChoiceSegment[];
+}
+
+export interface ChoiceQuestion {
+  key: string;
+  lines: ChoiceLine[];
+}
+
+export interface ConversationChoiceData {
+  badgeKo: string;
+  badgeVi: string;
+  instructionKo: string;
+  instructionVi: string;
+  questions: ChoiceQuestion[];
+}
+
+export const MOCK_CONVERSATION_CHOICE: ConversationChoiceData = {
+  badgeKo: '실전 확인',
+  badgeVi: 'Kiểm tra thực tế',
+  instructionKo: '알맞은 답을 골라 대화를 완성하세요.',
+  instructionVi: 'Hãy điền từ thích hợp vào chỗ trống để hoàn thành đoạn hội thoại.',
+  questions: [
+    // 1/3
+    {
+      key: 'q1',
+      lines: [
+        {
+          key: 'q1-l1', speaker: 'A',
+          segments: [
+            { type: 'text', value: '안녕하세요? 저는 레오' },
+            { type: 'blank', id: 'q1-b1', options: ['예요', '이에요'], answerIndex: 0 },
+            { type: 'text', value: '.' },
+          ],
+        },
+        {
+          key: 'q1-l2', speaker: 'A',
+          segments: [
+            { type: 'text', value: '저는 미국 사람' },
+            { type: 'blank', id: 'q1-b2', options: ['예요', '이에요'], answerIndex: 1 },
+            { type: 'text', value: '.' },
+          ],
+        },
+        {
+          key: 'q1-l3', speaker: 'B',
+          segments: [
+            { type: 'text', value: '만나서 반가워요. 저는 로빈' },
+            { type: 'blank', id: 'q1-b3', options: ['예요', '이에요'], answerIndex: 1 },
+            { type: 'text', value: '.' },
+          ],
+        },
+        {
+          key: 'q1-l4', speaker: 'B',
+          segments: [
+            { type: 'text', value: '저는 캐나다 사람' },
+            { type: 'blank', id: 'q1-b4', options: ['예요', '이에요'], answerIndex: 1 },
+            { type: 'text', value: '.' },
+          ],
+        },
+      ],
+    },
+    // 2/3
+    {
+      key: 'q2',
+      lines: [
+        {
+          key: 'q2-l1', speaker: 'A',
+          segments: [
+            { type: 'text', value: '안녕하세요? 저는 유키' },
+            { type: 'blank', id: 'q2-b1', options: ['예요', '이에요'], answerIndex: 0 },
+            { type: 'text', value: '.' },
+          ],
+        },
+        {
+          key: 'q2-l2', speaker: 'A',
+          segments: [
+            { type: 'text', value: '저는 일본 사람' },
+            { type: 'blank', id: 'q2-b2', options: ['이에요', '예요'], answerIndex: 0 },
+            { type: 'text', value: '.' },
+          ],
+        },
+        {
+          key: 'q2-l3', speaker: 'B',
+          segments: [
+            { type: 'text', value: '만나서 반가워요. 저는 왕타오' },
+            { type: 'blank', id: 'q2-b3', options: ['예요', '이에요'], answerIndex: 0 },
+            { type: 'text', value: '.' },
+          ],
+        },
+        {
+          key: 'q2-l4', speaker: 'B',
+          segments: [
+            { type: 'text', value: '저는 ' },
+            { type: 'blank', id: 'q2-b4', options: ['중국이에요', '중국 사람이에요'], answerIndex: 1 },
+            { type: 'text', value: '.' },
+          ],
+        },
+      ],
+    },
+    // 3/3
+    {
+      key: 'q3',
+      lines: [
+        {
+          key: 'q3-l1', speaker: 'A',
+          segments: [
+            { type: 'text', value: '안녕하세요? 저는 ' },
+            { type: 'blank', id: 'q3-b1', options: ['하리', '하린'], answerIndex: 1 },
+            { type: 'text', value: ' 이에요.' },
+          ],
+        },
+        {
+          key: 'q3-l2', speaker: 'A',
+          segments: [
+            { type: 'text', value: '저는 ' },
+            { type: 'blank', id: 'q3-b2', options: ['베트남', '베트남 사람'], answerIndex: 1 },
+            { type: 'text', value: ' 이에요.' },
+          ],
+        },
+        {
+          key: 'q3-l3', speaker: 'B',
+          segments: [
+            { type: 'text', value: '만나서 반가워요. 저는 ' },
+            { type: 'blank', id: 'q3-b3', options: ['수지', '수진'], answerIndex: 1 },
+            { type: 'text', value: ' 예요.' },
+          ],
+        },
+        {
+          key: 'q3-l4', speaker: 'B',
+          segments: [
+            { type: 'text', value: '저는 ' },
+            { type: 'blank', id: 'q3-b4', options: ['한국', '한국 사람'], answerIndex: 1 },
+            { type: 'text', value: ' 이에요.' },
+          ],
+        },
+      ],
+    },
+  ],
+};
+
+// ─── DialogueListenWriteStage 데이터 ──────────────────────────────────────────
+
+export interface DialogueWriteLine {
+  key: string;
+  speakerSide: 'A' | 'B';
+  speaker: string;
+  textKo: string;   // 한국어 전체 문장 (단어 박스 + 힌트에 사용)
+  textVi: string;
+  audioSrc?: string;
+}
+
+export interface DialogueListenWriteData {
+  instructionKo: string;
+  instructionVi: string;
+  lines: DialogueWriteLine[];
+}
+
+export const MOCK_DIALOGUE_LISTEN_WRITE: DialogueListenWriteData = {
+  instructionKo: '대화문을 잘 듣고 써 보세요.',
+  instructionVi: 'Hãy nghe kỹ hội thoại và viết lại.',
+  lines: [
+    {
+      key: 'dlw-l1',
+      speakerSide: 'A',
+      speaker: '하영',
+      textKo: '안녕하세요? 저는 하영이에요.',
+      textVi: 'Xin chào. Tôi là 하영.',
+    },
+    {
+      key: 'dlw-l2',
+      speakerSide: 'A',
+      speaker: '하영',
+      textKo: '저는 한국 사람이에요.',
+      textVi: 'Tôi là người Hàn Quốc.',
+    },
+    {
+      key: 'dlw-l3',
+      speakerSide: 'B',
+      speaker: '유키',
+      textKo: '만나서 반가워요. 저는 유키예요.',
+      textVi: 'Rất vui được gặp bạn. Tôi là 유키.',
+    },
+    {
+      key: 'dlw-l4',
+      speakerSide: 'B',
+      speaker: '유키',
+      textKo: '저는 일본 사람이에요.',
+      textVi: 'Tôi là người Nhật Bản.',
+    },
+  ],
+};
+
+// ─── PracticeCheckStage 데이터 (실전 확인) ────────────────────────────────────
+
+export interface PracticeCheckBlank {
+  options: string[];
+  answer: string;
+}
+export type PracticeCheckPart = string | PracticeCheckBlank;
+
+export interface PracticeCheckLine {
+  speakerSide: 'A' | 'B';
+  parts: PracticeCheckPart[];
+}
+
+export interface PracticeCheckScreen {
+  lines: PracticeCheckLine[];
+}
+
+export interface PracticeCheckData {
+  titleKo: string;
+  titleVi: string;
+  screens: PracticeCheckScreen[];
+}
+
+export const MOCK_PRACTICE_CHECK: PracticeCheckData = {
+  titleKo: '알맞은 답을 골라 대화를 완성하세요.',
+  titleVi: 'Hãy điền từ thích hợp vào chỗ trống để hoàn thành đoạn hội thoại.',
+  screens: [
+    {
+      lines: [
+        { speakerSide: 'A', parts: ['안녕하세요? 저는 레오 ', { options: ['예요', '이에요'], answer: '예요' }, '.'] },
+        { speakerSide: 'A', parts: ['저는 미국 사람 ', { options: ['예요', '이에요'], answer: '이에요' }, '.'] },
+        { speakerSide: 'B', parts: ['만나서 반가워요. 저는 로빈 ', { options: ['예요', '이에요'], answer: '이에요' }, '.'] },
+        { speakerSide: 'B', parts: ['저는 캐나다 사람 ', { options: ['예요', '이에요'], answer: '이에요' }, '.'] },
+      ],
+    },
+    {
+      lines: [
+        { speakerSide: 'A', parts: ['안녕하세요? 저는 유키 ', { options: ['에요', '예요'], answer: '예요' }, '.'] },
+        { speakerSide: 'A', parts: ['저는 일본 사람 ', { options: ['이에요', '이예요'], answer: '이에요' }, '.'] },
+        { speakerSide: 'B', parts: ['만나서 반가워요. 저는 왕타오 ', { options: ['에요', '예요'], answer: '예요' }, '.'] },
+        { speakerSide: 'B', parts: ['저는 ', { options: ['중국이에요', '중국 사람이에요'], answer: '중국 사람이에요' }, '.'] },
+      ],
+    },
+    {
+      lines: [
+        { speakerSide: 'A', parts: ['안녕하세요? 저는 ', { options: ['하리', '하린'], answer: '하린' }, ' 이에요.'] },
+        { speakerSide: 'A', parts: ['저는 ', { options: ['베트남', '베트남 사람'], answer: '베트남 사람' }, ' 이에요.'] },
+        { speakerSide: 'B', parts: ['만나서 반가워요. 저는 ', { options: ['수지', '수진'], answer: '수지' }, ' 예요.'] },
+        { speakerSide: 'B', parts: ['저는 ', { options: ['한국', '한국 사람'], answer: '한국 사람' }, ' 이에요.'] },
+      ],
+    },
+  ],
+};
+
+// ─── ConversationDictationStage 데이터 (받아쓰기 + 대화문 완성 통합) ──────────────
+
+// 받아쓰기 라인 (side 포함 — A=teal, B=amber)
+export interface DictationWriteLine {
+  key: string;
+  side: 'A' | 'B';
+  speaker: string;
+  audioSrc?: string;
+  textVi: string;
+  words: WritingWord[];
+}
+
+// 통합 데이터 타입
+export interface ConversationDictationData {
+  // Phase 1 — 받아쓰기
+  instructionWriteKo: string;
+  instructionWriteVi: string;
+  writeLines: DictationWriteLine[];
+  // Phase 2 — 대화문 완성
+  badgeKo: string;
+  badgeVi: string;
+  instructionChoiceKo: string;
+  instructionChoiceVi: string;
+  choiceQuestions: ChoiceQuestion[];
+}
+
+export const MOCK_CONVERSATION_DICTATION: ConversationDictationData = {
+  instructionWriteKo: '대화문을 잘 듣고 써 보세요.',
+  instructionWriteVi: 'Hãy nghe kỹ hội thoại và viết lại.',
+  writeLines: [
+    {
+      key: 'wd-a1', side: 'A', speaker: '하영',
+      textVi: 'Xin chào. Tôi là 하영.',
+      words: [
+        { id: 'wd-a1-1', text: '안녕하세요' },
+        { id: 'wd-a1-p1', text: '?', isPunctuation: true },
+        { id: 'wd-a1-2', text: '저는' },
+        { id: 'wd-a1-3', text: '하영이에요' },
+        { id: 'wd-a1-p2', text: '.', isPunctuation: true },
+      ],
+    },
+    {
+      key: 'wd-a2', side: 'A', speaker: '하영',
+      textVi: 'Tôi là người Hàn Quốc.',
+      words: [
+        { id: 'wd-a2-1', text: '저는' },
+        { id: 'wd-a2-2', text: '한국' },
+        { id: 'wd-a2-3', text: '사람이에요' },
+        { id: 'wd-a2-p1', text: '.', isPunctuation: true },
+      ],
+    },
+    {
+      key: 'wd-b1', side: 'B', speaker: '유키',
+      textVi: 'Rất vui được gặp bạn. Tôi là 유키.',
+      words: [
+        { id: 'wd-b1-1', text: '만나서' },
+        { id: 'wd-b1-2', text: '반가워요' },
+        { id: 'wd-b1-p1', text: '.', isPunctuation: true },
+        { id: 'wd-b1-3', text: '저는' },
+        { id: 'wd-b1-4', text: '유키예요' },
+        { id: 'wd-b1-p2', text: '.', isPunctuation: true },
+      ],
+    },
+    {
+      key: 'wd-b2', side: 'B', speaker: '유키',
+      textVi: 'Tôi là người Nhật Bản.',
+      words: [
+        { id: 'wd-b2-1', text: '저는' },
+        { id: 'wd-b2-2', text: '일본' },
+        { id: 'wd-b2-3', text: '사람이에요' },
+        { id: 'wd-b2-p1', text: '.', isPunctuation: true },
+      ],
+    },
+  ],
+  badgeKo: '실전 확인',
+  badgeVi: 'Kiểm tra thực tế',
+  instructionChoiceKo: '알맞은 답을 골라 대화를 완성하세요.',
+  instructionChoiceVi: 'Hãy điền từ thích hợp vào chỗ trống để hoàn thành đoạn hội thoại.',
+  choiceQuestions: [
+    {
+      key: 'dq1',
+      lines: [
+        {
+          key: 'dq1-l1', speaker: 'A',
+          segments: [
+            { type: 'text', value: '안녕하세요? 저는 레오 ' },
+            { type: 'blank', id: 'dq1-b1', options: ['예요', '이에요'], answerIndex: 0 },
+            { type: 'text', value: '.' },
+          ],
+        },
+        {
+          key: 'dq1-l2', speaker: 'A',
+          segments: [
+            { type: 'text', value: '저는 미국 사람 ' },
+            { type: 'blank', id: 'dq1-b2', options: ['예요', '이에요'], answerIndex: 1 },
+            { type: 'text', value: '.' },
+          ],
+        },
+        {
+          key: 'dq1-l3', speaker: 'B',
+          segments: [
+            { type: 'text', value: '만나서 반가워요. 저는 로빈 ' },
+            { type: 'blank', id: 'dq1-b3', options: ['예요', '이에요'], answerIndex: 1 },
+            { type: 'text', value: '.' },
+          ],
+        },
+        {
+          key: 'dq1-l4', speaker: 'B',
+          segments: [
+            { type: 'text', value: '저는 캐나다 사람 ' },
+            { type: 'blank', id: 'dq1-b4', options: ['예요', '이에요'], answerIndex: 1 },
+            { type: 'text', value: '.' },
+          ],
+        },
+      ],
+    },
+    {
+      key: 'dq2',
+      lines: [
+        {
+          key: 'dq2-l1', speaker: 'A',
+          segments: [
+            { type: 'text', value: '안녕하세요? 저는 유키 ' },
+            { type: 'blank', id: 'dq2-b1', options: ['에요', '예요'], answerIndex: 1 },
+            { type: 'text', value: '.' },
+          ],
+        },
+        {
+          key: 'dq2-l2', speaker: 'A',
+          segments: [
+            { type: 'text', value: '저는 일본 사람 ' },
+            { type: 'blank', id: 'dq2-b2', options: ['이에요', '이예요'], answerIndex: 0 },
+            { type: 'text', value: '.' },
+          ],
+        },
+        {
+          key: 'dq2-l3', speaker: 'B',
+          segments: [
+            { type: 'text', value: '만나서 반가워요. 저는 왕타오 ' },
+            { type: 'blank', id: 'dq2-b3', options: ['에요', '예요'], answerIndex: 1 },
+            { type: 'text', value: '.' },
+          ],
+        },
+        {
+          key: 'dq2-l4', speaker: 'B',
+          segments: [
+            { type: 'text', value: '저는 ' },
+            { type: 'blank', id: 'dq2-b4', options: ['중국이에요', '중국 사람이에요'], answerIndex: 1 },
+            { type: 'text', value: '.' },
+          ],
+        },
+      ],
+    },
+    {
+      key: 'dq3',
+      lines: [
+        {
+          key: 'dq3-l1', speaker: 'A',
+          segments: [
+            { type: 'text', value: '안녕하세요? 저는 ' },
+            { type: 'blank', id: 'dq3-b1', options: ['하리', '하린'], answerIndex: 1 },
+            { type: 'text', value: ' 이에요.' },
+          ],
+        },
+        {
+          key: 'dq3-l2', speaker: 'A',
+          segments: [
+            { type: 'text', value: '저는 ' },
+            { type: 'blank', id: 'dq3-b2', options: ['베트남', '베트남 사람'], answerIndex: 1 },
+            { type: 'text', value: ' 이에요.' },
+          ],
+        },
+        {
+          key: 'dq3-l3', speaker: 'B',
+          segments: [
+            { type: 'text', value: '만나서 반가워요. 저는 ' },
+            { type: 'blank', id: 'dq3-b3', options: ['수지', '수진'], answerIndex: 1 },
+            { type: 'text', value: ' 예요.' },
+          ],
+        },
+        {
+          key: 'dq3-l4', speaker: 'B',
+          segments: [
+            { type: 'text', value: '저는 ' },
+            { type: 'blank', id: 'dq3-b4', options: ['한국', '한국 사람'], answerIndex: 1 },
+            { type: 'text', value: ' 이에요.' },
+          ],
+        },
+      ],
+    },
+  ],
+};
+
+// ─── ConversationShadowingStage 전용 Mock ────────────────────────────────────
+// 대화-2 따라 말하기: 첫 번째 문항에서만 AI 튜터 인트로 노출
+export const MOCK_CONVERSATION_SHADOWING: ConversationData = {
+  ...MOCK_CONVERSATION,
+  aiTutor: {
+    bubbleKo: '정말 잘했어요! 이제 대화문을 보고 마이크 버튼을 누른 후 따라 읽어보세요.',
+    bubbleVi: 'Thật tuyệt! Hãy nhìn vào hội thoại, nhấn nút micro và đọc theo nhé.',
+    audioSrc: require('../../assets/ai-dec/ai-dec-1.mp3') as string,
+  },
+};
 
 

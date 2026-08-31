@@ -10,18 +10,12 @@ import { SCREEN_REGISTRY, getScreen } from './screenRegistry';
 
 // 화면 컴포넌트 임포트
 import { HomeScreen } from '../screens/HomeScreen';
-import { MissionStage } from '../screens/MissionStage';
 import { MissionTutorStage } from '../screens/MissionTutorStage';
-import { MissionTutorPrevStage } from '../screens/MissionTutorPrevStage';
-import { MissionTutorPrevViStage } from '../screens/MissionTutorPrevViStage';
-import { BridgeStage } from '../screens/BridgeStage';
-import { IntroStage } from '../screens/IntroStage';
 import { IntroTutorStage } from '../screens/IntroTutorStage';
 import { IntroEvalStage } from '../screens/IntroEvalStage';
 import { WordBuildStage } from '../screens/WordBuildStage';
 import { SentenceBuildStage } from '../screens/SentenceBuildStage';
 import { SentenceBuildStage2 } from '../screens/SentenceBuildStage2';
-import { VocabWordbookStage } from '../screens/VocabWordbookStage';
 import { VocabWordbookVoiceStage } from '../screens/VocabWordbookVoiceStage';
 import { SetWordbookEvalStage } from '../screens/SetWordbookEvalStage';
 import { GrammarDetailStage } from '../screens/GrammarDetailStage';
@@ -30,14 +24,6 @@ import { CultureStage } from '../screens/CultureStage';
 import { WordDetailStage } from '../screens/WordDetailStage';
 import { VideoBridgeStage } from '../screens/VideoBridgeStage';
 import { SlideExplainStage } from '../screens/SlideExplainStage';
-import { SpeakingDetailStage } from '../screens/SpeakingDetailStage';
-import { SpeakingDetailEasyStage } from '../screens/SpeakingDetailEasyStage';
-import { SpeakingVideoDemoStage } from '../screens/SpeakingVideoDemoStage';
-import { SpeakingAudioTutorStage } from '../screens/SpeakingAudioTutorStage';
-import { ReadWriteDetailStage } from '../screens/ReadWriteDetailStage';
-import { ReadWriteDetailEasyStage } from '../screens/ReadWriteDetailEasyStage';
-import { ReadWriteVisualSlideStage } from '../screens/ReadWriteVisualSlideStage';
-import { ListenSpeakDetailStage } from '../screens/ListenSpeakDetailStage';
 import { ListenSpeakDetailEasyStage } from '../screens/ListenSpeakDetailEasyStage';
 import { ListenSpeakInteractiveTryStage } from '../screens/ListenSpeakInteractiveTryStage';
 import { ListenSelect1 } from '../screens/ListenSelect1';
@@ -57,6 +43,13 @@ import { PracticalSpeakingStage } from '../screens/PracticalSpeakingStage';
 import { CompletionCelebrationVocabStage } from '../screens/CompletionCelebrationVocabStage';
 import { CompletionCelebrationGrammarStage } from '../screens/CompletionCelebrationGrammarStage';
 import { CompletionCelebrationClassStage } from '../screens/CompletionCelebrationClassStage';
+import { WordIntroSlidesStage } from '../screens/WordIntroSlidesStage';
+import { VideoAITutorStage } from '../screens/VideoAITutorStage';
+import { AITutorDescStage } from '../screens/AITutorDescStage';
+import { ConversationPreviewStage } from '../screens/ConversationPreviewStage';
+import { ConversationShadowingStage } from '../screens/ConversationShadowingStage';
+import DialogueListenWriteStage from '../screens/DialogueListenWriteStage';
+import PracticeCheckStage from '../screens/PracticeCheckStage';
 import { defaultSessionState, LEARNING_FLOW } from '../data/lessonData';
 import { useLang, type Lang } from '../components/LangContext';
 
@@ -263,66 +256,12 @@ function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate
           onStartSession={(id) => id === 2 ? onNavigate('quick-review') : onNavigate('mission')}
         />
       );
-    case 'mission':
-      return (
-        <MissionStage
-          sessionId={1}
-          onNext={() => onNavigate('preview-word')}
-          onBack={() => onNavigate('home')}
-        />
-      );
     case 'mission-tutor':
       return (
         <MissionTutorStage
           sessionId={1}
-          onNext={() => onNavigate('vocab-wordbook')}
+          onNext={() => onNavigate('home')}
           onBack={() => onNavigate('home')}
-        />
-      );
-    case 'mission-tutor-prev':
-      return (
-        <MissionTutorPrevStage
-          sessionId={1}
-          onNext={() => onNavigate('quick-review')}
-          onBack={() => onNavigate('home')}
-        />
-      );
-    case 'mission-tutor-prev-vi':
-      return (
-        <MissionTutorPrevViStage
-          sessionId={1}
-          onNext={() => onNavigate('quick-review')}
-          onBack={() => onNavigate('home')}
-        />
-      );
-    case 'bridge-vocab-grammar':
-      return (
-        <BridgeStage
-          onPressConfirm={() => onNavigate('home')}
-          onClose={() => onNavigate('home')}
-        />
-      );
-    case 'bridge-grammar-listening':
-    case 'bridge-grammar-speaking':
-    case 'bridge-grammar-writing': {
-      const bridgeDataMap: Record<string, import('../data/lessonData').BridgeData> = {
-        'bridge-grammar-listening': require('../data/lessonData').MOCK_BRIDGE_GRAMMAR_LISTENING,
-        'bridge-grammar-speaking':  require('../data/lessonData').MOCK_BRIDGE_GRAMMAR_SPEAKING,
-        'bridge-grammar-writing':   require('../data/lessonData').MOCK_BRIDGE_GRAMMAR_WRITING,
-      };
-      return (
-        <BridgeStage
-          data={bridgeDataMap[screenId]}
-          onPressConfirm={() => onNavigate('home')}
-          onClose={() => onNavigate('home')}
-        />
-      );
-    }
-    case 'vocab-wordbook':
-      return (
-        <VocabWordbookStage
-          onNext={() => onNavigate('word-build')}
-          onBack={() => onNavigate('mission')}
         />
       );
     case 'vocab-wordbook-voice':
@@ -330,13 +269,6 @@ function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate
         <VocabWordbookVoiceStage
           onNext={() => onNavigate('intro')}
           onBack={() => onNavigate('mission')}
-        />
-      );
-    case 'intro':
-      return (
-        <IntroStage
-          onNext={() => onNavigate('home')}
-          onBack={() => onNavigate('vocab-wordbook')}
         />
       );
     case 'intro-tutor':
@@ -569,6 +501,58 @@ function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate
           onBack={() => onNavigate('home')}
         />
       );
+    case 'completion-practice-listen':
+      return (
+        <CompletionCelebrationVocabStage
+          title="대단해요!"
+          titleVi="Tuyệt vời!"
+          description="실전 듣기를 완료했어요!"
+          descriptionVi="Bạn đã hoàn thành phần nghe thực hành!"
+          nextButtonText="확인"
+          nextButtonTextVi="Xác nhận"
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'completion-practice-read':
+      return (
+        <CompletionCelebrationVocabStage
+          title="대단해요!"
+          titleVi="Tuyệt vời!"
+          description={"실전 읽기 및 발음평가를\n완료했어요!"}
+          descriptionVi="Thực hành đọc và đánh giá phát âm đã hoàn thành!"
+          nextButtonText="확인"
+          nextButtonTextVi="Xác nhận"
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'completion-practice-write':
+      return (
+        <CompletionCelebrationVocabStage
+          title="대단해요!"
+          titleVi="Tuyệt vời!"
+          description="실전 쓰기를 완료했어요!"
+          descriptionVi="Bạn đã hoàn thành phần viết thực hành!"
+          nextButtonText="확인"
+          nextButtonTextVi="Xác nhận"
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'completion-practice-check':
+      return (
+        <CompletionCelebrationVocabStage
+          title="대단해요!"
+          titleVi="Tuyệt vời!"
+          description="실전 확인을 완료했어요!"
+          descriptionVi="Bạn đã hoàn thành phần kiểm tra thực hành!"
+          nextButtonText="확인"
+          nextButtonTextVi="Xác nhận"
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
     case 'sentence-build':
       return (
         <SentenceBuildStage
@@ -637,62 +621,6 @@ function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate
         <VideoBridgeStage
           onPressConfirm={() => onNavigate('home')}
           onClose={() => onNavigate('home')}
-        />
-      );
-    case 'speaking-detail':
-      return (
-        <SpeakingDetailStage
-          onNext={() => onNavigate('home')}
-          onBack={() => onNavigate('home')}
-        />
-      );
-    case 'speaking-detail-easy':
-      return (
-        <SpeakingDetailEasyStage
-          onNext={() => onNavigate('home')}
-          onBack={() => onNavigate('home')}
-        />
-      );
-    case 'speaking-video-demo':
-      return (
-        <SpeakingVideoDemoStage
-          onNext={() => onNavigate('home')}
-          onBack={() => onNavigate('home')}
-        />
-      );
-    case 'speaking-audio-tutor':
-      return (
-        <SpeakingAudioTutorStage
-          onNext={() => onNavigate('home')}
-          onBack={() => onNavigate('home')}
-        />
-      );
-    case 'read-write-detail':
-      return (
-        <ReadWriteDetailStage
-          onNext={() => onNavigate('home')}
-          onBack={() => onNavigate('home')}
-        />
-      );
-    case 'read-write-detail-easy':
-      return (
-        <ReadWriteDetailEasyStage
-          onNext={() => onNavigate('home')}
-          onBack={() => onNavigate('home')}
-        />
-      );
-    case 'read-write-visual-slide':
-      return (
-        <ReadWriteVisualSlideStage
-          onNext={() => onNavigate('home')}
-          onBack={() => onNavigate('home')}
-        />
-      );
-    case 'listen-speak-detail':
-      return (
-        <ListenSpeakDetailStage
-          onNext={() => onNavigate('home')}
-          onBack={() => onNavigate('home')}
         />
       );
     case 'listen-speak-detail-easy':
@@ -922,6 +850,55 @@ function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate
             aiFeedback: '오늘의 자기소개 발음을 완성했어요. 다음에는 받침 있는 단어를 정확하게 구분해 말해봅시다.',
             aiFeedbackVi: 'Bạn đã hoàn thành bài tự giới thiệu hôm nay. Lần sau, hãy phân biệt chính xác các từ có phụ âm cuối.'
           }}
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'word-intro-slides':
+      return (
+        <WordIntroSlidesStage
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'video-ai-tutor':
+      return (
+        <VideoAITutorStage
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'ai-tutor-desc':
+      return (
+        <AITutorDescStage
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'conversation-preview':
+      return (
+        <ConversationPreviewStage
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'conversation-shadowing':
+      return (
+        <ConversationShadowingStage
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'dialogue-listen-write':
+      return (
+        <DialogueListenWriteStage
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'practice-check':
+      return (
+        <PracticeCheckStage
           onNext={() => onNavigate('home')}
           onBack={() => onNavigate('home')}
         />
@@ -1256,6 +1233,21 @@ export function EmulatorShell() {
                 >
                   <Text style={[shell.selectItemLabel, { color: '#424242' }]}>
                     × Flow 종료
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[shell.selectItem, { backgroundColor: currentFlowStep <= 0 ? '#F5F5F5' : '#E8EAF6', marginTop: 8 }]}
+                  onPress={() => {
+                    if (currentFlowStep > 0) {
+                      setCurrentFlowStep(currentFlowStep - 1);
+                    }
+                  }}
+                  disabled={currentFlowStep <= 0}
+                  activeOpacity={0.7}
+                >
+                  <Text style={[shell.selectItemLabel, { color: currentFlowStep <= 0 ? '#BDBDBD' : '#3949AB', fontWeight: '700' }]}>
+                    ⏮️ 이전 Step
                   </Text>
                 </TouchableOpacity>
 
