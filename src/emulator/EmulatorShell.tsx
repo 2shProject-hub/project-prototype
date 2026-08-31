@@ -7,6 +7,9 @@ import { useState } from 'react';
 import { colors } from '../theme/colors';
 import { LangProvider } from '../components/LangContext';
 import { SCREEN_REGISTRY, getScreen } from './screenRegistry';
+import { ThemeProvider, useTheme } from '../theme/ThemeContext';
+import { ThemeGalleryScreen } from '../screens/ThemeGalleryScreen';
+import { ThemedWordbookScreen } from '../components/preview/ThemedWordbookScreen';
 
 // 화면 컴포넌트 임포트
 import { HomeScreen } from '../screens/HomeScreen';
@@ -1118,12 +1121,97 @@ const combo = StyleSheet.create({
   },
 });
 
-export function EmulatorShell() {
+// ─── 헤더 테마 셀렉트 박스 ─────────────────────────────────────────
+function ThemeSelect() {
+  const { themes, themeId, setThemeId, theme } = useTheme();
+  const [open, setOpen] = useState(false);
+
+  return (
+    <View style={ts.wrap}>
+      <TouchableOpacity style={[ts.trigger, open && ts.triggerOpen]} onPress={() => setOpen(!open)} activeOpacity={0.75}>
+        <View style={[ts.dot, { backgroundColor: theme.colors.primary, borderColor: theme.colors.primaryDark }]} />
+        <Text style={ts.triggerText} numberOfLines={1}>{theme.name}</Text>
+        <Text style={ts.arrow}>{open ? '▲' : '▼'}</Text>
+      </TouchableOpacity>
+
+      {open && (
+        <View style={ts.dropdown}>
+          <ScrollView style={{ maxHeight: 420 }} nestedScrollEnabled showsVerticalScrollIndicator>
+            {themes.map((t, i) => {
+              const sel = t.id === themeId;
+              return (
+                <TouchableOpacity
+                  key={t.id}
+                  style={[ts.option, sel && ts.optionOn]}
+                  onPress={() => { setThemeId(t.id); setOpen(false); }}
+                  activeOpacity={0.75}
+                >
+                  <Text style={ts.optionNo}>{String(i + 1).padStart(2, '0')}</Text>
+                  <View style={ts.swatchRow}>
+                    <View style={[ts.swatch, { backgroundColor: t.colors.canvas }]} />
+                    <View style={[ts.swatch, { backgroundColor: t.colors.primary }]} />
+                    <View style={[ts.swatch, { backgroundColor: t.colors.ink }]} />
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <Text style={[ts.optionLabel, sel && ts.optionLabelOn]} numberOfLines={1}>{t.name}</Text>
+                    <Text style={ts.optionSub} numberOfLines={1}>{t.type.display} · {t.layout.header}</Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        </View>
+      )}
+    </View>
+  );
+}
+
+const ts = StyleSheet.create({
+  wrap: { position: 'relative', zIndex: 50, width: 190 },
+  trigger: {
+    flexDirection: 'row', alignItems: 'center', gap: 7,
+    paddingHorizontal: 9, paddingVertical: 6, borderRadius: 9,
+    borderWidth: 1, borderColor: colors.line, backgroundColor: '#f9fafb',
+  },
+  triggerOpen: { borderColor: colors.teal, backgroundColor: colors.tealSoft },
+  dot: { width: 12, height: 12, borderRadius: 6, borderWidth: 1 },
+  triggerText: { flex: 1, fontSize: 12, fontWeight: '700', color: colors.ink },
+  arrow: { fontSize: 9, color: colors.muted },
+  dropdown: {
+    position: 'absolute', top: 38, right: 0, width: 262,
+    backgroundColor: colors.surface, borderRadius: 10,
+    borderWidth: 1, borderColor: colors.line,
+    shadowColor: '#000', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.14, shadowRadius: 18, elevation: 12,
+    overflow: 'hidden',
+  },
+  option: {
+    flexDirection: 'row', alignItems: 'center', gap: 8,
+    paddingHorizontal: 10, paddingVertical: 7,
+    borderBottomWidth: 1, borderBottomColor: '#f3f4f6',
+  },
+  optionOn: { backgroundColor: colors.tealSoft },
+  optionNo: { fontSize: 10, fontWeight: '700', color: colors.muted, width: 16 },
+  swatchRow: { flexDirection: 'row', gap: 2 },
+  swatch: { width: 9, height: 16, borderRadius: 2, borderWidth: 1, borderColor: 'rgba(0,0,0,0.08)' },
+  optionLabel: { fontSize: 12, fontWeight: '600', color: colors.ink },
+  optionLabelOn: { fontWeight: '800', color: colors.teal },
+  optionSub: { fontSize: 9.5, color: colors.muted, marginTop: 1 },
+});
+
+/** 테마가 입혀진 버전이 있는 화면. 나머지는 아직 원본 컴포넌트로만 렌더된다. */
+const THEMED_SCREEN_IDS = new Set(['set-wordbook-eval', 'set-wordbook-eval-2', 'set-wordbook-eval-3']);
+
+function EmulatorShellInner() {
   const [deviceId, setDeviceId] = useState('iphone15');
   const [screenId, setScreenId] = useState('set-wordbook-eval');
   const [infoTab, setInfoTab] = useState<'desc' | 'dev' | 'design'>('desc');
   const [flowMode, setFlowMode] = useState(false);
   const [currentFlowStep, setCurrentFlowStep] = useState(0);
+  const [showGallery, setShowGallery] = useState(false);
+  // 헤더에서 고른 테마를 가운데 폰 화면에도 실제로 입힌다.
+  // 아직 테마 버전이 있는 화면(단어장 5-2)에만 적용되고, 나머지는 원본 그대로 나온다.
+  const [applyTheme, setApplyTheme] = useState(true);
+  const { theme: activeTheme } = useTheme();
 
   // Flow 모드일 때 현재 screenId 결정
   const activeScreenId = flowMode ? LEARNING_FLOW[currentFlowStep]?.screenId : screenId;
@@ -1166,9 +1254,34 @@ export function EmulatorShell() {
           <Text style={shell.topBarLogo}>K-Chao</Text>
           <Text style={shell.topBarSub}>리뉴얼 프로토타입 뷰어</Text>
         </View>
-        <Text style={shell.topBarVersion}>v0.1 · Expo Web</Text>
+        <View style={shell.topBarRight}>
+          <Text style={shell.topBarFieldLabel}>테마</Text>
+          <ThemeSelect />
+          <TouchableOpacity
+            style={[shell.applyBtn, applyTheme && shell.applyBtnOn]}
+            onPress={() => setApplyTheme(!applyTheme)}
+            activeOpacity={0.8}
+          >
+            <Text style={[shell.applyBtnText, applyTheme && shell.applyBtnTextOn]}>
+              {applyTheme ? '테마 적용 ON' : '테마 적용 OFF'}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[shell.galleryBtn, showGallery && shell.galleryBtnOn]}
+            onPress={() => setShowGallery(!showGallery)}
+            activeOpacity={0.8}
+          >
+            <Text style={[shell.galleryBtnText, showGallery && shell.galleryBtnTextOn]}>
+              {showGallery ? '× 갤러리 닫기' : '🎨 테마 갤러리'}
+            </Text>
+          </TouchableOpacity>
+          <Text style={shell.topBarVersion}>v0.1 · Expo Web</Text>
+        </View>
       </View>
 
+      {showGallery ? (
+        <ThemeGalleryScreen onClose={() => setShowGallery(false)} />
+      ) : (
       <View style={shell.body}>
         {/* ── 좌측 컨트롤 패널 ── */}
         <View style={shell.leftPanel}>
@@ -1281,7 +1394,11 @@ export function EmulatorShell() {
             </View>
             {/* 화면 렌더링 영역 */}
             <View style={[shell.deviceScreen, { width: frameW, height: frameH - 24 }]}>
-              <ScreenRenderer screenId={activeScreenId || screenId} onNavigate={handleNavigate} />
+              {applyTheme && THEMED_SCREEN_IDS.has(activeScreenId || screenId) ? (
+                <ThemedWordbookScreen theme={activeTheme} width={frameW} height={frameH - 24} showStatusBar={false} />
+              ) : (
+                <ScreenRenderer screenId={activeScreenId || screenId} onNavigate={handleNavigate} />
+              )}
             </View>
           </View>
 
@@ -1356,6 +1473,7 @@ export function EmulatorShell() {
           )}
         </View>
       </View>
+      )}
     </View>
     </LangProvider>
   );
@@ -1372,6 +1490,22 @@ const shell = StyleSheet.create({
   topBarLogo: { fontSize: 15, fontWeight: '800', color: colors.teal },
   topBarSub: { fontSize: 13, color: colors.muted },
   topBarVersion: { fontSize: 12, color: colors.muted },
+  topBarRight: { flexDirection: 'row', alignItems: 'center', gap: 10, zIndex: 50 },
+  topBarFieldLabel: { fontSize: 11, fontWeight: '700', color: colors.muted, letterSpacing: 0.4 },
+  galleryBtn: {
+    paddingHorizontal: 11, paddingVertical: 7, borderRadius: 9,
+    borderWidth: 1, borderColor: colors.teal, backgroundColor: colors.tealSoft,
+  },
+  galleryBtnOn: { backgroundColor: colors.teal, borderColor: colors.teal },
+  galleryBtnText: { fontSize: 12, fontWeight: '800', color: colors.teal },
+  galleryBtnTextOn: { color: '#ffffff' },
+  applyBtn: {
+    paddingHorizontal: 10, paddingVertical: 7, borderRadius: 9,
+    borderWidth: 1, borderColor: colors.line, backgroundColor: '#f9fafb',
+  },
+  applyBtnOn: { backgroundColor: colors.ink, borderColor: colors.ink },
+  applyBtnText: { fontSize: 11.5, fontWeight: '700', color: colors.muted },
+  applyBtnTextOn: { color: '#ffffff' },
   body: { flex: 1, flexDirection: 'row' },
 
   // Left panel
@@ -1451,3 +1585,12 @@ const shell = StyleSheet.create({
   badgeMod: { backgroundColor: '#fff4e6' },
   categoryBadgeText: { fontSize: 10, fontWeight: '700', color: colors.muted },
 });
+
+// 테마 컨텍스트로 감싼 최종 export
+export function EmulatorShell() {
+  return (
+    <ThemeProvider>
+      <EmulatorShellInner />
+    </ThemeProvider>
+  );
+}

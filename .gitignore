@@ -44,3 +44,6 @@ yarn-error.*
 
 # large media assets (40MB+ 파일만 제외)
 assets/M_1_L1_1080p.mp4
+
+# 작업 중 생성한 스크린샷/검증 스크립트
+.shots/
