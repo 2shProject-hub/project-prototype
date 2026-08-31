@@ -229,16 +229,16 @@ const s = StyleSheet.create({
   badgeWrap: {
     paddingHorizontal: spacing.xl,
     paddingTop: spacing.md,
+    alignItems: 'center',
   },
   badge: {
-    alignSelf: 'flex-start',
     backgroundColor: colors.tealSoft,
     borderRadius: radius.pill,
-    paddingHorizontal: 12,
-    paddingVertical: 5,
+    paddingHorizontal: 48,
+    paddingVertical: 10,
   },
   badgeText: {
-    fontSize: 13,
+    fontSize: 20,
     fontWeight: '700',
     color: colors.teal,
   },
