@@ -168,37 +168,7 @@ function FeedbackModal({
   );
 }
 
-// ─── AI튜터 인트로 오버레이 ───────────────────────────────────────
-function AiTutorIntro({
-  bubbleText, onPlay, onConfirm, playing,
-}: {
-  bubbleText: string;
-  onPlay: () => void;
-  onConfirm: () => void;
-  playing: boolean;
-}) {
-  const tutorImg = require('../../../assets/word-slides/tutor.png');
-  return (
-    <View style={ov.container}>
-      <View style={ov.row}>
-        <View style={ov.card}>
-          <Text style={ov.bubbleText}>{bubbleText}</Text>
-          <TouchableOpacity
-            style={[ov.speakerBtn, playing && ov.speakerBtnActive]}
-            onPress={onPlay}
-            activeOpacity={0.7}
-          >
-            <Text style={ov.speakerIcon}>🔊</Text>
-          </TouchableOpacity>
-        </View>
-        <Image source={tutorImg} style={ov.tutorImg} />
-      </View>
-      <TouchableOpacity style={ov.confirmBtn} onPress={onConfirm} activeOpacity={0.85}>
-        <Text style={ov.confirmBtnText}>확인</Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
+const TUTOR_IMAGE = require('../../../assets/word-slides/tutor.png');
 
 // ─── Props ────────────────────────────────────────────────────────
 interface Props {
@@ -356,13 +326,15 @@ export function ConversationShadowingStage({
 
   const isLeft = currentLine?.side === 'left';
   const bubbleText = data.aiTutor ? pick(lang, data.aiTutor.bubbleKo, data.aiTutor.bubbleVi) : '';
+  const titleBadge = data.aiTutor ? pick(lang, data.aiTutor.titleBadgeKo, data.aiTutor.titleBadgeVi) : '';
 
   return (
     <View style={s.screen}>
       <ActivityHeader percentage={70} onClose={onBack} />
 
-      {/* 현재 라인 말풍선 */}
-      <View style={s.bubbleWrap}>
+      {/* 콘텐츠 영역 */}
+      <View style={s.contentArea}>
+        {/* 현재 라인 말풍선 */}
         <View style={s.bubbleArea}>
           <Text style={[s.speakerName, isLeft ? s.speakerLeft : s.speakerRight]}>
             {currentLine?.speaker}
@@ -384,41 +356,64 @@ export function ConversationShadowingStage({
             </View>
           </View>
         </View>
-        {/* intro phase: 검은 딤 오버레이 */}
-        {phase === 'intro' && <View style={s.dimOverlay} pointerEvents="none" />}
+
+        {/* main phase: 마이크 영역 */}
+        {phase === 'main' && (
+          <View style={s.micArea}>
+            {isRecording && (
+              <Text style={s.recordingLabel}>{pick(lang, '말하는 중...', 'Đang nói...')}</Text>
+            )}
+            {!recorded && !isRecording && (
+              <Text style={s.tapHint}>{pick(lang, '탭하여 말하기', 'Nhấn để nói')}</Text>
+            )}
+            <Animated.View style={{ transform: [{ scale: pulseAnim }] }}>
+              <TouchableOpacity
+                style={[s.micBtn, isRecording && s.micBtnRecording]}
+                onPress={handleMic}
+                disabled={isRecording}
+                activeOpacity={0.8}
+              >
+                <Text style={s.micIcon}>{isRecording ? '⏺' : '🎤'}</Text>
+              </TouchableOpacity>
+            </Animated.View>
+          </View>
+        )}
+
+        {/* intro phase: 전체 딤 오버레이 */}
+        {phase === 'intro' && data.aiTutor && (
+          <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
+            {/* 딤 */}
+            <View style={[StyleSheet.absoluteFill, s.dim]} pointerEvents="none" />
+
+            {/* 타이틀 배지 */}
+            <View style={s.introBadgeWrap} pointerEvents="none">
+              <View style={s.introBadge}>
+                <Text style={s.introBadgeText}>{titleBadge}</Text>
+              </View>
+            </View>
+
+            {/* AI 튜터 하단 */}
+            <View style={s.introTutorSection}>
+              <View style={s.introTutorRow}>
+                <View style={s.introTutorCard}>
+                  <Text style={s.introTutorText}>{bubbleText}</Text>
+                  <TouchableOpacity
+                    style={[s.introSpeakerBtn, tutorPlaying && s.introSpeakerBtnActive]}
+                    onPress={playTutorAudio}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={s.introSpeakerIcon}>🔊</Text>
+                  </TouchableOpacity>
+                </View>
+                <Image source={TUTOR_IMAGE as any} style={s.introTutorImg} resizeMode="contain" />
+              </View>
+              <TouchableOpacity style={s.introConfirmBtn} onPress={handleConfirm} activeOpacity={0.85}>
+                <Text style={s.introConfirmBtnText}>확인</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
       </View>
-
-      {/* main phase: 마이크 영역 */}
-      {phase === 'main' && (
-        <View style={s.micArea}>
-          {isRecording && (
-            <Text style={s.recordingLabel}>{pick(lang, '말하는 중...', 'Đang nói...')}</Text>
-          )}
-          {!recorded && !isRecording && (
-            <Text style={s.tapHint}>{pick(lang, '탭하여 말하기', 'Nhấn để nói')}</Text>
-          )}
-          <Animated.View style={{ transform: [{ scale: pulseAnim }] }}>
-            <TouchableOpacity
-              style={[s.micBtn, isRecording && s.micBtnRecording]}
-              onPress={handleMic}
-              disabled={isRecording}
-              activeOpacity={0.8}
-            >
-              <Text style={s.micIcon}>{isRecording ? '⏺' : '🎤'}</Text>
-            </TouchableOpacity>
-          </Animated.View>
-        </View>
-      )}
-
-      {/* intro phase: AI튜터 오버레이 */}
-      {phase === 'intro' && data.aiTutor && (
-        <AiTutorIntro
-          bubbleText={bubbleText}
-          onPlay={playTutorAudio}
-          onConfirm={handleConfirm}
-          playing={tutorPlaying}
-        />
-      )}
 
       {/* 피드백 모달 */}
       <FeedbackModal
@@ -435,64 +430,6 @@ export function ConversationShadowingStage({
   );
 }
 
-// ─── 인트로 오버레이 스타일 ───────────────────────────────────────
-const ov = StyleSheet.create({
-  container: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: colors.canvas,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    paddingHorizontal: spacing.xl,
-    paddingTop: spacing.lg,
-    paddingBottom: spacing.xl,
-    ...shadow.card,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    gap: 8,
-    marginBottom: spacing.md,
-  },
-  card: {
-    flex: 1,
-    backgroundColor: colors.surface,
-    borderRadius: radius.lg,
-    padding: 14,
-    paddingRight: 48,
-    borderWidth: 1,
-    borderColor: colors.borderLight,
-    ...shadow.card,
-    position: 'relative',
-    minHeight: 80,
-  },
-  bubbleText: { fontSize: 14, color: colors.ink, lineHeight: 22 },
-  speakerBtn: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: colors.tealSoft,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  speakerBtnActive: { backgroundColor: colors.teal },
-  speakerIcon: { fontSize: 18 },
-  tutorImg: { width: 72, height: 90, borderRadius: 8, resizeMode: 'cover', flexShrink: 0 },
-  confirmBtn: {
-    backgroundColor: colors.teal,
-    borderRadius: radius.lg,
-    height: 52,
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...shadow.card,
-  },
-  confirmBtnText: { color: colors.surface, fontSize: 16, fontWeight: '700' },
-});
 
 // ─── 모달 스타일 ──────────────────────────────────────────────────
 const m = StyleSheet.create({
@@ -527,18 +464,77 @@ const m = StyleSheet.create({
 // ─── 화면 스타일 ──────────────────────────────────────────────────
 const s = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.canvas },
-  bubbleWrap: { flex: 1, position: 'relative' },
-  dimOverlay: {
-    position: 'absolute',
-    top: 0, left: 0, right: 0, bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.55)',
-  },
+  contentArea: { flex: 1, position: 'relative' },
   bubbleArea: {
     flex: 1,
     paddingHorizontal: spacing.xl,
     justifyContent: 'center',
     gap: 6,
   },
+
+  // ── intro overlay ──
+  dim: { backgroundColor: 'rgba(0,0,0,0.55)' },
+  introBadgeWrap: {
+    position: 'absolute',
+    top: spacing.md,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+  },
+  introBadge: {
+    backgroundColor: colors.tealSoft,
+    borderRadius: radius.pill,
+    paddingHorizontal: 48,
+    paddingVertical: 10,
+  },
+  introBadgeText: { fontSize: 20, fontWeight: '700', color: colors.teal },
+  introTutorSection: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.lg,
+    paddingBottom: spacing.xl,
+    gap: spacing.md,
+  },
+  introTutorRow: { flexDirection: 'row', alignItems: 'flex-end', gap: 8 },
+  introTutorCard: {
+    flex: 1,
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: 14,
+    paddingRight: 48,
+    borderWidth: 1,
+    borderColor: colors.borderLight,
+    position: 'relative',
+    minHeight: 80,
+    ...shadow.card,
+  },
+  introTutorText: { fontSize: 14, color: colors.ink, lineHeight: 22 },
+  introSpeakerBtn: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: colors.tealSoft,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  introSpeakerBtnActive: { backgroundColor: colors.teal },
+  introSpeakerIcon: { fontSize: 18 },
+  introTutorImg: { width: 80, height: 110, flexShrink: 0 },
+  introConfirmBtn: {
+    backgroundColor: colors.teal,
+    borderRadius: radius.lg,
+    height: 52,
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...shadow.card,
+  },
+  introConfirmBtnText: { color: colors.surface, fontSize: 16, fontWeight: '700' },
   speakerName: { fontSize: 12, fontWeight: '700', color: colors.textMuted },
   speakerLeft: { textAlign: 'left', paddingLeft: 4 },
   speakerRight: { textAlign: 'right', paddingRight: 4 },

@@ -1595,6 +1595,8 @@ export interface ConversationLine {
 }
 
 export interface ConversationAiTutor {
+  titleBadgeKo: string;
+  titleBadgeVi: string;
   bubbleKo: string;
   bubbleVi: string;
   audioSrc: string;
@@ -1611,6 +1613,8 @@ export const MOCK_CONVERSATION: ConversationData = {
   badgeKo: '대화 듣기',
   badgeVi: 'Nghe hội thoại',
   aiTutor: {
+    titleBadgeKo: '실전 듣기',
+    titleBadgeVi: 'Nghe thực chiến',
     bubbleKo: '이번에는 한국어 자막과 함께 잘 들어보세요. 필요하면 베트남어 해석도 같이 볼 수 있어요.',
     bubbleVi: 'Lần này hãy nghe kỹ cùng phụ đề tiếng Hàn. Nếu cần, bạn cũng có thể xem thêm bản dịch tiếng Việt.',
     audioSrc: require('../../assets/ai-dec/ai-dec-1.mp3') as string,
@@ -1896,11 +1900,19 @@ export interface DialogueListenWriteData {
   instructionKo: string;
   instructionVi: string;
   lines: DialogueWriteLine[];
+  aiTutor?: ConversationAiTutor;
 }
 
 export const MOCK_DIALOGUE_LISTEN_WRITE: DialogueListenWriteData = {
   instructionKo: '대화문을 잘 듣고 써 보세요.',
   instructionVi: 'Hãy nghe kỹ hội thoại và viết lại.',
+  aiTutor: {
+    titleBadgeKo: '실전 쓰기',
+    titleBadgeVi: 'Viết thực chiến',
+    bubbleKo: '잘하고 있어요! 이제 대화문을 잘 듣고 키보드를 이용해 직접 써보세요.',
+    bubbleVi: 'Bạn đang làm rất tốt! Hãy nghe kỹ hội thoại và tự gõ bàn phím nhé.',
+    audioSrc: require('../../assets/ai-dec/ai-dec-1.mp3') as string,
+  },
   lines: [
     {
       key: 'dlw-l1',
@@ -2185,6 +2197,8 @@ export const MOCK_CONVERSATION_DICTATION: ConversationDictationData = {
 export const MOCK_CONVERSATION_SHADOWING: ConversationData = {
   ...MOCK_CONVERSATION,
   aiTutor: {
+    titleBadgeKo: '실전 읽기',
+    titleBadgeVi: 'Đọc thực chiến',
     bubbleKo: '정말 잘했어요! 이제 대화문을 보고 마이크 버튼을 누른 후 따라 읽어보세요.',
     bubbleVi: 'Thật tuyệt! Hãy nhìn vào hội thoại, nhấn nút micro và đọc theo nhé.',
     audioSrc: require('../../assets/ai-dec/ai-dec-1.mp3') as string,

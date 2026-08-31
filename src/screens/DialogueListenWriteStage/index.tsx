@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Animated,
   Image,
@@ -12,11 +12,13 @@ import {
 } from 'react-native';
 import { ActivityHeader } from '../../components/ActivityHeader';
 import { useLang, pick } from '../../components/LangContext';
-import { colors } from '../../theme';
+import { colors, spacing, radius, shadow } from '../../theme';
 import {
   DialogueListenWriteData,
   MOCK_DIALOGUE_LISTEN_WRITE,
 } from '../../data/lessonData';
+
+const TUTOR_IMAGE = require('../../../assets/word-slides/tutor.png');
 
 interface Props {
   onNext: () => void;
@@ -65,10 +67,16 @@ function WordBoxes({ target, values, disabled, wrong, onChange }: WordBoxesProps
   );
 }
 
+type Phase = 'intro' | 'main';
+
 // ─── Main Screen ─────────────────────────────────────────────────────────────
 export default function DialogueListenWriteStage({ onNext, onBack, data }: Props) {
   const d = data ?? MOCK_DIALOGUE_LISTEN_WRITE;
   const { lang } = useLang();
+
+  const [phase, setPhase] = useState<Phase>(d.aiTutor ? 'intro' : 'main');
+  const [tutorPlaying, setTutorPlaying] = useState(false);
+  const tutorAudioRef = useRef<HTMLAudioElement | null>(null);
 
   const [lineIndex, setLineIndex] = useState(0);
   const [vals, setVals] = useState<string[]>([]);
@@ -84,6 +92,40 @@ export default function DialogueListenWriteStage({ onNext, onBack, data }: Props
   const cores = words.map((w) => w.core);
   const total = d.lines.length;
   const percentage = Math.round((lineIndex / total) * 100);
+
+  // ── 인트로 음원 ──────────────────────────────────────────────────
+  const playTutorAudio = useCallback(() => {
+    if (Platform.OS !== 'web' || !d.aiTutor) return;
+    tutorAudioRef.current?.pause();
+    tutorAudioRef.current = null;
+    try {
+      const audio = new Audio(d.aiTutor.audioSrc as string);
+      tutorAudioRef.current = audio;
+      setTutorPlaying(true);
+      audio.play().catch(() => setTutorPlaying(false));
+      audio.onended = () => setTutorPlaying(false);
+    } catch {
+      setTutorPlaying(false);
+    }
+  }, [d.aiTutor]);
+
+  useEffect(() => {
+    if (phase === 'intro') {
+      const timer = setTimeout(playTutorAudio, 300);
+      return () => {
+        clearTimeout(timer);
+        tutorAudioRef.current?.pause();
+        tutorAudioRef.current = null;
+      };
+    }
+  }, [phase, playTutorAudio]);
+
+  const handleConfirmIntro = () => {
+    tutorAudioRef.current?.pause();
+    tutorAudioRef.current = null;
+    setTutorPlaying(false);
+    setPhase('main');
+  };
 
   // reset + auto-play when lineIndex changes
   useEffect(() => {
@@ -150,11 +192,44 @@ export default function DialogueListenWriteStage({ onNext, onBack, data }: Props
   }
 
   const instruction = pick(lang, d.instructionKo, d.instructionVi);
-  const tutorImg = require('../../../assets/word-slides/tutor.png');
+  const tutorBubble = d.aiTutor ? pick(lang, d.aiTutor.bubbleKo, d.aiTutor.bubbleVi) : '';
+  const titleBadge = d.aiTutor ? pick(lang, d.aiTutor.titleBadgeKo, d.aiTutor.titleBadgeVi) : '';
 
   return (
     <View style={styles.root}>
       <ActivityHeader percentage={percentage} onClose={onBack} />
+
+      {/* intro phase: 전체 딤 + 타이틀 배지 + AI 튜터 */}
+      {phase === 'intro' && d.aiTutor && (
+        <View style={[StyleSheet.absoluteFill, styles.introOverlay]} pointerEvents="box-none">
+          <View style={[StyleSheet.absoluteFill, styles.introDim]} pointerEvents="none" />
+
+          <View style={styles.introBadgeWrap} pointerEvents="none">
+            <View style={styles.introBadge}>
+              <Text style={styles.introBadgeText}>{titleBadge}</Text>
+            </View>
+          </View>
+
+          <View style={styles.introTutorSection}>
+            <View style={styles.introTutorRow}>
+              <View style={styles.introTutorCard}>
+                <Text style={styles.introTutorText}>{tutorBubble}</Text>
+                <TouchableOpacity
+                  style={[styles.introSpeakerBtn, tutorPlaying && styles.introSpeakerBtnActive]}
+                  onPress={playTutorAudio}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.introSpeakerIcon}>🔊</Text>
+                </TouchableOpacity>
+              </View>
+              <Image source={TUTOR_IMAGE as any} style={styles.introTutorImg} resizeMode="contain" />
+            </View>
+            <TouchableOpacity style={styles.introConfirmBtn} onPress={handleConfirmIntro} activeOpacity={0.85}>
+              <Text style={styles.introConfirmBtnText}>확인</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
 
       <ScrollView
         style={styles.scroll}
@@ -166,7 +241,7 @@ export default function DialogueListenWriteStage({ onNext, onBack, data }: Props
 
         {/* speaker card */}
         <View style={styles.speakerRow}>
-          <Image source={tutorImg} style={styles.avatar} />
+          <Image source={TUTOR_IMAGE as any} style={styles.avatar} />
           <TouchableOpacity
             style={[styles.playBtn, needsTap && styles.playBtnPulse]}
             onPress={playAudio}
@@ -266,6 +341,71 @@ export default function DialogueListenWriteStage({ onNext, onBack, data }: Props
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.canvas },
+
+  // ── intro overlay ──
+  introOverlay: { zIndex: 10 },
+  introDim: { backgroundColor: 'rgba(0,0,0,0.55)' },
+  introBadgeWrap: {
+    position: 'absolute',
+    top: spacing.md,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+  },
+  introBadge: {
+    backgroundColor: colors.tealSoft,
+    borderRadius: radius.pill,
+    paddingHorizontal: 48,
+    paddingVertical: 10,
+  },
+  introBadgeText: { fontSize: 20, fontWeight: '700', color: colors.teal },
+  introTutorSection: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.lg,
+    paddingBottom: spacing.xl,
+    gap: spacing.md,
+  },
+  introTutorRow: { flexDirection: 'row', alignItems: 'flex-end', gap: 8 },
+  introTutorCard: {
+    flex: 1,
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: 14,
+    paddingRight: 48,
+    borderWidth: 1,
+    borderColor: colors.borderLight,
+    position: 'relative',
+    minHeight: 80,
+    ...shadow.card,
+  },
+  introTutorText: { fontSize: 14, color: colors.ink, lineHeight: 22 },
+  introSpeakerBtn: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: colors.tealSoft,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  introSpeakerBtnActive: { backgroundColor: colors.teal },
+  introSpeakerIcon: { fontSize: 18 },
+  introTutorImg: { width: 80, height: 110, flexShrink: 0 },
+  introConfirmBtn: {
+    backgroundColor: colors.teal,
+    borderRadius: radius.lg,
+    height: 52,
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...shadow.card,
+  },
+  introConfirmBtnText: { color: colors.surface, fontSize: 16, fontWeight: '700' },
   scroll: { flex: 1 },
   scrollContent: { padding: 20, paddingBottom: 40 },
 

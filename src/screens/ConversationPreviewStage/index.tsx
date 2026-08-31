@@ -4,7 +4,7 @@
  * kcho-dev: dialogue_master (act10)
  *
  * 레이아웃:
- *   [intro phase] AI튜터 오버레이 → [확인] → [main phase] 대화문 목록
+ *   [intro phase] 전체 딤 + 타이틀 배지 + AI튜터 → [확인] → [main phase] 대화문 목록
  *
  * intro phase 동작:
  *   - data.aiTutor 미등록 시 스킵 → 바로 main phase
@@ -48,6 +48,8 @@ import {
   type ConversationLine,
 } from '../../data/lessonData';
 
+const TUTOR_IMAGE = require('../../../assets/word-slides/tutor.png');
+
 // 프로토타입 음원 (라인별 CDN 음원이 없을 때 공통 fallback)
 let FALLBACK_AUDIO: string | null = null;
 try {
@@ -71,18 +73,16 @@ type Phase = 'intro' | 'main';
 function ConversationBubble({
   line,
   isActive,
-  dimmed,
   onPlay,
 }: {
   line: ConversationLine;
   isActive: boolean;
-  dimmed: boolean;
   onPlay: (line: ConversationLine) => void;
 }) {
   const isLeft = line.side === 'left';
 
   return (
-    <View style={[bs.row, isLeft ? bs.rowLeft : bs.rowRight, dimmed && bs.rowDimmed]}>
+    <View style={[bs.row, isLeft ? bs.rowLeft : bs.rowRight]}>
       {isLeft && (
         <View style={[bs.avatar, isActive && bs.avatarActive]}>
           <Text style={bs.avatarText}>{line.speaker.charAt(0)}</Text>
@@ -104,7 +104,7 @@ function ConversationBubble({
 
           <TouchableOpacity
             style={[bs.speakerBtn, isActive && bs.speakerBtnActive]}
-            onPress={() => !dimmed && onPlay(line)}
+            onPress={() => onPlay(line)}
             activeOpacity={0.7}
             hitSlop={8}
           >
@@ -122,44 +122,6 @@ function ConversationBubble({
   );
 }
 
-// ─── AI튜터 인트로 오버레이 ───────────────────────────────────────
-function AiTutorIntro({
-  bubbleText,
-  onPlay,
-  onConfirm,
-  playing,
-}: {
-  bubbleText: string;
-  onPlay: () => void;
-  onConfirm: () => void;
-  playing: boolean;
-}) {
-  const tutorImg = require('../../../assets/word-slides/tutor.png');
-  return (
-    <View style={ov.container}>
-      {/* 말풍선 카드 + AI튜터 */}
-      <View style={ov.row}>
-        <View style={ov.card}>
-          <Text style={ov.bubbleText}>{bubbleText}</Text>
-          <TouchableOpacity
-            style={[ov.speakerBtn, playing && ov.speakerBtnActive]}
-            onPress={onPlay}
-            activeOpacity={0.7}
-          >
-            <Text style={ov.speakerIcon}>🔊</Text>
-          </TouchableOpacity>
-        </View>
-        <Image source={tutorImg} style={ov.tutorImg} />
-      </View>
-
-      {/* 확인 버튼 */}
-      <TouchableOpacity style={ov.confirmBtn} onPress={onConfirm} activeOpacity={0.85}>
-        <Text style={ov.confirmBtnText}>확인</Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
-
 // ─── 메인 화면 ────────────────────────────────────────────────────
 export function ConversationPreviewStage({
   onNext,
@@ -168,7 +130,6 @@ export function ConversationPreviewStage({
 }: Props) {
   const { lang } = useLang();
 
-  // data.aiTutor 없으면 바로 main
   const [phase, setPhase] = useState<Phase>(data.aiTutor ? 'intro' : 'main');
   const [tutorPlaying, setTutorPlaying] = useState(false);
   const tutorAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -193,7 +154,6 @@ export function ConversationPreviewStage({
     }
   }, [data.aiTutor]);
 
-  // 인트로 진입 시 자동 재생
   useEffect(() => {
     if (phase === 'intro') {
       const timer = setTimeout(playTutorAudio, 300);
@@ -237,7 +197,6 @@ export function ConversationPreviewStage({
     } catch {}
   }, [lines]);
 
-  // main phase 진입 시 자동 재생
   useEffect(() => {
     if (phase !== 'main') return;
     const timer = setTimeout(() => playLine(0), 300);
@@ -265,21 +224,26 @@ export function ConversationPreviewStage({
     ? pick(lang, data.aiTutor.bubbleKo, data.aiTutor.bubbleVi)
     : '';
 
+  const titleBadge = data.aiTutor
+    ? pick(lang, data.aiTutor.titleBadgeKo, data.aiTutor.titleBadgeVi)
+    : '';
+
   return (
     <View style={s.screen}>
       <ActivityHeader percentage={60} onClose={onBack} />
 
-      {/* 배지 */}
-      <View style={s.badgeWrap}>
-        <View style={s.badge}>
-          <Text style={s.badgeText}>
-            {pick(lang, data.badgeKo, data.badgeVi)}
-          </Text>
+      {/* 콘텐츠 영역 (배지 + 대화 목록) */}
+      <View style={s.contentArea}>
+        {/* 배지 */}
+        <View style={s.badgeWrap}>
+          <View style={s.badge}>
+            <Text style={s.badgeText}>
+              {pick(lang, data.badgeKo, data.badgeVi)}
+            </Text>
+          </View>
         </View>
-      </View>
 
-      {/* 대화문 목록 */}
-      <View style={s.scrollWrap}>
+        {/* 대화문 목록 */}
         <ScrollView
           style={s.scroll}
           contentContainerStyle={s.scrollContent}
@@ -291,25 +255,46 @@ export function ConversationPreviewStage({
               key={line.key}
               line={line}
               isActive={activeIndex === idx}
-              dimmed={phase === 'intro'}
               onPlay={handlePlayLine}
             />
           ))}
         </ScrollView>
 
-        {/* intro phase: 검은 딤 오버레이 */}
-        {phase === 'intro' && <View style={s.dimOverlay} pointerEvents="none" />}
-      </View>
+        {/* intro phase: 전체 딤 오버레이 */}
+        {phase === 'intro' && data.aiTutor && (
+          <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
+            {/* 딤 */}
+            <View style={[StyleSheet.absoluteFill, s.dim]} pointerEvents="none" />
 
-      {/* intro phase: AI튜터 오버레이 */}
-      {phase === 'intro' && data.aiTutor && (
-        <AiTutorIntro
-          bubbleText={bubbleText}
-          onPlay={playTutorAudio}
-          onConfirm={handleConfirm}
-          playing={tutorPlaying}
-        />
-      )}
+            {/* 타이틀 배지 */}
+            <View style={s.introBadgeWrap} pointerEvents="none">
+              <View style={s.introBadge}>
+                <Text style={s.introBadgeText}>{titleBadge}</Text>
+              </View>
+            </View>
+
+            {/* AI 튜터 하단 */}
+            <View style={s.introTutorSection}>
+              <View style={s.introTutorRow}>
+                <View style={s.introTutorCard}>
+                  <Text style={s.introTutorText}>{bubbleText}</Text>
+                  <TouchableOpacity
+                    style={[s.introSpeakerBtn, tutorPlaying && s.introSpeakerBtnActive]}
+                    onPress={playTutorAudio}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={s.introSpeakerIcon}>🔊</Text>
+                  </TouchableOpacity>
+                </View>
+                <Image source={TUTOR_IMAGE as any} style={s.introTutorImg} resizeMode="contain" />
+              </View>
+              <TouchableOpacity style={s.introConfirmBtn} onPress={handleConfirm} activeOpacity={0.85}>
+                <Text style={s.introConfirmBtnText}>확인</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+      </View>
 
       {/* main phase: 하단 CTA */}
       {phase === 'main' && (
@@ -335,7 +320,6 @@ const bs = StyleSheet.create({
   },
   rowLeft: { justifyContent: 'flex-start' },
   rowRight: { justifyContent: 'flex-end' },
-  rowDimmed: {},
   avatar: {
     width: 36,
     height: 36,
@@ -389,28 +373,63 @@ const bs = StyleSheet.create({
   speakerIcon: { fontSize: 12 },
 });
 
-// ─── 인트로 오버레이 스타일 ───────────────────────────────────────
-const ov = StyleSheet.create({
-  container: {
+// ─── 화면 스타일 ──────────────────────────────────────────────────
+const s = StyleSheet.create({
+  screen: { flex: 1, backgroundColor: colors.canvas },
+
+  contentArea: { flex: 1, position: 'relative' },
+
+  badgeWrap: { paddingHorizontal: spacing.xl, paddingTop: spacing.md },
+  badge: {
+    alignSelf: 'flex-start',
+    backgroundColor: colors.tealSoft,
+    borderRadius: radius.pill,
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+  },
+  badgeText: { fontSize: 13, fontWeight: '700', color: colors.teal },
+
+  scroll: { flex: 1 },
+  scrollContent: {
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.md,
+    paddingBottom: spacing.md,
+  },
+
+  // ── intro overlay ──
+  dim: { backgroundColor: 'rgba(0,0,0,0.55)' },
+
+  introBadgeWrap: {
+    position: 'absolute',
+    top: spacing.md,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+  },
+  introBadge: {
+    backgroundColor: colors.tealSoft,
+    borderRadius: radius.pill,
+    paddingHorizontal: 48,
+    paddingVertical: 10,
+  },
+  introBadgeText: { fontSize: 20, fontWeight: '700', color: colors.teal },
+
+  introTutorSection: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: colors.canvas,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
     paddingHorizontal: spacing.xl,
     paddingTop: spacing.lg,
     paddingBottom: spacing.xl,
-    ...shadow.card,
+    gap: spacing.md,
   },
-  row: {
+  introTutorRow: {
     flexDirection: 'row',
     alignItems: 'flex-end',
     gap: 8,
-    marginBottom: spacing.md,
   },
-  card: {
+  introTutorCard: {
     flex: 1,
     backgroundColor: colors.surface,
     borderRadius: radius.lg,
@@ -418,16 +437,12 @@ const ov = StyleSheet.create({
     paddingRight: 48,
     borderWidth: 1,
     borderColor: colors.borderLight,
-    ...shadow.card,
     position: 'relative',
     minHeight: 80,
+    ...shadow.card,
   },
-  bubbleText: {
-    fontSize: 14,
-    color: colors.ink,
-    lineHeight: 22,
-  },
-  speakerBtn: {
+  introTutorText: { fontSize: 14, color: colors.ink, lineHeight: 22 },
+  introSpeakerBtn: {
     position: 'absolute',
     top: 10,
     right: 10,
@@ -438,16 +453,11 @@ const ov = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  speakerBtnActive: { backgroundColor: colors.teal },
-  speakerIcon: { fontSize: 18 },
-  tutorImg: {
-    width: 72,
-    height: 90,
-    borderRadius: 8,
-    resizeMode: 'cover',
-    flexShrink: 0,
-  },
-  confirmBtn: {
+  introSpeakerBtnActive: { backgroundColor: colors.teal },
+  introSpeakerIcon: { fontSize: 18 },
+  introTutorImg: { width: 80, height: 110, flexShrink: 0 },
+
+  introConfirmBtn: {
     backgroundColor: colors.teal,
     borderRadius: radius.lg,
     height: 52,
@@ -455,33 +465,9 @@ const ov = StyleSheet.create({
     justifyContent: 'center',
     ...shadow.card,
   },
-  confirmBtnText: { color: colors.surface, fontSize: 16, fontWeight: '700' },
-});
+  introConfirmBtnText: { color: colors.surface, fontSize: 16, fontWeight: '700' },
 
-// ─── 화면 스타일 ──────────────────────────────────────────────────
-const s = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.canvas },
-  badgeWrap: { paddingHorizontal: spacing.xl, paddingTop: spacing.md },
-  badge: {
-    alignSelf: 'flex-start',
-    backgroundColor: colors.tealSoft,
-    borderRadius: radius.pill,
-    paddingHorizontal: 12,
-    paddingVertical: 5,
-  },
-  badgeText: { fontSize: 13, fontWeight: '700', color: colors.teal },
-  scrollWrap: { flex: 1, position: 'relative' },
-  dimOverlay: {
-    position: 'absolute',
-    top: 0, left: 0, right: 0, bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.55)',
-  },
-  scroll: { flex: 1 },
-  scrollContent: {
-    paddingHorizontal: spacing.xl,
-    paddingTop: spacing.md,
-    paddingBottom: spacing.md,
-  },
+  // ── footer ──
   footer: {
     paddingHorizontal: spacing.xl,
     paddingTop: spacing.sm,
