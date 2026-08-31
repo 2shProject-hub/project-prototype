@@ -1417,9 +1417,8 @@ export const LEARNING_FLOW = [
   { screenId: 'home', label: '1. 홈 화면 / 코스 안내', step: 1 },
   { screenId: 'mission-tutor', label: '2-1. 학습 미션(튜터)', step: 2 },
   { screenId: 'word-intro-slides', label: '2-W. 단어 슬라이드', step: 3 },
-  { screenId: 'video-bridge', label: '13. 영상 브릿지', step: 4 },
   // 세트 1
-  { screenId: 'set-wordbook-eval', label: '5-2. 단어장과 발음평가', step: 5, setNumber: 1 },
+  { screenId: 'set-wordbook-eval', label: '5-2. 단어장과 발음평가', step: 4, setNumber: 1 },
   { screenId: 'word-vn-ko-select-2', label: '29. 베트남어 단어 보고 한국어 선택', step: 6, setNumber: 1 },
   { screenId: 'listen-select-1', label: '28. 소리 듣고 단어 선택', step: 7, setNumber: 1 },
   { screenId: 'word-sound-1', label: '31. 단어를 보고 음원 선택', step: 8, setNumber: 1 },
