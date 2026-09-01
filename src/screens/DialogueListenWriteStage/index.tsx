@@ -134,14 +134,14 @@ export default function DialogueListenWriteStage({ onNext, onBack, data }: Props
     setPhase('main');
   };
 
-  // reset + auto-play when lineIndex changes
+  // reset + auto-play when lineIndex changes (intro phase에서는 문제 음원 재생 안 함)
   useEffect(() => {
     setVals(cores.map(() => ''));
     setResult(null);
     setShowHint(false);
     setNeedsTap(false);
 
-    if (Platform.OS !== 'web') return;
+    if (Platform.OS !== 'web' || phase !== 'main') return;
     audioRef.current?.pause();
     audioRef.current = null;
     if (line.audioSrc) {
@@ -156,7 +156,7 @@ export default function DialogueListenWriteStage({ onNext, onBack, data }: Props
       audioRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lineIndex]);
+  }, [lineIndex, phase]);
 
   // slide-up feedback panel
   useEffect(() => {
