@@ -44,6 +44,7 @@ function SessionRing({ frac, completed }: { frac: number; completed: boolean }) 
 export function HomeScreen({ sessions, setView, onStartSession }: Props) {
   const { theme: activeTheme, enabled: themeOn } = useTheme();
   const brandCrest = themeOn ? themeAssets(activeTheme.id)?.crest : undefined;
+  const brandRowIcons = themeOn ? themeAssets(activeTheme.id)?.rowIcons : undefined;
   const { lang } = useLang();
   const [subTab, setSubTab] = useState<SubTab>('my');
 
@@ -186,16 +187,31 @@ export function HomeScreen({ sessions, setView, onStartSession }: Props) {
                 <View key={s.id} style={styles.timelineRow}>
                   {/* 세로 연결선 */}
                   {!isLast && <View style={styles.connector} />}
-                  {/* 번호 원 */}
-                  <View style={[
-                    styles.dot,
-                    completed && styles.dotDone,
-                    !unlocked && styles.dotLocked,
-                  ]}>
-                    <Text style={[styles.dotText, !unlocked && styles.dotTextLocked]}>
-                      {completed ? '✓' : s.id}
-                    </Text>
-                  </View>
+                  {/* 번호 원 — 브랜드 자산 테마는 아이콘 타일 (차시 번호는 카드의 "N차시" 텍스트가 유지) */}
+                  {brandRowIcons ? (
+                    <View style={[styles.dot, { backgroundColor: 'transparent' }]}>
+                      <Image
+                        source={brandRowIcons[idx % brandRowIcons.length]}
+                        style={{ width: 38, height: 38, borderRadius: 11, opacity: unlocked ? 1 : 0.38 }}
+                        resizeMode="contain"
+                      />
+                      {completed ? (
+                        <View style={{ position: 'absolute', right: 0, bottom: 0, width: 16, height: 16, borderRadius: 8, backgroundColor: activeTheme.colors.primary, alignItems: 'center', justifyContent: 'center' }}>
+                          <Text style={{ color: activeTheme.colors.onPrimary, fontSize: 9, fontWeight: '700' }}>✓</Text>
+                        </View>
+                      ) : null}
+                    </View>
+                  ) : (
+                    <View style={[
+                      styles.dot,
+                      completed && styles.dotDone,
+                      !unlocked && styles.dotLocked,
+                    ]}>
+                      <Text style={[styles.dotText, !unlocked && styles.dotTextLocked]}>
+                        {completed ? '✓' : s.id}
+                      </Text>
+                    </View>
+                  )}
                   {/* 카드 */}
                   <TouchableOpacity
                     style={[styles.sessionCard, !unlocked && styles.sessionCardLocked]}
