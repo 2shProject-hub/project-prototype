@@ -39,7 +39,6 @@ import { ListenTyping1 } from '../screens/ListenTyping1';
 import { SentenceSelect1 } from '../screens/SentenceSelect1';
 import { SpeakingEvalStage } from '../screens/SpeakingEvalStage';
 import { LearningReportStage } from '../screens/LearningReportStage';
-import { PracticalListeningStage } from '../screens/PracticalListeningStage';
 import { PracticalSpeakingStage } from '../screens/PracticalSpeakingStage';
 import { CompletionCelebrationVocabStage } from '../screens/CompletionCelebrationVocabStage';
 import { CompletionCelebrationGrammarStage } from '../screens/CompletionCelebrationGrammarStage';
@@ -453,18 +452,11 @@ function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate
           onBack={() => onNavigate('home')}
         />
       );
-    case 'practical-listening':
-      return (
-        <PracticalListeningStage
-          onNext={() => onNavigate('practical-speaking')}
-          onBack={() => onNavigate('home')}
-        />
-      );
     case 'practical-speaking':
       return (
         <PracticalSpeakingStage
           onNext={() => onNavigate('home')}
-          onBack={() => onNavigate('practical-listening')}
+          onBack={() => onNavigate('home')}
         />
       );
     case 'completion-celebration-vocab':

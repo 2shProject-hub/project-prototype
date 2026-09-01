@@ -351,16 +351,6 @@ export const BASE_SCREEN_REGISTRY: ScreenMeta[] = [
     sourceBRef: 'LearningReportStage',
   },
   {
-    id: 'practical-listening',
-    label: '21. 실전 듣기',
-    category: '신규',
-    description: '문장을 듣고 핵심 단어를 확인하는 실전 듣기 활동. 스피커 아이콘 탭 시 문장 음원 재생. 이어지는 실전 말하기의 참고 문장을 미리 익힌다.',
-    devNotes: 'PracticalListeningStage / props: onNext, onBack, data(optional) / 음원 재생 인터랙션 / 하이라이트 박스로 핵심 단어 표시 / KO-VI 다국어 지원',
-    designNotes: '배지: tealSoft bg / 타이틀 22px bold / 문장 카드: #FAFCFD bg, line border / 스피커 버튼: tealSoft 원형 44px / 하이라이트 박스: teal border + #E6F7F7 bg',
-    sourceAFile: undefined,
-    sourceBRef: 'PracticalListeningStage',
-  },
-  {
     id: 'practical-speaking',
     label: '22. 실전 말하기',
     category: '신규',
