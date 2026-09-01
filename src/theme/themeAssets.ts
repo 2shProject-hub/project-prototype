@@ -26,6 +26,8 @@ export interface ThemeAssets {
   crest?: any;
   /** 이모지 아이콘 대체 글리프 (ThemedGlyph 가 조회) */
   glyphs?: Record<string, any>;
+  /** 화면 구석에 얹는 캐릭터 이모티콘(투명 배경) — 화면 id 해시로 순환 */
+  stickers?: Array<{ img: any; w: number; h: number }>;
 }
 
 export const THEME_ASSETS: Record<string, ThemeAssets> = {
@@ -60,6 +62,11 @@ export const THEME_ASSETS: Record<string, ThemeAssets> = {
       quest: require('../../assets/themes/malhaeboka/icon-quest.png'),
       dict: require('../../assets/themes/malhaeboka/icon-dict.png'),
     },
+    stickers: [
+      { img: require('../../assets/themes/malhaeboka/char-rabbit.png'), w: 78, h: 90 },
+      { img: require('../../assets/themes/malhaeboka/sticker-cat.png'), w: 84, h: 90 },
+      { img: require('../../assets/themes/malhaeboka/char-fish.png'), w: 56, h: 76 },
+    ],
   },
 };
 

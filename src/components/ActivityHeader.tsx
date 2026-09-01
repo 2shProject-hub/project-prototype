@@ -1,10 +1,11 @@
 import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import {
-  View, Text, TouchableOpacity, StyleSheet, Modal, Animated,
+  View, Text, TouchableOpacity, StyleSheet, Modal, Animated, Image,
 } from 'react-native';
 import { colors } from '../theme/colors';
 import { useTheme } from '../theme/ThemeContext';
 import { themedHeader, themedExitPopup, nativeThemeAttr } from '../theme/themedControls';
+import { themeAssets } from '../theme/themeAssets';
 import { useLang, pick } from './LangContext';
 
 interface Props {
@@ -77,10 +78,14 @@ function ExitConfirmPopup({
   const { lang } = useLang();
   const { theme, enabled: themeOn } = useTheme();
   const tp = themeOn ? themedExitPopup(theme) : null;
+  const sticker = themeOn ? themeAssets(theme.id)?.stickers?.[0] : undefined;
   return (
     <Modal visible={visible} transparent animationType="fade" statusBarTranslucent>
       <View style={popup.backdrop}>
         <View style={[popup.card, tp && tp.card]} {...(tp ? nativeThemeAttr : null)}>
+          {sticker ? (
+            <Image source={sticker.img} style={{ width: 56, height: 64, alignSelf: 'center', marginBottom: 8 }} resizeMode="contain" />
+          ) : null}
           <Text style={[popup.message, tp && tp.message]}>
             {pick(
               lang,

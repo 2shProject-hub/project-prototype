@@ -2,7 +2,7 @@
  * 에뮬레이터 쉘 — 웹 전용 (Platform.OS === 'web')
  * 구성: 좌측 컨트롤 패널 | 중앙 디바이스 프레임 | 우측 정보 패널
  */
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Platform, Image } from 'react-native';
 import { useEffect, useState } from 'react';
 import { colors } from '../theme/colors';
 import { LangProvider } from '../components/LangContext';
@@ -10,6 +10,7 @@ import { SCREEN_REGISTRY, getScreen } from './screenRegistry';
 import { ThemeProvider, useTheme } from '../theme/ThemeContext';
 import { ThemeGalleryScreen } from '../screens/ThemeGalleryScreen';
 import { applyThemeToDom } from '../theme/applyThemeToDom';
+import { themeAssets } from '../theme/themeAssets';
 
 // 화면 컴포넌트 임포트
 import { HomeScreen } from '../screens/HomeScreen';
@@ -62,6 +63,22 @@ const DEVICES = [
 ];
 
 // ─── 화면 → 컴포넌트 렌더러 ────────────────────────────────────────
+// 브랜드 자산 테마: 화면마다 다른 캐릭터 이모티콘이 우하단에서 빼꼼 (터치 통과).
+// 자체 캐릭터가 있는 화면(홈·5-2·세트완료·축하)은 제외한다.
+function ScreenSticker({ themeId, enabled, screenId }: { themeId: string; enabled: boolean; screenId: string }) {
+  const stickers = enabled ? themeAssets(themeId)?.stickers : undefined;
+  if (!stickers || !stickers.length) return null;
+  if (screenId === 'home' || screenId.startsWith('set-') || screenId.startsWith('completion-')) return null;
+  let h = 0;
+  for (let i = 0; i < screenId.length; i++) h = (h * 31 + screenId.charCodeAt(i)) >>> 0;
+  const st = stickers[h % stickers.length];
+  return (
+    <View pointerEvents="none" style={{ position: 'absolute', right: 2, bottom: 88, alignItems: 'flex-end' }}>
+      <Image source={st.img} style={{ width: st.w, height: st.h }} resizeMode="contain" />
+    </View>
+  );
+}
+
 function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate: (id: string) => void }) {
   const [sessions] = useState({ 1: defaultSessionState() });
 
@@ -1377,6 +1394,7 @@ function EmulatorShellInner() {
             <View style={[shell.deviceScreen, { width: frameW, height: frameH - 24 }]}>
               <View style={{ flex: 1 }} {...({ dataSet: applyTheme ? { themed: 'on' } : undefined } as any)}>
                 <ScreenRenderer screenId={activeScreenId || screenId} onNavigate={handleNavigate} />
+                <ScreenSticker themeId={activeTheme.id} enabled={applyTheme} screenId={activeScreenId || screenId} />
               </View>
             </View>
           </View>
