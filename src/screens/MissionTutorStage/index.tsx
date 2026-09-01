@@ -76,7 +76,7 @@ export function MissionTutorStage({ sessionId, onNext, onBack }: Props) {
         {/* 2. 일러스트 영역 */}
         <View style={styles.imageContainer}>
           <Image
-            source={require('../../../assets/classroom.jpg')}
+            source={require('../../../assets/sample/class-room.png')}
             style={styles.image}
             resizeMode="cover"
           />
