@@ -1,4 +1,4 @@
-// 디자인 테마 갤러리 — 20종을 실제 학습화면 목업으로 비교하고 고른다.
+// 디자인 테마 갤러리 — 21종을 실제 학습화면 목업으로 비교하고 고른다.
 // 좌: 썸네일 그리드 / 우: 선택 테마 상세(원본 크기 미리보기 + 레퍼런스 + 팔레트 + 서체 + 형태 토큰)
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useMemo, useState } from 'react';
@@ -67,7 +67,7 @@ export function ThemeGalleryScreen(_props: { onClose?: () => void }) {
           <View style={{ flex: 1 }}>
             <Text style={g.title}>디자인 테마 {themes.length}종</Text>
             <Text style={g.sub}>
-              실제 학습앱 20종(듀오링고·칸아카데미·퀴즐렛·코세라·유데미·바벨·멤라이즈·부수·포토매스·브릴리언트·엘사·헬로톡·드롭스·링고디어·로제타스톤·아이토키·앙키·케이크·스픽·산타)을 하나씩 참조했습니다.
+              실제 학습앱 21종(듀오링고·칸아카데미·퀴즐렛·코세라·유데미·바벨·멤라이즈·부수·포토매스·브릴리언트·엘사·헬로톡·드롭스·링고디어·로제타스톤·아이토키·앙키·케이크·스픽·산타·말해보카)을 하나씩 참조했습니다.
               색뿐 아니라 <Text style={{ fontWeight: '700', color: base.ink }}>화면 구조·서체·여백·형태</Text>가 함께 바뀝니다.
               구조는 6종(초점형·균일목록·격자·탭·히어로·통계)으로 갈립니다. 지면은 전부 밝고, 사진은 실사입니다.
             </Text>

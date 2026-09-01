@@ -1,4 +1,4 @@
-// 자동 생성 — 학습앱 20종을 참조한 밝은 테마 20종.
+// 자동 생성 — 학습앱을 하나씩 참조한 밝은 테마 21종.
 // 색만이 아니라 화면 구조(structure)·서체·여백·형태가 함께 바뀐다.
 // 대비와 밝기는 생성 시점에 수치로 검증·보정된다.
 import type { Theme } from './themeTypes';
@@ -1203,6 +1203,66 @@ export const THEMES: Theme[] = [
     },
     "avoid": "일러스트를 넣지 않는다. 숫자와 표로만.",
     "rationale": "산타 — 점수와 진단 데이터가 화면의 주인공. 숫자가 크고 나머지는 조밀하다."
+  },
+  {
+    "id": "malhaeboka",
+    "name": "보카 라벤더",
+    "nameEn": "Voca Lavender",
+    "reference": "말해보카 — 흰 지면 위에 라벤더 알약(pill) 행과 보라 필 버튼. 캐릭터가 앞에 서고, 출석 점·카운트 배지 같은 작은 장치가 목록을 채운다. 하늘·분홍 파스텔 포인트.",
+    "idea": "지면은 희게 비우고, 만지는 것마다 라벤더 알약으로 말랑하게 감싼다.",
+    "rationale": "말해보카 — 흰 바탕에 보라는 필 버튼과 배지에만. 목록 행은 라벤더 인셋 알약, 진행은 출석 점. 마스코트가 화면의 초점.",
+    "avoid": "보라를 지면에 칠하지 않는다(지면은 흰색). 알약 밖 그림자 남발 금지. 파스텔 포인트는 배지·배너에만.",
+    "colors": {
+      "canvas": "#FFFFFF",
+      "surface": "#FFFFFF",
+      "ink": "#241A4A",
+      "textSecondary": "#453B72",
+      "muted": "#635A8F",
+      "line": "#E0D9F0",
+      "primary": "#7150F0",
+      "primaryDark": "#4C34C2",
+      "primarySoft": "#EDE7FE",
+      "accent": "#F06EAC",
+      "onPrimary": "#FFFFFF",
+      "success": "#2E9560",
+      "warning": "#A8720E",
+      "danger": "#D14A6B",
+      "backdrop": "#F2EEFB",
+      "accentSoft": "#FBE7F1",
+      "successSoft": "#E3F2EA",
+      "warningSoft": "#F6F0DE",
+      "dangerSoft": "#F8E4EC"
+    },
+    "type": {
+      "display": "Gowun Dodum",
+      "body": "Pretendard",
+      "displayWeight": 400,
+      "bodyWeight": 500,
+      "displaySize": 30,
+      "bodySize": 15,
+      "displayTracking": -0.4,
+      "displayLine": 1.26,
+      "bodyLine": 1.55,
+      "labelTracking": 0.4,
+      "labelCase": "normal"
+    },
+    "layout": {
+      "structure": "focus-list",
+      "header": "stacked",
+      "list": "inset",
+      "button": "pill",
+      "progress": "dots",
+      "photo": "rounded",
+      "density": "open",
+      "radius": 18,
+      "hairline": 1,
+      "shadow": "soft",
+      "edge": 20
+    },
+    "photo": {
+      "heroTags": "study,desk",
+      "lock": 197
+    }
   }
 ];
 
