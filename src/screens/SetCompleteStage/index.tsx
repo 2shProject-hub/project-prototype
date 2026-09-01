@@ -65,7 +65,11 @@ export function SetCompleteStage({
     const timer = setTimeout(() => {
       playAudio();
     }, 500);
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      audioRef.current?.pause();
+      audioRef.current = null;
+    };
   }, []);
 
   const progressPct = (setNumber / totalSets) * 100;

@@ -124,8 +124,16 @@ export function SetWordbookEvalStage({
       const timer = setTimeout(() => {
         playToastAudio();
       }, 500);
-      return () => clearTimeout(timer);
+      return () => {
+        clearTimeout(timer);
+        audioRef.current?.pause();
+        audioRef.current = null;
+      };
     }
+    return () => {
+      audioRef.current?.pause();
+      audioRef.current = null;
+    };
   }, [setNumber]);
 
   // 토스트 팝업 닫기

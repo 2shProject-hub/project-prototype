@@ -105,8 +105,20 @@ export function WordLetterBlank({
       const timer = setTimeout(() => {
         playToastAudio();
       }, 500);
-      return () => clearTimeout(timer);
+      return () => {
+        clearTimeout(timer);
+        toastAudioRef.current?.pause();
+        toastAudioRef.current = null;
+        audioRef.current?.pause();
+        audioRef.current = null;
+      };
     }
+    return () => {
+      toastAudioRef.current?.pause();
+      toastAudioRef.current = null;
+      audioRef.current?.pause();
+      audioRef.current = null;
+    };
   }, [currentSetNumber, showToast]);
 
   const playAudio = () => {
