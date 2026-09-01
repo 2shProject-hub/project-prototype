@@ -1518,7 +1518,8 @@ function EmulatorShellInner() {
         </View>
 
         {/* ── 중앙 디바이스 프레임 ── */}
-        <View style={shell.centerPanel}>
+        {/* 말해보카: 실물 목업처럼 폰 뒤는 연회색 지면 */}
+        <View style={[shell.centerPanel, lightFrame && { backgroundColor: '#E9EBF0' }]}>
           <View
             style={[
               shell.deviceOuter,
