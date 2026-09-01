@@ -88,18 +88,39 @@ const CHEERS: Array<[string, string]> = [
   ['같이 하니까 재밌죠?', 'Học cùng nhau vui nhỉ?'],
   ['벌써 이만큼 왔어요!', 'Đã đi được chừng này rồi!'],
   ['내일의 나가 고마워할 거예요', 'Ngày mai bạn sẽ cảm ơn hôm nay'],
+  ['이 단어, 곧 내 거예요!', 'Từ này sắp là của bạn rồi!'],
+  ['소리 내어 말해 봐요!', 'Thử nói to lên nào!'],
+  ['어제보다 늘었어요!', 'Giỏi hơn hôm qua rồi!'],
+  ['포기하지 않는 게 실력!', 'Không bỏ cuộc chính là thực lực!'],
+  ['좋은 흐름이에요!', 'Đang vào guồng tốt lắm!'],
+  ['쉬어가도 괜찮아요', 'Nghỉ một chút cũng được mà'],
 ];
+// 반복 방지용 셔플 백 — 풀 전체를 다 쓰기 전에는 같은 것이 다시 나오지 않는다
+function makeBag(size: number) {
+  let bag: number[] = [];
+  return () => {
+    if (!bag.length) {
+      bag = Array.from({ length: size }, (_, i) => i);
+      for (let i = bag.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [bag[i], bag[j]] = [bag[j], bag[i]];
+      }
+    }
+    return bag.pop()!;
+  };
+}
+// 캐릭터는 원본 10종 × 좌/우 빼꼼 = 20변형
+const drawSticker = makeBag(20);
+const drawCheer = makeBag(20);
+
 function ScreenSticker({ theme, enabled, screenId }: { theme: Theme; enabled: boolean; screenId: string }) {
   const { lang } = useLang();
   // 등장(빠르게) → 응원 멘트 → 멘트와 캐릭터가 함께 퇴장. 화면을 오래 가리지 않는다.
   const charY = useRef(new Animated.Value(60)).current;
   const charOp = useRef(new Animated.Value(1)).current;
   const bubble = useRef(new Animated.Value(0)).current;
-  // 방문할 때마다 캐릭터·멘트를 새로 뽑는다 (10종 × 14멘트) — 렌더 시점에 확정
-  const picked = useMemo(
-    () => ({ s: Math.floor(Math.random() * 1000), c: Math.floor(Math.random() * 1000) }),
-    [screenId],
-  );
+  // 방문할 때마다 셔플 백에서 뽑는다 — 풀을 다 돌기 전엔 반복 없음
+  const picked = useMemo(() => ({ s: drawSticker(), c: drawCheer() }), [screenId]);
   useEffect(() => {
     charY.setValue(60);
     charOp.setValue(1);
@@ -124,15 +145,23 @@ function ScreenSticker({ theme, enabled, screenId }: { theme: Theme; enabled: bo
   // 아바타 화면·자체 캐릭터 화면(홈·5-2·축하) 제외. 세트 완료(step 9·15…)에는 나온다.
   if (STICKER_EXCLUDE.has(screenId) || screenId.startsWith('set-wordbook') || screenId.startsWith('completion-')) return null;
   const st = stickers[picked.s % stickers.length];
+  const flip = picked.s >= stickers.length; // 후반 10변형은 좌측에서 빼꼼 (좌우 반전)
   const cheer = CHEERS[picked.c % CHEERS.length];
   const c = theme.colors;
   return (
-    <View pointerEvents="none" style={{ position: 'absolute', right: 2, bottom: 88, alignItems: 'flex-end' }}>
+    <View
+      pointerEvents="none"
+      style={{
+        position: 'absolute',
+        bottom: 88,
+        ...(flip ? { left: 2, alignItems: 'flex-start' } : { right: 2, alignItems: 'flex-end' }),
+      }}
+    >
       {/* 응원 말풍선 */}
       <Animated.View
         style={{
           maxWidth: 190,
-          marginRight: st.w - 14,
+          ...(flip ? { marginLeft: st.w - 14 } : { marginRight: st.w - 14 }),
           marginBottom: -6,
           opacity: bubble,
           transform: [{ translateY: bubble.interpolate({ inputRange: [0, 1], outputRange: [8, 0] }) }],
@@ -153,7 +182,8 @@ function ScreenSticker({ theme, enabled, screenId }: { theme: Theme; enabled: bo
         </View>
         <View
           style={{
-            alignSelf: 'flex-end', marginRight: 10, marginTop: -1,
+            ...(flip ? { alignSelf: 'flex-start', marginLeft: 10 } : { alignSelf: 'flex-end', marginRight: 10 }),
+            marginTop: -1,
             width: 10, height: 10, backgroundColor: c.surface,
             borderRightWidth: 1, borderBottomWidth: 1, borderColor: c.line,
             transform: [{ rotate: '45deg' }],
@@ -162,7 +192,10 @@ function ScreenSticker({ theme, enabled, screenId }: { theme: Theme; enabled: bo
       </Animated.View>
       <Animated.Image
         source={st.img}
-        style={{ width: st.w, height: st.h, opacity: charOp, transform: [{ translateY: charY }] }}
+        style={{
+          width: st.w, height: st.h, opacity: charOp,
+          transform: [{ translateY: charY }, { scaleX: flip ? -1 : 1 }],
+        }}
         resizeMode="contain"
       />
     </View>
