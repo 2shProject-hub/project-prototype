@@ -4,15 +4,16 @@
  * - 공통 ActivityHeader, ChoiceChip, CtaButton, QuizFeedbackModal 적용
  */
 import { useState, useRef, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Platform, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Platform, ScrollView, Image } from 'react-native';
 import { colors, radius, spacing, shadow } from '../../theme';
-import { useLang, pick, ActivityHeader, CtaButton, QuizFeedbackModal, ChoiceChip } from '../../components';
+import { useLang, pick, ActivityHeader, CtaButton, QuizFeedbackModal } from '../../components';
 import { useSfx } from '../../hooks/useSfx';
 
 interface Word {
   text: string;
   textVi: string;
   audioUri?: string;
+  imageUri?: any;
 }
 
 interface Question {
@@ -217,35 +218,41 @@ export function WordVnKoSelect2({
         {/* 한국어 선택지 목록 */}
         <View style={s.cardGrid}>
           {currentQuestion.words.map((word, idx) => {
-            let choiceState: 'default' | 'selected' | 'correct' | 'wrong' = 'default';
-            if (selectedIdx === idx) {
-              choiceState = selectedState === 'correct' ? 'correct' : 'wrong';
-            }
+            const isSelected = selectedIdx === idx;
+            const choiceState: 'default' | 'correct' | 'wrong' =
+              !isSelected ? 'default' : selectedState === 'correct' ? 'correct' : 'wrong';
 
             return (
-              <ChoiceChip
+              <TouchableOpacity
                 key={idx}
-                text={word.text}
-                badge={idx + 1}
-                state={choiceState}
+                style={[
+                  s.imageCard,
+                  choiceState === 'correct' && s.imageCard_correct,
+                  choiceState === 'wrong' && s.imageCard_wrong,
+                ]}
                 onPress={() => handleSelect(word, idx)}
                 disabled={showModal}
-                size="lg"
-                icon={
-                  word.audioUri ? (
-                    <TouchableOpacity
-                      style={s.audioIconBtn}
-                      onPress={(e) => {
-                        e.stopPropagation?.();
-                        playAudio(word.audioUri);
-                      }}
-                      activeOpacity={0.7}
-                    >
-                      <Text style={s.audioIconText}>🔊</Text>
-                    </TouchableOpacity>
-                  ) : undefined
-                }
-              />
+                activeOpacity={0.75}
+              >
+                {word.imageUri ? (
+                  <Image
+                    source={word.imageUri}
+                    style={s.imageCardImg}
+                    resizeMode="contain"
+                  />
+                ) : (
+                  <View style={s.imageCardPlaceholder} />
+                )}
+                <Text
+                  style={[
+                    s.imageCardText,
+                    choiceState === 'correct' && s.imageCardText_correct,
+                    choiceState === 'wrong' && s.imageCardText_wrong,
+                  ]}
+                >
+                  {word.text}
+                </Text>
+              </TouchableOpacity>
             );
           })}
         </View>
@@ -384,14 +391,57 @@ const s = StyleSheet.create({
     fontSize: 14,
   },
   cardGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: spacing.md,
     marginBottom: spacing.xl,
   },
-  audioIconBtn: {
-    padding: spacing.xs,
+  imageCard: {
+    width: '47%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: spacing.lg,
+    paddingHorizontal: spacing.sm,
+    borderRadius: radius.lg,
+    borderWidth: 1.5,
+    borderStyle: 'dashed',
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    gap: spacing.sm,
+    ...shadow.soft,
   },
-  audioIconText: {
-    fontSize: 18,
+  imageCard_correct: {
+    borderColor: colors.correct,
+    borderStyle: 'solid',
+    backgroundColor: colors.correctLight,
+  },
+  imageCard_wrong: {
+    borderColor: colors.wrong,
+    borderStyle: 'solid',
+    backgroundColor: colors.wrongLight,
+  },
+  imageCardImg: {
+    width: 80,
+    height: 56,
+    borderRadius: 6,
+  },
+  imageCardPlaceholder: {
+    width: 80,
+    height: 56,
+    borderRadius: 6,
+    backgroundColor: colors.bgSubtle,
+  },
+  imageCardText: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: colors.textPrimary,
+    textAlign: 'center',
+  },
+  imageCardText_correct: {
+    color: colors.correct,
+  },
+  imageCardText_wrong: {
+    color: colors.wrong,
   },
   footer: {
     paddingHorizontal: spacing.xl,

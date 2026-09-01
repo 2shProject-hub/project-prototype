@@ -134,21 +134,25 @@ function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate
     {
       no: 1,
       desc: '다음 베트남어 단어에 맞는 한국어를 선택하세요',
-      viText: 'Việt Nam',
-      answer: '베트남',
+      viText: 'người',
+      answer: '사람',
       words: [
-        { text: '베트남', textVi: 'Việt Nam' },
-        { text: '한국', textVi: 'Hàn Quốc' },
+        { text: '사람', textVi: 'người', imageUri: require('../../assets/SetWordbookEvalStage/preson.png') },
+        { text: '학생', textVi: 'học sinh', imageUri: require('../../assets/SetWordbookEvalStage/1_student.png') },
+        { text: '선생님', textVi: 'giáo viên', imageUri: require('../../assets/SetWordbookEvalStage/2_teacher.png') },
+        { text: '친구', textVi: 'bạn bè', imageUri: require('../../assets/SetWordbookEvalStage/friend.png') },
       ],
     },
     {
       no: 2,
       desc: '다음 베트남어 단어에 맞는 한국어를 선택하세요',
-      viText: 'Hàn Quốc',
-      answer: '한국',
+      viText: 'học sinh',
+      answer: '학생',
       words: [
-        { text: '베트남', textVi: 'Việt Nam' },
-        { text: '한국', textVi: 'Hàn Quốc' },
+        { text: '사람', textVi: 'người', imageUri: require('../../assets/SetWordbookEvalStage/preson.png') },
+        { text: '학생', textVi: 'học sinh', imageUri: require('../../assets/SetWordbookEvalStage/1_student.png') },
+        { text: '선생님', textVi: 'giáo viên', imageUri: require('../../assets/SetWordbookEvalStage/2_teacher.png') },
+        { text: '친구', textVi: 'bạn bè', imageUri: require('../../assets/SetWordbookEvalStage/friend.png') },
       ],
     },
   ];
@@ -656,7 +660,15 @@ function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate
       return (
         <WordVnKoSelect2
           questions={[
-            { no: 1, desc: '', viText: 'người', answer: '사람', words: [{ text: '사람', textVi: 'người' }, { text: '학생', textVi: 'học sinh' }, { text: '선생님', textVi: 'giáo viên' }, { text: '친구', textVi: 'bạn bè' }] },
+            {
+              no: 1, desc: '', viText: 'người', answer: '사람',
+              words: [
+                { text: '사람', textVi: 'người', imageUri: require('../../assets/SetWordbookEvalStage/preson.png') },
+                { text: '학생', textVi: 'học sinh', imageUri: require('../../assets/SetWordbookEvalStage/1_student.png') },
+                { text: '선생님', textVi: 'giáo viên', imageUri: require('../../assets/SetWordbookEvalStage/2_teacher.png') },
+                { text: '친구', textVi: 'bạn bè', imageUri: require('../../assets/SetWordbookEvalStage/friend.png') },
+              ],
+            },
           ]}
           currentSetNumber={1}
           totalSets={3}

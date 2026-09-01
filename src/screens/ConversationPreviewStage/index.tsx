@@ -81,13 +81,21 @@ function ConversationBubble({
 }) {
   const isLeft = line.side === 'left';
 
+  const avatarEl = line.avatarUri ? (
+    <Image
+      source={line.avatarUri}
+      style={[bs.avatarImg, isActive && bs.avatarImgActive]}
+      resizeMode="cover"
+    />
+  ) : (
+    <View style={[bs.avatar, !isLeft && bs.avatarRight, isActive && bs.avatarActive]}>
+      <Text style={bs.avatarText}>{line.speaker.charAt(0)}</Text>
+    </View>
+  );
+
   return (
     <View style={[bs.row, isLeft ? bs.rowLeft : bs.rowRight]}>
-      {isLeft && (
-        <View style={[bs.avatar, isActive && bs.avatarActive]}>
-          <Text style={bs.avatarText}>{line.speaker.charAt(0)}</Text>
-        </View>
-      )}
+      {isLeft && avatarEl}
 
       <View style={bs.bubbleWrap}>
         <Text style={[bs.speakerName, isLeft ? bs.speakerLeft : bs.speakerRight]}>
@@ -113,11 +121,7 @@ function ConversationBubble({
         </View>
       </View>
 
-      {!isLeft && (
-        <View style={[bs.avatar, bs.avatarRight, isActive && bs.avatarActive]}>
-          <Text style={bs.avatarText}>{line.speaker.charAt(0)}</Text>
-        </View>
-      )}
+      {!isLeft && avatarEl}
     </View>
   );
 }
@@ -333,6 +337,16 @@ const bs = StyleSheet.create({
   avatarRight: { backgroundColor: colors.tealSoft },
   avatarActive: { backgroundColor: colors.teal },
   avatarText: { fontSize: 14, fontWeight: '700', color: colors.surface },
+  avatarImg: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    flexShrink: 0,
+  },
+  avatarImgActive: {
+    borderWidth: 2,
+    borderColor: colors.teal,
+  },
   bubbleWrap: { maxWidth: '72%', gap: 4 },
   speakerName: { fontSize: 11, fontWeight: '700', color: colors.textMuted },
   speakerLeft: { textAlign: 'left', paddingLeft: 4 },

@@ -336,24 +336,33 @@ export function ConversationShadowingStage({
       <View style={s.contentArea}>
         {/* 현재 라인 말풍선 */}
         <View style={s.bubbleArea}>
-          <Text style={[s.speakerName, isLeft ? s.speakerLeft : s.speakerRight]}>
-            {currentLine?.speaker}
-          </Text>
-          <View style={[s.bubble, isLeft ? s.bubbleLeft : s.bubbleRight]}>
-            <View style={s.bubbleContent}>
-              <View style={s.bubbleTexts}>
-                <Text style={s.textKo}>{currentLine?.textKo}</Text>
-                <Text style={s.textVi}>{currentLine?.textVi}</Text>
+          <View style={[s.bubbleRow, !isLeft && s.bubbleRowRight]}>
+            {isLeft && (
+              currentLine?.avatarUri
+                ? <Image source={currentLine.avatarUri} style={s.avatar} resizeMode="cover" />
+                : <View style={s.avatarFallback}><Text style={s.avatarText}>{currentLine?.speaker.charAt(0)}</Text></View>
+            )}
+            <View style={[s.bubble, isLeft ? s.bubbleLeft : s.bubbleRight, s.bubbleFlex]}>
+              <View style={s.bubbleContent}>
+                <View style={s.bubbleTexts}>
+                  <Text style={s.textKo}>{currentLine?.textKo}</Text>
+                  <Text style={s.textVi}>{currentLine?.textVi}</Text>
+                </View>
+                <TouchableOpacity
+                  style={[s.speakerBtn, isPlaying && s.speakerBtnActive]}
+                  onPress={phase === 'main' ? playCurrentLine : undefined}
+                  disabled={isRecording || phase === 'intro'}
+                  activeOpacity={0.7}
+                >
+                  <Text style={s.speakerIcon}>{isPlaying ? '🔊' : '🔈'}</Text>
+                </TouchableOpacity>
               </View>
-              <TouchableOpacity
-                style={[s.speakerBtn, isPlaying && s.speakerBtnActive]}
-                onPress={phase === 'main' ? playCurrentLine : undefined}
-                disabled={isRecording || phase === 'intro'}
-                activeOpacity={0.7}
-              >
-                <Text style={s.speakerIcon}>{isPlaying ? '🔊' : '🔈'}</Text>
-              </TouchableOpacity>
             </View>
+            {!isLeft && (
+              currentLine?.avatarUri
+                ? <Image source={currentLine.avatarUri} style={s.avatar} resizeMode="cover" />
+                : <View style={s.avatarFallback}><Text style={s.avatarText}>{currentLine?.speaker.charAt(0)}</Text></View>
+            )}
           </View>
         </View>
 
@@ -472,6 +481,29 @@ const s = StyleSheet.create({
     justifyContent: 'center',
     gap: 6,
   },
+  bubbleRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: spacing.sm,
+  },
+  bubbleRowRight: { justifyContent: 'flex-end' },
+  bubbleFlex: { flex: 1 },
+  avatar: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    flexShrink: 0,
+  },
+  avatarFallback: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: colors.borderLight,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+  },
+  avatarText: { fontSize: 16, fontWeight: '700', color: colors.surface },
 
   // ── intro overlay ──
   dim: { backgroundColor: 'rgba(0,0,0,0.55)' },

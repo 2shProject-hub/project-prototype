@@ -1,20 +1,35 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import {
   Animated,
+  Image,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  Platform,
 } from 'react-native';
 import { ActivityHeader } from '../../components/ActivityHeader';
 import { useLang, pick } from '../../components/LangContext';
-import { colors } from '../../theme';
+import { colors, spacing, radius, shadow } from '../../theme';
 import {
   PracticeCheckData,
   PracticeCheckPart,
   MOCK_PRACTICE_CHECK,
 } from '../../data/lessonData';
+
+const TUTOR_IMAGE = require('../../../assets/word-slides/tutor.png') as string;
+
+let TUTOR_AUDIO: string | null = null;
+try {
+  TUTOR_AUDIO = Platform.OS === 'web'
+    ? (require('../../../assets/ai-dec/ai-dec-1.mp3') as string)
+    : null;
+} catch {
+  TUTOR_AUDIO = null;
+}
+
+const BUBBLE_TEXT = '훌륭해요! 마지막으로 실전 확인을 통해 오늘 배운 내용을 얼마나 잘 이해했는지 점검해 보세요.';
 
 interface Props {
   onNext: () => void;
@@ -96,6 +111,55 @@ export default function PracticeCheckStage({ onNext, onBack, data }: Props) {
   const [picks, setPicks] = useState<Picks>({});
   const [submitted, setSubmitted] = useState(false);
   const panelY = useRef(new Animated.Value(300)).current;
+
+  // ── AI 튜터 오버레이 (첫 번째 문항에서만 노출) ──
+  const [showOverlay, setShowOverlay] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const overlayShownRef = useRef(true); // 최초 1회만
+
+  // 음원 재생 유틸
+  function playAudio() {
+    if (Platform.OS !== 'web' || !TUTOR_AUDIO) return;
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+    try {
+      const audio = new Audio(TUTOR_AUDIO as string);
+      audioRef.current = audio;
+      audio.play().catch(() => setIsPlaying(false));
+      setIsPlaying(true);
+      audio.onended = () => setIsPlaying(false);
+    } catch {
+      setIsPlaying(false);
+    }
+  }
+
+  // 진입 시 자동재생
+  useEffect(() => {
+    if (!overlayShownRef.current) return;
+    const timer = setTimeout(playAudio, 300);
+    return () => {
+      clearTimeout(timer);
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // [확인] — 음원 정지 후 오버레이 닫기
+  function handleOverlayConfirm() {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+    setIsPlaying(false);
+    overlayShownRef.current = false;
+    setShowOverlay(false);
+  }
 
   const screen = d.screens[screenIndex];
   const total = d.screens.length;
@@ -182,6 +246,41 @@ export default function PracticeCheckStage({ onNext, onBack, data }: Props) {
           <Text style={styles.confirmBtnText}>확인</Text>
         </TouchableOpacity>
       </View>
+
+      {/* AI 튜터 오버레이 — 첫 번째 문항 진입 시 노출 */}
+      {showOverlay && (
+        <View style={[StyleSheet.absoluteFill, styles.introOverlay]} pointerEvents="box-none">
+          {/* 딤 레이어 */}
+          <View style={[StyleSheet.absoluteFill, styles.introDim]} pointerEvents="none" />
+
+          {/* 상단 타이틀 배지 */}
+          <View style={styles.introBadgeWrap} pointerEvents="none">
+            <View style={styles.introBadge}>
+              <Text style={styles.introBadgeText}>실전 확인</Text>
+            </View>
+          </View>
+
+          {/* 하단: 말풍선 + 튜터 이미지 + [확인] 버튼 */}
+          <View style={styles.introTutorSection}>
+            <View style={styles.introTutorRow}>
+              <View style={styles.introTutorCard}>
+                <Text style={styles.introTutorText}>{BUBBLE_TEXT}</Text>
+                <TouchableOpacity
+                  style={[styles.introSpeakerBtn, isPlaying && styles.introSpeakerBtnActive]}
+                  onPress={playAudio}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.introSpeakerIcon}>🔊</Text>
+                </TouchableOpacity>
+              </View>
+              <Image source={TUTOR_IMAGE as any} style={styles.introTutorImg} resizeMode="contain" />
+            </View>
+            <TouchableOpacity style={styles.introConfirmBtn} onPress={handleOverlayConfirm} activeOpacity={0.85}>
+              <Text style={styles.introConfirmBtnText}>확인</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
 
       {/* 피드백 패널 */}
       {submitted && (
@@ -310,4 +409,69 @@ const styles = StyleSheet.create({
   panelBtnFill: { backgroundColor: colors.teal },
   panelBtnFillCorrect: { backgroundColor: colors.correct },
   panelBtnFillText: { color: colors.surface, fontWeight: '700', fontSize: 15 },
+
+  // ── AI 튜터 오버레이 ──────────────────────────────────────────────
+  introOverlay: { zIndex: 100 },
+  introDim: { backgroundColor: 'rgba(0,0,0,0.55)' },
+  introBadgeWrap: {
+    position: 'absolute',
+    top: 64,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+  },
+  introBadge: {
+    backgroundColor: colors.tealSoft,
+    borderRadius: radius.pill,
+    paddingHorizontal: 48,
+    paddingVertical: 10,
+  },
+  introBadgeText: { fontSize: 20, fontWeight: '700', color: colors.teal },
+  introTutorSection: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.lg,
+    paddingBottom: spacing.xl,
+    gap: spacing.md,
+  },
+  introTutorRow: { flexDirection: 'row', alignItems: 'flex-end', gap: 8 },
+  introTutorCard: {
+    flex: 1,
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: 14,
+    paddingRight: 48,
+    borderWidth: 1,
+    borderColor: colors.borderLight,
+    position: 'relative',
+    minHeight: 80,
+    ...shadow.card,
+  },
+  introTutorText: { fontSize: 14, color: colors.ink, lineHeight: 22 },
+  introSpeakerBtn: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: colors.tealSoft,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  introSpeakerBtnActive: { backgroundColor: colors.teal },
+  introSpeakerIcon: { fontSize: 18 },
+  introTutorImg: { width: 80, height: 110, flexShrink: 0 },
+  introConfirmBtn: {
+    backgroundColor: colors.teal,
+    borderRadius: radius.lg,
+    height: 52,
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...shadow.card,
+  },
+  introConfirmBtnText: { color: colors.surface, fontSize: 16, fontWeight: '700' },
 });

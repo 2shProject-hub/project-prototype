@@ -20,6 +20,11 @@ import {
 
 const TUTOR_IMAGE = require('../../../assets/word-slides/tutor.png');
 
+const SPEAKER_IMAGES: Record<string, any> = {
+  '하영': require('../../../assets/WordVnKoSelect2/sena.png'),
+  '유키': require('../../../assets/WordVnKoSelect2/yuki.png'),
+};
+
 interface Props {
   onNext: () => void;
   onBack: () => void;
@@ -51,6 +56,7 @@ function WordBoxes({ target, values, disabled, wrong, onChange }: WordBoxesProps
           <TextInput
             style={[
               styles.wordBox,
+              { width: Math.max(52, w.core.length * 22) },
               wrong && styles.wordBoxWrong,
               disabled && styles.wordBoxDone,
             ]}
@@ -194,6 +200,7 @@ export default function DialogueListenWriteStage({ onNext, onBack, data }: Props
   const instruction = pick(lang, d.instructionKo, d.instructionVi);
   const tutorBubble = d.aiTutor ? pick(lang, d.aiTutor.bubbleKo, d.aiTutor.bubbleVi) : '';
   const titleBadge = d.aiTutor ? pick(lang, d.aiTutor.titleBadgeKo, d.aiTutor.titleBadgeVi) : '';
+  const avatarSrc = SPEAKER_IMAGES[line.speaker] ?? TUTOR_IMAGE;
 
   return (
     <View style={styles.root}>
@@ -241,14 +248,13 @@ export default function DialogueListenWriteStage({ onNext, onBack, data }: Props
 
         {/* speaker card */}
         <View style={styles.speakerRow}>
-          <Image source={TUTOR_IMAGE as any} style={styles.avatar} />
+          <Image source={avatarSrc as any} style={styles.avatar} />
           <TouchableOpacity
             style={[styles.playBtn, needsTap && styles.playBtnPulse]}
             onPress={playAudio}
           >
             <Text style={styles.playIcon}>🔊</Text>
           </TouchableOpacity>
-          <Text style={styles.speakerName}>{line.speaker}</Text>
         </View>
 
         {/* input card */}
