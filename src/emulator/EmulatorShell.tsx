@@ -719,8 +719,8 @@ function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate
       return (
         <PictureWord2
           questions={[
-            { no: 1, desc: '이미지에 맞는 단어를 선택하세요', imageUrl: 'https://via.placeholder.com/200?text=Vietnam', words: ['베트남', '한국', '일본'], answer: '베트남', viText: 'Việt Nam' },
-            { no: 2, desc: '다음 이미지에 맞는 단어를 선택하세요', imageUrl: 'https://via.placeholder.com/200?text=People', words: ['사람', '학생', '선생님'], answer: '사람', viText: 'người' },
+            { no: 1, desc: '이미지에 맞는 단어를 선택하세요', imageUrl: 'https://loremflickr.com/400/400/vietnam,city?lock=733', words: ['베트남', '한국', '일본'], answer: '베트남', viText: 'Việt Nam' },
+            { no: 2, desc: '다음 이미지에 맞는 단어를 선택하세요', imageUrl: 'https://loremflickr.com/400/400/people,walking?lock=734', words: ['사람', '학생', '선생님'], answer: '사람', viText: 'người' },
           ]}
           onNext={() => onNavigate('home')}
           onBack={() => onNavigate('home')}
