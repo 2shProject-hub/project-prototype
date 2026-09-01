@@ -11,6 +11,7 @@ import { ThemeProvider, useTheme } from '../theme/ThemeContext';
 import { ThemeGalleryScreen } from '../screens/ThemeGalleryScreen';
 import { applyThemeToDom } from '../theme/applyThemeToDom';
 import { themeAssets } from '../theme/themeAssets';
+import { MB_SCREENS } from '../theme/mb/registry';
 import type { Theme } from '../theme/themeTypes';
 
 // 화면 컴포넌트 임포트
@@ -205,8 +206,14 @@ function ScreenSticker({ theme, enabled, screenId }: { theme: Theme; enabled: bo
   );
 }
 
-function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate: (id: string) => void }) {
+function ScreenRenderer({ screenId, onNavigate, flowStep, flowTotal }: { screenId: string; onNavigate: (id: string) => void; flowStep?: number; flowTotal?: number }) {
   const [sessions] = useState({ 1: defaultSessionState() });
+  const { theme: mbTheme, enabled: mbEnabled } = useTheme();
+
+  // 말해보카 테마 전용 화면 — 등록된 화면은 완전히 다른 소스로 렌더 (타 테마 무영향)
+  if (mbEnabled && mbTheme.id === 'malhaeboka' && MB_SCREENS[screenId]) {
+    return MB_SCREENS[screenId]({ onNavigate, flowStep, flowTotal });
+  }
 
   // LEARNING_FLOW에서 현재 화면의 setNumber 추출
   const flowScreenInfo = LEARNING_FLOW.find(s => s.screenId === screenId);
@@ -1350,6 +1357,9 @@ function EmulatorShellInner() {
   const frameH = device.h * scale;
 
   // onNavigate 콜백 - flow 모드에 따라 다르게 처리
+  // 말해보카 테마: 검은 베젤 대신 흰 프레임 — 화면이 가득 차 보이게
+  const lightFrame = applyTheme && activeTheme.id === 'malhaeboka';
+
   const handleNavigate = (nextScreenId: string) => {
     if (flowMode) {
       // flow 모드: 다음 단계로 이동
@@ -1509,17 +1519,28 @@ function EmulatorShellInner() {
 
         {/* ── 중앙 디바이스 프레임 ── */}
         <View style={shell.centerPanel}>
-          <View style={[shell.deviceOuter, { width: frameW + 24, height: frameH + 48 }]}>
+          <View
+            style={[
+              shell.deviceOuter,
+              { width: frameW + 24, height: frameH + 48 },
+              lightFrame && { backgroundColor: '#FFFFFF', shadowOpacity: 0.12, shadowRadius: 36 },
+            ]}
+          >
             {/* OS 상단 노치/Dynamic Island 표시 */}
-            <View style={[shell.statusBar, { width: frameW }]}>
-              <Text style={shell.statusBarText}>9:41</Text>
-              <View style={shell.notch} />
-              <Text style={shell.statusBarText}>● ● ●</Text>
+            <View style={[shell.statusBar, { width: frameW }, lightFrame && { backgroundColor: '#FFFFFF' }]}>
+              <Text style={[shell.statusBarText, lightFrame && { color: '#1A1A20' }]}>9:41</Text>
+              <View style={[shell.notch, lightFrame && { backgroundColor: '#EFEDF6' }]} />
+              <Text style={[shell.statusBarText, lightFrame && { color: '#1A1A20' }]}>● ● ●</Text>
             </View>
             {/* 화면 렌더링 영역 */}
             <View style={[shell.deviceScreen, { width: frameW, height: frameH - 24 }]}>
               <View style={{ flex: 1 }} {...({ dataSet: applyTheme ? { themed: 'on' } : undefined } as any)}>
-                <ScreenRenderer screenId={activeScreenId || screenId} onNavigate={handleNavigate} />
+                <ScreenRenderer
+                  screenId={activeScreenId || screenId}
+                  onNavigate={handleNavigate}
+                  flowStep={flowMode ? currentFlowStep + 1 : undefined}
+                  flowTotal={flowMode ? LEARNING_FLOW.length : undefined}
+                />
                 <ScreenSticker theme={activeTheme} enabled={applyTheme} screenId={activeScreenId || screenId} />
               </View>
             </View>

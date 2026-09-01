@@ -59,18 +59,36 @@ class Particle {
   }
   draw(ctx: CanvasRenderingContext2D) {
     const last = this.coords[this.coords.length - 1];
+    const a = Math.max(0, this.alpha);
+    // 수명 후반에는 반짝임(트윙클) — 게임 폭죽의 잔불 느낌
+    const twinkle = a < 0.55 ? 0.55 + 0.45 * Math.random() : 1;
+
+    // 블룸 글로우 — 요즘 게임 VFX 의 핵심. 색 발광을 shadow 로 얹는다
+    ctx.save();
+    ctx.shadowColor = this.color;
+    ctx.shadowBlur = this.size * 5;
+
     ctx.beginPath();
     ctx.moveTo(last.x, last.y);
     ctx.lineTo(this.x, this.y);
     ctx.strokeStyle = this.color;
-    ctx.globalAlpha = Math.max(0, this.alpha);
+    ctx.globalAlpha = a * twinkle;
     ctx.lineWidth = this.size;
+    ctx.lineCap = 'round';
     ctx.stroke();
-    // 머리 점 — 선만 그리면 먼지처럼 보인다
+
+    // 화이트핫 코어 — 머리는 흰색에 가깝게 타오른다
     ctx.beginPath();
-    ctx.arc(this.x, this.y, this.size * 0.62, 0, Math.PI * 2);
+    ctx.arc(this.x, this.y, this.size * 0.66, 0, Math.PI * 2);
     ctx.fillStyle = this.color;
     ctx.fill();
+    ctx.globalAlpha = a * twinkle * 0.85;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size * 0.3, 0, Math.PI * 2);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fill();
+
+    ctx.restore();
     ctx.globalAlpha = 1;
   }
 }
@@ -160,6 +178,17 @@ export function CanvasFireworks({ width, height, colors, variant, power = 1, ble
       flashes.push({ x, y, r: 4, a: 0.95, color });
     };
 
+    // 2차 크래클 — 일부 파티클이 사그라들며 잔불 스파크를 한 번 더 터뜨린다 (모던 폭죽 연출)
+    const crackle = (px: number, py: number, color: string) => {
+      const n = 4 + Math.floor(Math.random() * 3);
+      for (let i = 0; i < n; i++) {
+        parts.push(
+          new Particle(px, py, Math.random() < 0.4 ? '#FFFFFF' : color, 0.9, P.gravity * 0.6,
+            rand(0.03, 0.05), Math.max(1.2, P.size * 0.45), 3, rand(0, Math.PI * 2), rand(0.8, 2.4)),
+        );
+      }
+    };
+
     const timers = spots.map((s) => setTimeout(() => burst(s.x, s.y, s.color), s.delay));
 
     let raf = 0;
@@ -190,7 +219,13 @@ export function CanvasFireworks({ width, height, colors, variant, power = 1, ble
 
       for (let i = parts.length - 1; i >= 0; i--) {
         parts[i].draw(ctx);
-        if (parts[i].step()) parts.splice(i, 1);
+        if (parts[i].step()) {
+          // 큰 파티클 일부는 사라지며 잔불 크래클을 남긴다
+          if (parts[i].size >= 2 && Math.random() < 0.22 && parts.length < 260) {
+            crackle(parts[i].x, parts[i].y, parts[i].color);
+          }
+          parts.splice(i, 1);
+        }
       }
 
       // 다 사라지면 루프를 멈춘다. 한 번 터지고 끝나는 연출이라 계속 돌 이유가 없다.
