@@ -154,7 +154,10 @@ function ScreenSticker({ theme, enabled, screenId }: { theme: Theme; enabled: bo
       style={{
         position: 'absolute',
         bottom: 88,
-        ...(flip ? { left: 2, alignItems: 'flex-start' } : { right: 2, alignItems: 'flex-end' }),
+        // 원본이 잘린 빼꼼 포즈(edge)는 가장자리 밀착, 완전한 스프라이트는 8px 띄운다
+        ...(flip
+          ? { left: st.edge ? 0 : 8, alignItems: 'flex-start' as const }
+          : { right: st.edge ? 0 : 8, alignItems: 'flex-end' as const }),
       }}
     >
       {/* 응원 말풍선 */}

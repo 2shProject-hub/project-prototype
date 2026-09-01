@@ -26,8 +26,8 @@ export interface ThemeAssets {
   crest?: any;
   /** 이모지 아이콘 대체 글리프 (ThemedGlyph 가 조회) */
   glyphs?: Record<string, any>;
-  /** 화면 구석에 얹는 캐릭터 이모티콘(투명 배경) — 화면 id 해시로 순환 */
-  stickers?: Array<{ img: any; w: number; h: number }>;
+  /** 화면 구석에 얹는 캐릭터 이모티콘(투명 배경). edge=원본이 한쪽이 잘린 빼꼼 포즈 → 화면 가장자리에 밀착 */
+  stickers?: Array<{ img: any; w: number; h: number; edge?: boolean }>;
 }
 
 export const THEME_ASSETS: Record<string, ThemeAssets> = {
@@ -63,16 +63,16 @@ export const THEME_ASSETS: Record<string, ThemeAssets> = {
       dict: require('../../assets/themes/malhaeboka/icon-dict.png'),
     },
     stickers: [
-      { img: require('../../assets/themes/malhaeboka/char-rabbit.png'), w: 78, h: 90 },
-      { img: require('../../assets/themes/malhaeboka/sticker-cat.png'), w: 84, h: 90 },
-      { img: require('../../assets/themes/malhaeboka/char-fish.png'), w: 56, h: 76 },
-      { img: require('../../assets/themes/malhaeboka/sticker-mouse.png'), w: 80, h: 72 },
-      { img: require('../../assets/themes/malhaeboka/sticker-crowncat.png'), w: 76, h: 98 },
-      { img: require('../../assets/themes/malhaeboka/sticker-owl.png'), w: 78, h: 75 },
-      { img: require('../../assets/themes/malhaeboka/sticker-chu.png'), w: 70, h: 90 },
-      { img: require('../../assets/themes/malhaeboka/sticker-monster.png'), w: 72, h: 67 },
-      { img: require('../../assets/themes/malhaeboka/sticker-nana.png'), w: 58, h: 66 },
-      { img: require('../../assets/themes/malhaeboka/sticker-goldfish.png'), w: 72, h: 72 },
+      { img: require('../../assets/themes/malhaeboka/char-rabbit.png'), w: 79, h: 90, edge: true },
+      { img: require('../../assets/themes/malhaeboka/sticker-cat.png'), w: 76, h: 90 },
+      { img: require('../../assets/themes/malhaeboka/char-fish.png'), w: 58, h: 77 },
+      { img: require('../../assets/themes/malhaeboka/sticker-mouse.png'), w: 78, h: 67 },
+      { img: require('../../assets/themes/malhaeboka/sticker-crowncat.png'), w: 75, h: 96 },
+      { img: require('../../assets/themes/malhaeboka/sticker-owl.png'), w: 78, h: 72 },
+      { img: require('../../assets/themes/malhaeboka/sticker-chu.png'), w: 88, h: 72 },
+      { img: require('../../assets/themes/malhaeboka/sticker-monster.png'), w: 66, h: 74 },
+      { img: require('../../assets/themes/malhaeboka/sticker-nana.png'), w: 58, h: 79 },
+      { img: require('../../assets/themes/malhaeboka/sticker-goldfish.png'), w: 72, h: 76 },
     ],
   },
 };
