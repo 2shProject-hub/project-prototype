@@ -110,7 +110,7 @@ export function SentenceBlank1({
                 <Text style={s.koText}>{part}</Text>
                 {idx < arr.length - 1 && (
                   <View style={[s.blankSlot, selectedAnswer ? s.blankSlotFilled : null]}>
-                    <Text style={s.blankSlotText}>{selectedAnswer || '____'}</Text>
+                    <Text style={s.blankSlotText}>{selectedAnswer || ' '}</Text>
                   </View>
                 )}
               </View>

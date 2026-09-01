@@ -422,14 +422,14 @@ const s = StyleSheet.create({
     backgroundColor: colors.wrongLight,
   },
   imageCardImg: {
-    width: 80,
-    height: 56,
-    borderRadius: 6,
+    width: 120,
+    height: 88,
+    borderRadius: 8,
   },
   imageCardPlaceholder: {
-    width: 80,
-    height: 56,
-    borderRadius: 6,
+    width: 120,
+    height: 88,
+    borderRadius: 8,
     backgroundColor: colors.bgSubtle,
   },
   imageCardText: {
