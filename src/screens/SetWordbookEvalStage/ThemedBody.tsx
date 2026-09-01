@@ -24,6 +24,8 @@ import {
 } from '../../theme/themeTypes';
 import { pick, type Lang } from '../../components';
 import { themeAssets } from '../../theme/themeAssets';
+import { MbProgressRow } from '../../theme/mb/MbScaffold';
+import { useFlowProgress } from '../../theme/mb/FlowContext';
 
 export interface ThemedBodyProps {
   theme: Theme;
@@ -56,6 +58,7 @@ export function ThemedBody(p: ThemedBodyProps) {
   const pillR = L.radius === 0 ? 2 : 999;
   // 브랜드 자산 테마(말해보카 등): 캐릭터·아이콘을 실자산으로
   const assets = themeAssets(theme.id);
+  const flow = useFlowProgress();
 
   const boxOf = (focus = false): ViewStyle => {
     switch (L.list) {
@@ -74,7 +77,14 @@ export function ThemedBody(p: ThemedBodyProps) {
   const isRule = L.list === 'rule';
 
   // ── 조각들 ──────────────────────────────────────────────────────
-  const Header = (
+  // 말해보카: 상단을 트로피 진행 알약으로 통일 (플로우면 STEP n/총)
+  const Header = theme.id === 'malhaeboka' ? (
+    <MbProgressRow
+      percentage={flow ? (flow.step / flow.total) * 100 : p.progressPct}
+      counter={flow ? `${flow.step}/${flow.total}` : `${Math.round(p.progressPct)}%`}
+      onClose={p.onBack || (() => {})}
+    />
+  ) : (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: L.edge, paddingTop: 10, paddingBottom: s.row }}>
       <View style={{ flex: 1, height: 6, backgroundColor: c.line, borderRadius: pillR, overflow: 'hidden' }}>
         <View style={{ width: `${p.progressPct}%`, height: 6, backgroundColor: c.primary, borderRadius: pillR }} />
@@ -369,7 +379,7 @@ export function ThemedBody(p: ThemedBodyProps) {
         };
     const fg = primary ? (L.button === 'outline' ? c.primaryDark : c.onPrimary) : c.textSecondary;
     return (
-      <TouchableOpacity onPress={onPress} activeOpacity={0.8} style={[{ flex: 1, height: L.density === 'open' ? 52 : 48, borderRadius: r, alignItems: 'center', justifyContent: 'center' }, deco]}>
+      <TouchableOpacity onPress={onPress} activeOpacity={0.8} style={[{ flex: 1, height: theme.id === 'malhaeboka' ? 44 : L.density === 'open' ? 52 : 48, borderRadius: r, alignItems: 'center', justifyContent: 'center' }, deco]}>
         <Text numberOfLines={1} style={[{ fontSize: t.bodySize, color: fg }, bodyFont(theme, 700)]}>{label}</Text>
       </TouchableOpacity>
     );
@@ -379,7 +389,7 @@ export function ThemedBody(p: ThemedBodyProps) {
   return (
     <View style={{ flex: 1, backgroundColor: c.canvas }} {...({ dataSet: { 'native-theme': '1' } } as any)}>
       {Header}
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingHorizontal: L.edge, paddingBottom: 24 }} showsVerticalScrollIndicator={false}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingHorizontal: L.edge, paddingBottom: 14 }} showsVerticalScrollIndicator={false}>
         {heroBand ? (
           // 상단을 브랜드 밴드로 — 사진 없는 실제 화면에서 hero 구조의 번안
           <View style={{ backgroundColor: c.primary, marginHorizontal: -L.edge, paddingHorizontal: L.edge, paddingTop: s.row, paddingBottom: s.row + 4, marginBottom: s.gap }}>
@@ -424,8 +434,8 @@ export function ThemedBody(p: ThemedBodyProps) {
           flexDirection: 'row',
           gap: 8,
           paddingHorizontal: L.edge,
-          paddingTop: s.row,
-          paddingBottom: 18,
+          paddingTop: 8,
+          paddingBottom: 12,
           borderTopWidth: L.shadow === 'none' ? L.hairline : 0,
           borderTopColor: c.line,
           backgroundColor: c.canvas,

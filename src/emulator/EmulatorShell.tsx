@@ -12,6 +12,7 @@ import { ThemeGalleryScreen } from '../screens/ThemeGalleryScreen';
 import { applyThemeToDom } from '../theme/applyThemeToDom';
 import { themeAssets } from '../theme/themeAssets';
 import { MB_SCREENS } from '../theme/mb/registry';
+import { FlowProgressContext } from '../theme/mb/FlowContext';
 import type { Theme } from '../theme/themeTypes';
 
 // 화면 컴포넌트 임포트
@@ -1360,6 +1361,16 @@ function EmulatorShellInner() {
   // 말해보카 테마: 검은 베젤 대신 흰 프레임 — 화면이 가득 차 보이게
   const lightFrame = applyTheme && activeTheme.id === 'malhaeboka';
 
+  // 모바일 목업 안에서는 스크롤이 동작하되 스크롤바는 보이지 않는다
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    if (document.getElementById('kchao-hide-scrollbar')) return;
+    const tag = document.createElement('style');
+    tag.id = 'kchao-hide-scrollbar';
+    tag.textContent = '[data-device-screen] *::-webkit-scrollbar{width:0!important;height:0!important;display:none!important} [data-device-screen] *{scrollbar-width:none;-ms-overflow-style:none}';
+    document.head.appendChild(tag);
+  }, []);
+
   const handleNavigate = (nextScreenId: string) => {
     if (flowMode) {
       // flow 모드: 다음 단계로 이동
@@ -1534,8 +1545,11 @@ function EmulatorShellInner() {
               <Text style={[shell.statusBarText, lightFrame && { color: '#1A1A20' }]}>● ● ●</Text>
             </View>
             {/* 화면 렌더링 영역 */}
-            <View style={[shell.deviceScreen, { width: frameW, height: frameH - 24 }]}>
+            <View style={[shell.deviceScreen, { width: frameW, height: frameH - 24 }]} {...({ dataSet: { 'device-screen': '1' } } as any)}>
               <View style={{ flex: 1 }} {...({ dataSet: applyTheme ? { themed: 'on' } : undefined } as any)}>
+                <FlowProgressContext.Provider
+                  value={flowMode ? { step: currentFlowStep + 1, total: LEARNING_FLOW.length } : null}
+                >
                 <ScreenRenderer
                   screenId={activeScreenId || screenId}
                   onNavigate={handleNavigate}
@@ -1543,6 +1557,7 @@ function EmulatorShellInner() {
                   flowTotal={flowMode ? LEARNING_FLOW.length : undefined}
                 />
                 <ScreenSticker theme={activeTheme} enabled={applyTheme} screenId={activeScreenId || screenId} />
+                </FlowProgressContext.Provider>
               </View>
             </View>
           </View>

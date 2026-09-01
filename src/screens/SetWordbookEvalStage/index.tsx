@@ -17,6 +17,8 @@
  *      - 우측: [세트 문제 풀기] (White 배경 / 테두리) ➔ 다음 템플릿(onNext) 이동
  */
 import { ThemedGlyph } from '../../components/ThemedGlyph';
+import { useTheme } from '../../theme/ThemeContext';
+import { ThemedBody } from './ThemedBody';
 import React, { useRef, useState, useEffect } from 'react';
 import { ScrollView, View, Text, TouchableOpacity, StyleSheet, Modal, Platform, Animated, Image } from 'react-native';
 import { colors, radius, spacing, shadow } from '../../theme';
@@ -62,6 +64,7 @@ export function SetWordbookEvalStage({
 }: Props) {
   const { lang } = useLang();
   const sfx = useSfx();
+  const { theme, enabled: themeEnabled } = useTheme();
 
   const words = SET_WORDS_DATA[setNumber] || SET_WORDS_DATA[1];
 
@@ -169,6 +172,152 @@ export function SetWordbookEvalStage({
   };
 
   const progressPct = (setNumber / totalSets) * 100;
+
+  const modals = (
+    <>
+      {/* ─── 단어 발음평가 모달 ──────────────────────────────────────── */}
+      <Modal visible={showPronModal} animationType="slide" transparent>
+        <View style={s.modalOverlay}>
+          <View style={s.modalContainer}>
+            <View style={s.modalHeader}>
+              <Text style={s.modalTitle}>
+                {pick(lang, '단어 발음 연습', 'Luyện phát âm từ')} ({pronIdx + 1}/{words.length})
+              </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  setShowPronModal(false);
+                  if (recordingTimer) clearTimeout(recordingTimer);
+                  setIsRecording(false);
+                }}
+              >
+                <Text style={s.modalClose}>✕</Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={s.modalBody}>
+              {/* 단어 이미지 카드 */}
+              <View style={s.wordImageCard}>
+                <Image
+                  source={words[pronIdx]?.image}
+                  style={s.wordImage}
+                  resizeMode="cover"
+                />
+              </View>
+
+              <Text style={s.pronTargetKo}>{words[pronIdx]?.ko}</Text>
+              <Text style={s.pronTargetVi}>{words[pronIdx]?.vi}</Text>
+
+              <TouchableOpacity
+                style={s.pronListenBtn}
+                onPress={() => speakKo(words[pronIdx]?.ko)}
+                activeOpacity={0.7}
+              >
+                <ThemedGlyph style={s.pronListenText} glyph="🔈" />
+                <Text style={s.pronListenText}> {pick(lang, '원어민 발음 듣기', 'Nghe phát âm chuẩn')}</Text>
+              </TouchableOpacity>
+
+              <View style={s.micSection}>
+                <TouchableOpacity
+                  style={[s.micBtn, isRecording && s.micBtnRecording]}
+                  onPress={isRecording ? stopRecording : startRecording}
+                  activeOpacity={0.8}
+                >
+                  <ThemedGlyph style={s.micIcon} glyph={isRecording ? '⏹' : '🎙️'} />
+                </TouchableOpacity>
+                <Text style={s.micDesc}>
+                  {isRecording
+                    ? pick(lang, '듣고 있어요... 말씀하세요!', 'Đang lắng nghe...')
+                    : pick(lang, '마이크를 누르고 말해보세요', 'Bấm mic để nói')}
+                </Text>
+              </View>
+            </View>
+
+            <View style={s.modalFooter}>
+              <TouchableOpacity
+                style={[s.navWordBtn, pronIdx === 0 && s.navWordBtnDisabled]}
+                disabled={pronIdx === 0}
+                onPress={() => setPronIdx(pronIdx - 1)}
+              >
+                <Text style={s.navWordText}>◀ 이전 단어</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[s.navWordBtn, pronIdx === words.length - 1 && s.navWordBtnDisabled]}
+                disabled={pronIdx === words.length - 1}
+                onPress={() => setPronIdx(pronIdx + 1)}
+              >
+                <Text style={s.navWordText}>다음 단어 ▶</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* ─── 발음 평가 결과 모달 ──────────────────────────────────── */}
+      <Modal visible={showResultModal} animationType="fade" transparent>
+        <View style={s.modalOverlay}>
+          <View style={s.resultContainer}>
+            <Text style={s.resultTitle}>🎉 발음 평가 결과</Text>
+            <View style={s.scoreCircle}>
+              <Text style={s.scoreNumber}>{mockScore.average}</Text>
+              <Text style={s.scoreUnit}>점</Text>
+            </View>
+
+            <View style={s.scoreDetailRow}>
+              <View style={s.scoreDetailItem}>
+                <Text style={s.scoreDetailLabel}>정확도</Text>
+                <Text style={s.scoreDetailVal}>{mockScore.accuracy}%</Text>
+              </View>
+              <View style={s.scoreDetailItem}>
+                <Text style={s.scoreDetailLabel}>유창성</Text>
+                <Text style={s.scoreDetailVal}>{mockScore.fluency}%</Text>
+              </View>
+              <View style={s.scoreDetailItem}>
+                <Text style={s.scoreDetailLabel}>완성도</Text>
+                <Text style={s.scoreDetailVal}>{mockScore.completeness}%</Text>
+              </View>
+            </View>
+
+            <TouchableOpacity
+              style={s.resultConfirmBtn}
+              onPress={() => setShowResultModal(false)}
+            >
+              <Text style={s.resultConfirmText}>확인</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    </>
+  );
+
+  // 말해보카 등 테마 ON: 구조 렌더(ThemedBody)가 표시를 맡고, 상태·모달은 이 파일이 소유
+  if (themeEnabled) {
+    return (
+      <View style={{ flex: 1 }}>
+        <ThemedBody
+          theme={theme}
+          lang={lang}
+          words={words}
+          setNumber={setNumber}
+          totalSets={totalSets}
+          progressPct={progressPct}
+          tab={tab}
+          onTab={(t) => { setTab(t); sfx.play(); }}
+          speed={speed}
+          setSpeed={setSpeed}
+          showToast={showToast && setNumber === 1}
+          isAudioPlaying={isAudioPlaying}
+          onCloseToast={handleCloseToast}
+          onToastAudio={playToastAudio}
+          speakKo={speakKo}
+          onBack={onBack}
+          onPron={() => { setPronIdx(0); setShowPronModal(true); sfx.play(); }}
+          onNext={() => { sfx.play(); onNext(); }}
+        />
+        {modals}
+      </View>
+    );
+  }
 
   return (
     <View style={s.container}>
@@ -329,118 +478,7 @@ export function SetWordbookEvalStage({
         </View>
       </View>
 
-      {/* ─── 단어 발음평가 모달 ──────────────────────────────────────── */}
-      <Modal visible={showPronModal} animationType="slide" transparent>
-        <View style={s.modalOverlay}>
-          <View style={s.modalContainer}>
-            <View style={s.modalHeader}>
-              <Text style={s.modalTitle}>
-                {pick(lang, '단어 발음 연습', 'Luyện phát âm từ')} ({pronIdx + 1}/{words.length})
-              </Text>
-              <TouchableOpacity
-                onPress={() => {
-                  setShowPronModal(false);
-                  if (recordingTimer) clearTimeout(recordingTimer);
-                  setIsRecording(false);
-                }}
-              >
-                <Text style={s.modalClose}>✕</Text>
-              </TouchableOpacity>
-            </View>
-
-            <View style={s.modalBody}>
-              {/* 단어 이미지 카드 */}
-              <View style={s.wordImageCard}>
-                <Image
-                  source={words[pronIdx]?.image}
-                  style={s.wordImage}
-                  resizeMode="cover"
-                />
-              </View>
-
-              <Text style={s.pronTargetKo}>{words[pronIdx]?.ko}</Text>
-              <Text style={s.pronTargetVi}>{words[pronIdx]?.vi}</Text>
-
-              <TouchableOpacity
-                style={s.pronListenBtn}
-                onPress={() => speakKo(words[pronIdx]?.ko)}
-                activeOpacity={0.7}
-              >
-                <ThemedGlyph style={s.pronListenText} glyph="🔈" />
-                <Text style={s.pronListenText}> {pick(lang, '원어민 발음 듣기', 'Nghe phát âm chuẩn')}</Text>
-              </TouchableOpacity>
-
-              <View style={s.micSection}>
-                <TouchableOpacity
-                  style={[s.micBtn, isRecording && s.micBtnRecording]}
-                  onPress={isRecording ? stopRecording : startRecording}
-                  activeOpacity={0.8}
-                >
-                  <ThemedGlyph style={s.micIcon} glyph={isRecording ? '⏹' : '🎙️'} />
-                </TouchableOpacity>
-                <Text style={s.micDesc}>
-                  {isRecording
-                    ? pick(lang, '듣고 있어요... 말씀하세요!', 'Đang lắng nghe...')
-                    : pick(lang, '마이크를 누르고 말해보세요', 'Bấm mic để nói')}
-                </Text>
-              </View>
-            </View>
-
-            <View style={s.modalFooter}>
-              <TouchableOpacity
-                style={[s.navWordBtn, pronIdx === 0 && s.navWordBtnDisabled]}
-                disabled={pronIdx === 0}
-                onPress={() => setPronIdx(pronIdx - 1)}
-              >
-                <Text style={s.navWordText}>◀ 이전 단어</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={[s.navWordBtn, pronIdx === words.length - 1 && s.navWordBtnDisabled]}
-                disabled={pronIdx === words.length - 1}
-                onPress={() => setPronIdx(pronIdx + 1)}
-              >
-                <Text style={s.navWordText}>다음 단어 ▶</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
-
-      {/* ─── 발음 평가 결과 모달 ──────────────────────────────────── */}
-      <Modal visible={showResultModal} animationType="fade" transparent>
-        <View style={s.modalOverlay}>
-          <View style={s.resultContainer}>
-            <Text style={s.resultTitle}>🎉 발음 평가 결과</Text>
-            <View style={s.scoreCircle}>
-              <Text style={s.scoreNumber}>{mockScore.average}</Text>
-              <Text style={s.scoreUnit}>점</Text>
-            </View>
-
-            <View style={s.scoreDetailRow}>
-              <View style={s.scoreDetailItem}>
-                <Text style={s.scoreDetailLabel}>정확도</Text>
-                <Text style={s.scoreDetailVal}>{mockScore.accuracy}%</Text>
-              </View>
-              <View style={s.scoreDetailItem}>
-                <Text style={s.scoreDetailLabel}>유창성</Text>
-                <Text style={s.scoreDetailVal}>{mockScore.fluency}%</Text>
-              </View>
-              <View style={s.scoreDetailItem}>
-                <Text style={s.scoreDetailLabel}>완성도</Text>
-                <Text style={s.scoreDetailVal}>{mockScore.completeness}%</Text>
-              </View>
-            </View>
-
-            <TouchableOpacity
-              style={s.resultConfirmBtn}
-              onPress={() => setShowResultModal(false)}
-            >
-              <Text style={s.resultConfirmText}>확인</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+      {modals}
     </View>
   );
 }

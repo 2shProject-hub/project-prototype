@@ -102,6 +102,10 @@ export function themedCta(t: Theme, variant: 'primary' | 'secondary' | 'outline'
       fg = readableOn(c.danger, ['#ffffff', c.ink]);
       break;
   }
+  // 말해보카: 버튼 상하 두께를 줄여 시원하게
+  if (t.id === 'malhaeboka') {
+    box = { ...box, height: 46, paddingVertical: 0, justifyContent: 'center' };
+  }
   return { box, text: { color: fg, ...bodyFont(t, 700) } as TextStyle, spinner: fg };
 }
 

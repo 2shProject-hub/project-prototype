@@ -1234,9 +1234,9 @@ export const THEMES: Theme[] = [
       "dangerSoft": "#F8E4EC"
     },
     "type": {
-      "display": "Gowun Dodum",
+      "display": "Pretendard",
       "body": "Pretendard",
-      "displayWeight": 400,
+      "displayWeight": 800,
       "bodyWeight": 500,
       "displaySize": 30,
       "bodySize": 15,
@@ -1250,11 +1250,11 @@ export const THEMES: Theme[] = [
       "structure": "focus-list",
       "header": "stacked",
       "list": "inset",
-      "button": "pill",
+      "button": "rect",
       "progress": "dots",
       "photo": "rounded",
       "density": "open",
-      "radius": 18,
+      "radius": 14,
       "hairline": 1,
       "shadow": "soft",
       "edge": 20

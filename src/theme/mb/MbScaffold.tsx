@@ -24,17 +24,19 @@ export function MbCanvas({ children }: { children: React.ReactNode }) {
   );
 }
 
-/** 트로피 배지가 붙은 진행 알약 — 막대 안에 n/m, 채움 애니메이션 + 하이라이트 스윕 */
-export function MbHeader({
-  current,
-  total,
+/** 트로피 배지가 붙은 진행 알약 — 막대 안 카운터, 채움 애니메이션 + 하이라이트 스윕.
+ *  말해보카 테마의 모든 화면 상단이 이 바로 통일된다. */
+export function MbProgressRow({
+  percentage,
+  counter,
   onClose,
 }: {
-  current: number;
-  total: number;
+  percentage: number;
+  counter: string;
   onClose: () => void;
 }) {
-  const pct = Math.round((current / total) * 100);
+  const pct = Math.round(percentage);
+  const showPctLabel = !counter.endsWith('%'); // 카운터가 이미 % 면 우측 라벨은 중복이라 숨긴다
   const fill = useRef(new Animated.Value(0)).current;
   const sweep = useRef(new Animated.Value(0)).current;
   const pop = useRef(new Animated.Value(1)).current;
@@ -69,13 +71,13 @@ export function MbHeader({
         >
           <Image source={{ uri: trophy }} style={{ width: 21, height: 21 }} />
         </View>
-        <View style={{ flex: 1, height: 22, marginLeft: -10, borderRadius: 999, backgroundColor: 'rgba(255,255,255,0.75)', overflow: 'hidden', justifyContent: 'center' }}>
+        <View style={{ flex: 1, height: 22, marginLeft: -10, borderRadius: 999, backgroundColor: '#ECEAF6', overflow: 'hidden', justifyContent: 'center' }}>
           <Animated.View
             style={{
               position: 'absolute', left: 0, top: 0, bottom: 0,
               borderRadius: 999,
               backgroundColor: mb.violet,
-              width: fill.interpolate({ inputRange: [0, 100], outputRange: ['12%', '100%'] }),
+              width: fill.interpolate({ inputRange: [0, 100], outputRange: ['17%', '100%'] }),
               overflow: 'hidden',
             }}
           >
@@ -92,20 +94,27 @@ export function MbHeader({
           </Animated.View>
           {/* 막대 안 카운터 */}
           <Text style={{ fontFamily: mbFont, fontSize: 11.5, fontWeight: '800', color: mb.white, marginLeft: 22, zIndex: 2 }}>
-            {current}/{total}
+            {counter}
           </Text>
         </View>
       </View>
-      <Animated.Text
-        style={{ fontFamily: mbFont, fontSize: 15, fontWeight: '900', color: mb.violetDark, transform: [{ scale: pop }] }}
-      >
-        {pct}%
-      </Animated.Text>
+      {showPctLabel ? (
+        <Animated.Text
+          style={{ fontFamily: mbFont, fontSize: 15, fontWeight: '900', color: mb.violetDark, transform: [{ scale: pop }] }}
+        >
+          {pct}%
+        </Animated.Text>
+      ) : null}
       <TouchableOpacity onPress={onClose} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} activeOpacity={0.7}>
         <Image source={{ uri: icon('close', '#7d8aa0', 19, 2.2) }} style={{ width: 19, height: 19 }} />
       </TouchableOpacity>
     </View>
   );
+}
+
+/** MB 화면용 헤더 — 진행 알약 한 줄 */
+export function MbHeader({ current, total, onClose }: { current: number; total: number; onClose: () => void }) {
+  return <MbProgressRow percentage={(current / total) * 100} counter={`${current}/${total}`} onClose={onClose} />;
 }
 
 /** 플로팅 흰 카드 — 실물의 문항 카드 */
@@ -163,8 +172,8 @@ export function MbNavBar({
         alignItems: 'center',
         gap: 8,
         paddingHorizontal: 14,
-        paddingTop: 8,
-        paddingBottom: 14,
+        paddingTop: 6,
+        paddingBottom: 10,
       }}
     >
       <TouchableOpacity
@@ -173,7 +182,7 @@ export function MbNavBar({
         activeOpacity={0.7}
         style={{
           flexDirection: 'row', alignItems: 'center', gap: 2,
-          paddingHorizontal: 12, height: 44, borderRadius: 12,
+          paddingHorizontal: 12, height: 40, borderRadius: 11,
           backgroundColor: mb.white,
           shadowColor: '#3E6D96', shadowOpacity: 0.12, shadowRadius: 6, shadowOffset: { width: 0, height: 2 },
           opacity: isFirst ? 0.45 : 1,
@@ -195,7 +204,7 @@ export function MbNavBar({
         activeOpacity={0.7}
         style={{
           flexDirection: 'row', alignItems: 'center', gap: 2,
-          paddingHorizontal: 12, height: 44, borderRadius: 12,
+          paddingHorizontal: 12, height: 40, borderRadius: 11,
           backgroundColor: mb.white,
           shadowColor: '#3E6D96', shadowOpacity: 0.12, shadowRadius: 6, shadowOffset: { width: 0, height: 2 },
           opacity: isLast ? 0.45 : 1,
@@ -211,8 +220,8 @@ export function MbNavBar({
         activeOpacity={0.85}
         style={{
           flex: 1,
-          height: 50,
-          borderRadius: 13,
+          height: 44,
+          borderRadius: 12,
           overflow: 'hidden',
           alignItems: 'center',
           justifyContent: 'center',

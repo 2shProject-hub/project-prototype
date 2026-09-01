@@ -6,6 +6,8 @@ import { colors } from '../theme/colors';
 import { useTheme } from '../theme/ThemeContext';
 import { themedHeader, themedExitPopup, nativeThemeAttr } from '../theme/themedControls';
 import { themeAssets } from '../theme/themeAssets';
+import { MbProgressRow } from '../theme/mb/MbScaffold';
+import { useFlowProgress } from '../theme/mb/FlowContext';
 import { useLang, pick } from './LangContext';
 
 interface Props {
@@ -138,6 +140,25 @@ export function ActivityHeader({ percentage, onClose, children }: Props) {
   const [showPopup, setShowPopup] = useState(false);
   const { theme, enabled: themeOn } = useTheme();
   const th = themeOn ? themedHeader(theme) : null;
+  const flow = useFlowProgress();
+
+  // 말해보카: 모든 화면의 상단을 트로피 진행 알약으로 통일.
+  // 플로우 모드면 STEP n/총, 아니면 화면 자체 퍼센트. ✕ 는 기존 종료 확인 팝업 그대로.
+  if (themeOn && theme.id === 'malhaeboka') {
+    const pct = flow ? (flow.step / flow.total) * 100 : percentage;
+    const counter = flow ? `${flow.step}/${flow.total}` : `${Math.round(percentage)}%`;
+    return (
+      <View>
+        <MbProgressRow percentage={pct} counter={counter} onClose={() => setShowPopup(true)} />
+        {children}
+        <ExitConfirmPopup
+          visible={showPopup}
+          onCancel={() => setShowPopup(false)}
+          onConfirm={() => { setShowPopup(false); onClose(); }}
+        />
+      </View>
+    );
+  }
 
   return (
     <View style={[s.header, th && th.header]}>

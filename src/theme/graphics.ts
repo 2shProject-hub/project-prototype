@@ -41,23 +41,24 @@ const wrap = (inner: string, size = 24) =>
 type IconName = 'volume' | 'mic' | 'check' | 'chevron' | 'play' | 'sparkle' | 'bookmark' | 'close' | 'back';
 
 const PATHS: Record<IconName, (c: string, w: number) => string> = {
+  // 2026 표준 스트로크 아이콘 (Lucide 계열 라운드 스트로크) — 촌스러운 자작 패스 대체
   volume: (c, w) =>
-    `<path d="M4 9.5h3l4-3.2v11.4l-4-3.2H4z" fill="${c}" stroke="${c}" stroke-width="${w}" stroke-linejoin="round"/>` +
-    `<path d="M15.2 9.1a4 4 0 0 1 0 5.8" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>` +
-    `<path d="M17.9 6.6a7.6 7.6 0 0 1 0 10.8" stroke="${c}" stroke-width="${w}" stroke-linecap="round" opacity="0.55"/>`,
+    `<path d="M11 4.7a.7.7 0 0 0-1.2-.5L6.4 7.6a1.4 1.4 0 0 1-1 .4H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.4a1.4 1.4 0 0 1 1 .4l3.4 3.4a.7.7 0 0 0 1.2-.5z" fill="${c}"/>` +
+    `<path d="M16 9a5 5 0 0 1 0 6" stroke="${c}" stroke-width="${w}" stroke-linecap="round" fill="none"/>` +
+    `<path d="M19.4 5.6a9.2 9.2 0 0 1 0 12.8" stroke="${c}" stroke-width="${w}" stroke-linecap="round" fill="none" opacity="0.55"/>`,
   mic: (c, w) =>
-    `<rect x="9" y="3" width="6" height="10.5" rx="3" fill="${c}"/>` +
-    `<path d="M5.8 11.4a6.2 6.2 0 0 0 12.4 0" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>` +
-    `<path d="M12 17.6V21" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`,
-  check: (c, w) => `<path d="M5 12.6l4.4 4.4L19 7.4" stroke="${c}" stroke-width="${w + 0.4}" stroke-linecap="round" stroke-linejoin="round"/>`,
-  chevron: (c, w) => `<path d="M9.5 5.5L16 12l-6.5 6.5" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`,
-  play: (c) => `<path d="M8.5 5.6l10 6.4-10 6.4z" fill="${c}"/>`,
+    `<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z" fill="${c}"/>` +
+    `<path d="M19 10v2a7 7 0 0 1-14 0v-2" stroke="${c}" stroke-width="${w}" stroke-linecap="round" fill="none"/>` +
+    `<path d="M12 19v3" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`,
+  check: (c, w) => `<path d="M20 6 9 17l-5-5" stroke="${c}" stroke-width="${w + 0.4}" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`,
+  chevron: (c, w) => `<path d="m9 18 6-6-6-6" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`,
+  play: (c) => `<path d="M6 4.6a1 1 0 0 1 1.5-.9l12.2 7.4a1 1 0 0 1 0 1.8L7.5 20.3a1 1 0 0 1-1.5-.9z" fill="${c}"/>`,
   sparkle: (c) =>
-    `<path d="M12 2.6l1.9 5.6 5.6 1.9-5.6 1.9L12 17.6l-1.9-5.6L4.5 10.1l5.6-1.9z" fill="${c}"/>` +
-    `<path d="M18.6 15.4l.9 2.5 2.5.9-2.5.9-.9 2.5-.9-2.5-2.5-.9 2.5-.9z" fill="${c}" opacity="0.6"/>`,
-  bookmark: (c, w) => `<path d="M6.5 3.8h11v16.4L12 16.4l-5.5 3.8z" stroke="${c}" stroke-width="${w}" stroke-linejoin="round"/>`,
-  close: (c, w) => `<path d="M6 6l12 12M18 6L6 18" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`,
-  back: (c, w) => `<path d="M14.5 5.5L8 12l6.5 6.5" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`,
+    `<path d="M9.9 15.5a2 2 0 0 0-1.4-1.4L2.4 12.5a.5.5 0 0 1 0-1L8.5 9.9a2 2 0 0 0 1.4-1.4l1.6-6.1a.5.5 0 0 1 1 0l1.6 6.1a2 2 0 0 0 1.4 1.4l6.1 1.6a.5.5 0 0 1 0 1l-6.1 1.6a2 2 0 0 0-1.4 1.4l-1.6 6.1a.5.5 0 0 1-1 0z" fill="${c}"/>` +
+    `<path d="M19 2.5v4M21 4.5h-4" stroke="${c}" stroke-width="1.6" stroke-linecap="round" opacity="0.65"/>`,
+  bookmark: (c, w) => `<path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" stroke="${c}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round" fill="none"/>`,
+  close: (c, w) => `<path d="M18 6 6 18M6 6l12 12" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`,
+  back: (c, w) => `<path d="m15 18-6-6 6-6" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`,
 };
 
 export function icon(name: IconName, color: string, size = 20, strokeWidth = 1.7): string {
