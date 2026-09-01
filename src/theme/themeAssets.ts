@@ -20,6 +20,10 @@ export interface ThemeAssets {
   bubble?: any;
   /** 목록 행 선두에 붙는 아이콘들 (행마다 순환) */
   rowIcons?: any[];
+  /** 하단 내비 아이콘 — 탭 키별 활성/비활성 이미지 */
+  navIcons?: Record<string, { on: any; off: any }>;
+  /** 홈 코스 카드의 삽화(기본 🏫 이모지 대체) */
+  crest?: any;
 }
 
 export const THEME_ASSETS: Record<string, ThemeAssets> = {
@@ -34,6 +38,14 @@ export const THEME_ASSETS: Record<string, ThemeAssets> = {
       require('../../assets/themes/malhaeboka/icon-dict.png'),
       require('../../assets/themes/malhaeboka/icon-boost.png'),
     ],
+    // 말해보카 하단 내비 글리프(어휘·리스닝·리그·프리미엄)를 우리 탭에 대응
+    navIcons: {
+      home: { on: require('../../assets/themes/malhaeboka/nav-vocab-on.png'), off: require('../../assets/themes/malhaeboka/nav-vocab-off.png') },
+      report: { on: require('../../assets/themes/malhaeboka/nav-league-on.png'), off: require('../../assets/themes/malhaeboka/nav-league-off.png') },
+      'ai-talk': { on: require('../../assets/themes/malhaeboka/nav-listen-on.png'), off: require('../../assets/themes/malhaeboka/nav-listen-off.png') },
+      'my-info': { on: require('../../assets/themes/malhaeboka/nav-crown-on.png'), off: require('../../assets/themes/malhaeboka/nav-crown-off.png') },
+    },
+    crest: require('../../assets/themes/malhaeboka/char-fish.png'),
   },
 };
 

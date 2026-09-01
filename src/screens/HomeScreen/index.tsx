@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import {
-  View, Text, ScrollView, TouchableOpacity, StyleSheet,
+  View, Text, ScrollView, TouchableOpacity, StyleSheet, Image,
 } from 'react-native';
 import { colors, shadow } from '../../theme/colors';
 import { BottomNav } from '../../components/BottomNav';
 import { useLang, pick } from '../../components/LangContext';
+import { useTheme } from '../../theme/ThemeContext';
+import { themeAssets } from '../../theme/themeAssets';
 import { LESSON, SESSIONS, STAGE_ORDER, type SessionState } from '../../data/lessonData';
 
 type AppView = 'home' | 'report' | 'ai-talk' | 'my-info' | 'learning';
@@ -40,6 +42,8 @@ function SessionRing({ frac, completed }: { frac: number; completed: boolean }) 
 }
 
 export function HomeScreen({ sessions, setView, onStartSession }: Props) {
+  const { theme: activeTheme, enabled: themeOn } = useTheme();
+  const brandCrest = themeOn ? themeAssets(activeTheme.id)?.crest : undefined;
   const { lang } = useLang();
   const [subTab, setSubTab] = useState<SubTab>('my');
 
@@ -120,7 +124,11 @@ export function HomeScreen({ sessions, setView, onStartSession }: Props) {
               </Text>
             </View>
             <View style={styles.heroImageBox}>
-              <Text style={styles.heroEmoji}>🏫</Text>
+              {brandCrest ? (
+                <Image source={brandCrest} style={{ width: 44, height: 56 }} resizeMode="contain" />
+              ) : (
+                <Text style={styles.heroEmoji}>🏫</Text>
+              )}
             </View>
           </View>
 

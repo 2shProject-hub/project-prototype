@@ -1,5 +1,7 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { colors } from '../theme/colors';
+import { useTheme } from '../theme/ThemeContext';
+import { themeAssets } from '../theme/themeAssets';
 
 type NavView = 'home' | 'report' | 'ai-talk' | 'my-info';
 
@@ -9,6 +11,9 @@ interface BottomNavProps {
 }
 
 export function BottomNav({ active, setView }: BottomNavProps) {
+  // 브랜드 자산 테마(말해보카 등)는 이모지 대신 실제 내비 글리프를 쓴다
+  const { theme, enabled: themeOn } = useTheme();
+  const navIcons = themeOn ? themeAssets(theme.id)?.navIcons : undefined;
   const items: { key: NavView; label: string; icon: string }[] = [
     { key: 'home', label: '홈', icon: '🏠' },
     { key: 'report', label: '리포트', icon: '📊' },
@@ -26,7 +31,15 @@ export function BottomNav({ active, setView }: BottomNavProps) {
           activeOpacity={0.7}
         >
           <View style={[styles.iconWrap, active === item.key && styles.iconWrapActive]}>
-            <Text style={styles.icon}>{item.icon}</Text>
+            {navIcons?.[item.key] ? (
+              <Image
+                source={active === item.key ? navIcons[item.key].on : navIcons[item.key].off}
+                style={{ width: 24, height: 21 }}
+                resizeMode="contain"
+              />
+            ) : (
+              <Text style={styles.icon}>{item.icon}</Text>
+            )}
           </View>
           <Text style={[styles.label, active === item.key && styles.labelActive]}>
             {item.label}
