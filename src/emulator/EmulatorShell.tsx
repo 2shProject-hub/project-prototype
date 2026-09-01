@@ -3,13 +3,13 @@
  * 구성: 좌측 컨트롤 패널 | 중앙 디바이스 프레임 | 우측 정보 패널
  */
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Platform } from 'react-native';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { colors } from '../theme/colors';
 import { LangProvider } from '../components/LangContext';
 import { SCREEN_REGISTRY, getScreen } from './screenRegistry';
 import { ThemeProvider, useTheme } from '../theme/ThemeContext';
 import { ThemeGalleryScreen } from '../screens/ThemeGalleryScreen';
-import { ThemedWordbookScreen } from '../components/preview/ThemedWordbookScreen';
+import { applyThemeToDom } from '../theme/applyThemeToDom';
 
 // 화면 컴포넌트 임포트
 import { HomeScreen } from '../screens/HomeScreen';
@@ -1198,9 +1198,6 @@ const ts = StyleSheet.create({
   optionSub: { fontSize: 9.5, color: colors.muted, marginTop: 1 },
 });
 
-/** 테마가 입혀진 버전이 있는 화면. 나머지는 아직 원본 컴포넌트로만 렌더된다. */
-const THEMED_SCREEN_IDS = new Set(['set-wordbook-eval', 'set-wordbook-eval-2', 'set-wordbook-eval-3']);
-
 function EmulatorShellInner() {
   const [deviceId, setDeviceId] = useState('iphone15');
   const [screenId, setScreenId] = useState('set-wordbook-eval');
@@ -1213,8 +1210,17 @@ function EmulatorShellInner() {
   const [applyTheme, setApplyTheme] = useState(true);
   const { theme: activeTheme } = useTheme();
 
+
   // Flow 모드일 때 현재 screenId 결정
   const activeScreenId = flowMode ? LEARNING_FLOW[currentFlowStep]?.screenId : screenId;
+  // 고른 테마를 실제 화면들에 입힌다. 화면 컴포넌트는 건드리지 않으므로 기능은 그대로 동작한다.
+  useEffect(() => {
+    const t = applyTheme ? activeTheme : null;
+    applyThemeToDom(t);
+    // 화면 전환 직후에는 아직 DOM 이 다 그려지지 않았을 수 있어 한 번 더 입힌다
+    const again = setTimeout(() => applyThemeToDom(t), 350);
+    return () => clearTimeout(again);
+  }, [applyTheme, activeTheme, activeScreenId, screenId]);
 
   const device = DEVICES.find((d) => d.id === deviceId) ?? DEVICES[0];
   const screen = getScreen(activeScreenId || screenId);
@@ -1394,11 +1400,9 @@ function EmulatorShellInner() {
             </View>
             {/* 화면 렌더링 영역 */}
             <View style={[shell.deviceScreen, { width: frameW, height: frameH - 24 }]}>
-              {applyTheme && THEMED_SCREEN_IDS.has(activeScreenId || screenId) ? (
-                <ThemedWordbookScreen theme={activeTheme} width={frameW} height={frameH - 24} showStatusBar={false} />
-              ) : (
+              <View style={{ flex: 1 }} {...({ dataSet: applyTheme ? { themed: 'on' } : undefined } as any)}>
                 <ScreenRenderer screenId={activeScreenId || screenId} onNavigate={handleNavigate} />
-              )}
+              </View>
             </View>
           </View>
 
