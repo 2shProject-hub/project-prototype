@@ -281,16 +281,6 @@ export const BASE_SCREEN_REGISTRY: ScreenMeta[] = [
     sourceBRef: 'SetCompleteStage',
   },
   {
-    id: 'picture-word-2',
-    label: '30. 이미지 보고 단어 선택',
-    category: '신규',
-    description: '이미지를 보고 해당하는 단어 선택지를 고르는 액티비티. 시각적 학습 강화.',
-    devNotes: 'PictureWord2 / props: questions, onNext, onBack / 이미지 표시 및 선택지 카드',
-    designNotes: '상단: 질문 제목 / 중앙: 이미지 컨테이너 + 단어 선택지 카드 / 하단: 돌아가기',
-    sourceAFile: 'src/screens/activity/picture/PictureWord2.tsx',
-    sourceBRef: 'PictureWord2',
-  },
-  {
     id: 'sentence-blank-1',
     label: '18. 문장 빈칸 채우기',
     category: '신규',

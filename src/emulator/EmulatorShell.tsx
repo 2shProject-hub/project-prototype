@@ -32,7 +32,6 @@ import { WordVnKoSelect2 } from '../screens/WordVnKoSelect2';
 import { WordSound1 } from '../screens/WordSound1';
 import { WordLetterBlank } from '../screens/WordLetterBlank';
 import { SetCompleteStage } from '../screens/SetCompleteStage';
-import { PictureWord2 } from '../screens/PictureWord2';
 import { SentenceBlank1 } from '../screens/SentenceBlank1';
 import { WordBlank1 } from '../screens/WordBlank1';
 import { ListenTyping1 } from '../screens/ListenTyping1';
@@ -699,17 +698,6 @@ function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate
         <SetCompleteStage
           setNumber={3}
           totalSets={3}
-          onNext={() => onNavigate('home')}
-          onBack={() => onNavigate('home')}
-        />
-      );
-    case 'picture-word-2':
-      return (
-        <PictureWord2
-          questions={[
-            { no: 1, desc: '이미지에 맞는 단어를 선택하세요', imageUrl: 'https://loremflickr.com/400/400/vietnam,city?lock=733', words: ['베트남', '한국', '일본'], answer: '베트남', viText: 'Việt Nam' },
-            { no: 2, desc: '다음 이미지에 맞는 단어를 선택하세요', imageUrl: 'https://loremflickr.com/400/400/people,walking?lock=734', words: ['사람', '학생', '선생님'], answer: '사람', viText: 'người' },
-          ]}
           onNext={() => onNavigate('home')}
           onBack={() => onNavigate('home')}
         />
