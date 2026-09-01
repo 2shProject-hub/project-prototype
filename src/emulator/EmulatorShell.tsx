@@ -3,7 +3,7 @@
  * 구성: 좌측 컨트롤 패널 | 중앙 디바이스 프레임 | 우측 정보 패널
  */
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Platform, Image, Animated } from 'react-native';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 import { colors } from '../theme/colors';
 import { LangProvider } from '../components/LangContext';
 import { SCREEN_REGISTRY, getScreen } from './screenRegistry';
@@ -73,14 +73,6 @@ const STICKER_EXCLUDE = new Set([
   'dialogue-listen-write', 'practice-check', 'word-intro-slides', 'grammar-detail',
   'vocab-wordbook-voice',
 ]);
-// 문항을 푸는 화면 — 응원이 끝나면 캐릭터도 함께 내려가 문항을 가리지 않는다
-const QUESTION_SCREENS = new Set([
-  'word-build', 'word-vnko-select', 'listen-select', 'listen-select-1',
-  'word-sound', 'word-sound-1', 'word-letter-blank', 'sentence-blank-1',
-  'sentence-select-1', 'word-blank-1', 'listen-typing-1', 'sentence-build',
-  'sentence-build-2', 'word-vn-ko-select-2', 'picture-word-2',
-  'practical-listening', 'practical-speaking', 'speaking-eval', 'quick-review',
-]);
 const CHEERS: Array<[string, string]> = [
   ['잘하고 있어요!', 'Bạn đang làm rất tốt!'],
   ['조금만 더 힘내요!', 'Cố lên chút nữa nhé!'],
@@ -88,32 +80,40 @@ const CHEERS: Array<[string, string]> = [
   ['멋져요, 바로 그거예요!', 'Tuyệt lắm, chính là như vậy!'],
   ['천천히 해도 괜찮아요', 'Từ từ cũng không sao đâu'],
   ['거의 다 왔어요!', 'Sắp xong rồi!'],
+  ['대단해요, 계속 가요!', 'Giỏi lắm, tiếp tục nào!'],
+  ['한 걸음씩 성장 중!', 'Từng bước tiến bộ!'],
+  ['집중력 최고예요!', 'Tập trung tuyệt vời!'],
+  ['해낼 줄 알았어요!', 'Biết ngay bạn làm được mà!'],
+  ['실수해도 괜찮아요', 'Sai cũng không sao nhé'],
+  ['같이 하니까 재밌죠?', 'Học cùng nhau vui nhỉ?'],
+  ['벌써 이만큼 왔어요!', 'Đã đi được chừng này rồi!'],
+  ['내일의 나가 고마워할 거예요', 'Ngày mai bạn sẽ cảm ơn hôm nay'],
 ];
 function ScreenSticker({ theme, enabled, screenId }: { theme: Theme; enabled: boolean; screenId: string }) {
   const { lang } = useLang();
-  // 순서 연출: 캐릭터가 먼저 올라오고 → 말풍선이 떠서 잠깐 응원한 뒤 → 사라진다.
-  // 말풍선이 계속 떠 있으면 문항을 가린다 (사용자 확정).
+  // 등장(빠르게) → 응원 멘트 → 멘트와 캐릭터가 함께 퇴장. 화면을 오래 가리지 않는다.
   const charY = useRef(new Animated.Value(60)).current;
   const charOp = useRef(new Animated.Value(1)).current;
   const bubble = useRef(new Animated.Value(0)).current;
+  // 방문할 때마다 캐릭터·멘트를 새로 뽑는다 (10종 × 14멘트) — 렌더 시점에 확정
+  const picked = useMemo(
+    () => ({ s: Math.floor(Math.random() * 1000), c: Math.floor(Math.random() * 1000) }),
+    [screenId],
+  );
   useEffect(() => {
     charY.setValue(60);
     charOp.setValue(1);
     bubble.setValue(0);
     if (!enabled) return;
-    const isQuestion = QUESTION_SCREENS.has(screenId);
-    const exit = isQuestion
-      ? Animated.parallel([
-          Animated.timing(bubble, { toValue: 0, duration: 320, useNativeDriver: false }),
-          Animated.timing(charY, { toValue: 110, duration: 360, useNativeDriver: false }),
-          Animated.timing(charOp, { toValue: 0, duration: 360, useNativeDriver: false }),
-        ])
-      : Animated.timing(bubble, { toValue: 0, duration: 320, useNativeDriver: false });
     const seq = Animated.sequence([
-      Animated.timing(charY, { toValue: 0, duration: 280, useNativeDriver: false }),
-      Animated.timing(bubble, { toValue: 1, duration: 200, useNativeDriver: false }),
-      Animated.delay(2400),
-      exit,
+      Animated.timing(charY, { toValue: 0, duration: 200, useNativeDriver: false }),
+      Animated.timing(bubble, { toValue: 1, duration: 150, useNativeDriver: false }),
+      Animated.delay(1500),
+      Animated.parallel([
+        Animated.timing(bubble, { toValue: 0, duration: 220, useNativeDriver: false }),
+        Animated.timing(charY, { toValue: 110, duration: 260, useNativeDriver: false }),
+        Animated.timing(charOp, { toValue: 0, duration: 260, useNativeDriver: false }),
+      ]),
     ]);
     seq.start();
     return () => seq.stop();
@@ -121,15 +121,14 @@ function ScreenSticker({ theme, enabled, screenId }: { theme: Theme; enabled: bo
 
   const stickers = enabled ? themeAssets(theme.id)?.stickers : undefined;
   if (!stickers || !stickers.length) return null;
-  if (STICKER_EXCLUDE.has(screenId) || screenId.startsWith('set-') || screenId.startsWith('completion-')) return null;
-  let h = 0;
-  for (let i = 0; i < screenId.length; i++) h = (h * 31 + screenId.charCodeAt(i)) >>> 0;
-  const st = stickers[h % stickers.length];
-  const cheer = CHEERS[h % CHEERS.length];
+  // 아바타 화면·자체 캐릭터 화면(홈·5-2·축하) 제외. 세트 완료(step 9·15…)에는 나온다.
+  if (STICKER_EXCLUDE.has(screenId) || screenId.startsWith('set-wordbook') || screenId.startsWith('completion-')) return null;
+  const st = stickers[picked.s % stickers.length];
+  const cheer = CHEERS[picked.c % CHEERS.length];
   const c = theme.colors;
   return (
     <View pointerEvents="none" style={{ position: 'absolute', right: 2, bottom: 88, alignItems: 'flex-end' }}>
-      {/* 응원 말풍선 — 잠깐 떴다가 사라진다 */}
+      {/* 응원 말풍선 */}
       <Animated.View
         style={{
           maxWidth: 190,
@@ -152,7 +151,6 @@ function ScreenSticker({ theme, enabled, screenId }: { theme: Theme; enabled: bo
         >
           <Text style={{ fontSize: 12, color: c.ink, fontWeight: '600' }}>{pick(lang, cheer[0], cheer[1])}</Text>
         </View>
-        {/* 꼬리 */}
         <View
           style={{
             alignSelf: 'flex-end', marginRight: 10, marginTop: -1,

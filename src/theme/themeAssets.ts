@@ -67,6 +67,12 @@ export const THEME_ASSETS: Record<string, ThemeAssets> = {
       { img: require('../../assets/themes/malhaeboka/sticker-cat.png'), w: 84, h: 90 },
       { img: require('../../assets/themes/malhaeboka/char-fish.png'), w: 56, h: 76 },
       { img: require('../../assets/themes/malhaeboka/sticker-mouse.png'), w: 80, h: 72 },
+      { img: require('../../assets/themes/malhaeboka/sticker-crowncat.png'), w: 76, h: 98 },
+      { img: require('../../assets/themes/malhaeboka/sticker-owl.png'), w: 78, h: 75 },
+      { img: require('../../assets/themes/malhaeboka/sticker-chu.png'), w: 70, h: 90 },
+      { img: require('../../assets/themes/malhaeboka/sticker-monster.png'), w: 72, h: 67 },
+      { img: require('../../assets/themes/malhaeboka/sticker-nana.png'), w: 58, h: 66 },
+      { img: require('../../assets/themes/malhaeboka/sticker-goldfish.png'), w: 72, h: 72 },
     ],
   },
 };
