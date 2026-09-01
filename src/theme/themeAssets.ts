@@ -66,6 +66,7 @@ export const THEME_ASSETS: Record<string, ThemeAssets> = {
       { img: require('../../assets/themes/malhaeboka/char-rabbit.png'), w: 78, h: 90 },
       { img: require('../../assets/themes/malhaeboka/sticker-cat.png'), w: 84, h: 90 },
       { img: require('../../assets/themes/malhaeboka/char-fish.png'), w: 56, h: 76 },
+      { img: require('../../assets/themes/malhaeboka/sticker-mouse.png'), w: 80, h: 72 },
     ],
   },
 };

@@ -73,6 +73,14 @@ const STICKER_EXCLUDE = new Set([
   'dialogue-listen-write', 'practice-check', 'word-intro-slides', 'grammar-detail',
   'vocab-wordbook-voice',
 ]);
+// 문항을 푸는 화면 — 응원이 끝나면 캐릭터도 함께 내려가 문항을 가리지 않는다
+const QUESTION_SCREENS = new Set([
+  'word-build', 'word-vnko-select', 'listen-select', 'listen-select-1',
+  'word-sound', 'word-sound-1', 'word-letter-blank', 'sentence-blank-1',
+  'sentence-select-1', 'word-blank-1', 'listen-typing-1', 'sentence-build',
+  'sentence-build-2', 'word-vn-ko-select-2', 'picture-word-2',
+  'practical-listening', 'practical-speaking', 'speaking-eval', 'quick-review',
+]);
 const CHEERS: Array<[string, string]> = [
   ['잘하고 있어요!', 'Bạn đang làm rất tốt!'],
   ['조금만 더 힘내요!', 'Cố lên chút nữa nhé!'],
@@ -86,20 +94,30 @@ function ScreenSticker({ theme, enabled, screenId }: { theme: Theme; enabled: bo
   // 순서 연출: 캐릭터가 먼저 올라오고 → 말풍선이 떠서 잠깐 응원한 뒤 → 사라진다.
   // 말풍선이 계속 떠 있으면 문항을 가린다 (사용자 확정).
   const charY = useRef(new Animated.Value(60)).current;
+  const charOp = useRef(new Animated.Value(1)).current;
   const bubble = useRef(new Animated.Value(0)).current;
   useEffect(() => {
     charY.setValue(60);
+    charOp.setValue(1);
     bubble.setValue(0);
     if (!enabled) return;
+    const isQuestion = QUESTION_SCREENS.has(screenId);
+    const exit = isQuestion
+      ? Animated.parallel([
+          Animated.timing(bubble, { toValue: 0, duration: 320, useNativeDriver: false }),
+          Animated.timing(charY, { toValue: 110, duration: 360, useNativeDriver: false }),
+          Animated.timing(charOp, { toValue: 0, duration: 360, useNativeDriver: false }),
+        ])
+      : Animated.timing(bubble, { toValue: 0, duration: 320, useNativeDriver: false });
     const seq = Animated.sequence([
       Animated.timing(charY, { toValue: 0, duration: 280, useNativeDriver: false }),
       Animated.timing(bubble, { toValue: 1, duration: 200, useNativeDriver: false }),
       Animated.delay(2400),
-      Animated.timing(bubble, { toValue: 0, duration: 320, useNativeDriver: false }),
+      exit,
     ]);
     seq.start();
     return () => seq.stop();
-  }, [screenId, enabled, theme.id, charY, bubble]);
+  }, [screenId, enabled, theme.id, charY, charOp, bubble]);
 
   const stickers = enabled ? themeAssets(theme.id)?.stickers : undefined;
   if (!stickers || !stickers.length) return null;
@@ -146,7 +164,7 @@ function ScreenSticker({ theme, enabled, screenId }: { theme: Theme; enabled: bo
       </Animated.View>
       <Animated.Image
         source={st.img}
-        style={{ width: st.w, height: st.h, transform: [{ translateY: charY }] }}
+        style={{ width: st.w, height: st.h, opacity: charOp, transform: [{ translateY: charY }] }}
         resizeMode="contain"
       />
     </View>
