@@ -3,6 +3,8 @@ import {
   View, Text, TouchableOpacity, StyleSheet, Modal, Animated,
 } from 'react-native';
 import { colors } from '../theme/colors';
+import { useTheme } from '../theme/ThemeContext';
+import { themedHeader, themedExitPopup, nativeThemeAttr } from '../theme/themedControls';
 import { useLang, pick } from './LangContext';
 
 interface Props {
@@ -15,7 +17,7 @@ interface Props {
 }
 
 // ── Animated ProgressBar (Source A 동일 동작: 500ms timing) ──
-function ProgressBar({ percentage }: { percentage: number }) {
+function ProgressBar({ percentage, themed }: { percentage: number; themed: ReturnType<typeof themedHeader> | null }) {
   const anim = useRef(new Animated.Value(percentage)).current;
 
   useEffect(() => {
@@ -32,9 +34,9 @@ function ProgressBar({ percentage }: { percentage: number }) {
   });
 
   return (
-    <View style={pb.track}>
-      <Animated.View style={[pb.fill, { width }]}>
-        <View style={pb.sheen} />
+    <View style={[pb.track, themed && themed.track]}>
+      <Animated.View style={[pb.fill, { width }, themed && themed.fill]}>
+        {!themed && <View style={pb.sheen} />}
       </Animated.View>
     </View>
   );
@@ -73,11 +75,13 @@ function ExitConfirmPopup({
   onConfirm: () => void;
 }) {
   const { lang } = useLang();
+  const { theme, enabled: themeOn } = useTheme();
+  const tp = themeOn ? themedExitPopup(theme) : null;
   return (
     <Modal visible={visible} transparent animationType="fade" statusBarTranslucent>
       <View style={popup.backdrop}>
-        <View style={popup.card}>
-          <Text style={popup.message}>
+        <View style={[popup.card, tp && tp.card]} {...(tp ? nativeThemeAttr : null)}>
+          <Text style={[popup.message, tp && tp.message]}>
             {pick(
               lang,
               'K-Chao 학습을 종료 하시겠습니까?\n종료한 학습 이어할 수 있습니다.',
@@ -85,13 +89,13 @@ function ExitConfirmPopup({
             )}
           </Text>
           <View style={popup.btnRow}>
-            <TouchableOpacity style={[popup.btn, popup.btnSecondary]} onPress={onCancel} activeOpacity={0.8}>
-              <Text style={[popup.btnText, popup.btnTextSecondary]}>
+            <TouchableOpacity style={[popup.btn, popup.btnSecondary, tp && tp.btnSecondary]} onPress={onCancel} activeOpacity={0.8}>
+              <Text style={[popup.btnText, popup.btnTextSecondary, tp && tp.btnTextSecondary]}>
                 {pick(lang, '학습하기', 'Tiếp tục học')}
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[popup.btn, popup.btnPrimary]} onPress={onConfirm} activeOpacity={0.8}>
-              <Text style={[popup.btnText, popup.btnTextPrimary]}>
+            <TouchableOpacity style={[popup.btn, popup.btnPrimary, tp && tp.btnPrimary]} onPress={onConfirm} activeOpacity={0.8}>
+              <Text style={[popup.btnText, popup.btnTextPrimary, tp && tp.btnTextPrimary]}>
                 {pick(lang, '종료하기', 'Thoát')}
               </Text>
             </TouchableOpacity>
@@ -127,19 +131,24 @@ const popup = StyleSheet.create({
 // ── ActivityHeader (공유 컴포넌트) ──
 export function ActivityHeader({ percentage, onClose, children }: Props) {
   const [showPopup, setShowPopup] = useState(false);
+  const { theme, enabled: themeOn } = useTheme();
+  const th = themeOn ? themedHeader(theme) : null;
 
   return (
-    <View style={s.header}>
-      <View style={s.progressCenter}>
-        <ProgressBar percentage={percentage} />
+    <View style={[s.header, th && th.header]}>
+      {/* native-theme 는 헤더가 직접 소유한 부분에만 — children(화면이 준 배지 등)은
+          DOM 오버라이드가 계속 색을 입혀야 하므로 루트에 걸면 안 된다 */}
+      <View style={s.progressCenter} {...(th ? nativeThemeAttr : null)}>
+        <ProgressBar percentage={percentage} themed={th} />
       </View>
       {children}
       <TouchableOpacity
         style={s.closeBtn}
         onPress={() => setShowPopup(true)}
         activeOpacity={0.7}
+        {...(th ? nativeThemeAttr : null)}
       >
-        <Text style={s.closeBtnText}>✕</Text>
+        <Text style={[s.closeBtnText, th && th.closeText]}>✕</Text>
       </TouchableOpacity>
       <ExitConfirmPopup
         visible={showPopup}

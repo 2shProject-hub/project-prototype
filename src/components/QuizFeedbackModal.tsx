@@ -9,6 +9,9 @@ import {
 } from 'react-native';
 import { colors, radius, spacing, shadow } from '../theme';
 import { useLang, pick } from './LangContext';
+import { useTheme } from '../theme/ThemeContext';
+import { bodyFont, readableOn } from '../theme/themeTypes';
+import { nativeThemeAttr } from '../theme/themedControls';
 import { CtaButton } from './CtaButton';
 
 export interface QuizFeedbackModalProps {
@@ -41,6 +44,26 @@ export function QuizFeedbackModal({
   onClose,
 }: QuizFeedbackModalProps) {
   const { lang } = useLang();
+  // Modal 은 포털이라 DOM 오버라이드가 못 닿는다 — 여기서 직접 테마를 입힌다
+  const { theme, enabled: themeOn } = useTheme();
+  const tm = themeOn
+    ? (() => {
+        const c = theme.colors;
+        const L = theme.layout;
+        const tone = isCorrect ? c.success : c.danger;
+        const toneSoft = isCorrect ? c.successSoft : c.dangerSoft;
+        return {
+          card: { backgroundColor: c.surface, borderRadius: L.radius === 0 ? 2 : Math.max(8, Math.round(L.radius * 1.4)), borderWidth: L.list === 'block' ? 2 : 0, borderColor: c.ink },
+          icon: { backgroundColor: toneSoft, borderRadius: L.radius === 0 ? 4 : 999 },
+          iconText: { color: readableOn(toneSoft, [tone, c.ink]), ...bodyFont(theme, 700) },
+          title: { color: tone, ...bodyFont(theme, 700) },
+          answerBox: { backgroundColor: c.backdrop, borderRadius: L.radius },
+          answerLabel: { color: c.muted, ...bodyFont(theme, 600) },
+          answerValue: { color: c.ink, ...bodyFont(theme, 700) },
+          explanation: { color: c.textSecondary, ...bodyFont(theme) },
+        };
+      })()
+    : null;
 
   const defaultTitle = isCorrect
     ? pick(lang, '정답입니다!', 'Chính xác!')
@@ -66,15 +89,16 @@ export function QuizFeedbackModal({
       <TouchableWithoutFeedback onPress={onClose}>
         <View style={styles.backdrop}>
           <TouchableWithoutFeedback>
-            <View style={styles.card}>
+            <View style={[styles.card, tm && tm.card]} {...(tm ? nativeThemeAttr : null)}>
               {/* 상단 상태 뱃지 / 아이콘 */}
               <View
                 style={[
                   styles.iconCircle,
                   isCorrect ? styles.iconCorrect : styles.iconWrong,
+                  tm && tm.icon,
                 ]}
               >
-                <Text style={styles.iconText}>{isCorrect ? '✓' : '✕'}</Text>
+                <Text style={[styles.iconText, tm && tm.iconText]}>{isCorrect ? '✓' : '✕'}</Text>
               </View>
 
               {/* 피드백 타이틀 */}
@@ -82,6 +106,7 @@ export function QuizFeedbackModal({
                 style={[
                   styles.title,
                   isCorrect ? styles.titleCorrect : styles.titleWrong,
+                  tm && tm.title,
                 ]}
               >
                 {displayTitle}
@@ -89,18 +114,18 @@ export function QuizFeedbackModal({
 
               {/* 정답 안내 영역 */}
               {displayAnswer && (
-                <View style={styles.answerBox}>
-                  <Text style={styles.answerLabel}>
+                <View style={[styles.answerBox, tm && tm.answerBox]}>
+                  <Text style={[styles.answerLabel, tm && tm.answerLabel]}>
                     {pick(lang, '정답', 'Đáp án')}
                   </Text>
-                  <Text style={styles.answerValue}>{displayAnswer}</Text>
+                  <Text style={[styles.answerValue, tm && tm.answerValue]}>{displayAnswer}</Text>
                 </View>
               )}
 
               {/* 해설 영역 */}
               {displayExplanation && (
                 <View style={styles.explanationBox}>
-                  <Text style={styles.explanationText}>{displayExplanation}</Text>
+                  <Text style={[styles.explanationText, tm && tm.explanation]}>{displayExplanation}</Text>
                 </View>
               )}
 

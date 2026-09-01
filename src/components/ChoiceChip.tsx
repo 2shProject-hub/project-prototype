@@ -8,6 +8,8 @@ import {
   TextStyle,
 } from 'react-native';
 import { colors, radius, spacing, shadow } from '../theme';
+import { useTheme } from '../theme/ThemeContext';
+import { themedChip, nativeThemeAttr } from '../theme/themedControls';
 
 export type ChoiceState = 'default' | 'selected' | 'correct' | 'wrong';
 
@@ -42,6 +44,9 @@ export function ChoiceChip({
   const effectiveState: ChoiceState =
     state === 'default' && selected ? 'selected' : state;
 
+  const { theme, enabled: themeOn } = useTheme();
+  const themed = themeOn ? themedChip(theme, effectiveState) : null;
+
   const getContainerStyle = () => {
     const base: ViewStyle[] = [styles.container, styles[`size_${size}`]];
 
@@ -55,6 +60,9 @@ export function ChoiceChip({
       base.push(styles.state_default);
     }
 
+    if (themed) {
+      base.push(themed.box);
+    }
     if (style) {
       base.push(style);
     }
@@ -75,6 +83,9 @@ export function ChoiceChip({
       base.push(styles.text_default);
     }
 
+    if (themed) {
+      base.push(themed.text);
+    }
     if (textStyle) {
       base.push(textStyle);
     }
@@ -88,6 +99,7 @@ export function ChoiceChip({
       onPress={onPress}
       disabled={disabled}
       activeOpacity={0.7}
+      {...(themed ? nativeThemeAttr : null)}
     >
       <View style={styles.contentRow}>
         {badge !== undefined && (
@@ -97,12 +109,14 @@ export function ChoiceChip({
               effectiveState === 'selected' && styles.badge_selected,
               effectiveState === 'correct' && styles.badge_correct,
               effectiveState === 'wrong' && styles.badge_wrong,
+              themed && themed.badge,
             ]}
           >
             <Text
               style={[
                 styles.badgeText,
                 effectiveState !== 'default' && styles.badgeText_active,
+                themed && themed.badgeText,
               ]}
             >
               {badge}
@@ -112,7 +126,7 @@ export function ChoiceChip({
 
         <View style={styles.textColumn}>
           <Text style={getTextStyle()}>{text}</Text>
-          {subText ? <Text style={styles.subText}>{subText}</Text> : null}
+          {subText ? <Text style={[styles.subText, themed && themed.sub]}>{subText}</Text> : null}
         </View>
 
         {icon && <View style={styles.iconBox}>{icon}</View>}

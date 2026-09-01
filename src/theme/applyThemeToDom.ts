@@ -184,7 +184,7 @@ export function applyThemeToDom(theme: Theme | null): void {
       // data-native-theme 서브트리는 이미 테마 값으로 그려진 곳 — 또 변환하면 이중 적용이라 제외
       const scoped = r.selectorText
         .split(',')
-        .map((sel) => `[data-themed="on"] ${sel.trim()}:not([data-native-theme] *)`)
+        .map((sel) => `[data-themed="on"] ${sel.trim()}:not([data-native-theme]):not([data-native-theme] *)`)
         .join(', ');
       out.push(`${scoped}{${withImportant(css)}}`);
     }

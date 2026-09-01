@@ -9,6 +9,8 @@ import {
   View,
 } from 'react-native';
 import { colors, radius, spacing } from '../theme';
+import { useTheme } from '../theme/ThemeContext';
+import { themedCta, nativeThemeAttr } from '../theme/themedControls';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'correct' | 'wrong';
 export type ButtonSize = 'sm' | 'md' | 'lg';
@@ -40,6 +42,10 @@ export function CtaButton({
   fullWidth = true,
   activeOpacity = 0.8,
 }: CtaButtonProps) {
+  // 테마 적용 중이면 원본 스타일 뒤에 테마 형태를 덧붙인다 (기능·props 불변)
+  const { theme, enabled: themeOn } = useTheme();
+  const themed = themeOn ? themedCta(theme, variant, disabled) : null;
+
   const getContainerStyle = () => {
     const base: ViewStyle[] = [styles.button, styles[`size_${size}`]];
 
@@ -53,6 +59,9 @@ export function CtaButton({
       base.push(styles[`variant_${variant}`]);
     }
 
+    if (themed) {
+      base.push(themed.box);
+    }
     if (style) {
       base.push(style);
     }
@@ -69,6 +78,9 @@ export function CtaButton({
       base.push(styles[`textVariant_${variant}`]);
     }
 
+    if (themed) {
+      base.push(themed.text);
+    }
     if (textStyle) {
       base.push(textStyle);
     }
@@ -82,11 +94,12 @@ export function CtaButton({
       onPress={onPress}
       disabled={disabled || loading}
       activeOpacity={activeOpacity}
+      {...(themed ? nativeThemeAttr : null)}
     >
       {loading ? (
         <ActivityIndicator
           size="small"
-          color={variant === 'outline' || variant === 'secondary' ? colors.teal : colors.surface}
+          color={themed ? themed.spinner : variant === 'outline' || variant === 'secondary' ? colors.teal : colors.surface}
         />
       ) : (
         <View style={styles.contentRow}>
