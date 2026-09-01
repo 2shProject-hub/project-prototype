@@ -2,8 +2,8 @@
  * 에뮬레이터 쉘 — 웹 전용 (Platform.OS === 'web')
  * 구성: 좌측 컨트롤 패널 | 중앙 디바이스 프레임 | 우측 정보 패널
  */
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Platform, Image } from 'react-native';
-import { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Platform, Image, Animated } from 'react-native';
+import { useEffect, useState, useRef } from 'react';
 import { colors } from '../theme/colors';
 import { LangProvider } from '../components/LangContext';
 import { SCREEN_REGISTRY, getScreen } from './screenRegistry';
@@ -83,6 +83,24 @@ const CHEERS: Array<[string, string]> = [
 ];
 function ScreenSticker({ theme, enabled, screenId }: { theme: Theme; enabled: boolean; screenId: string }) {
   const { lang } = useLang();
+  // 순서 연출: 캐릭터가 먼저 올라오고 → 말풍선이 떠서 잠깐 응원한 뒤 → 사라진다.
+  // 말풍선이 계속 떠 있으면 문항을 가린다 (사용자 확정).
+  const charY = useRef(new Animated.Value(60)).current;
+  const bubble = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    charY.setValue(60);
+    bubble.setValue(0);
+    if (!enabled) return;
+    const seq = Animated.sequence([
+      Animated.timing(charY, { toValue: 0, duration: 280, useNativeDriver: false }),
+      Animated.timing(bubble, { toValue: 1, duration: 200, useNativeDriver: false }),
+      Animated.delay(2400),
+      Animated.timing(bubble, { toValue: 0, duration: 320, useNativeDriver: false }),
+    ]);
+    seq.start();
+    return () => seq.stop();
+  }, [screenId, enabled, theme.id, charY, bubble]);
+
   const stickers = enabled ? themeAssets(theme.id)?.stickers : undefined;
   if (!stickers || !stickers.length) return null;
   if (STICKER_EXCLUDE.has(screenId) || screenId.startsWith('set-') || screenId.startsWith('completion-')) return null;
@@ -93,8 +111,16 @@ function ScreenSticker({ theme, enabled, screenId }: { theme: Theme; enabled: bo
   const c = theme.colors;
   return (
     <View pointerEvents="none" style={{ position: 'absolute', right: 2, bottom: 88, alignItems: 'flex-end' }}>
-      {/* 응원 말풍선 */}
-      <View style={{ maxWidth: 190, marginRight: st.w - 14, marginBottom: -6 }}>
+      {/* 응원 말풍선 — 잠깐 떴다가 사라진다 */}
+      <Animated.View
+        style={{
+          maxWidth: 190,
+          marginRight: st.w - 14,
+          marginBottom: -6,
+          opacity: bubble,
+          transform: [{ translateY: bubble.interpolate({ inputRange: [0, 1], outputRange: [8, 0] }) }],
+        }}
+      >
         <View
           style={{
             backgroundColor: c.surface,
@@ -117,8 +143,12 @@ function ScreenSticker({ theme, enabled, screenId }: { theme: Theme; enabled: bo
             transform: [{ rotate: '45deg' }],
           }}
         />
-      </View>
-      <Image source={st.img} style={{ width: st.w, height: st.h }} resizeMode="contain" />
+      </Animated.View>
+      <Animated.Image
+        source={st.img}
+        style={{ width: st.w, height: st.h, transform: [{ translateY: charY }] }}
+        resizeMode="contain"
+      />
     </View>
   );
 }
