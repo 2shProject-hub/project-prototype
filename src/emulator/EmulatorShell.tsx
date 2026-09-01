@@ -11,6 +11,7 @@ import { ThemeProvider, useTheme } from '../theme/ThemeContext';
 import { ThemeGalleryScreen } from '../screens/ThemeGalleryScreen';
 import { applyThemeToDom } from '../theme/applyThemeToDom';
 import { themeAssets } from '../theme/themeAssets';
+import type { Theme } from '../theme/themeTypes';
 
 // 화면 컴포넌트 임포트
 import { HomeScreen } from '../screens/HomeScreen';
@@ -51,7 +52,7 @@ import { ConversationShadowingStage } from '../screens/ConversationShadowingStag
 import DialogueListenWriteStage from '../screens/DialogueListenWriteStage';
 import PracticeCheckStage from '../screens/PracticeCheckStage';
 import { defaultSessionState, LEARNING_FLOW } from '../data/lessonData';
-import { useLang, type Lang } from '../components/LangContext';
+import { useLang, pick, type Lang } from '../components/LangContext';
 
 // ─── 디바이스 프리셋 ───────────────────────────────────────────────
 const DEVICES = [
@@ -63,17 +64,60 @@ const DEVICES = [
 ];
 
 // ─── 화면 → 컴포넌트 렌더러 ────────────────────────────────────────
-// 브랜드 자산 테마: 화면마다 다른 캐릭터 이모티콘이 우하단에서 빼꼼 (터치 통과).
-// 자체 캐릭터가 있는 화면(홈·5-2·세트완료·축하)은 제외한다.
-function ScreenSticker({ themeId, enabled, screenId }: { themeId: string; enabled: boolean; screenId: string }) {
-  const stickers = enabled ? themeAssets(themeId)?.stickers : undefined;
+// 브랜드 자산 테마: 화면마다 다른 캐릭터가 응원 말풍선과 함께 우하단에서 빼꼼 (터치 통과).
+// 자체 캐릭터가 있는 화면(홈·5-2·세트완료·축하)과 튜터 아바타·화자 썸네일이 있는 화면은 제외 —
+// 캐릭터가 아바타를 가리면 안 된다.
+const STICKER_EXCLUDE = new Set([
+  'home', 'mission-tutor', 'intro-tutor', 'intro-tutor-2', 'intro-eval',
+  'video-ai-tutor', 'ai-tutor-desc', 'conversation-preview', 'conversation-shadowing',
+  'dialogue-listen-write', 'practice-check', 'word-intro-slides', 'grammar-detail',
+  'vocab-wordbook-voice',
+]);
+const CHEERS: Array<[string, string]> = [
+  ['잘하고 있어요!', 'Bạn đang làm rất tốt!'],
+  ['조금만 더 힘내요!', 'Cố lên chút nữa nhé!'],
+  ['오늘도 화이팅!', 'Hôm nay cũng cố lên!'],
+  ['멋져요, 바로 그거예요!', 'Tuyệt lắm, chính là như vậy!'],
+  ['천천히 해도 괜찮아요', 'Từ từ cũng không sao đâu'],
+  ['거의 다 왔어요!', 'Sắp xong rồi!'],
+];
+function ScreenSticker({ theme, enabled, screenId }: { theme: Theme; enabled: boolean; screenId: string }) {
+  const { lang } = useLang();
+  const stickers = enabled ? themeAssets(theme.id)?.stickers : undefined;
   if (!stickers || !stickers.length) return null;
-  if (screenId === 'home' || screenId.startsWith('set-') || screenId.startsWith('completion-')) return null;
+  if (STICKER_EXCLUDE.has(screenId) || screenId.startsWith('set-') || screenId.startsWith('completion-')) return null;
   let h = 0;
   for (let i = 0; i < screenId.length; i++) h = (h * 31 + screenId.charCodeAt(i)) >>> 0;
   const st = stickers[h % stickers.length];
+  const cheer = CHEERS[h % CHEERS.length];
+  const c = theme.colors;
   return (
     <View pointerEvents="none" style={{ position: 'absolute', right: 2, bottom: 88, alignItems: 'flex-end' }}>
+      {/* 응원 말풍선 */}
+      <View style={{ maxWidth: 190, marginRight: st.w - 14, marginBottom: -6 }}>
+        <View
+          style={{
+            backgroundColor: c.surface,
+            borderWidth: 1,
+            borderColor: c.line,
+            borderRadius: 14,
+            paddingHorizontal: 11,
+            paddingVertical: 7,
+            shadowColor: '#000', shadowOpacity: 0.08, shadowRadius: 6, shadowOffset: { width: 0, height: 2 },
+          }}
+        >
+          <Text style={{ fontSize: 12, color: c.ink, fontWeight: '600' }}>{pick(lang, cheer[0], cheer[1])}</Text>
+        </View>
+        {/* 꼬리 */}
+        <View
+          style={{
+            alignSelf: 'flex-end', marginRight: 10, marginTop: -1,
+            width: 10, height: 10, backgroundColor: c.surface,
+            borderRightWidth: 1, borderBottomWidth: 1, borderColor: c.line,
+            transform: [{ rotate: '45deg' }],
+          }}
+        />
+      </View>
       <Image source={st.img} style={{ width: st.w, height: st.h }} resizeMode="contain" />
     </View>
   );
@@ -1394,7 +1438,7 @@ function EmulatorShellInner() {
             <View style={[shell.deviceScreen, { width: frameW, height: frameH - 24 }]}>
               <View style={{ flex: 1 }} {...({ dataSet: applyTheme ? { themed: 'on' } : undefined } as any)}>
                 <ScreenRenderer screenId={activeScreenId || screenId} onNavigate={handleNavigate} />
-                <ScreenSticker themeId={activeTheme.id} enabled={applyTheme} screenId={activeScreenId || screenId} />
+                <ScreenSticker theme={activeTheme} enabled={applyTheme} screenId={activeScreenId || screenId} />
               </View>
             </View>
           </View>

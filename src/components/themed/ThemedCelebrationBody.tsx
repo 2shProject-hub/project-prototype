@@ -75,7 +75,9 @@ export function ThemedCelebrationBody({
   const mood = festivity(theme);
   // 브랜드 자산 테마: 축하 얼굴을 실캐릭터로 (세트 완료는 대체 캐릭터)
   const asset = themeAssets(theme.id);
-  const charImg = asset ? (setNumber != null && asset.characterAlt ? asset.characterAlt : asset.character) : undefined;
+  const charImg = asset ? asset.character : undefined;
+  // 세트 완료(33~35)는 브랜드 테마에서 캐릭터를 두지 않는다 (사용자 확정: 폭죽·타이틀만)
+  const hideArt = !!asset && setNumber != null;
   const photoTop = art.kind === 'photo' || st === 'hero-list';
   const variant = Math.max(0, THEMES.findIndex((x) => x.id === theme.id));
   const learnPicks = LEARN_PICKS[theme.id] ?? LEARN_FALLBACK;
@@ -128,7 +130,7 @@ export function ThemedCelebrationBody({
       {st === 'grid' ? (
         <View onLayout={onBandLayout} style={{ paddingTop: 26, paddingHorizontal: L.edge, alignItems: 'center' }}>
           {fireworks}
-          <ArtPiece theme={theme} art={art} size={96} charImg={charImg} />
+          {hideArt ? null : <ArtPiece theme={theme} art={art} size={96} charImg={charImg} />}
           <View style={{ height: s.row }} />
           <TitleText theme={theme} color={c.ink} text={title} />
           <SubText theme={theme} color={c.muted} text={titleOther} />
@@ -159,7 +161,7 @@ export function ThemedCelebrationBody({
           {st === 'plain-list' ? (
             <View style={{ flex: 1, paddingHorizontal: L.edge, justifyContent: 'center' }}>
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: s.row }}>
-                <ArtPiece theme={theme} art={art} size={56} charImg={charImg} />
+                {hideArt ? null : <ArtPiece theme={theme} art={art} size={56} charImg={charImg} />}
                 <View style={{ flex: 1 }}>
                   <TitleText theme={theme} color={onBand} text={title} size={0.82} align="left" />
                   <SubText theme={theme} color={subOnBand} text={titleOther} align="left" />
@@ -172,7 +174,7 @@ export function ThemedCelebrationBody({
                 <TitleText theme={theme} color={onBand} text={title} size={0.86} align="left" />
                 <SubText theme={theme} color={subOnBand} text={titleOther} align="left" />
               </View>
-              <ArtPiece theme={theme} art={art} size={76} charImg={charImg} />
+              {hideArt ? null : <ArtPiece theme={theme} art={art} size={76} charImg={charImg} />}
             </View>
           ) : st === 'hero-list' ? (
             <View style={{ flex: 1, justifyContent: 'flex-end', paddingHorizontal: L.edge, paddingBottom: s.row }}>
@@ -181,14 +183,14 @@ export function ThemedCelebrationBody({
             </View>
           ) : st === 'stat-list' ? (
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: L.edge }}>
-              <ArtPiece theme={theme} art={art} size={72} charImg={charImg} />
+              {hideArt ? null : <ArtPiece theme={theme} art={art} size={72} charImg={charImg} />}
               <View style={{ height: s.gap }} />
               <TitleText theme={theme} color={onBand} text={title} size={0.78} />
             </View>
           ) : (
             // focus-list — 중앙에 크게
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: L.edge }}>
-              <ArtPiece theme={theme} art={art} size={96} charImg={charImg} />
+              {hideArt ? null : <ArtPiece theme={theme} art={art} size={96} charImg={charImg} />}
               <View style={{ height: s.row }} />
               <TitleText theme={theme} color={onBand} text={title} />
               <SubText theme={theme} color={subOnBand} text={titleOther} />
