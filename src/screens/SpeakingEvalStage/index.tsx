@@ -4,6 +4,7 @@
  * - 4단계 (1/4, 2/4, 3/4, 4/4)
  * - 공통 ActivityHeader, CtaButton 적용
  */
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { useState, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, TextInput, Platform } from 'react-native';
 import { colors, radius, spacing, shadow } from '../../theme';
@@ -167,7 +168,7 @@ export function SpeakingEvalStage({
               onPress={isRecording ? stopRecording : startRecording}
               activeOpacity={0.7}
             >
-              <Text style={s.micIcon}>🎤</Text>
+              <ThemedGlyph style={s.micIcon} glyph="🎤" />
             </TouchableOpacity>
           </View>
           <Text style={s.recordingHint}>

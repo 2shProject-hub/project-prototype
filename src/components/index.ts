@@ -6,3 +6,4 @@ export * from './CtaButton';
 export * from './QuizFeedbackModal';
 export * from './ChoiceChip';
 export * from './AudioPlayButton';
+export * from './ThemedGlyph';

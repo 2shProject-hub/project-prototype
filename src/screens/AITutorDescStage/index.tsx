@@ -15,6 +15,7 @@
  *   - ActivityHeader → ActivityLayout (step/totalSteps)
  */
 
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import React, { useRef, useEffect, useState } from 'react';
 import {
   View, Text, TouchableOpacity, StyleSheet, Platform, Image,
@@ -123,7 +124,7 @@ export function AITutorDescStage({
             activeOpacity={0.7}
             hitSlop={8}
           >
-            <Text style={s.speakerIcon}>🔈</Text>
+            <ThemedGlyph style={s.speakerIcon} glyph="🔈" />
           </TouchableOpacity>
           {/* 꼬리 */}
           <View style={s.bubbleTail} />

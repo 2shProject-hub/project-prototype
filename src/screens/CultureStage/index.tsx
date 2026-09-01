@@ -1,3 +1,4 @@
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { useState } from 'react';
 import {
   View, Text, StyleSheet, ScrollView, TouchableOpacity, Image,
@@ -31,7 +32,7 @@ function HeroMedia({ heroMedia }: { heroMedia: CultureActivityData['heroMedia'] 
         <View style={hero.wrap}>
           <Image source={imageSource} style={hero.fill} resizeMode="cover" />
           <View style={hero.playOverlay}>
-            <Text style={hero.playIcon}>▶</Text>
+            <ThemedGlyph style={hero.playIcon} glyph="▶" />
           </View>
         </View>
       );
@@ -44,7 +45,7 @@ function HeroMedia({ heroMedia }: { heroMedia: CultureActivityData['heroMedia'] 
   // 플레이스홀더 텍스트는 Korean-only로 유지 (ADMIN 콘텐츠 등록 전 개발용)
   return (
     <View style={hero.placeholder}>
-      <Text style={hero.placeholderIcon}>{heroMedia.type === 'video' ? '🎬' : '🖼️'}</Text>
+      <ThemedGlyph style={hero.placeholderIcon} glyph={heroMedia.type === 'video' ? '🎬' : '🖼️'} />
       <Text style={hero.placeholderText}>
         {heroMedia.type === 'video' ? '영상' : '이미지'} 준비 중
       </Text>

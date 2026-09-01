@@ -29,6 +29,7 @@
  *   - lines → activity.questions[].listItems.dialogue_content[]
  */
 
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import {
   View, Text, TouchableOpacity, StyleSheet, Animated, Modal, Platform, Image,
@@ -354,7 +355,7 @@ export function ConversationShadowingStage({
                   disabled={isRecording || phase === 'intro'}
                   activeOpacity={0.7}
                 >
-                  <Text style={s.speakerIcon}>{isPlaying ? '🔊' : '🔈'}</Text>
+                  <ThemedGlyph style={s.speakerIcon} glyph={isPlaying ? '🔊' : '🔈'} />
                 </TouchableOpacity>
               </View>
             </View>
@@ -382,7 +383,7 @@ export function ConversationShadowingStage({
                 disabled={isRecording}
                 activeOpacity={0.8}
               >
-                <Text style={s.micIcon}>{isRecording ? '⏺' : '🎤'}</Text>
+                <ThemedGlyph style={s.micIcon} glyph={isRecording ? '⏺' : '🎤'} />
               </TouchableOpacity>
             </Animated.View>
           </View>
@@ -413,7 +414,7 @@ export function ConversationShadowingStage({
                   onPress={playTutorAudio}
                   activeOpacity={0.7}
                 >
-                  <Text style={s.introSpeakerIcon}>🔊</Text>
+                  <ThemedGlyph style={s.introSpeakerIcon} glyph="🔊" />
                 </TouchableOpacity>
               </View>
               <Image source={TUTOR_IMAGE as any} style={s.introTutorImg} resizeMode="contain" />

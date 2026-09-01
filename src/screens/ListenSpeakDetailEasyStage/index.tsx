@@ -6,6 +6,7 @@
  * - 귀여운 캐릭터 국기 뱃지 + 대형 마이크 발화 가이드 카드 중심의 직관적 UI
  */
 
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import React, { useState } from 'react';
 import {
   View,
@@ -71,9 +72,7 @@ export function ListenSpeakDetailEasyStage({ onNext, onBack }: Props) {
               onPress={handlePlayAudio}
               activeOpacity={0.8}
             >
-              <Text style={styles.audioPlayIcon}>
-                {isPlayingAudio ? '🔊' : '▶'}
-              </Text>
+              <ThemedGlyph style={styles.audioPlayIcon} glyph={isPlayingAudio ? '🔊' : '▶'} />
               <Text style={styles.audioPlayText}>
                 {isPlayingAudio
                   ? pick(lang, '듣는 중...', 'Đang nghe...')
@@ -142,7 +141,7 @@ export function ListenSpeakDetailEasyStage({ onNext, onBack }: Props) {
           </View>
 
           <View style={styles.micGuideBox}>
-            <Text style={styles.micGuideIcon}>🎙️</Text>
+            <ThemedGlyph style={styles.micGuideIcon} glyph="🎙️" />
             <Text style={styles.micGuideText}>
               {pick(
                 lang,

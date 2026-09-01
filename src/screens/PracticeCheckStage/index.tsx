@@ -1,3 +1,4 @@
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import React, { useRef, useState, useEffect } from 'react';
 import {
   Animated,
@@ -270,7 +271,7 @@ export default function PracticeCheckStage({ onNext, onBack, data }: Props) {
                   onPress={playAudio}
                   activeOpacity={0.7}
                 >
-                  <Text style={styles.introSpeakerIcon}>🔊</Text>
+                  <ThemedGlyph style={styles.introSpeakerIcon} glyph="🔊" />
                 </TouchableOpacity>
               </View>
               <Image source={TUTOR_IMAGE as any} style={styles.introTutorImg} resizeMode="contain" />

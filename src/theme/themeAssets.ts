@@ -24,6 +24,8 @@ export interface ThemeAssets {
   navIcons?: Record<string, { on: any; off: any }>;
   /** 홈 코스 카드의 삽화(기본 🏫 이모지 대체) */
   crest?: any;
+  /** 이모지 아이콘 대체 글리프 (ThemedGlyph 가 조회) */
+  glyphs?: Record<string, any>;
 }
 
 export const THEME_ASSETS: Record<string, ThemeAssets> = {
@@ -46,6 +48,15 @@ export const THEME_ASSETS: Record<string, ThemeAssets> = {
       'my-info': { on: require('../../assets/themes/malhaeboka/nav-crown-on.png'), off: require('../../assets/themes/malhaeboka/nav-crown-off.png') },
     },
     crest: require('../../assets/themes/malhaeboka/char-fish.png'),
+    glyphs: {
+      speakerOn: require('../../assets/themes/malhaeboka/nav-listen-on.png'),
+      speakerOff: require('../../assets/themes/malhaeboka/nav-listen-off.png'),
+      mic: require('../../assets/themes/malhaeboka/glyph-mic.png'),
+      hint: require('../../assets/themes/malhaeboka/glyph-hint.png'),
+      book: require('../../assets/themes/malhaeboka/nav-vocab-on.png'),
+      play: require('../../assets/themes/malhaeboka/glyph-play.png'),
+      school: require('../../assets/themes/malhaeboka/char-fish.png'),
+    },
   },
 };
 

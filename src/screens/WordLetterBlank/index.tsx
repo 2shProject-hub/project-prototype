@@ -4,6 +4,7 @@
  * - 1번 세트에서 베트남어 안내 토스트 팝업 및 자동 음원 재생
  * - 공통 ActivityHeader, AudioPlayButton, CtaButton, QuizFeedbackModal 적용
  */
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { useState, useRef, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Platform, ScrollView } from 'react-native';
 import { colors, radius, spacing, shadow } from '../../theme';
@@ -233,7 +234,7 @@ export function WordLetterBlank({
                 onPress={playToastAudio}
                 activeOpacity={0.7}
               >
-                <Text style={s.toastSpeakerIcon}>{isToastAudioPlaying ? '🔊' : '🔈'}</Text>
+                <ThemedGlyph style={s.toastSpeakerIcon} glyph={isToastAudioPlaying ? '🔊' : '🔈'} />
               </TouchableOpacity>
             </View>
           </View>

@@ -1,3 +1,4 @@
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { useState } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity, StyleSheet,
@@ -77,7 +78,7 @@ export function ContextStage({ onNext, onBack }: Props) {
                 )}
               </View>
               <TouchableOpacity style={styles.speakBtn} activeOpacity={0.7}>
-                <Text style={styles.speakIcon}>🔊</Text>
+                <ThemedGlyph style={styles.speakIcon} glyph="🔊" />
               </TouchableOpacity>
             </View>
           ))}

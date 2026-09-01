@@ -6,6 +6,7 @@
  * - 텍스트 없이 스피커 탭(1단계) -> 마이크 탭(2단계)의 실제 조작을 1회 체험한 후 본 활동 진입
  */
 
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import React, { useState } from 'react';
 import {
   View,
@@ -102,9 +103,7 @@ export function ListenSpeakInteractiveTryStage({ onNext, onBack }: Props) {
             onPress={handlePressSpeaker}
             activeOpacity={0.85}
           >
-            <Text style={styles.actionBigIcon}>
-              {isPlayingSpeaker ? '🔊' : '🔈'}
-            </Text>
+            <ThemedGlyph style={styles.actionBigIcon} glyph={isPlayingSpeaker ? '🔊' : '🔈'} />
             <Text style={styles.actionBigLabel}>
               {isPlayingSpeaker
                 ? pick(lang, '듣는 중...', 'Đang nghe...')

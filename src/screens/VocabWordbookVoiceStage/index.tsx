@@ -1,3 +1,4 @@
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { useEffect, useRef, useState } from 'react';
 import { ScrollView, View, Text, TouchableOpacity, StyleSheet, Modal, Platform } from 'react-native';
 import { colors } from '../../theme/colors';
@@ -215,7 +216,7 @@ export function VocabWordbookVoiceStage({ onNext, onBack }: Props) {
                 onPress={() => speakKo(w.ko)}
                 activeOpacity={0.7}
               >
-                <Text style={styles.speakerIcon}>🔊</Text>
+                <ThemedGlyph style={styles.speakerIcon} glyph="🔊" />
               </TouchableOpacity>
             </View>
           ))}
@@ -262,10 +263,10 @@ export function VocabWordbookVoiceStage({ onNext, onBack }: Props) {
           {/* 모달 내용 */}
           <View style={styles.pronContent}>
             <View style={styles.pronCard}>
-              <Text style={styles.pronCardEmoji}>📖</Text>
+              <ThemedGlyph style={styles.pronCardEmoji} glyph="📖" />
               <View style={styles.pronWordRow}>
                 <TouchableOpacity style={styles.pronSpeaker} onPress={() => speakKo(words[pronIdx].ko)} activeOpacity={0.7}>
-                  <Text style={styles.pronSpeakerEmoji}>🔊</Text>
+                  <ThemedGlyph style={styles.pronSpeakerEmoji} glyph="🔊" />
                 </TouchableOpacity>
                 <Text style={styles.pronWordKo}>{words[pronIdx].ko}</Text>
               </View>
@@ -285,7 +286,7 @@ export function VocabWordbookVoiceStage({ onNext, onBack }: Props) {
               onPress={() => { sfx.play(); isRecording ? stopRecording() : startRecording(); }}
               activeOpacity={0.8}
             >
-              <Text style={styles.micIcon}>{isRecording ? '⏹️' : '🎤'}</Text>
+              <ThemedGlyph style={styles.micIcon} glyph={isRecording ? '⏹️' : '🎤'} />
             </TouchableOpacity>
             <Text style={styles.micHelpText}>
               {isRecording ? '녹음 중입니다... (말씀을 마친 뒤 다시 눌러주세요)' : '마이크를 눌러 단어를 소리 내어 읽어주세요'}

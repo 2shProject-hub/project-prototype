@@ -12,6 +12,7 @@
  * - Source A/B 이식 시: props.data를 통해 외부 CMS/ADMIN API 데이터 주입 가능
  */
 
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import React, { useState } from 'react';
 import {
   View,
@@ -120,7 +121,7 @@ export function ReadWriteDetailStage({
         {/* ── 3. 읽기 체크 포인트 (Reading Key Points) ── */}
         <View style={styles.readingPointsSection}>
           <View style={styles.sectionHeaderRow}>
-            <Text style={styles.sectionIcon}>📖</Text>
+            <ThemedGlyph style={styles.sectionIcon} glyph="📖" />
             <Text style={styles.sectionTitle}>
               {pick(lang, '읽기 핵심 체크 포인트', 'Điểm kiểm tra khi đọc')}
             </Text>
@@ -227,7 +228,7 @@ export function ReadWriteDetailStage({
 
                   {/* 슬롯 가이드 */}
                   <View style={styles.guideRow}>
-                    <Text style={styles.guideIcon}>💡</Text>
+                    <ThemedGlyph style={styles.guideIcon} glyph="💡" />
                     <Text style={styles.guideText}>
                       {pick(lang, item.slotGuideKo, item.slotGuideVi)}
                     </Text>

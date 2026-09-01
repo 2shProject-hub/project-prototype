@@ -1,3 +1,4 @@
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Animated,
@@ -226,7 +227,7 @@ export default function DialogueListenWriteStage({ onNext, onBack, data }: Props
                   onPress={playTutorAudio}
                   activeOpacity={0.7}
                 >
-                  <Text style={styles.introSpeakerIcon}>🔊</Text>
+                  <ThemedGlyph style={styles.introSpeakerIcon} glyph="🔊" />
                 </TouchableOpacity>
               </View>
               <Image source={TUTOR_IMAGE as any} style={styles.introTutorImg} resizeMode="contain" />
@@ -253,7 +254,7 @@ export default function DialogueListenWriteStage({ onNext, onBack, data }: Props
             style={[styles.playBtn, needsTap && styles.playBtnPulse]}
             onPress={playAudio}
           >
-            <Text style={styles.playIcon}>🔊</Text>
+            <ThemedGlyph style={styles.playIcon} glyph="🔊" />
           </TouchableOpacity>
         </View>
 
@@ -276,7 +277,7 @@ export default function DialogueListenWriteStage({ onNext, onBack, data }: Props
         <View style={styles.viRow}>
           <Text style={styles.viText}>{line.textVi}</Text>
           <TouchableOpacity onPress={() => setShowHint((h) => !h)}>
-            <Text style={styles.hintIcon}>💡</Text>
+            <ThemedGlyph style={styles.hintIcon} glyph="💡" />
           </TouchableOpacity>
         </View>
         {showHint && (

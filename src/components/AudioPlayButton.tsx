@@ -1,3 +1,4 @@
+import { ThemedGlyph } from './ThemedGlyph';
 import React, { useEffect, useRef } from 'react';
 import {
   TouchableOpacity,
@@ -94,15 +95,14 @@ export function AudioPlayButton({
           disabled={disabled}
           activeOpacity={0.8}
         >
-          <Text
+          <ThemedGlyph
             style={[
               styles.icon,
               { fontSize: getIconSize() },
               isPlaying && styles.iconPlaying,
             ]}
-          >
-            {isPlaying ? '⏸' : '🔊'}
-          </Text>
+            glyph={isPlaying ? '⏸' : '🔊'}
+          />
         </TouchableOpacity>
       </Animated.View>
 

@@ -12,6 +12,7 @@
  * - Source A/B 이식 시: props.data를 통해 외부 CMS/ADMIN API 데이터 주입 가능
  */
 
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import React, { useState } from 'react';
 import {
   View,
@@ -66,7 +67,7 @@ export function ListenSpeakDetailStage({
         {/* ── 2. 대화 상황 & 등장인물 카드 (Context & Characters) ── */}
         <View style={styles.contextCard}>
           <View style={styles.contextHeader}>
-            <Text style={styles.contextIcon}>🎧</Text>
+            <ThemedGlyph style={styles.contextIcon} glyph="🎧" />
             <Text style={styles.contextTitle}>
               {pick(lang, data.situation.titleKo, data.situation.titleVi)}
             </Text>
@@ -127,7 +128,7 @@ export function ListenSpeakDetailStage({
             {data.listeningMission.points.map((p) => (
               <View key={p.no} style={styles.pointRow}>
                 <View style={styles.pointIconBox}>
-                  <Text style={styles.pointIcon}>{p.icon}</Text>
+                  <ThemedGlyph style={styles.pointIcon} glyph={p.icon} />
                 </View>
                 <View style={styles.pointTextWrap}>
                   <Text style={styles.pointTitle}>
@@ -145,7 +146,7 @@ export function ListenSpeakDetailStage({
         {/* ── 4. 말하기 발화 미션 예고 (Speaking Mission Preview) ── */}
         <View style={styles.speakingSection}>
           <View style={styles.sectionHeaderRow}>
-            <Text style={styles.sectionIcon}>🎙️</Text>
+            <ThemedGlyph style={styles.sectionIcon} glyph="🎙️" />
             <Text style={styles.speakingSectionTitle}>
               {pick(
                 lang,

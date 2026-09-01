@@ -6,6 +6,7 @@
  * - 세나의 3줄 소개 카드(읽기)와 나만의 프로필 카드(쓰기) 2단계 시각화
  */
 
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import React, { useState } from 'react';
 import {
   View,
@@ -168,7 +169,7 @@ export function ReadWriteDetailEasyStage({ onNext, onBack }: Props) {
 
         {/* 하단 친절 팁 박스 */}
         <View style={styles.hintBox}>
-          <Text style={styles.hintIcon}>💡</Text>
+          <ThemedGlyph style={styles.hintIcon} glyph="💡" />
           <Text style={styles.hintText}>
             {pick(
               lang,

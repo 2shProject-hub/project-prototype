@@ -1,3 +1,4 @@
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { useEffect, useState } from 'react';
 import {
   View, Text, TouchableOpacity, StyleSheet, TextInput,
@@ -211,7 +212,7 @@ export function SentenceBuildStage2({ onComplete, onBack }: Props) {
             onPress={() => setShowHint(h => !h)}
             activeOpacity={0.8}
           >
-            <Text style={styles.hintBtnIcon}>💡</Text>
+            <ThemedGlyph style={styles.hintBtnIcon} glyph="💡" />
             {!showHint && <View style={styles.hintBtnBadge} />}
           </TouchableOpacity>
         </View>

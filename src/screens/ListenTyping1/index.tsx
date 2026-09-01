@@ -6,6 +6,7 @@
  * - 텍스트 입력 필드
  * - 정답/오답 피드백
  */
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { useState, useRef, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Modal, ScrollView, TextInput, Platform } from 'react-native';
 import { colors } from '../../theme/colors';
@@ -114,7 +115,7 @@ export function ListenTyping1({ questions = [], onNext, onBack, currentSetNumber
             onPress={playAudio}
             activeOpacity={0.7}
           >
-            <Text style={s.audioIcon}>{isPlaying ? '🔊' : '🔈'}</Text>
+            <ThemedGlyph style={s.audioIcon} glyph={isPlaying ? '🔊' : '🔈'} />
           </TouchableOpacity>
           <Text style={s.audioLabel}>{pick(lang, '음원 재생', 'Phát âm thanh')}</Text>
         </View>

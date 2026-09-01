@@ -6,6 +6,7 @@
  * - 텍스트 없이 그림 1장 + 음성 1개로 1컷 만남 -> 2컷 읽기 -> 3컷 쓰기의 3단계를 시각적으로 전달
  */
 
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import React, { useState } from 'react';
 import {
   View,
@@ -89,7 +90,7 @@ export function ReadWriteVisualSlideStage({ onNext, onBack }: Props) {
               onPress={handlePlayAudio}
               activeOpacity={0.8}
             >
-              <Text style={styles.audioIcon}>{isPlayingAudio ? '🔊' : '🔈'}</Text>
+              <ThemedGlyph style={styles.audioIcon} glyph={isPlayingAudio ? '🔊' : '🔈'} />
             </TouchableOpacity>
           </View>
 

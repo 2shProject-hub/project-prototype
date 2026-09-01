@@ -6,6 +6,7 @@
  * - 큼직한 2턴 롤플레잉 말풍선 + 국기/인물 교체 카드 중심의 초간결 UI
  */
 
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import React, { useState } from 'react';
 import {
   View,
@@ -101,9 +102,7 @@ export function SpeakingDetailEasyStage({ onNext, onBack }: Props) {
                     </Text>
                     <Text style={styles.bubbleVi}>{pair.textVi}</Text>
                   </View>
-                  <Text style={styles.speakerIcon}>
-                    {isPlaying ? '🔊' : '🔈'}
-                  </Text>
+                  <ThemedGlyph style={styles.speakerIcon} glyph={isPlaying ? '🔊' : '🔈'} />
                 </TouchableOpacity>
 
                 {/* 우측 아바타 */}
@@ -120,7 +119,7 @@ export function SpeakingDetailEasyStage({ onNext, onBack }: Props) {
 
         {/* ── 2. 원포인트 핵심 표현 배너 ── */}
         <View style={styles.keyPointBanner}>
-          <Text style={styles.keyPointIcon}>💡</Text>
+          <ThemedGlyph style={styles.keyPointIcon} glyph="💡" />
           <Text style={styles.keyPointText}>{data.keyPointKo}</Text>
         </View>
 

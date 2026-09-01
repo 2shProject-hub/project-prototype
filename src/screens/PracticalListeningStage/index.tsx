@@ -4,6 +4,7 @@
  * - 문장 내 핵심 단어는 하이라이트 박스로 표시
  * - KO/VI 다국어 지원
  */
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { useState, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Platform, Image } from 'react-native';
 import { colors } from '../../theme/colors';
@@ -135,7 +136,7 @@ export function PracticalListeningStage({ onNext, onBack, data }: Props) {
               onPress={() => handlePlay(idx, item.audioUrl)}
               activeOpacity={0.75}
             >
-              <Text style={s.speakerIcon}>{playingIdx === idx ? '🔊' : '🔈'}</Text>
+              <ThemedGlyph style={s.speakerIcon} glyph={playingIdx === idx ? '🔊' : '🔈'} />
             </TouchableOpacity>
 
             {/* 문장 목록 */}

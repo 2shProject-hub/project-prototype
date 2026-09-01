@@ -1,3 +1,4 @@
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { useState, useMemo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
@@ -227,7 +228,7 @@ export function VocabStage({ onComplete, onBack }: Props) {
       <View style={styles.body}>
         {/* Counter */}
         <View style={styles.counterRow}>
-          <Text style={styles.counterIcon}>📖</Text>
+          <ThemedGlyph style={styles.counterIcon} glyph="📖" />
           <Text style={styles.counter}>{pick(lang, '어휘 문제', 'Câu hỏi từ vựng')} {qIndex + 1}/{items.length}</Text>
         </View>
 
@@ -248,7 +249,7 @@ export function VocabStage({ onComplete, onBack }: Props) {
         {needsListen && (
           <>
             <TouchableOpacity style={styles.speakBtn} activeOpacity={0.7}>
-              <Text style={styles.speakIcon}>🔊</Text>
+              <ThemedGlyph style={styles.speakIcon} glyph="🔊" />
               <Text style={styles.speakLabel}>{pick(lang, '다시 듣기', 'Nghe lại')}</Text>
             </TouchableOpacity>
             <ChoiceGrid item={item} selected={selected} onChoose={choose} />
@@ -275,7 +276,7 @@ export function VocabStage({ onComplete, onBack }: Props) {
             )}
             {item.type === 'listen-assemble' && (
               <TouchableOpacity style={styles.speakBtn} activeOpacity={0.7}>
-                <Text style={styles.speakIcon}>🔊</Text>
+                <ThemedGlyph style={styles.speakIcon} glyph="🔊" />
                 <Text style={styles.speakLabel}>{pick(lang, '다시 듣기', 'Nghe lại')}</Text>
               </TouchableOpacity>
             )}

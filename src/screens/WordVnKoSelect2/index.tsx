@@ -3,6 +3,7 @@
  * - 프로그레스바 헤더
  * - 공통 ActivityHeader, ChoiceChip, CtaButton, QuizFeedbackModal 적용
  */
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { useState, useRef, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Platform, ScrollView, Image } from 'react-native';
 import { colors, radius, spacing, shadow } from '../../theme';
@@ -209,7 +210,7 @@ export function WordVnKoSelect2({
                 onPress={playToastAudio}
                 activeOpacity={0.7}
               >
-                <Text style={s.toastSpeakerIcon}>{isToastAudioPlaying ? '🔊' : '🔈'}</Text>
+                <ThemedGlyph style={s.toastSpeakerIcon} glyph={isToastAudioPlaying ? '🔊' : '🔈'} />
               </TouchableOpacity>
             </View>
           </View>

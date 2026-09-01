@@ -28,6 +28,7 @@
  *   - lines → activity.questions[].listItems.dialogue_content[]
  */
 
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import {
   Animated,
@@ -116,7 +117,7 @@ function ConversationBubble({
             activeOpacity={0.7}
             hitSlop={8}
           >
-            <Text style={bs.speakerIcon}>🔈</Text>
+            <ThemedGlyph style={bs.speakerIcon} glyph="🔈" />
           </TouchableOpacity>
         </View>
       </View>
@@ -289,7 +290,7 @@ export function ConversationPreviewStage({
                   onPress={playTutorAudio}
                   activeOpacity={0.7}
                 >
-                  <Text style={s.introSpeakerIcon}>🔊</Text>
+                  <ThemedGlyph style={s.introSpeakerIcon} glyph="🔊" />
                 </TouchableOpacity>
               </View>
               <Image source={TUTOR_IMAGE as any} style={s.introTutorImg} resizeMode="contain" />

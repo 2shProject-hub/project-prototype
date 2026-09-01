@@ -6,6 +6,7 @@
  * 레이아웃: ActivityHeader → 슬라이드 콘텐츠 → AI튜터+말풍선 → [이전/N/넘기기] → [다음]
  * [다음] 버튼은 마지막 슬라이드 도달 후 활성화
  */
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { useEffect, useRef, useState } from 'react';
 import {
   View, Text, TouchableOpacity, Image, StyleSheet, Platform,
@@ -122,7 +123,7 @@ export function WordIntroSlidesStage({ onNext, onBack, slides }: Props) {
               onPress={replayAudio}
               activeOpacity={0.7}
             >
-              <Text style={s.speakerIcon}>🔊</Text>
+              <ThemedGlyph style={s.speakerIcon} glyph="🔊" />
             </TouchableOpacity>
           </View>
           <Image source={TUTOR_IMAGE as any} style={s.tutorImg} resizeMode="contain" />

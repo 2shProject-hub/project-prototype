@@ -12,6 +12,7 @@
  * - 디자인 토큰: src/theme/colors.ts (colors, shadow)
  */
 
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import React, { useRef, useState } from 'react';
 import {
   View,
@@ -104,12 +105,12 @@ export function SpeakingVideoDemoStage({
             >
               {/* 비디오 썸네일 배경 */}
               <View style={styles.videoCoverBg}>
-                <Text style={styles.videoCoverEmoji}>🎬</Text>
+                <ThemedGlyph style={styles.videoCoverEmoji} glyph="🎬" />
               </View>
 
               {/* 중앙 큼직한 재생 버튼 */}
               <View style={styles.playBtnCircle}>
-                <Text style={styles.playBtnIcon}>▶</Text>
+                <ThemedGlyph style={styles.playBtnIcon} glyph="▶" />
               </View>
 
               {/* 하단 시연 안내 띠지 */}

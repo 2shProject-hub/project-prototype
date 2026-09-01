@@ -20,6 +20,7 @@
  *   4. recordQuestionAttempt + completeActivity 완료 후 navigateToNextActivityOrLessonComplete
  */
 
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import React, { useRef, useState } from 'react';
 import {
   View, Text, TouchableOpacity, StyleSheet, Platform,
@@ -72,7 +73,7 @@ function VideoPlaceholder({ title }: { title: string }) {
   return (
     <View style={p.wrap}>
       <View style={p.iconCircle}>
-        <Text style={p.playIcon}>▶</Text>
+        <ThemedGlyph style={p.playIcon} glyph="▶" />
       </View>
       <Text style={p.title}>{title}</Text>
       <Text style={p.sub}>영상은 모바일 앱에서 재생됩니다.</Text>

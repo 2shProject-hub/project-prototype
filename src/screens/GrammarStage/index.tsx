@@ -1,3 +1,4 @@
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { colors, shadow } from '../../theme/colors';
@@ -184,7 +185,7 @@ function SentenceQuiz({ items, onDone }: { items: SentenceItem[]; onDone: () => 
       {(item.type === 'listenWord' || item.type === 'listenChar') && (
         <>
           <TouchableOpacity style={sq.speakBtn} activeOpacity={0.7}>
-            <Text style={sq.speakIcon}>🔊</Text>
+            <ThemedGlyph style={sq.speakIcon} glyph="🔊" />
             <Text style={sq.speakLabel}>{pick(lang, '다시 듣기', 'Nghe lại')}</Text>
           </TouchableOpacity>
           <Text style={sq.tileHint}>{pick(lang, '들은 문장을 카드로 완성하세요', 'Ghép thẻ thành câu vừa nghe')}</Text>
@@ -271,7 +272,7 @@ export function GrammarStage({ onComplete, onBack }: Props) {
               <Text style={styles.heroRule}>{pick(lang, g.rule, g.ruleVi)}</Text>
             </View>
             <View style={styles.heroIllustration}>
-              <Text style={styles.heroEmoji}>📚</Text>
+              <ThemedGlyph style={styles.heroEmoji} glyph="📚" />
             </View>
           </View>
 
@@ -290,7 +291,7 @@ export function GrammarStage({ onComplete, onBack }: Props) {
                   <Text style={styles.exampleNum}>{i + 1}</Text>
                   <Text style={styles.exampleText}>{ex}</Text>
                   <TouchableOpacity style={styles.exampleSpeak} activeOpacity={0.7}>
-                    <Text>🔊</Text>
+                    <ThemedGlyph glyph="🔊" />
                   </TouchableOpacity>
                 </View>
               ))}

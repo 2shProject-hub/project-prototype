@@ -1,3 +1,4 @@
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { useState } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity, StyleSheet, Image,
@@ -100,7 +101,7 @@ export function HomeScreen({ sessions, setView, onStartSession }: Props) {
       {subTab === 'all' ? (
         /* ── 전체 코스 탭 ── */
         <View style={styles.allCourseEmpty}>
-          <Text style={styles.allCourseEmptyIcon}>📚</Text>
+          <ThemedGlyph style={styles.allCourseEmptyIcon} glyph="📚" />
           <Text style={styles.allCourseEmptyTitle}>
             {pick(lang, '전체 코스', 'Tất cả khóa học')}
           </Text>
@@ -128,7 +129,7 @@ export function HomeScreen({ sessions, setView, onStartSession }: Props) {
               {brandCrest ? (
                 <Image source={brandCrest} style={{ width: 44, height: 56 }} resizeMode="contain" />
               ) : (
-                <Text style={styles.heroEmoji}>🏫</Text>
+                <ThemedGlyph style={styles.heroEmoji} glyph="🏫" />
               )}
             </View>
           </View>

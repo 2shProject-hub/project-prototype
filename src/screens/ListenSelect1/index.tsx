@@ -3,6 +3,7 @@
  * - 프로그레스바 헤더
  * - 공통 ActivityHeader, AudioPlayButton, ChoiceChip, QuizFeedbackModal, CtaButton 적용
  */
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { useState, useRef, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Platform, ScrollView } from 'react-native';
 import { colors, radius, spacing, shadow } from '../../theme';
@@ -204,7 +205,7 @@ export function ListenSelect1({
                 onPress={playToastAudio}
                 activeOpacity={0.7}
               >
-                <Text style={s.toastSpeakerIcon}>{isToastAudioPlaying ? '🔊' : '🔈'}</Text>
+                <ThemedGlyph style={s.toastSpeakerIcon} glyph={isToastAudioPlaying ? '🔊' : '🔈'} />
               </TouchableOpacity>
             </View>
           </View>

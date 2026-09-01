@@ -5,6 +5,7 @@
  * - 정/오답 평가는 추후 제공 예정 (현재 프로토타입은 입력 UI만 구현)
  * - KO/VI 다국어 지원
  */
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { useState, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, TextInput, Platform } from 'react-native';
 import { colors } from '../../theme/colors';
@@ -284,12 +285,12 @@ export function PracticalSpeakingStage({ onNext, onBack, data }: Props) {
           onPress={handleMic}
           activeOpacity={0.8}
         >
-          <Text style={s.micIcon}>🎤</Text>
+          <ThemedGlyph style={s.micIcon} glyph="🎤" />
         </TouchableOpacity>
 
         {/* 힌트 버튼 */}
         <TouchableOpacity style={s.toolBtn} activeOpacity={0.75}>
-          <Text style={s.toolIcon}>💡</Text>
+          <ThemedGlyph style={s.toolIcon} glyph="💡" />
         </TouchableOpacity>
       </View>
 

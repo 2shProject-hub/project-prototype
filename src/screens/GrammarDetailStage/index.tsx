@@ -1,3 +1,4 @@
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import React, { useRef, useState } from 'react';
 import {
   View, Text, TouchableOpacity, StyleSheet, ScrollView, Platform,
@@ -149,11 +150,11 @@ export function GrammarDetailStage({ onNext, onBack }: Props) {
             >
               {/* 썸네일 배경 */}
               <View style={styles.videoThumbBg}>
-                <Text style={styles.videoThumbEmoji}>🎬</Text>
+                <ThemedGlyph style={styles.videoThumbEmoji} glyph="🎬" />
               </View>
               {/* 플레이 버튼 */}
               <View style={styles.playBtn}>
-                <Text style={styles.playBtnIcon}>▶</Text>
+                <ThemedGlyph style={styles.playBtnIcon} glyph="▶" />
               </View>
             </TouchableOpacity>
           )}

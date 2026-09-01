@@ -10,6 +10,7 @@
 // 루트의 data-native-theme 속성은 DOM 오버라이드(applyThemeToDom)가
 // 이 서브트리를 건드리지 않게 하는 표시다 — 여기는 이미 테마 값으로 그려서
 // 또 변환하면 이중 적용이 된다.
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import React from 'react';
 import { ScrollView, View, Text, TouchableOpacity, Image, type ViewStyle } from 'react-native';
 import {
@@ -148,7 +149,7 @@ export function ThemedBody(p: ThemedBodyProps) {
       </View>
       <View style={{ alignItems: 'flex-end', marginTop: 4 }}>
         <TouchableOpacity onPress={p.onToastAudio} activeOpacity={0.7} style={{ padding: 4 }}>
-          <Text style={{ fontSize: 15, opacity: p.isAudioPlaying ? 1 : 0.55 }}>{p.isAudioPlaying ? '🔊' : '🔈'}</Text>
+          <ThemedGlyph style={{ fontSize: 15, opacity: p.isAudioPlaying ? 1 : 0.55 }} glyph={p.isAudioPlaying ? '🔊' : '🔈'} />
         </TouchableOpacity>
       </View>
     </View>
@@ -252,7 +253,7 @@ export function ThemedBody(p: ThemedBodyProps) {
         borderColor: c.ink,
       }}
     >
-      <Text style={{ fontSize: small ? 14 : 16 }}>🔊</Text>
+      <ThemedGlyph style={{ fontSize: small ? 14 : 16 }} glyph="🔊" />
     </TouchableOpacity>
   );
 

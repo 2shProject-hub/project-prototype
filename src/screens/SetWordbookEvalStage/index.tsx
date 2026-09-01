@@ -16,6 +16,7 @@
  *      - 좌측: [단어 발음하기] (Teal 배경) ➔ 발음 평가 모달 실행
  *      - 우측: [세트 문제 풀기] (White 배경 / 테두리) ➔ 다음 템플릿(onNext) 이동
  */
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import React, { useRef, useState, useEffect } from 'react';
 import { ScrollView, View, Text, TouchableOpacity, StyleSheet, Modal, Platform, Animated, Image } from 'react-native';
 import { colors, radius, spacing, shadow } from '../../theme';
@@ -218,7 +219,7 @@ export function SetWordbookEvalStage({
                 onPress={playToastAudio}
                 activeOpacity={0.7}
               >
-                <Text style={s.toastSpeakerIcon}>{isAudioPlaying ? '🔊' : '🔈'}</Text>
+                <ThemedGlyph style={s.toastSpeakerIcon} glyph={isAudioPlaying ? '🔊' : '🔈'} />
               </TouchableOpacity>
             </View>
           </View>
@@ -294,7 +295,7 @@ export function SetWordbookEvalStage({
                 onPress={() => speakKo(item.ko)}
                 activeOpacity={0.7}
               >
-                <Text style={s.speakerIcon}>🔊</Text>
+                <ThemedGlyph style={s.speakerIcon} glyph="🔊" />
               </TouchableOpacity>
             </View>
           ))}
@@ -365,7 +366,8 @@ export function SetWordbookEvalStage({
                 onPress={() => speakKo(words[pronIdx]?.ko)}
                 activeOpacity={0.7}
               >
-                <Text style={s.pronListenText}>🔈 {pick(lang, '원어민 발음 듣기', 'Nghe phát âm chuẩn')}</Text>
+                <ThemedGlyph style={s.pronListenText} glyph="🔈" />
+                <Text style={s.pronListenText}> {pick(lang, '원어민 발음 듣기', 'Nghe phát âm chuẩn')}</Text>
               </TouchableOpacity>
 
               <View style={s.micSection}>
@@ -374,7 +376,7 @@ export function SetWordbookEvalStage({
                   onPress={isRecording ? stopRecording : startRecording}
                   activeOpacity={0.8}
                 >
-                  <Text style={s.micIcon}>{isRecording ? '⏹' : '🎙️'}</Text>
+                  <ThemedGlyph style={s.micIcon} glyph={isRecording ? '⏹' : '🎙️'} />
                 </TouchableOpacity>
                 <Text style={s.micDesc}>
                   {isRecording

@@ -17,6 +17,7 @@
  *   - ActivityHeader → ActivityLayout (step/totalSteps)
  */
 
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import React, { useRef, useEffect, useState } from 'react';
 import {
   View, Text, TouchableOpacity, StyleSheet, Platform, Image,
@@ -77,7 +78,7 @@ function VideoPlaceholder() {
   return (
     <View style={ph.wrap}>
       <View style={ph.circle}>
-        <Text style={ph.icon}>▶</Text>
+        <ThemedGlyph style={ph.icon} glyph="▶" />
       </View>
       <Text style={ph.text}>영상은 모바일 앱에서 재생됩니다.</Text>
     </View>
@@ -194,7 +195,7 @@ export function VideoAITutorStage({
             activeOpacity={0.7}
             hitSlop={8}
           >
-            <Text style={s.speakerIcon}>🔈</Text>
+            <ThemedGlyph style={s.speakerIcon} glyph="🔈" />
           </TouchableOpacity>
           {/* 꼬리 */}
           <View style={s.bubbleTail} />

@@ -1,3 +1,4 @@
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { useEffect, useRef, useState } from 'react';
 import {
   View, Text, TouchableOpacity, StyleSheet, TextInput,
@@ -175,7 +176,7 @@ export function SentenceBuildStage({ onComplete, onBack }: Props) {
             activeOpacity={0.8}
           >
             <Animated.View style={[styles.speakerBtn, isPlaying && styles.speakerBtnActive, { transform: [{ scale: pulseAnim }] }]}>
-              <Text style={styles.speakerIcon}>🔊</Text>
+              <ThemedGlyph style={styles.speakerIcon} glyph="🔊" />
             </Animated.View>
           </TouchableOpacity>
 
@@ -313,7 +314,7 @@ export function SentenceBuildStage({ onComplete, onBack }: Props) {
               onPress={() => setShowHint(h => !h)}
               activeOpacity={0.8}
             >
-              <Text style={styles.hintBtnIcon}>💡</Text>
+              <ThemedGlyph style={styles.hintBtnIcon} glyph="💡" />
               {!showHint && <View style={styles.hintBtnBadge} />}
             </TouchableOpacity>
           </View>

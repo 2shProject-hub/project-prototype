@@ -12,6 +12,7 @@
  * - Source A/B 이식 시: props.data를 통해 외부 CMS/ADMIN API 데이터 주입 가능
  */
 
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import React, { useState } from 'react';
 import {
   View,
@@ -113,7 +114,7 @@ export function SpeakingDetailStage({
             onPress={handlePlayAll}
             activeOpacity={0.8}
           >
-            <Text style={styles.playAllBtnIcon}>{isPlayingAll ? '⏹' : '▶'}</Text>
+            <ThemedGlyph style={styles.playAllBtnIcon} glyph={isPlayingAll ? '⏹' : '▶'} />
             <Text style={styles.playAllBtnText}>
               {isPlayingAll
                 ? pick(lang, '재생 중...', 'Đang phát...')
@@ -175,9 +176,7 @@ export function SpeakingDetailStage({
                       isActive && styles.bubbleAudioBtnActive,
                     ]}
                   >
-                    <Text style={styles.bubbleAudioIcon}>
-                      {isActive ? '🔊' : '🔈'}
-                    </Text>
+                    <ThemedGlyph style={styles.bubbleAudioIcon} glyph={isActive ? '🔊' : '🔈'} />
                   </View>
                 </TouchableOpacity>
 
@@ -198,7 +197,7 @@ export function SpeakingDetailStage({
         {/* ── 4. 핵심 표현 & 문화 팁 (Key Tips) ── */}
         <View style={styles.tipsSection}>
           <View style={styles.tipsSectionHeader}>
-            <Text style={styles.tipsSectionIcon}>💡</Text>
+            <ThemedGlyph style={styles.tipsSectionIcon} glyph="💡" />
             <Text style={styles.tipsSectionTitle}>
               {pick(lang, '핵심 표현 및 팁', 'Biểu hiện & Mẹo quan trọng')}
             </Text>

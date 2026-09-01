@@ -6,12 +6,14 @@ import {
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  Image,
 } from 'react-native';
 import { colors, radius, spacing, shadow } from '../theme';
 import { useLang, pick } from './LangContext';
 import { useTheme } from '../theme/ThemeContext';
 import { bodyFont, readableOn } from '../theme/themeTypes';
 import { nativeThemeAttr } from '../theme/themedControls';
+import { themeAssets } from '../theme/themeAssets';
 import { CtaButton } from './CtaButton';
 
 export interface QuizFeedbackModalProps {
@@ -46,6 +48,9 @@ export function QuizFeedbackModal({
   const { lang } = useLang();
   // Modal 은 포털이라 DOM 오버라이드가 못 닿는다 — 여기서 직접 테마를 입힌다
   const { theme, enabled: themeOn } = useTheme();
+  // 브랜드 자산 테마: 정오답 얼굴을 캐릭터로 (정답=메인, 오답=서브)
+  const asset = themeOn ? themeAssets(theme.id) : null;
+  const charImg = asset ? (isCorrect ? asset.character : asset.bubble ?? asset.character) : null;
   const tm = themeOn
     ? (() => {
         const c = theme.colors;
@@ -98,7 +103,11 @@ export function QuizFeedbackModal({
                   tm && tm.icon,
                 ]}
               >
-                <Text style={[styles.iconText, tm && tm.iconText]}>{isCorrect ? '✓' : '✕'}</Text>
+                {charImg ? (
+                  <Image source={charImg} style={{ width: 46, height: 46, borderRadius: 12 }} resizeMode="contain" />
+                ) : (
+                  <Text style={[styles.iconText, tm && tm.iconText]}>{isCorrect ? '✓' : '✕'}</Text>
+                )}
               </View>
 
               {/* 피드백 타이틀 */}

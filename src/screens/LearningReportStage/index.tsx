@@ -6,6 +6,7 @@
  * - AI 피드백
  * - 공통 ActivityHeader, CtaButton 적용
  */
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { colors, radius, spacing, shadow } from '../../theme';
 import { useLang, pick, ActivityHeader, CtaButton } from '../../components';
@@ -65,14 +66,14 @@ export function LearningReportStage({ data, onNext, onBack }: Props) {
           <View style={s.summaryGrid}>
             {/* 어휘 */}
             <View style={s.summaryItem}>
-              <Text style={s.summaryIcon}>📚</Text>
+              <ThemedGlyph style={s.summaryIcon} glyph="📚" />
               <Text style={s.summaryCount}>{data.vocabCount}개</Text>
               <Text style={s.summaryLabel}>{pick(lang, '학습 어휘', 'Từ vựng học')}</Text>
             </View>
 
             {/* 발음평가 */}
             <View style={s.summaryItem}>
-              <Text style={s.summaryIcon}>🎤</Text>
+              <ThemedGlyph style={s.summaryIcon} glyph="🎤" />
               <Text style={s.summaryCount}>{data.speakingScore}/{data.speakingTotal}</Text>
               <Text style={s.summaryLabel}>{pick(lang, '발음평가', 'Đánh giá phát âm')}</Text>
             </View>
@@ -106,7 +107,10 @@ export function LearningReportStage({ data, onNext, onBack }: Props) {
 
         {/* AI 피드백 영역 */}
         <View style={s.feedbackBox}>
-          <Text style={s.feedbackTitle}>💡 {pick(lang, 'AI 튜터 피드백', 'Phản hồi của AI Tutor')}</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+            <ThemedGlyph style={s.feedbackTitle} glyph="💡" />
+            <Text style={s.feedbackTitle}>{pick(lang, 'AI 튜터 피드백', 'Phản hồi của AI Tutor')}</Text>
+          </View>
           <Text style={s.feedbackText}>{pick(lang, data.aiFeedback, data.aiFeedbackVi)}</Text>
         </View>
       </ScrollView>
