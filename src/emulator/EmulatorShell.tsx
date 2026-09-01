@@ -27,8 +27,6 @@ import { CultureStage } from '../screens/CultureStage';
 import { WordDetailStage } from '../screens/WordDetailStage';
 import { VideoBridgeStage } from '../screens/VideoBridgeStage';
 import { SlideExplainStage } from '../screens/SlideExplainStage';
-import { ListenSpeakDetailEasyStage } from '../screens/ListenSpeakDetailEasyStage';
-import { ListenSpeakInteractiveTryStage } from '../screens/ListenSpeakInteractiveTryStage';
 import { ListenSelect1 } from '../screens/ListenSelect1';
 import { WordVnKoSelect2 } from '../screens/WordVnKoSelect2';
 import { WordSound1 } from '../screens/WordSound1';
@@ -628,20 +626,6 @@ function ScreenRenderer({ screenId, onNavigate }: { screenId: string; onNavigate
         <VideoBridgeStage
           onPressConfirm={() => onNavigate('home')}
           onClose={() => onNavigate('home')}
-        />
-      );
-    case 'listen-speak-detail-easy':
-      return (
-        <ListenSpeakDetailEasyStage
-          onNext={() => onNavigate('home')}
-          onBack={() => onNavigate('home')}
-        />
-      );
-    case 'listen-speak-interactive-try':
-      return (
-        <ListenSpeakInteractiveTryStage
-          onNext={() => onNavigate('home')}
-          onBack={() => onNavigate('home')}
         />
       );
     case 'listen-select-1':
