@@ -1207,8 +1207,7 @@ function EmulatorShellInner() {
   const [showGallery, setShowGallery] = useState(false);
   // 헤더에서 고른 테마를 가운데 폰 화면에도 실제로 입힌다.
   // 아직 테마 버전이 있는 화면(단어장 5-2)에만 적용되고, 나머지는 원본 그대로 나온다.
-  const [applyTheme, setApplyTheme] = useState(true);
-  const { theme: activeTheme } = useTheme();
+  const { theme: activeTheme, enabled: applyTheme, setEnabled: setApplyTheme } = useTheme();
 
 
   // Flow 모드일 때 현재 screenId 결정

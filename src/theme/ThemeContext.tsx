@@ -9,6 +9,9 @@ interface ThemeCtx {
   themeId: string;
   setThemeId: (id: string) => void;
   themes: Theme[];
+  /** 테마 적용 토글 — 화면 컴포넌트가 이 값을 보고 테마/원본 렌더를 가른다 */
+  enabled: boolean;
+  setEnabled: (on: boolean) => void;
 }
 
 const Ctx = createContext<ThemeCtx>({
@@ -16,10 +19,32 @@ const Ctx = createContext<ThemeCtx>({
   themeId: THEMES[0].id,
   setThemeId: () => {},
   themes: THEMES,
+  enabled: true,
+  setEnabled: () => {},
 });
 
+const LS_KEY = 'kchao-theme';
+
+function loadSaved(): { id?: string; enabled?: boolean } {
+  try {
+    const raw = globalThis.localStorage?.getItem(LS_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
+
 export function ThemeProvider({ children, initialId }: { children: ReactNode; initialId?: string }) {
-  const [themeId, setThemeId] = useState(initialId ?? DEFAULT_THEME_ID);
+  const saved = loadSaved();
+  const [themeId, setThemeId] = useState(initialId ?? saved.id ?? DEFAULT_THEME_ID);
+  const [enabled, setEnabled] = useState(saved.enabled ?? true);
+
+  // 새로고침해도 고른 테마가 유지되도록 저장
+  useEffect(() => {
+    try {
+      globalThis.localStorage?.setItem(LS_KEY, JSON.stringify({ id: themeId, enabled }));
+    } catch {}
+  }, [themeId, enabled]);
 
   // 테마가 실제로 쓰는 서체만 주입한다 (웹 전용, 1회)
   useEffect(() => {
@@ -32,7 +57,7 @@ export function ThemeProvider({ children, initialId }: { children: ReactNode; in
   }, []);
 
   const theme = useMemo(() => THEMES.find((t) => t.id === themeId) ?? THEMES[0], [themeId]);
-  const value = useMemo(() => ({ theme, themeId, setThemeId, themes: THEMES }), [theme, themeId]);
+  const value = useMemo(() => ({ theme, themeId, setThemeId, themes: THEMES, enabled, setEnabled }), [theme, themeId, enabled]);
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
 
