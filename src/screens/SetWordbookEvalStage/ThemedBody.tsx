@@ -11,7 +11,7 @@
 // 이 서브트리를 건드리지 않게 하는 표시다 — 여기는 이미 테마 값으로 그려서
 // 또 변환하면 이중 적용이 된다.
 import React from 'react';
-import { ScrollView, View, Text, TouchableOpacity, type ViewStyle } from 'react-native';
+import { ScrollView, View, Text, TouchableOpacity, Image, type ViewStyle } from 'react-native';
 import {
   type Theme,
   spacing,
@@ -22,6 +22,7 @@ import {
   readableOn,
 } from '../../theme/themeTypes';
 import { pick, type Lang } from '../../components';
+import { themeAssets } from '../../theme/themeAssets';
 
 export interface ThemedBodyProps {
   theme: Theme;
@@ -52,6 +53,8 @@ export function ThemedBody(p: ThemedBodyProps) {
   const s = spacing(L.density);
   const st = L.structure;
   const pillR = L.radius === 0 ? 2 : 999;
+  // 브랜드 자산 테마(말해보카 등): 캐릭터·아이콘을 실자산으로
+  const assets = themeAssets(theme.id);
 
   const boxOf = (focus = false): ViewStyle => {
     switch (L.list) {
@@ -130,14 +133,19 @@ export function ThemedBody(p: ThemedBodyProps) {
       >
         <Text style={[{ fontSize: 13, color: c.muted }, bodyFont(theme, 700)]}>✕</Text>
       </TouchableOpacity>
-      <Text
-        style={[
-          { fontSize: t.bodySize - 1, color: readableOn(c.primarySoft, [c.primaryDark, c.ink]), lineHeight: Math.round((t.bodySize - 1) * t.bodyLine), paddingRight: 20 },
-          bodyFont(theme, 600),
-        ]}
-      >
-        Xem nghĩa và cách phát âm của từng từ. Bấm vào từ để tự luyện phát âm luôn nhé.
-      </Text>
+      <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 10 }}>
+        {assets?.bubble ? (
+          <Image source={assets.bubble} style={{ width: 34, height: 46, marginTop: 2 }} resizeMode="contain" />
+        ) : null}
+        <Text
+          style={[
+            { flex: 1, fontSize: t.bodySize - 1, color: readableOn(c.primarySoft, [c.primaryDark, c.ink]), lineHeight: Math.round((t.bodySize - 1) * t.bodyLine), paddingRight: 20 },
+            bodyFont(theme, 600),
+          ]}
+        >
+          Xem nghĩa và cách phát âm của từng từ. Bấm vào từ để tự luyện phát âm luôn nhé.
+        </Text>
+      </View>
       <View style={{ alignItems: 'flex-end', marginTop: 4 }}>
         <TouchableOpacity onPress={p.onToastAudio} activeOpacity={0.7} style={{ padding: 4 }}>
           <Text style={{ fontSize: 15, opacity: p.isAudioPlaying ? 1 : 0.55 }}>{p.isAudioPlaying ? '🔊' : '🔈'}</Text>
@@ -262,7 +270,7 @@ export function ThemedBody(p: ThemedBodyProps) {
     </View>
   );
 
-  const Row = ({ w, last }: { w: { id: number; ko: string; vi: string }; last: boolean }) => (
+  const Row = ({ w, last, idx = 0 }: { w: { id: number; ko: string; vi: string }; last: boolean; idx?: number }) => (
     <View
       style={[
         {
@@ -278,6 +286,9 @@ export function ThemedBody(p: ThemedBodyProps) {
         boxOf(),
       ]}
     >
+      {assets?.rowIcons ? (
+        <Image source={assets.rowIcons[idx % assets.rowIcons.length]} style={{ width: 30, height: 30, borderRadius: Math.min(10, L.radius) }} resizeMode="contain" />
+      ) : null}
       <WordTexts w={w} />
       <Speaker ko={w.ko} small />
     </View>
@@ -310,7 +321,7 @@ export function ThemedBody(p: ThemedBodyProps) {
           </View>
           <Text style={[{ fontSize: 10.5, color: c.muted, letterSpacing: t.labelTracking, marginBottom: s.gap }, bodyFont(theme, 700)]}>다음 단어</Text>
           {rest.map((w, i) => (
-            <Row key={w.id} w={w} last={i === rest.length - 1} />
+            <Row key={w.id} w={w} last={i === rest.length - 1} idx={i + 1} />
           ))}
         </View>
       );
@@ -318,7 +329,7 @@ export function ThemedBody(p: ThemedBodyProps) {
     return (
       <View style={{ marginTop: s.block }}>
         {p.words.map((w, i) => (
-          <Row key={w.id} w={w} last={i === p.words.length - 1} />
+          <Row key={w.id} w={w} last={i === p.words.length - 1} idx={i} />
         ))}
       </View>
     );
@@ -399,6 +410,13 @@ export function ThemedBody(p: ThemedBodyProps) {
         {st !== 'tabs-list' && Tabs}
         <WordList />
       </ScrollView>
+
+      {assets?.peek ? (
+        // 화면 우하단에서 빼꼼 — 말해보카 시그니처. 터치를 막지 않도록 pointerEvents 차단
+        <View pointerEvents="none" style={{ position: 'absolute', right: 0, bottom: 84, alignItems: 'flex-end' }}>
+          <Image source={assets.peek} style={{ width: 86, height: 100 }} resizeMode="contain" />
+        </View>
+      ) : null}
 
       <View
         style={{

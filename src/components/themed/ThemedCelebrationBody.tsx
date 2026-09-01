@@ -32,6 +32,7 @@ import {
   type PhotoPick,
 } from '../preview/ThemedCelebrationMock';
 import { nativeThemeAttr } from '../../theme/themedControls';
+import { themeAssets } from '../../theme/themeAssets';
 import { ActivityHeader } from '../ActivityHeader';
 import { CtaButton } from '../CtaButton';
 import { pick, type Lang } from '../LangContext';
@@ -72,6 +73,9 @@ export function ThemedCelebrationBody({
   const st = L.structure;
   const art = artOf(theme);
   const mood = festivity(theme);
+  // 브랜드 자산 테마: 축하 얼굴을 실캐릭터로 (세트 완료는 대체 캐릭터)
+  const asset = themeAssets(theme.id);
+  const charImg = asset ? (setNumber != null && asset.characterAlt ? asset.characterAlt : asset.character) : undefined;
   const photoTop = art.kind === 'photo' || st === 'hero-list';
   const variant = Math.max(0, THEMES.findIndex((x) => x.id === theme.id));
   const learnPicks = LEARN_PICKS[theme.id] ?? LEARN_FALLBACK;
@@ -124,7 +128,7 @@ export function ThemedCelebrationBody({
       {st === 'grid' ? (
         <View onLayout={onBandLayout} style={{ paddingTop: 26, paddingHorizontal: L.edge, alignItems: 'center' }}>
           {fireworks}
-          <ArtPiece theme={theme} art={art} size={96} />
+          <ArtPiece theme={theme} art={art} size={96} charImg={charImg} />
           <View style={{ height: s.row }} />
           <TitleText theme={theme} color={c.ink} text={title} />
           <SubText theme={theme} color={c.muted} text={titleOther} />
@@ -155,7 +159,7 @@ export function ThemedCelebrationBody({
           {st === 'plain-list' ? (
             <View style={{ flex: 1, paddingHorizontal: L.edge, justifyContent: 'center' }}>
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: s.row }}>
-                <ArtPiece theme={theme} art={art} size={56} />
+                <ArtPiece theme={theme} art={art} size={56} charImg={charImg} />
                 <View style={{ flex: 1 }}>
                   <TitleText theme={theme} color={onBand} text={title} size={0.82} align="left" />
                   <SubText theme={theme} color={subOnBand} text={titleOther} align="left" />
@@ -168,7 +172,7 @@ export function ThemedCelebrationBody({
                 <TitleText theme={theme} color={onBand} text={title} size={0.86} align="left" />
                 <SubText theme={theme} color={subOnBand} text={titleOther} align="left" />
               </View>
-              <ArtPiece theme={theme} art={art} size={76} />
+              <ArtPiece theme={theme} art={art} size={76} charImg={charImg} />
             </View>
           ) : st === 'hero-list' ? (
             <View style={{ flex: 1, justifyContent: 'flex-end', paddingHorizontal: L.edge, paddingBottom: s.row }}>
@@ -177,14 +181,14 @@ export function ThemedCelebrationBody({
             </View>
           ) : st === 'stat-list' ? (
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: L.edge }}>
-              <ArtPiece theme={theme} art={art} size={72} />
+              <ArtPiece theme={theme} art={art} size={72} charImg={charImg} />
               <View style={{ height: s.gap }} />
               <TitleText theme={theme} color={onBand} text={title} size={0.78} />
             </View>
           ) : (
             // focus-list — 중앙에 크게
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: L.edge }}>
-              <ArtPiece theme={theme} art={art} size={96} />
+              <ArtPiece theme={theme} art={art} size={96} charImg={charImg} />
               <View style={{ height: s.row }} />
               <TitleText theme={theme} color={onBand} text={title} />
               <SubText theme={theme} color={subOnBand} text={titleOther} />
@@ -234,14 +238,14 @@ export function ThemedCelebrationBody({
 }
 
 // ─── 축하의 얼굴 (목업과 같은 규칙, 실화면용) ─────────────────────
-function ArtPiece({ theme, art, size }: { theme: Theme; art: Art; size: number }) {
+function ArtPiece({ theme, art, size, charImg }: { theme: Theme; art: Art; size: number; charImg?: any }) {
   const c = theme.colors;
   const L = theme.layout;
 
   if (art.kind === 'character') {
     return (
       <View style={{ borderRadius: L.radius === 0 ? 0 : Math.max(L.radius, 20), overflow: 'hidden', borderWidth: L.list === 'block' ? 2 : 0, borderColor: c.ink }}>
-        <Image source={CHARACTER} style={{ width: size, height: size }} resizeMode="cover" />
+        <Image source={charImg ?? CHARACTER} style={{ width: size, height: size }} resizeMode="cover" />
       </View>
     );
   }

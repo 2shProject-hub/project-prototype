@@ -24,6 +24,7 @@ import {
 import { icon, scrimUri, markUri, ringUri, type MarkKind } from '../../theme/graphics';
 import { THEMES } from '../../theme/themes';
 import { CanvasFireworks } from './CanvasFireworks';
+import { themeAssets } from '../../theme/themeAssets';
 
 const CHARACTER = require('../../../assets/character-kchao.png');
 
@@ -299,7 +300,7 @@ function ArtPiece({ theme, art, size }: { theme: Theme; art: Art; size: number }
           shadowFor(L.shadow, c.ink) as ViewStyle,
         ]}
       >
-        <Image source={CHARACTER} style={{ width: size, height: size }} resizeMode="cover" />
+        <Image source={themeAssets(theme.id)?.character ?? CHARACTER} style={{ width: size, height: size }} resizeMode="cover" />
       </View>
     );
   }
