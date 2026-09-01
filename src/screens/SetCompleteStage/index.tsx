@@ -9,6 +9,8 @@ import { useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, Platform } from 'react-native';
 import { colors, radius, spacing, shadow } from '../../theme';
 import { useLang, pick, ActivityHeader, CtaButton } from '../../components';
+import { useTheme } from '../../theme/ThemeContext';
+import { ThemedCelebrationBody } from '../../components/themed/ThemedCelebrationBody';
 
 interface Props {
   setNumber?: number;
@@ -24,6 +26,7 @@ export function SetCompleteStage({
   onBack,
 }: Props) {
   const { lang } = useLang();
+  const { theme, enabled: themeEnabled } = useTheme();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
 
@@ -66,6 +69,26 @@ export function SetCompleteStage({
   }, []);
 
   const progressPct = (setNumber / totalSets) * 100;
+
+  if (themeEnabled) {
+    return (
+      <ThemedCelebrationBody
+        theme={theme}
+        lang={lang}
+        progressPct={progressPct}
+        onBack={onBack || (() => {})}
+        onNext={onNext}
+        titleKo={`${setNumber} 세트 학습을 완료했습니다!`}
+        titleVi={`Bạn đã hoàn thành ${setNumber} set học rồi!`}
+        noteKo={setNumber === totalSets ? '다음 단계로 넘어가세요.' : '다음 단어로 넘어가세요.'}
+        noteVi={setNumber === totalSets ? 'Hãy chuyển sang giai đoạn tiếp theo nhé.' : 'Hãy chuyển sang từ tiếp theo nhé.'}
+        ctaKo="다음"
+        ctaVi="Tiếp tục"
+        setNumber={setNumber}
+        totalSets={totalSets}
+      />
+    );
+  }
 
   return (
     <View style={s.root}>

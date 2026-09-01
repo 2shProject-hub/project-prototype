@@ -191,7 +191,8 @@ export function applyThemeToDom(theme: Theme | null): void {
   }
 
   // 본문 서체도 함께 바꾼다. 색만 바뀌면 같은 화면으로 보인다.
-  out.push(`[data-themed="on"], [data-themed="on"] * { font-family: ${fontStack(theme.type.body)} !important; }`);
+  // native-theme 영역은 컴포넌트가 display/body 서체를 직접 고른다 — 블랭킷 룰로 덮으면 안 된다
+  out.push(`[data-themed="on"], [data-themed="on"] *:not([data-native-theme]):not([data-native-theme] *) { font-family: ${fontStack(theme.type.body)} !important; }`);
   // 지면색은 컨테이너에 직접
   out.push(`[data-themed="on"] { background-color: ${theme.colors.canvas} !important; }`);
 

@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, Platform, Image } from 'react-native';
 import LottieView from 'lottie-react-native';
 import { colors, radius, spacing, shadow } from '../../theme';
 import { useLang, pick, ActivityHeader, CtaButton } from '../../components';
+import { useTheme } from '../../theme/ThemeContext';
+import { ThemedCelebrationBody } from '../../components/themed/ThemedCelebrationBody';
 
 const TUTOR_IMAGE = require('../../../assets/word-slides/tutor.png') as string;
 const COMPLETE_AUDIO = require('../../../assets/sounds/complete_vi.mp3') as string;
@@ -29,6 +31,7 @@ export function CompletionCelebrationGrammarStage({
   onBack,
 }: Props) {
   const { lang } = useLang();
+  const { theme, enabled: themeEnabled } = useTheme();
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
@@ -50,6 +53,25 @@ export function CompletionCelebrationGrammarStage({
     if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
     onNext?.();
   };
+
+  if (themeEnabled) {
+    return (
+      <ThemedCelebrationBody
+        theme={theme}
+        lang={lang}
+        progressPct={100}
+        onBack={onBack || (() => {})}
+        onNext={onNext}
+        titleKo={title}
+        titleVi={titleVi}
+        descKo={description}
+        descVi={descriptionVi}
+        ctaKo={nextButtonText}
+        ctaVi={nextButtonTextVi}
+        tutor={<Image source={TUTOR_IMAGE as any} style={s.tutorImage} resizeMode="contain" />}
+      />
+    );
+  }
 
   return (
     <View style={s.root}>

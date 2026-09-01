@@ -2,6 +2,8 @@ import { View, Text, StyleSheet } from 'react-native';
 import LottieView from 'lottie-react-native';
 import { colors, radius, spacing, shadow } from '../../theme';
 import { useLang, pick, ActivityHeader, CtaButton } from '../../components';
+import { useTheme } from '../../theme/ThemeContext';
+import { ThemedCelebrationBody } from '../../components/themed/ThemedCelebrationBody';
 
 interface Props {
   title?: string;
@@ -25,6 +27,25 @@ export function CompletionCelebrationStage({
   onBack,
 }: Props) {
   const { lang } = useLang();
+  const { theme, enabled: themeEnabled } = useTheme();
+
+  if (themeEnabled) {
+    return (
+      <ThemedCelebrationBody
+        theme={theme}
+        lang={lang}
+        progressPct={100}
+        onBack={onBack || (() => {})}
+        onNext={onNext}
+        titleKo={title}
+        titleVi={titleVi}
+        descKo={description}
+        descVi={descriptionVi}
+        ctaKo={nextButtonText}
+        ctaVi={nextButtonTextVi}
+      />
+    );
+  }
 
   return (
     <View style={s.root}>

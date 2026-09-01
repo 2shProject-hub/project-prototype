@@ -30,32 +30,57 @@ const CHARACTER = require('../../../assets/character-kchao.png');
 // 완료 화면은 테마의 히어로 사진(도시·거리·풍경)을 쓰면 안 된다.
 // 방금 공부를 끝낸 화면에 기차나 산이 나오면 맥락이 어긋난다.
 // 학습 장면만 모아 테마마다 다른 조합을 쓴다.
-const LEARN_TAGS: Record<string, string[]> = {
-  // 각 사진은 실제로 내려받아 눈으로 확인했다(에이전트 19종 병렬 검증).
-  // 풍경·거리·기차·건물·인물초상·흑백 사진은 전부 걸러내고 공부하는 장면만 남겼다.
-  // 배열 인덱스가 아니라 테마 id 로 묶는다 — 테마 순서가 바뀌어도 사진이 옮겨가지 않는다.
-  duolingo: ["student,desk,writing","open,book,page","writing,notebook,pen"],
-  'khan-academy': ["notebook,pencil,desk","books,stack","bookshelf,study"],
-  quizlet: ["library,study","notebook,writing","pencil,paper,write"],
-  coursera: ["student,desk,writing","books,stack","university,study"],
-  udemy: ["notebook,pencil,desk","books,stack","writing,notebook,pen"],
-  babbel: ["student,desk,writing","open,book,page","study,desk"],
-  memrise: ["student,desk,writing","chalkboard,school","books,colorful"],
-  busuu: ["library,study","notebook,pencil,desk","flashcards,vocabulary"],
-  photomath: ["math,notebook,pencil","calculator,study","student,desk,writing"],
-  brilliant: ["student,desk,writing","books,stack","notes,desk"],
-  'elsa-speak': ["student,desk,writing","library,study","handwriting,notebook"],
-  hellotalk: ["student,desk,writing","notebook,pencil,desk","flashcards,vocabulary"],
-  drops: ["handwriting,notebook","flashcards,vocabulary","pencil,desk"],
-  lingodeer: ["grammar,book","writing,notebook,pen","desk,stationery,pencil"],
-  rosetta: ["student,desk,writing","reading,study","books,stack"],
-  italki: ["tutor,study","vocabulary,notebook","books,desk"],
-  anki: ["vocabulary,notebook","notebook,plain","pencil,paper,write"],
-  cake: ["study,notes,yellow","notebook,highlighter","books,desk"],
-  speak: ["books,stack","pen,minimal","handwriting,notebook"],
-  santa: ["exam,paper","books,stack","notebook,pencil,desk"],
+export type PhotoPick = { t: string; l: number };
+
+// 완료 화면은 테마의 히어로 사진(도시·거리·풍경)을 쓰면 안 된다.
+// 방금 공부를 끝낸 화면에 기차나 산이 나오면 맥락이 어긋난다.
+//
+// ⚠️ lock 은 절대값으로 고정한다 — loremflickr 는 같은 lock 이라도 요청 픽셀 크기가
+//    다르면 다른 사진을 주고, 사진 풀도 시간이 지나면 바뀐다. 그래서 (태그, lock, 요청치수)
+//    세 개를 함께 고정하고, 전수 내려받아 눈으로 재검증했다(2026-09-01, 55장+후보 51장).
+//    요청 치수: 스트립 200×66 → 400×198 / 밴드 390×구조높이 → 780×(3×높이).
+export const LEARN_PICKS: Record<string, PhotoPick[]> = {
+  duolingo: [{ t: 'student,desk,writing', l: 51 }, { t: 'study,desk', l: 795 }, { t: 'writing,notebook,pen', l: 374 }],
+  'khan-academy': [{ t: 'notebook,pencil,desk', l: 63 }, { t: 'books,stack', l: 74 }, { t: 'bookshelf,study', l: 85 }],
+  quizlet: [{ t: 'library,study', l: 77 }, { t: 'notebook,writing', l: 88 }, { t: 'pencil,paper,write', l: 99 }],
+  coursera: [{ t: 'student,desk,writing', l: 81 }, { t: 'books,stack', l: 92 }, { t: 'university,study', l: 103 }],
+  udemy: [{ t: 'notebook,pencil,desk', l: 93 }, { t: 'books,stack', l: 104 }, { t: 'writing,notebook,pen', l: 115 }],
+  babbel: [{ t: 'student,desk,writing', l: 107 }, { t: 'library,study', l: 635 }, { t: 'study,desk', l: 129 }],
+  memrise: [{ t: 'student,desk,writing', l: 119 }, { t: 'chalkboard,school', l: 130 }, { t: 'books,colorful', l: 141 }],
+  busuu: [{ t: 'library,study', l: 123 }, { t: 'notebook,pencil,desk', l: 435 }, { t: 'flashcards,vocabulary', l: 145 }],
+  photomath: [{ t: 'math,notebook,pencil', l: 137 }, { t: 'math,notebook,pencil', l: 665 }, { t: 'pencil,paper,write', l: 676 }],
+  brilliant: [{ t: 'student,desk,writing', l: 141 }, { t: 'books,stack', l: 453 }, { t: 'notes,desk', l: 163 }],
+  'elsa-speak': [{ t: 'student,desk,writing', l: 153 }, { t: 'library,study', l: 164 }, { t: 'handwriting,notebook', l: 175 }],
+  hellotalk: [{ t: 'student,desk,writing', l: 167 }, { t: 'writing,notebook,pen', l: 911 }, { t: 'flashcards,vocabulary', l: 189 }],
+  drops: [{ t: 'handwriting,notebook', l: 171 }, { t: 'handwriting,notebook', l: 699 }, { t: 'notebook,pencil,desk', l: 710 }],
+  lingodeer: [{ t: 'grammar,book', l: 490 }, { t: 'writing,notebook,pen', l: 200 }, { t: 'desk,stationery,pencil', l: 211 }],
+  rosetta: [{ t: 'student,desk,writing', l: 191 }, { t: 'reading,study', l: 202 }, { t: 'books,stack', l: 514 }],
+  italki: [{ t: 'tutor,study', l: 203 }, { t: 'vocabulary,notebook', l: 214 }, { t: 'books,desk', l: 225 }],
+  anki: [{ t: 'vocabulary,notebook', l: 207 }, { t: 'notebook,plain', l: 218 }, { t: 'pencil,paper,write', l: 530 }],
+  cake: [{ t: 'study,notes,yellow', l: 213 }, { t: 'notebook,highlighter', l: 224 }, { t: 'books,desk', l: 235 }],
+  speak: [{ t: 'books,stack', l: 219 }, { t: 'pen,minimal', l: 531 }, { t: 'handwriting,notebook', l: 241 }],
+  santa: [{ t: 'exam,paper', l: 532 }, { t: 'books,stack', l: 242 }, { t: 'notebook,pencil,desk', l: 253 }],
 };
-const LEARN_FALLBACK = ['notebook,pencil,desk', 'books,desk', 'study,notes'];
+export const LEARN_FALLBACK: PhotoPick[] = [
+  { t: 'notebook,pencil,desk', l: 63 }, { t: 'books,stack', l: 74 }, { t: 'study,desk', l: 795 },
+];
+
+/** 사진 밴드(실사 배경) 테마의 밴드 사진 — 역시 절대 lock 으로 고정 */
+export const BAND_PICKS: Record<string, PhotoPick> = {
+  udemy: { t: 'notebook,pencil,desk', l: 56 },
+  hellotalk: { t: 'student,desk,writing', l: 130 },
+  drops: { t: 'student,desk,writing', l: 651 },
+  rosetta: { t: 'student,desk,writing', l: 455 },
+};
+
+/** 갤러리 목업(390×844)의 밴드 높이 — 사진 lock 검증이 이 치수 기준이다 */
+export function mockBandH(st: string): number {
+  return st === 'hero-list' ? Math.round(844 * 0.52)
+    : st === 'stat-list' ? Math.round(844 * 0.34)
+    : st === 'plain-list' ? Math.round(844 * 0.28)
+    : st === 'tabs-list' ? Math.round(844 * 0.32)
+    : Math.round(844 * 0.44);
+}
 
 const STATS = [
   { label: '정확도', value: '87%' },
@@ -63,9 +88,9 @@ const STATS = [
   { label: '외운 단어', value: '4' },
 ];
 
-type Art = { kind: 'character' | 'photo' | 'mark' | 'score'; mark?: MarkKind };
+export type Art = { kind: 'character' | 'photo' | 'mark' | 'score'; mark?: MarkKind };
 
-function artOf(t: Theme): Art {
+export function artOf(t: Theme): Art {
   const byId: Record<string, Art> = {
     duolingo: { kind: 'character' },
     memrise: { kind: 'character' },
@@ -92,7 +117,7 @@ function artOf(t: Theme): Art {
 }
 
 /** 축하 연출의 세기 — 미니멀한 테마에 요란한 폭죽을 쏘면 그 순간 시안이 죽는다 */
-function festivity(t: Theme): 'quiet' | 'warm' | 'loud' {
+export function festivity(t: Theme): 'quiet' | 'warm' | 'loud' {
   if (t.layout.button === 'block' || t.layout.radius >= 18) return 'loud';
   if (t.layout.list === 'rule' || t.layout.radius <= 4 || t.layout.shadow === 'none') return 'quiet';
   return 'warm';
@@ -118,7 +143,8 @@ export function ThemedCelebrationMock({
   const mood = festivity(theme);
   const photoTop = art.kind === 'photo' || st === 'hero-list';
   const variant = Math.max(0, THEMES.findIndex((x) => x.id === theme.id));
-  const learnTags = LEARN_TAGS[theme.id] ?? LEARN_FALLBACK;
+  const learnPicks = LEARN_PICKS[theme.id] ?? LEARN_FALLBACK;
+  const bandPick = BAND_PICKS[theme.id] ?? { t: learnPicks[0].t, l: theme.photo.lock + 3 };
 
   // 구조마다 상단 영역의 성격이 다르다
   const bandH =
@@ -172,7 +198,7 @@ export function ThemedCelebrationMock({
         >
           {photoTop && (
             <>
-              <Image source={{ uri: coverPhoto(learnTags[0], width, bandH, theme.photo.lock + 3) }} style={StyleSheet.absoluteFill} resizeMode="cover" />
+              <Image source={{ uri: coverPhoto(bandPick.t, width, bandH, bandPick.l) }} style={StyleSheet.absoluteFill} resizeMode="cover" />
               <Image source={{ uri: scrimUri(c.ink, 0.16, 0.86) }} style={StyleSheet.absoluteFill} resizeMode="stretch" />
             </>
           )}
@@ -246,7 +272,7 @@ export function ThemedCelebrationMock({
           <StatRow theme={theme} />
         )}
 
-        {st !== 'grid' && <LearnStrip theme={theme} tags={learnTags} />}
+        {st !== 'grid' && <LearnStrip theme={theme} picks={learnPicks} />}
 
         <NextCard theme={theme} />
 
@@ -326,7 +352,7 @@ function Sub({ theme, color, align = 'center' }: { theme: Theme; color: string; 
 }
 
 // ─── 기록 표시 6종 ────────────────────────────────────────────────
-function boxStyle(theme: Theme): ViewStyle {
+export function boxStyle(theme: Theme): ViewStyle {
   const c = theme.colors;
   const L = theme.layout;
   switch (L.list) {
@@ -488,7 +514,7 @@ function StatStrip({ theme }: { theme: Theme }) {
 }
 
 /** 오늘 공부한 흔적 — 학습 장면 실사 3장. 완료 화면을 채우되 맥락에서 벗어나지 않게 */
-function LearnStrip({ theme, tags }: { theme: Theme; tags: string[] }) {
+function LearnStrip({ theme, picks }: { theme: Theme; picks: PhotoPick[] }) {
   const c = theme.colors;
   const L = theme.layout;
   const s = spacing(L.density);
@@ -499,10 +525,10 @@ function LearnStrip({ theme, tags }: { theme: Theme; tags: string[] }) {
         오늘의 학습
       </Text>
       <View style={{ flexDirection: 'row', gap: s.gap }}>
-        {tags.map((t, i) => (
+        {picks.map((p) => (
           <Image
-            key={t}
-            source={{ uri: coverPhoto(t, 200, h, theme.photo.lock + 40 + i * 11) }}
+            key={p.t + p.l}
+            source={{ uri: coverPhoto(p.t, 200, h, p.l) }}
             style={{ flex: 1, height: h, borderRadius: L.radius === 0 ? 0 : Math.min(L.radius, 12) }}
             resizeMode="cover"
           />
