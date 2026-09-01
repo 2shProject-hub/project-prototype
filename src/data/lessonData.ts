@@ -1923,7 +1923,8 @@ export const MOCK_DIALOGUE_LISTEN_WRITE: DialogueListenWriteData = {
       speakerSide: 'A',
       speaker: '하영',
       textKo: '안녕하세요? 저는 하영이에요.',
-      textVi: 'Xin chào. Tôi là 하영.',
+      textVi: 'Xin chào. Tôi là Ha-young.',
+      audioSrc: require('../../assets/sounds/hayoung-1.mp3') as string,
     },
     {
       key: 'dlw-l2',
@@ -1931,13 +1932,15 @@ export const MOCK_DIALOGUE_LISTEN_WRITE: DialogueListenWriteData = {
       speaker: '하영',
       textKo: '저는 한국 사람이에요.',
       textVi: 'Tôi là người Hàn Quốc.',
+      audioSrc: require('../../assets/sounds/korea-1.mp3') as string,
     },
     {
       key: 'dlw-l3',
       speakerSide: 'B',
       speaker: '유키',
       textKo: '만나서 반가워요. 저는 유키예요.',
-      textVi: 'Rất vui được gặp bạn. Tôi là 유키.',
+      textVi: 'Rất vui được gặp bạn. Tôi là Yuki.',
+      audioSrc: require('../../assets/sounds/yuki-1.mp3') as string,
     },
     {
       key: 'dlw-l4',
@@ -1945,6 +1948,7 @@ export const MOCK_DIALOGUE_LISTEN_WRITE: DialogueListenWriteData = {
       speaker: '유키',
       textKo: '저는 일본 사람이에요.',
       textVi: 'Tôi là người Nhật Bản.',
+      audioSrc: require('../../assets/sounds/yuki-2.mp3') as string,
     },
   ],
 };
