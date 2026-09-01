@@ -1,3 +1,4 @@
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
@@ -45,7 +46,7 @@ export function SlideExplainStage({ onNext, onBack }: Props) {
             <Image source={slide.image} style={s.image} resizeMode="contain" />
           ) : (
             <View style={s.placeholder}>
-              <Text style={s.placeholderIcon}>🖼️</Text>
+              <ThemedGlyph style={s.placeholderIcon} glyph="🖼️" />
               <Text style={s.placeholderLabel}>슬라이드 이미지</Text>
               <Text style={s.placeholderSub}>{currentIndex + 1} / {total}</Text>
             </View>

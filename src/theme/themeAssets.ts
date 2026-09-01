@@ -56,6 +56,9 @@ export const THEME_ASSETS: Record<string, ThemeAssets> = {
       book: require('../../assets/themes/malhaeboka/nav-vocab-on.png'),
       play: require('../../assets/themes/malhaeboka/glyph-play.png'),
       school: require('../../assets/themes/malhaeboka/char-fish.png'),
+      write: require('../../assets/themes/malhaeboka/glyph-keyboard.png'),
+      quest: require('../../assets/themes/malhaeboka/icon-quest.png'),
+      dict: require('../../assets/themes/malhaeboka/icon-dict.png'),
     },
   },
 };

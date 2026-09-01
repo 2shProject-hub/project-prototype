@@ -24,6 +24,13 @@ const GLYPH_KEY: Record<string, string> = {
   '▶': 'play',
   '🎬': 'play',
   '🏫': 'school',
+  '✏️': 'write',
+  '✏': 'write',
+  '📝': 'write',
+  '🎯': 'quest',
+  '🤝': 'dict',
+  '🖼️': 'book',
+  '🖼': 'book',
 };
 
 interface Props {

@@ -91,7 +91,7 @@ export function SpeakingDetailStage({
         {/* ── 2. 상황 맥락 카드 (Context Card) ── */}
         <View style={styles.situationCard}>
           <View style={styles.situationHeader}>
-            <Text style={styles.situationIcon}>🤝</Text>
+            <ThemedGlyph style={styles.situationIcon} glyph="🤝" />
             <Text style={styles.situationTitle}>
               {pick(lang, data.situation.titleKo, data.situation.titleVi)}
             </Text>

@@ -156,7 +156,7 @@ export function ReadWriteDetailStage({
         {/* ── 4. 글쓰기 4단계 프레임워크 (Writing Framework) ── */}
         <View style={styles.frameworkSection}>
           <View style={styles.sectionHeaderRow}>
-            <Text style={styles.sectionIcon}>✏️</Text>
+            <ThemedGlyph style={styles.sectionIcon} glyph="✏️" />
             <Text style={styles.frameworkTitle}>
               {pick(
                 lang,

@@ -227,7 +227,7 @@ export function WordBuildStage({ onComplete, onBack }: Props) {
       {/* ── 힌트 ── */}
       {showHint && (
         <View style={styles.hintBox}>
-          <Text style={styles.hintLabel}>💡 {pick(lang, '힌트', 'Gợi ý')}</Text>
+          <ThemedGlyph style={styles.hintLabel} glyph="💡" /><Text style={styles.hintLabel}> {pick(lang, '힌트', 'Gợi ý')}</Text>
           <Text style={styles.hintText}>{quiz.vi}</Text>
         </View>
       )}

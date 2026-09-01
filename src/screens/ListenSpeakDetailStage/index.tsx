@@ -98,7 +98,7 @@ export function ListenSpeakDetailStage({
         <View style={styles.missionSection}>
           <View style={styles.missionHeaderRow}>
             <View style={styles.sectionTitleWrap}>
-              <Text style={styles.sectionIcon}>🎯</Text>
+              <ThemedGlyph style={styles.sectionIcon} glyph="🎯" />
               <Text style={styles.sectionTitle}>
                 {pick(
                   lang,

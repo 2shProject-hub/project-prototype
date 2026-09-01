@@ -123,7 +123,7 @@ export function ListenTyping1({ questions = [], onNext, onBack, currentSetNumber
         {/* 힌트 (있으면 표시) */}
         {currentQuestion.hint && (
           <View style={s.hintCard}>
-            <Text style={s.hintLabel}>💡 {pick(lang, '힌트', 'Gợi ý')}:</Text>
+            <ThemedGlyph style={s.hintLabel} glyph="💡" /><Text style={s.hintLabel}> {pick(lang, '힌트', 'Gợi ý')}:</Text>
             <Text style={s.hintText}>{currentQuestion.hint}</Text>
           </View>
         )}

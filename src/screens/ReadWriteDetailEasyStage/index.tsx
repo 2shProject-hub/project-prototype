@@ -83,7 +83,7 @@ export function ReadWriteDetailEasyStage({ onNext, onBack }: Props) {
                 activeTab === 'write' && styles.stepToggleTextActive,
               ]}
             >
-              ✏️ 2. 직접 쓰기 (Viết)
+              2. 직접 쓰기 (Viết)
             </Text>
           </TouchableOpacity>
         </View>
@@ -131,7 +131,7 @@ export function ReadWriteDetailEasyStage({ onNext, onBack }: Props) {
         {activeTab === 'write' && (
           <View style={styles.mainCard}>
             <View style={styles.cardHeader}>
-              <Text style={styles.cardAvatar}>📝</Text>
+              <ThemedGlyph style={styles.cardAvatar} glyph="📝" />
               <View style={styles.cardHeaderTextWrap}>
                 <Text style={styles.cardTitle}>
                   {pick(

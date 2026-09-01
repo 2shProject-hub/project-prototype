@@ -1,3 +1,4 @@
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
 import { SESSION1 } from '../../data/lessonData';
@@ -27,7 +28,7 @@ export function IntroStage({ onNext, onBack }: Props) {
 
           {/* 2. 아이콘 */}
           <View style={styles.iconCircle}>
-            <Text style={styles.iconEmoji}>{intro.icon}</Text>
+            <ThemedGlyph style={styles.iconEmoji} glyph={intro.icon} />
           </View>
 
           {/* 3. 타이틀 */}

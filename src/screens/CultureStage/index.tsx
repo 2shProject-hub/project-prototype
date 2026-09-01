@@ -112,7 +112,7 @@ function ContentCard({ item, lang }: { item: CultureActivityData['contents'][num
     <View style={cc.wrap}>
       {/* [questionContent] — Source A: questionContent 슬롯에 해당 */}
       <View style={cc.titleRow}>
-        {item.icon && <Text style={cc.icon}>{item.icon}</Text>}
+        {item.icon && <ThemedGlyph style={cc.icon} glyph={item.icon} />}
         <Text style={cc.title}>{pick(lang, item.title, item.titleVi ?? item.title)}</Text>
       </View>
       <Text style={cc.description}>{pick(lang, item.description, item.descriptionVi ?? item.description)}</Text>

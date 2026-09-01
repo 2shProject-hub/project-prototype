@@ -27,6 +27,7 @@
  *   5. confirmDisabled는 항상 false (브릿지는 즉시 진행 가능)
  */
 
+import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { useEffect, useRef } from 'react';
 import {
   View, Text, TouchableOpacity, StyleSheet, Animated, Platform,
@@ -160,7 +161,7 @@ export function BridgeStage({
         {/* ── Phase 1: 전환 방향 배지 + 브릿지 메시지 ── */}
         <Animated.View style={[s.flowSection, { opacity: flowOpacity }]}>
           <View style={s.flowBadge}>
-            <Text style={s.flowIcon}>{flow.icon}</Text>
+            <ThemedGlyph style={s.flowIcon} glyph={flow.icon} />
             <Text style={s.flowLabel}>
               {pick(lang, flow.koLabel, flow.viLabel)}
             </Text>
