@@ -1551,6 +1551,7 @@ function EmulatorShellInner() {
                   value={flowMode ? { step: currentFlowStep + 1, total: LEARNING_FLOW.length } : null}
                 >
                 <ScreenRenderer
+                  key={flowMode ? `flow-${currentFlowStep}` : screenId}
                   screenId={activeScreenId || screenId}
                   onNavigate={handleNavigate}
                   flowStep={flowMode ? currentFlowStep + 1 : undefined}
