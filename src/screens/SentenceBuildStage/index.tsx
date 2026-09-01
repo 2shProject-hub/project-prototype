@@ -2,7 +2,7 @@ import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { useEffect, useRef, useState } from 'react';
 import {
   View, Text, TouchableOpacity, StyleSheet, TextInput,
-  Animated, Easing,
+  Animated, Easing, Platform,
 } from 'react-native';
 import { colors, radius, spacing, shadow } from '../../theme';
 import { SESSION1 } from '../../data/lessonData';
@@ -48,6 +48,7 @@ export function SentenceBuildStage({ onComplete, onBack }: Props) {
 
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const playTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const quiz = QUIZ_LIST[quizIdx];
   const totalSlots = quiz.answerWords.length;
@@ -65,28 +66,46 @@ export function SentenceBuildStage({ onComplete, onBack }: Props) {
     setKeyboardText('');
   }, [quizIdx]);
 
-  // ── 음원 재생 시뮬레이션 ──────────────────────────────────────
+  // ── 음원 재생 ────────────────────────────────────────────────
   useEffect(() => {
+    if (Platform.OS !== 'web') return;
     if (isPlaying) {
+      const audio = new Audio(require('../../../assets/sounds/ikorea.mp3') as string);
+      audio.playbackRate = parseFloat(speed);
+      audioRef.current = audio;
+
       Animated.loop(
         Animated.sequence([
           Animated.timing(pulseAnim, { toValue: 1.18, duration: 350, useNativeDriver: true, easing: Easing.inOut(Easing.ease) }),
           Animated.timing(pulseAnim, { toValue: 1, duration: 350, useNativeDriver: true, easing: Easing.inOut(Easing.ease) }),
         ]),
       ).start();
-      const dur = speed === '0.5' ? 2800 : speed === '1.5' ? 900 : 1400;
-      playTimerRef.current = setTimeout(() => {
+
+      audio.play().catch(() => {});
+      audio.onended = () => {
         setIsPlaying(false);
         pulseAnim.stopAnimation();
         pulseAnim.setValue(1);
-      }, dur);
+        audioRef.current = null;
+      };
     } else {
+      audioRef.current?.pause();
+      audioRef.current = null;
       pulseAnim.stopAnimation();
       pulseAnim.setValue(1);
       if (playTimerRef.current) clearTimeout(playTimerRef.current);
     }
-    return () => { if (playTimerRef.current) clearTimeout(playTimerRef.current); };
+    return () => {
+      audioRef.current?.pause();
+      audioRef.current = null;
+      if (playTimerRef.current) clearTimeout(playTimerRef.current);
+    };
   }, [isPlaying]);
+
+  // ── 속도 변경 시 재생 중 오디오에 즉시 반영 ─────────────────
+  useEffect(() => {
+    if (audioRef.current) audioRef.current.playbackRate = parseFloat(speed);
+  }, [speed]);
 
   // ── 타일 모드 ─────────────────────────────────────────────────
   const onTileTap = (tileIdx: number) => {

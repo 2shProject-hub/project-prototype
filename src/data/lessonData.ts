@@ -83,8 +83,8 @@ export const SESSION1 = {
     {
       id: 1,
       vi: 'Tôi là người Hàn Quốc.',
-      ko: '저는 한국 사람이에요.',
-      answerWords: ['저는', '한국', '사람이에요'],
+      ko: '저는 한국인 입니다.',
+      answerWords: ['저는', '한국인', '입니다'],
       distractors: ['베트남', '의사예요'],
     },
   ],
