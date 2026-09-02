@@ -86,6 +86,23 @@ export function ThemedBody(p: ThemedBodyProps) {
   const flow = useFlowProgress();
   // 빼꼼 캐릭터 생동감 — 잔잔한 플로팅
   const peekBob = useRef(new Animated.Value(0)).current;
+  // 응원 캐릭터와 같은 문법 — 잠시 응원하고 아래로 사라진다
+  const peekOutY = useRef(new Animated.Value(0)).current;
+  const peekOutOp = useRef(new Animated.Value(1)).current;
+  const [peekGone, setPeekGone] = useState(false);
+  useEffect(() => {
+    if (!assets?.peek) return;
+    peekOutY.setValue(0);
+    peekOutOp.setValue(1);
+    setPeekGone(false);
+    const t = setTimeout(() => {
+      Animated.parallel([
+        Animated.timing(peekOutY, { toValue: 140, duration: 320, useNativeDriver: false }),
+        Animated.timing(peekOutOp, { toValue: 0, duration: 280, useNativeDriver: false }),
+      ]).start(() => setPeekGone(true));
+    }, 3800);
+    return () => clearTimeout(t);
+  }, [assets, peekOutY, peekOutOp]);
   // 2.6초 주기로 130ms 감은 눈 프레임
   const [peekBlink, setPeekBlink] = useState(false);
   useEffect(() => {
@@ -179,7 +196,12 @@ export function ThemedBody(p: ThemedBodyProps) {
         isRule ? { borderBottomWidth: L.hairline, borderBottomColor: c.line, paddingBottom: s.row } : boxOf(),
       ]}
     >
-      <Text style={[{ fontSize: t.bodySize - 1, color: c.textSecondary }, bodyFont(theme, 600), theme.id === 'malhaeboka' && { fontSize: 17, fontWeight: '800' as const, color: '#4C34C2' }]}>재생 속도</Text>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+        {theme.id === 'malhaeboka' ? (
+          <Image source={require('../../../assets/themes/malhaeboka/icon-speedo.png')} style={{ width: 30, height: 30 }} resizeMode="contain" />
+        ) : null}
+        <Text style={[{ fontSize: t.bodySize - 1, color: c.textSecondary }, bodyFont(theme, 600), theme.id === 'malhaeboka' && { fontSize: 17, fontWeight: '800' as const, color: '#4C34C2' }]}>재생 속도</Text>
+      </View>
       <View style={{ flexDirection: 'row', gap: 6 }}>
         {([0.5, 1.0, 1.5] as const).map((spd) => {
           const on = p.speed === spd;
@@ -459,9 +481,9 @@ export function ThemedBody(p: ThemedBodyProps) {
         <WordList />
       </ScrollView>
 
-      {assets?.peek ? (
-        // 화면 우하단에서 빼꼼 — 말해보카 시그니처. 터치를 막지 않도록 pointerEvents 차단
-        <View pointerEvents="none" style={{ position: 'absolute', right: 0, bottom: 84, alignItems: 'flex-end' }}>
+      {assets?.peek && !peekGone ? (
+        // 화면 우하단에서 빼꼼 — 잠시 응원하고 멘트와 함께 아래로 사라진다
+        <Animated.View pointerEvents="none" style={{ position: 'absolute', right: 0, bottom: 84, alignItems: 'flex-end', opacity: peekOutOp, transform: [{ translateY: peekOutY }] }}>
           {/* 멘트 — 캐릭터는 항상 말과 함께 */}
           <View style={{ backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#E5DFF7', borderRadius: 13, paddingHorizontal: 11, paddingVertical: 7, marginRight: 8, marginBottom: 5, maxWidth: 168, shadowColor: '#000', shadowOpacity: 0.08, shadowRadius: 6, shadowOffset: { width: 0, height: 2 } }}>
             <Text style={{ fontSize: 12.5, fontWeight: '600', color: '#1B1926' }}>{pick(p.lang, '스피커로 발음을 들어봐요!', 'Nghe phát âm bằng loa nhé!')}</Text>
@@ -469,7 +491,7 @@ export function ThemedBody(p: ThemedBodyProps) {
           <Animated.View style={{ transform: [{ translateY: peekBob }] }}>
             <BlinkSprite img={assets.peek} blink={assets.peekBlink} on={peekBlink} w={86} h={100} />
           </Animated.View>
-        </View>
+        </Animated.View>
       ) : null}
 
       <View
