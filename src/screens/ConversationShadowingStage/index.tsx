@@ -35,7 +35,7 @@ import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { icon } from '../../theme/graphics';
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import {
-  View, Text, TouchableOpacity, StyleSheet, Animated, Modal, Platform, Image,
+  View, Text, TouchableOpacity, StyleSheet, Animated, Platform, Image,
 } from 'react-native';
 import { ActivityHeader } from '../../components/ActivityHeader';
 import { useLang, pick } from '../../components/LangContext';
@@ -135,7 +135,7 @@ function FeedbackModal({
   if (!visible) return null;
 
   return (
-    <Modal transparent animationType="none" visible={visible}>
+    <View style={[StyleSheet.absoluteFill, { zIndex: 200 }]}>
       <View style={m.overlay}>
         <Animated.View style={[m.sheet, { transform: [{ translateY: slideAnim }] }]}>
           <View style={m.handle} />
@@ -168,7 +168,7 @@ function FeedbackModal({
           </View>
         </Animated.View>
       </View>
-    </Modal>
+    </View>
   );
 }
 
