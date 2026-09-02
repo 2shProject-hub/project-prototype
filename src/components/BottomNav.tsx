@@ -34,7 +34,7 @@ export function BottomNav({ active, setView }: BottomNavProps) {
             {navIcons?.[item.key] ? (
               <Image
                 source={active === item.key ? navIcons[item.key].on : navIcons[item.key].off}
-                style={{ width: 24, height: 21 }}
+                style={{ width: 26, height: 26 }}
                 resizeMode="contain"
               />
             ) : (

@@ -52,10 +52,10 @@ export const THEME_ASSETS: Record<string, ThemeAssets> = {
     // 말해보카 하단 내비 글리프(어휘·리스닝·리그·프리미엄)를 우리 탭에 대응
     // 하단 내비 — 상용 수준 선명도를 위해 벡터 스트로크로 (활성 보라 / 비활성 회색)
     navIcons: {
-      home: { on: { uri: icon('home', '#7150F0', 24, 2.1) }, off: { uri: icon('home', '#A5A1B8', 24, 2) } },
-      report: { on: { uri: icon('chart', '#7150F0', 24, 2.1) }, off: { uri: icon('chart', '#A5A1B8', 24, 2) } },
-      'ai-talk': { on: { uri: icon('headphones', '#7150F0', 24, 2.1) }, off: { uri: icon('headphones', '#A5A1B8', 24, 2) } },
-      'my-info': { on: { uri: icon('crown', '#7150F0', 24, 2.1) }, off: { uri: icon('crown', '#A5A1B8', 24, 2) } },
+      home: { on: require('../../assets/themes/malhaeboka/nav-home-on.png'), off: require('../../assets/themes/malhaeboka/nav-home-off.png') },
+      report: { on: require('../../assets/themes/malhaeboka/nav-report-on.png'), off: require('../../assets/themes/malhaeboka/nav-report-off.png') },
+      'ai-talk': { on: require('../../assets/themes/malhaeboka/nav-chat-on.png'), off: require('../../assets/themes/malhaeboka/nav-chat-off.png') },
+      'my-info': { on: require('../../assets/themes/malhaeboka/nav-people-on.png'), off: require('../../assets/themes/malhaeboka/nav-people-off.png') },
     },
     crest: require('../../assets/themes/malhaeboka/char-fish.png'),
     glyphs: {
