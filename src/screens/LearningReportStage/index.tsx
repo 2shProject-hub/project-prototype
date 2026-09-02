@@ -125,7 +125,7 @@ export function LearningReportStage({ data, onNext, onBack }: Props) {
             {/* 어휘 */}
             <View style={[s.summaryItem, __mbRp && { gap: 7 }]}>
               {__mbRp ? (
-                <Image source={require('../../../assets/themes/malhaeboka/thumb-vocab.png')} style={{ width: 46, height: 46, borderRadius: 23, borderWidth: 1.5, borderColor: '#E5DFF7' }} />
+                <Image source={require('../../../assets/themes/malhaeboka/thumb-vocab.png')} style={{ width: 58, height: 58, borderRadius: 29, borderWidth: 1.5, borderColor: '#E5DFF7' }} />
               ) : (
                 <ThemedGlyph style={s.summaryIcon} glyph="📚" />
               )}
@@ -136,7 +136,7 @@ export function LearningReportStage({ data, onNext, onBack }: Props) {
             {/* 발음평가 */}
             <View style={[s.summaryItem, __mbRp && { gap: 7 }]}>
               {__mbRp ? (
-                <Image source={require('../../../assets/themes/malhaeboka/thumb-speak.png')} style={{ width: 46, height: 46, borderRadius: 23, borderWidth: 1.5, borderColor: '#E5DFF7' }} />
+                <Image source={require('../../../assets/themes/malhaeboka/thumb-speak.png')} style={{ width: 58, height: 58, borderRadius: 29, borderWidth: 1.5, borderColor: '#E5DFF7' }} />
               ) : (
                 <ThemedGlyph style={s.summaryIcon} glyph="🎤" />
               )}
@@ -147,7 +147,7 @@ export function LearningReportStage({ data, onNext, onBack }: Props) {
             {/* 확인 문제 */}
             <View style={[s.summaryItem, __mbRp && { gap: 7 }]}>
               {__mbRp ? (
-                <Image source={require('../../../assets/themes/malhaeboka/thumb-check.png')} style={{ width: 46, height: 46, borderRadius: 23, borderWidth: 1.5, borderColor: '#E5DFF7' }} />
+                <Image source={require('../../../assets/themes/malhaeboka/thumb-check.png')} style={{ width: 58, height: 58, borderRadius: 29, borderWidth: 1.5, borderColor: '#E5DFF7' }} />
               ) : (
                 <Text style={s.summaryIcon}>✓</Text>
               )}

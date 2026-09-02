@@ -228,9 +228,9 @@ export function HomeScreen({ sessions, setView, onStartSession }: Props) {
                     </View>
                   )}
                   {/* 카드 — 진행중 차시는 카드도 함께 숨쉰다 */}
-                  <MbNowPulse active={!!showNow} style={{ flex: 1 }}>
+                  <MbNowPulse active={!!showNow} scaleTo={1.015} style={{ flex: 1 }}>
                   <TouchableOpacity
-                    style={[styles.sessionCard, !unlocked && styles.sessionCardLocked]}
+                    style={[styles.sessionCard, showNow && { backgroundColor: '#F7F4FF', borderWidth: 1.5, borderColor: '#C9B8F9' }, !unlocked && styles.sessionCardLocked]}
                     onPress={() => unlocked && onStartSession(s.id)}
                     activeOpacity={unlocked ? 0.75 : 1}
                     disabled={!unlocked}
@@ -330,19 +330,19 @@ function ReadingPulse({ text, style }: { text: string; style?: any }) {
 }
 
 // 진행중 차시 아이콘 — 잔잔히 커졌다 작아지며 '지금 여기'를 알린다
-function MbNowPulse({ active, style, children }: { active: boolean; style?: object; children: React.ReactNode }) {
+function MbNowPulse({ active, style, scaleTo = 1.09, children }: { active: boolean; style?: object; scaleTo?: number; children: React.ReactNode }) {
   const sc = useRef(new Animated.Value(1)).current;
   useEffect(() => {
     if (!active) { sc.setValue(1); return; }
     const loop = Animated.loop(
       Animated.sequence([
-        Animated.timing(sc, { toValue: 1.09, duration: 700, useNativeDriver: false }),
+        Animated.timing(sc, { toValue: scaleTo, duration: 700, useNativeDriver: false }),
         Animated.timing(sc, { toValue: 1, duration: 700, useNativeDriver: false }),
       ]),
     );
     loop.start();
     return () => loop.stop();
-  }, [active, sc]);
+  }, [active, sc, scaleTo]);
   if (!active) return <View style={style}>{children}</View>;
   return <Animated.View style={[style, { transform: [{ scale: sc }] }]}>{children}</Animated.View>;
 }

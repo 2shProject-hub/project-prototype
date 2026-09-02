@@ -12,12 +12,10 @@
 // 또 변환하면 이중 적용이 된다.
 import { ThemedGlyph } from '../../components/ThemedGlyph';
 
-// 나라 단어 → 실사 지도 사진. ⚠️ loremflickr 는 (태그, lock, 요청 치수) 3개를 절대 바꾸지 말 것 —
-// 하나라도 바뀌면 전 행의 사진이 통째로 뒤바뀐다. 표시 크기는 스타일로만 조절한다.
-const MB_MAP_TAGS: Record<string, string> = {
-  '베트남': 'map,vietnam?lock=7', '한국': 'map,korea?lock=21', '인도네시아': 'map,indonesia?lock=7',
-  '러시아': 'map,russia?lock=7', '미국': 'map,usa?lock=7', '프랑스': 'map,france?lock=7',
-  '중국': 'map,china?lock=7', '독일': 'map,germany?lock=7',
+// 나라 단어 → 해당 나라 국기 (flagcdn — 국가코드 고정이라 사진이 뒤바뀔 일이 없다)
+const MB_FLAGS: Record<string, string> = {
+  '베트남': 'vn', '한국': 'kr', '인도네시아': 'id', '러시아': 'ru',
+  '미국': 'us', '프랑스': 'fr', '중국': 'cn', '독일': 'de',
 };
 
 import { BlinkSprite } from '../../theme/BlinkSprite';
@@ -288,10 +286,10 @@ export function ThemedBody(p: ThemedBodyProps) {
       ]}
     >
       {assets?.rowIcons ? (
-        MB_MAP_TAGS[w.ko] ? (
+        MB_FLAGS[w.ko] ? (
           <Image
-            source={{ uri: `https://loremflickr.com/96/96/${MB_MAP_TAGS[w.ko]}` }}
-            style={{ width: 34, height: 34, borderRadius: 10, backgroundColor: '#EFEDF6' }}
+            source={{ uri: `https://flagcdn.com/w80/${MB_FLAGS[w.ko]}.png` }}
+            style={{ width: 38, height: 27, borderRadius: 5, backgroundColor: '#EFEDF6', borderWidth: 1, borderColor: '#E7E4F0' }}
             resizeMode="cover"
           />
         ) : (
