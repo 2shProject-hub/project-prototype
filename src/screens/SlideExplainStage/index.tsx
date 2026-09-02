@@ -117,7 +117,6 @@ const s = StyleSheet.create({
   imageCard: {
     borderRadius: 16,
     overflow: 'hidden',
-    backgroundColor: colors.tealSoft,
     aspectRatio: 4 / 3,
     width: '100%',
   },
