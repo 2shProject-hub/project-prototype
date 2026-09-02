@@ -198,10 +198,10 @@ export function HomeScreen({ sessions, setView, onStartSession }: Props) {
                   {/* 번호 원 — 브랜드 자산 테마는 아이콘 타일 (차시 번호는 카드의 "N차시" 텍스트가 유지) */}
                   {brandRowIcons ? (
                     <MbNowPulse active={!!showNow}>
-                    <View style={[styles.dot, { backgroundColor: '#FFFFFF', borderWidth: 1.5, borderColor: '#ECE7FA' }, showNow ? { borderColor: '#B9A5F5', borderWidth: 2 } : null]}>
+                    <View style={[styles.dot, { backgroundColor: '#FFFFFF', borderWidth: 2, borderColor: '#ECE7FA' }, showNow ? { borderColor: '#B9A5F5', borderWidth: 2 } : null]}>
                       <Image
                         source={brandRowIcons[idx % brandRowIcons.length]}
-                        style={{ width: 30, height: 30, borderRadius: 8, opacity: unlocked ? 1 : 0.38 }}
+                        style={{ width: 32, height: 32, borderRadius: 9, opacity: unlocked ? 1 : 0.38 }}
                         resizeMode="contain"
                       />
                       {completed ? (

@@ -351,7 +351,7 @@ function ScreenSticker({ theme, enabled, screenId }: { theme: Theme; enabled: bo
                 const iy = Math.max(0, Math.min(y + fh, r.bottom) - Math.max(y, r.top));
                 mediaOv += ix * iy;
               }
-              const ov = textOv + mediaOv / 400; // 텍스트 1px² = 이미지 400px² 비중
+              const ov = textOv + mediaOv / 40; // 텍스트 1px² = 이미지 40px² 비중 — 차트/사진 덮개도 사실상 차단
               if (!best || ov < best.ov - 0.5 || (Math.abs(ov - best.ov) <= 0.5 && idx < best.ord)) {
                 best = { side, bottom, ov, ord: idx };
               }

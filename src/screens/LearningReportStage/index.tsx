@@ -44,8 +44,9 @@ function mbReportDonut(pct: number, label: string): string {
   const off = c * (1 - pct / 100);
   return svgDataUri(
     `<svg xmlns="http://www.w3.org/2000/svg" width="110" height="110" viewBox="0 0 110 110">` +
-    `<circle cx="55" cy="55" r="${r}" fill="none" stroke="#EFEAFF" stroke-width="12"/>` +
-    `<circle cx="55" cy="55" r="${r}" fill="none" stroke="#7B2FF2" stroke-width="12" stroke-linecap="round" stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}" transform="rotate(-90 55 55)"/>` +
+    `<defs><linearGradient id="mbg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7B2FF2"/><stop offset="0.55" stop-color="#A855F7"/><stop offset="1" stop-color="#0EA5E9"/></linearGradient></defs>` +
+    `<circle cx="55" cy="55" r="${r}" fill="none" stroke="#F0EEF9" stroke-width="12"/>` +
+    `<circle cx="55" cy="55" r="${r}" fill="none" stroke="url(#mbg)" stroke-width="12" stroke-linecap="round" stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}" transform="rotate(-90 55 55)"/>` +
     `<text x="55" y="53" text-anchor="middle" font-family="Pretendard, sans-serif" font-size="23" font-weight="800" fill="#1B1926">${pct}%</text>` +
     `<text x="55" y="73" text-anchor="middle" font-family="Pretendard, sans-serif" font-size="11.5" font-weight="700" fill="#6D6A7C">${label}</text>` +
     `</svg>`,
@@ -87,15 +88,20 @@ export function LearningReportStage({ data, onNext, onBack }: Props) {
             <Text style={{ fontSize: 16.5, fontWeight: '800', color: '#1B1926', letterSpacing: -0.3 }}>{pick(lang, '학습 분석', 'Phân tích học tập')}</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 18 }}>
               <Image source={{ uri: mbReportDonut(82, pick(lang, '정답률', 'Đúng')) }} style={{ width: 110, height: 110 }} />
-              <View style={{ flex: 1, gap: 11 }}>
-                {([[pick(lang, '세트 1', 'Bộ 1'), 85], [pick(lang, '세트 2', 'Bộ 2'), 78], [pick(lang, '세트 3', 'Bộ 3'), 92]] as Array<[string, number]>).map(([k, v]) => (
-                  <View key={k} style={{ gap: 4 }}>
+              <View style={{ flex: 1, gap: 9 }}>
+                {([
+                  [pick(lang, '어휘', 'Từ vựng'), 92, '#7B2FF2', '#EFEAFF'],
+                  [pick(lang, '듣기', 'Nghe'), 85, '#0EA5E9', '#E0F2FE'],
+                  [pick(lang, '발음', 'Phát âm'), 78, '#F59E0B', '#FEF3C7'],
+                  [pick(lang, '문법', 'Ngữ pháp'), 88, '#10B981', '#D1FAE5'],
+                ] as Array<[string, number, string, string]>).map(([k, v, fill, track]) => (
+                  <View key={k} style={{ gap: 3 }}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                       <Text style={{ fontSize: 12.5, fontWeight: '700', color: '#4B4660' }}>{k}</Text>
-                      <Text style={{ fontSize: 12.5, fontWeight: '800', color: '#7150F0' }}>{v}%</Text>
+                      <Text style={{ fontSize: 12.5, fontWeight: '800', color: fill }}>{v}%</Text>
                     </View>
-                    <View style={{ height: 9, borderRadius: 5, backgroundColor: '#EFEAFF', overflow: 'hidden' }}>
-                      <View style={{ width: `${v}%`, height: 9, borderRadius: 5, backgroundColor: '#7B2FF2' }} />
+                    <View style={{ height: 9, borderRadius: 5, backgroundColor: track, overflow: 'hidden' }}>
+                      <View style={{ width: `${v}%`, height: 9, borderRadius: 5, backgroundColor: fill }} />
                     </View>
                   </View>
                 ))}
