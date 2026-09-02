@@ -12,6 +12,13 @@
 // 또 변환하면 이중 적용이 된다.
 import { ThemedGlyph } from '../../components/ThemedGlyph';
 
+// 재생 속도 — 3D 숫자+X 조합 (사용자 지정 숫자 시트에서 합성)
+const SPEED_IMGS: Record<string, { img: any; w: number }> = {
+  '0.5': { img: require('../../../assets/themes/malhaeboka/speed-05x.png'), w: 50 },
+  '1': { img: require('../../../assets/themes/malhaeboka/speed-1x.png'), w: 21 },
+  '1.5': { img: require('../../../assets/themes/malhaeboka/speed-15x.png'), w: 42 },
+};
+
 // 나라 단어 → 해당 나라 국기 (flagcdn — 국가코드 고정이라 사진이 뒤바뀔 일이 없다)
 const MB_FLAGS: Record<string, string> = {
   '베트남': 'vn', '한국': 'kr', '인도네시아': 'id', '러시아': 'ru',
@@ -183,14 +190,23 @@ export function ThemedBody(p: ThemedBodyProps) {
               activeOpacity={0.7}
               style={{
                 paddingHorizontal: 10,
-                paddingVertical: 4,
+                paddingVertical: theme.id === 'malhaeboka' ? 6 : 4,
                 borderRadius: L.button === 'pill' ? pillR : L.radius,
                 backgroundColor: on ? c.primary : 'transparent',
                 borderWidth: Math.max(1, L.hairline),
                 borderColor: on ? c.primary : c.line,
+                ...(theme.id === 'malhaeboka' && !on ? { backgroundColor: c.surface } : null),
               }}
             >
-              <Text style={[{ fontSize: t.bodySize - 2, color: on ? c.onPrimary : c.muted }, bodyFont(theme, on ? 700 : 500)]}>{spd}x</Text>
+              {theme.id === 'malhaeboka' ? (
+                <Image
+                  source={SPEED_IMGS[String(spd)].img}
+                  style={{ width: SPEED_IMGS[String(spd)].w, height: 18, opacity: on ? 1 : 0.82 }}
+                  resizeMode="contain"
+                />
+              ) : (
+                <Text style={[{ fontSize: t.bodySize - 2, color: on ? c.onPrimary : c.muted }, bodyFont(theme, on ? 700 : 500)]}>{spd}x</Text>
+              )}
             </TouchableOpacity>
           );
         })}
@@ -309,7 +325,7 @@ export function ThemedBody(p: ThemedBodyProps) {
         ) : MB_PHOTOS[w.ko] ? (
           <Image
             source={MB_PHOTOS[w.ko]}
-            style={{ width: 58, height: 58, borderRadius: 14, backgroundColor: '#EFEDF6', borderWidth: 1, borderColor: '#E7E4F0' }}
+            style={{ width: 72, height: 72, borderRadius: 16, backgroundColor: '#EFEDF6', borderWidth: 1, borderColor: '#E7E4F0' }}
             resizeMode="cover"
           />
         ) : (

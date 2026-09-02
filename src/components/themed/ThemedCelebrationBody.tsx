@@ -7,6 +7,9 @@
 // 폭죽 연출 세기도 테마마다 다르다 — 규칙은 갤러리 목업과 같은 것을 쓴다.
 // 튜터 아바타는 원본 화면이 원본 스타일 그대로 넘겨준다(tutor prop) — 여기서 변형하지 않는다.
 import { useState, useEffect, useRef, type ReactNode } from 'react';
+
+// 세트 완료 도트의 체크 — 사용자 지정 레드 브러시 체크박스
+const CHECK_RED = require('../../../assets/themes/malhaeboka/icon-check-red.png');
 import { BlinkSprite } from '../../theme/BlinkSprite';
 import { View, Text, Image, StyleSheet, ScrollView, type ViewStyle, type LayoutChangeEvent } from 'react-native';
 import {
@@ -439,15 +442,19 @@ function SetTrack({ theme, lang, setNumber, totalSets }: { theme: Theme; lang: L
           style={{
             width: 44, height: 44,
             borderRadius: L.radius === 0 ? 4 : 999,
-            backgroundColor: done(n) ? c.primary : c.backdrop,
-            borderWidth: done(n) ? 0 : L.hairline,
-            borderColor: c.line,
+            backgroundColor: done(n) ? (theme.id === 'malhaeboka' ? c.surface : c.primary) : c.backdrop,
+            borderWidth: done(n) ? (theme.id === 'malhaeboka' ? 1.5 : 0) : L.hairline,
+            borderColor: theme.id === 'malhaeboka' && done(n) ? '#E5DFF7' : c.line,
             alignItems: 'center', justifyContent: 'center',
           }}
         >
-          <Text style={[{ fontSize: theme.type.bodySize + 1, color: done(n) ? c.onPrimary : c.muted }, bodyFont(theme, 700)]}>
-            {done(n) ? '✓' : n}
-          </Text>
+          {theme.id === 'malhaeboka' && done(n) ? (
+            <Image source={CHECK_RED} style={{ width: 26, height: 26 }} resizeMode="contain" />
+          ) : (
+            <Text style={[{ fontSize: theme.type.bodySize + 1, color: done(n) ? c.onPrimary : c.muted }, bodyFont(theme, 700)]}>
+              {done(n) ? '✓' : n}
+            </Text>
+          )}
         </View>
       ))}
     </View>

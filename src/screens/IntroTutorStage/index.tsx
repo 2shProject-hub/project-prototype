@@ -1,11 +1,11 @@
 import { useTheme } from '../../theme/ThemeContext';
 
 // 말해보카: 벡터 글리프 대신 상황 실사진 — 키보드(문법 연습)·마이크(말하기 평가)
-const MB_ICON_PHOTOS: Record<string, any> = {
-  '📖': require('../../../assets/themes/malhaeboka/thumb-vocab.png'),
-  '📝': require('../../../assets/themes/malhaeboka/photo-keyboard.png'),
-  '⌨': require('../../../assets/themes/malhaeboka/photo-keyboard.png'),
-  '🎤': require('../../../assets/themes/malhaeboka/photo-mic.png'),
+const MB_ICON_PHOTOS: Record<string, { img: any; fit: 'cover' | 'contain' }> = {
+  '📖': { img: require('../../../assets/themes/malhaeboka/thumb-vocab.png'), fit: 'cover' },
+  '📝': { img: require('../../../assets/themes/malhaeboka/icon-keyboard-sphere.png'), fit: 'contain' },
+  '⌨': { img: require('../../../assets/themes/malhaeboka/icon-keyboard-sphere.png'), fit: 'contain' },
+  '🎤': { img: require('../../../assets/themes/malhaeboka/photo-mic.png'), fit: 'cover' },
 };
 import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { useEffect, useRef, useState } from 'react';
@@ -84,7 +84,11 @@ export function IntroTutorStage({ onNext, onBack, introData }: Props) {
           {/* 2. 아이콘 */}
           <View style={[styles.iconCircle, __mbBig && { width: 92, height: 92, overflow: 'hidden' as const }]}>
             {__mbBig && MB_ICON_PHOTOS[intro.icon] ? (
-              <Image source={MB_ICON_PHOTOS[intro.icon]} style={{ width: '100%', height: '100%' }} resizeMode="cover" />
+              <Image
+                source={MB_ICON_PHOTOS[intro.icon].img}
+                style={MB_ICON_PHOTOS[intro.icon].fit === 'contain' ? { width: '86%', height: '86%' } : { width: '100%', height: '100%' }}
+                resizeMode={MB_ICON_PHOTOS[intro.icon].fit}
+              />
             ) : (
               <ThemedGlyph style={[styles.iconEmoji, __mbBig && { fontSize: 46 }]} glyph={intro.icon} />
             )}
@@ -98,9 +102,9 @@ export function IntroTutorStage({ onNext, onBack, introData }: Props) {
 
           {/* 5. 학습 성과 카드 */}
           <View style={styles.achievementCard}>
-            <View style={[styles.checkCircle, __mbBig && { backgroundColor: 'transparent' }]}>
+            <View style={[styles.checkCircle, __mbBig && { backgroundColor: 'transparent', width: 44, height: 44, borderWidth: 0 }]}>
               {__mbBig ? (
-                <Image source={require('../../../assets/themes/malhaeboka/icon-check-egg.png')} style={{ width: 26, height: 26 }} resizeMode="contain" />
+                <Image source={require('../../../assets/themes/malhaeboka/icon-check-egg.png')} style={{ width: 38, height: 38 }} resizeMode="contain" />
               ) : (
                 <Text style={styles.checkMark}>✓</Text>
               )}
