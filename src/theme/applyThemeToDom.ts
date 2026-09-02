@@ -95,6 +95,7 @@ function transformDeclarations(cssText: string, replacements: Array<[string, str
   const r = theme.layout.radius;
   const factor = r / 12; // 기본 스케일의 중심값 lg=12 를 기준으로
   let changed = false;
+  const extraDecls: string[] = [];
 
   const decls = cssText.split(';').map((d) => d.trim()).filter(Boolean).map((decl) => {
     const colon = decl.indexOf(':');
@@ -128,10 +129,19 @@ function transformDeclarations(cssText: string, replacements: Array<[string, str
       changed = true;
     }
 
+    // 말해보카: 큰 글자(제목류)는 트래킹을 타이트하게 — 2026 타이포 트렌드
+    if (theme.id === 'malhaeboka' && prop === 'font-size') {
+      const m = val.match(/(\d+(?:\.\d+)?)px/);
+      if (m && parseFloat(m[1]) >= 17) {
+        extraDecls.push('letter-spacing:-0.4px');
+        changed = true;
+      }
+    }
+
     return `${decl.slice(0, colon)}:${val}`;
   });
 
-  return changed ? decls.join('; ') : null;
+  return changed ? decls.concat(extraDecls).join('; ') : null;
 }
 
 /**

@@ -273,7 +273,7 @@ export function ThemedBody(p: ThemedBodyProps) {
         (big ? (
           <Text style={[{ fontSize: Math.round(t.displaySize * 0.72), color: c.ink, letterSpacing: t.displayTracking }, displayFont(theme)]}>{w.ko}</Text>
         ) : (
-          <Text numberOfLines={1} style={[{ fontSize: t.bodySize + 3, color: c.ink, letterSpacing: -0.2 }, bodyFont(theme, 700)]}>{w.ko}</Text>
+          <Text numberOfLines={1} style={[{ fontSize: t.bodySize + 4, color: c.ink, letterSpacing: -0.3 }, bodyFont(theme, 700)]}>{w.ko}</Text>
         ))}
       {p.tab !== 'ko' && (
         <Text numberOfLines={1} style={[{ fontSize: t.bodySize - (big ? 0.5 : 1), color: c.muted, marginTop: 2 }, bodyFont(theme)]}>{w.vi}</Text>
