@@ -98,8 +98,12 @@ export function IntroTutorStage({ onNext, onBack, introData }: Props) {
 
           {/* 5. 학습 성과 카드 */}
           <View style={styles.achievementCard}>
-            <View style={styles.checkCircle}>
-              <Text style={styles.checkMark}>✓</Text>
+            <View style={[styles.checkCircle, __mbBig && { backgroundColor: 'transparent' }]}>
+              {__mbBig ? (
+                <Image source={require('../../../assets/themes/malhaeboka/icon-check-egg.png')} style={{ width: 26, height: 26 }} resizeMode="contain" />
+              ) : (
+                <Text style={styles.checkMark}>✓</Text>
+              )}
             </View>
             <View style={styles.achievementText}>
               <Text style={[styles.achievementLabel, __mbBig && { fontSize: 16 }]}>{pick(lang, intro.achievement.label, intro.achievement.labelVi)}</Text>

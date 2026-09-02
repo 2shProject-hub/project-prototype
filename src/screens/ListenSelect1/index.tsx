@@ -8,7 +8,7 @@ import { useTheme } from '../../theme/ThemeContext';
 // 나라 보기 → 해당 나라 국기 (flagcdn — 국가코드 고정)
 const LS_FLAGS: Record<string, string> = {
   '베트남': 'vn', '한국': 'kr', '인도네시아': 'id', '러시아': 'ru',
-  '미국': 'us', '프랑스': 'fr', '중국': 'cn', '독일': 'de',
+  '미국': 'us', '프랑스': 'fr', '중국': 'cn', '독일': 'de', '일본': 'jp', '태국': 'th', '필리핀': 'ph', '영국': 'gb', '스페인': 'es', '이탈리아': 'it', '캐나다': 'ca', '호주': 'au', '브라질': 'br', '인도': 'in',
 };
 import { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Platform, ScrollView, Image } from 'react-native';
