@@ -6,7 +6,7 @@
  * - AI 피드백
  * - 공통 ActivityHeader, CtaButton 적용
  */
-import { svgDataUri } from '../../theme/graphics';
+import { svgDataUri, icon } from '../../theme/graphics';
 import { useTheme } from '../../theme/ThemeContext';
 import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
@@ -123,24 +123,42 @@ export function LearningReportStage({ data, onNext, onBack }: Props) {
 
           <View style={s.summaryGrid}>
             {/* 어휘 */}
-            <View style={s.summaryItem}>
-              <ThemedGlyph style={s.summaryIcon} glyph="📚" />
-              <Text style={s.summaryCount}>{data.vocabCount}개</Text>
-              <Text style={s.summaryLabel}>{pick(lang, '학습 어휘', 'Từ vựng học')}</Text>
+            <View style={[s.summaryItem, __mbRp && { gap: 7 }]}>
+              {__mbRp ? (
+                <View style={{ width: 42, height: 42, borderRadius: 21, backgroundColor: '#EFEAFF', alignItems: 'center', justifyContent: 'center' }}>
+                  <Image source={{ uri: icon('bookopen', '#5B3DF5', 22, 2) }} style={{ width: 22, height: 22 }} />
+                </View>
+              ) : (
+                <ThemedGlyph style={s.summaryIcon} glyph="📚" />
+              )}
+              <Text style={[s.summaryCount, __mbRp && { fontSize: 18, color: '#1B1926' }]}>{data.vocabCount}개</Text>
+              <Text style={[s.summaryLabel, __mbRp && { fontSize: 12.5 }]}>{pick(lang, '학습 어휘', 'Từ vựng học')}</Text>
             </View>
 
             {/* 발음평가 */}
-            <View style={s.summaryItem}>
-              <ThemedGlyph style={s.summaryIcon} glyph="🎤" />
-              <Text style={s.summaryCount}>{data.speakingScore}/{data.speakingTotal}</Text>
-              <Text style={s.summaryLabel}>{pick(lang, '발음평가', 'Đánh giá phát âm')}</Text>
+            <View style={[s.summaryItem, __mbRp && { gap: 7 }]}>
+              {__mbRp ? (
+                <View style={{ width: 42, height: 42, borderRadius: 21, backgroundColor: '#E0F2FE', alignItems: 'center', justifyContent: 'center' }}>
+                  <Image source={{ uri: icon('mic', '#0284C7', 22, 2) }} style={{ width: 22, height: 22 }} />
+                </View>
+              ) : (
+                <ThemedGlyph style={s.summaryIcon} glyph="🎤" />
+              )}
+              <Text style={[s.summaryCount, __mbRp && { fontSize: 18, color: '#1B1926' }]}>{data.speakingScore}/{data.speakingTotal}</Text>
+              <Text style={[s.summaryLabel, __mbRp && { fontSize: 12.5 }]}>{pick(lang, '발음평가', 'Đánh giá phát âm')}</Text>
             </View>
 
             {/* 확인 문제 */}
-            <View style={s.summaryItem}>
-              <Text style={s.summaryIcon}>✓</Text>
-              <Text style={s.summaryCount}>{data.testScore}/{data.testTotal}</Text>
-              <Text style={s.summaryLabel}>{pick(lang, '확인 문제', 'Câu hỏi xác nhận')}</Text>
+            <View style={[s.summaryItem, __mbRp && { gap: 7 }]}>
+              {__mbRp ? (
+                <View style={{ width: 42, height: 42, borderRadius: 21, backgroundColor: '#D1FAE5', alignItems: 'center', justifyContent: 'center' }}>
+                  <Image source={{ uri: icon('check', '#059669', 22, 2.4) }} style={{ width: 22, height: 22 }} />
+                </View>
+              ) : (
+                <Text style={s.summaryIcon}>✓</Text>
+              )}
+              <Text style={[s.summaryCount, __mbRp && { fontSize: 18, color: '#1B1926' }]}>{data.testScore}/{data.testTotal}</Text>
+              <Text style={[s.summaryLabel, __mbRp && { fontSize: 12.5 }]}>{pick(lang, '확인 문제', 'Câu hỏi xác nhận')}</Text>
             </View>
           </View>
         </View>

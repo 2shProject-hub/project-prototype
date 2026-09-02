@@ -1,3 +1,4 @@
+import { TypewriterText } from '../../components/TypewriterText';
 import { useTheme } from '../../theme/ThemeContext';
 import { ThemedGlyph } from '../../components/ThemedGlyph';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
@@ -224,7 +225,7 @@ export default function DialogueListenWriteStage({ onNext, onBack, data }: Props
           <View style={[styles.introTutorSection, __mbBtn && { paddingBottom: 8 }]}>
             <View style={styles.introTutorRow}>
               <View style={styles.introTutorCard}>
-                <Text style={[styles.introTutorText, __mbBtn && { fontSize: 15, lineHeight: 23 }]}>{tutorBubble}</Text>
+                <TypewriterText active={!!__mbBtn} text={tutorBubble} style={[styles.introTutorText, __mbBtn && { fontSize: 15, lineHeight: 23 }]} />
                 <TouchableOpacity
                   style={[styles.introSpeakerBtn, tutorPlaying && styles.introSpeakerBtnActive]}
                   onPress={playTutorAudio}

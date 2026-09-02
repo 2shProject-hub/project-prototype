@@ -10,6 +10,7 @@ import { MOCK_WORD_SLIDES, type WordSlide } from '../../data/lessonData';
 import { icon } from '../graphics';
 import { mb, mbFont, mbDisplay, mbBody } from './mbTokens';
 import { MbCanvas, MbHeader, MbCard, MbNavBar } from './MbScaffold';
+import { TypewriterText } from '../../components/TypewriterText';
 import { BlinkSprite } from '../BlinkSprite';
 
 const TUTOR_IMAGE = require('../../../assets/word-slides/tutor.png') as string;
@@ -129,9 +130,11 @@ export function MbWordSlides({ onNext, onBack, slides, flowStep, flowTotal }: Pr
               shadowColor: '#3E6D96', shadowOpacity: 0.16, shadowRadius: 12, shadowOffset: { width: 0, height: 4 },
             }}
           >
-            <Text style={[mbBody(15, '600'), { flex: 1, color: mb.ink, lineHeight: 23 }]} numberOfLines={4}>
-              {pick(lang, slide.bubble.ko, slide.bubble.vi)}
-            </Text>
+            <TypewriterText
+              text={pick(lang, slide.bubble.ko, slide.bubble.vi)}
+              style={[mbBody(15, '600'), { flex: 1, color: mb.ink, lineHeight: 23 }]}
+              numberOfLines={4}
+            />
             <TouchableOpacity
               onPress={replayAudio}
               activeOpacity={0.7}

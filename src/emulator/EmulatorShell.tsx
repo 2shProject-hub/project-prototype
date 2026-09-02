@@ -10,6 +10,7 @@ import { SCREEN_REGISTRY, getScreen } from './screenRegistry';
 import { ThemeProvider, useTheme } from '../theme/ThemeContext';
 import { ThemeGalleryScreen } from '../screens/ThemeGalleryScreen';
 import { applyThemeToDom } from '../theme/applyThemeToDom';
+import { svgDataUri } from '../theme/graphics';
 import { BlinkSprite } from '../theme/BlinkSprite';
 import { themeAssets } from '../theme/themeAssets';
 import { MB_SCREENS } from '../theme/mb/registry';
@@ -209,7 +210,7 @@ function MbFocusPulse({ enabled, screenId }: { enabled: boolean; screenId: strin
           target.animate(
             [
               { transform: 'scale(1)' },
-              { transform: 'scale(1.03)', offset: 0.45 },
+              { transform: 'scale(1.045)', offset: 0.45 },
               { transform: 'scale(1)' },
             ],
             { duration: 640, easing: 'cubic-bezier(.34,1.3,.5,1)' },
@@ -1328,13 +1329,13 @@ function LangSwitcher() {
 const ls = StyleSheet.create({
   row: { flexDirection: 'row', gap: 6 },
   btn: {
-    flex: 1, paddingVertical: 7, borderRadius: 10,
-    borderWidth: 1, borderColor: colors.line, alignItems: 'center',
-    backgroundColor: '#f9fafb',
+    flex: 1, paddingVertical: 8, borderRadius: 11,
+    borderWidth: 1, borderColor: '#E7E6EE', alignItems: 'center',
+    backgroundColor: '#FFFFFF',
   },
-  btnActive: { borderColor: colors.teal, backgroundColor: colors.tealSoft },
-  label: { fontSize: 11, fontWeight: '600', color: colors.muted },
-  labelActive: { color: colors.teal },
+  btnActive: { borderColor: '#6B4EF6', backgroundColor: '#F4F1FF', borderWidth: 1.5 },
+  label: { fontSize: 11.5, fontWeight: '700', color: '#8A8799' },
+  labelActive: { color: '#4C34C2' },
 });
 
 // ─── 화면 선택 콤보박스 ──────────────────────────────────────────
@@ -1677,8 +1678,11 @@ function EmulatorShellInner() {
       {/* ── 상단 타이틀 바 ── */}
       <View style={shell.topBar}>
         <View style={shell.topBarBrand}>
+          <Image source={{ uri: STUDIO_LOGO }} style={{ width: 28, height: 28, borderRadius: 8 }} />
           <Text style={shell.topBarLogo}>K-Chao</Text>
-          <Text style={shell.topBarSub}>리뉴얼 프로토타입 뷰어</Text>
+          <View style={shell.topBarSubChip}>
+            <Text style={shell.topBarSub}>리뉴얼 프로토타입 뷰어</Text>
+          </View>
         </View>
         <View style={shell.topBarRight}>
           <Text style={shell.topBarFieldLabel}>테마</Text>
@@ -1701,7 +1705,9 @@ function EmulatorShellInner() {
               {showGallery ? '× 갤러리 닫기' : '🎨 테마 갤러리'}
             </Text>
           </TouchableOpacity>
-          <Text style={shell.topBarVersion}>v0.1 · Expo Web</Text>
+          <View style={shell.versionChip}>
+            <Text style={shell.topBarVersion}>v0.1 · Expo Web</Text>
+          </View>
         </View>
       </View>
 
@@ -1741,42 +1747,42 @@ function EmulatorShellInner() {
             <Text style={shell.panelTitle}>학습 Flow</Text>
             {!flowMode ? (
               <TouchableOpacity
-                style={[shell.selectItem, { backgroundColor: colors.tealSoft }]}
+                style={[shell.selectItem, { backgroundColor: '#6B4EF6', alignItems: 'center', paddingVertical: 11 }]}
                 onPress={() => {
                   setFlowMode(true);
                   setCurrentFlowStep(0);
                 }}
-                activeOpacity={0.7}
+                activeOpacity={0.85}
               >
-                <Text style={[shell.selectItemLabel, { color: colors.teal, fontWeight: '700' }]}>
-                  📚 Flow 시작
+                <Text style={[shell.selectItemLabel, { color: '#FFFFFF', fontWeight: '800' }]}>
+                  ▶  Flow 시작
                 </Text>
               </TouchableOpacity>
             ) : (
               <View>
-                <View style={[shell.selectItem, { backgroundColor: '#FFE6E6' }]}>
-                  <Text style={[shell.selectItemLabel, { color: '#D32F2F', fontWeight: '700' }]}>
-                    🎯 Step {currentFlowStep + 1}/{LEARNING_FLOW.length}
+                <View style={[shell.selectItem, { backgroundColor: '#17151F', alignItems: 'center', paddingVertical: 11 }]}>
+                  <Text style={[shell.selectItemLabel, { color: '#FFFFFF', fontWeight: '800' }]}>
+                    Step {currentFlowStep + 1} / {LEARNING_FLOW.length}
                   </Text>
                 </View>
                 <Text style={[shell.panelTitle, { marginTop: 8, fontSize: 12 }]}>
                   {LEARNING_FLOW[currentFlowStep]?.label || '완료'}
                 </Text>
                 <TouchableOpacity
-                  style={[shell.selectItem, { backgroundColor: '#E0E0E0', marginTop: 8 }]}
+                  style={[shell.selectItem, { backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#E7E6EE', alignItems: 'center', marginTop: 8 }]}
                   onPress={() => {
                     setFlowMode(false);
                     setCurrentFlowStep(0);
                   }}
                   activeOpacity={0.7}
                 >
-                  <Text style={[shell.selectItemLabel, { color: '#424242' }]}>
-                    × Flow 종료
+                  <Text style={[shell.selectItemLabel, { color: '#6E6C7A', fontWeight: '700' }]}>
+                    ✕  Flow 종료
                   </Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  style={[shell.selectItem, { backgroundColor: currentFlowStep <= 0 ? '#F5F5F5' : '#E8EAF6', marginTop: 8 }]}
+                  style={[shell.selectItem, { backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: currentFlowStep <= 0 ? '#F0EFF6' : '#D8D0F8', alignItems: 'center', marginTop: 8 }]}
                   onPress={() => {
                     if (currentFlowStep > 0) {
                       setCurrentFlowStep(currentFlowStep - 1);
@@ -1785,13 +1791,13 @@ function EmulatorShellInner() {
                   disabled={currentFlowStep <= 0}
                   activeOpacity={0.7}
                 >
-                  <Text style={[shell.selectItemLabel, { color: currentFlowStep <= 0 ? '#BDBDBD' : '#3949AB', fontWeight: '700' }]}>
-                    ⏮️ 이전 Step
+                  <Text style={[shell.selectItemLabel, { color: currentFlowStep <= 0 ? '#C4C2CE' : '#5B3DF5', fontWeight: '700' }]}>
+                    ‹  이전 Step
                   </Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  style={[shell.selectItem, { backgroundColor: '#FFF3E0', marginTop: 8 }]}
+                  style={[shell.selectItem, { backgroundColor: '#F4F1FF', borderWidth: 1, borderColor: '#D8D0F8', alignItems: 'center', marginTop: 8 }]}
                   onPress={() => {
                     if (currentFlowStep < LEARNING_FLOW.length - 1) {
                       setCurrentFlowStep(currentFlowStep + 1);
@@ -1800,8 +1806,8 @@ function EmulatorShellInner() {
                   disabled={currentFlowStep >= LEARNING_FLOW.length - 1}
                   activeOpacity={0.7}
                 >
-                  <Text style={[shell.selectItemLabel, { color: '#E65100', fontWeight: '700' }]}>
-                    ⏭️ 다음 Step
+                  <Text style={[shell.selectItemLabel, { color: '#4C34C2', fontWeight: '800' }]}>
+                    다음 Step  ›
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -1924,52 +1930,68 @@ function EmulatorShellInner() {
   );
 }
 
+// 스튜디오 로고 마크 — 그라디언트 라운드 사각 + K
+const STUDIO_LOGO = svgDataUri(
+  '<svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 56 56">' +
+  '<defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7B2FF2"/><stop offset="1" stop-color="#0EA5E9"/></linearGradient></defs>' +
+  '<rect width="56" height="56" rx="14" fill="url(#lg)"/>' +
+  '<path d="M20 14v28M20 28l14-14M22 26l14 16" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>' +
+  '</svg>',
+);
+
 const shell = StyleSheet.create({
-  root: { flex: 1, flexDirection: 'column', backgroundColor: colors.backdrop },
+  root: { flex: 1, flexDirection: 'column', backgroundColor: '#F2F2F7' },
   topBar: {
-    height: 52, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingHorizontal: 24,
-    backgroundColor: colors.surface, borderBottomWidth: 1, borderBottomColor: colors.line,
+    height: 58, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    backgroundColor: '#FFFFFF', borderBottomWidth: 1, borderBottomColor: '#ECEAF4',
   },
   topBarBrand: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  topBarLogo: { fontSize: 15, fontWeight: '800', color: colors.teal },
-  topBarSub: { fontSize: 13, color: colors.muted },
-  topBarVersion: { fontSize: 12, color: colors.muted },
+  topBarLogo: { fontSize: 16.5, fontWeight: '800', color: '#17151F', letterSpacing: -0.3 },
+  topBarSubChip: { backgroundColor: '#F4F3FA', paddingHorizontal: 9, paddingVertical: 4, borderRadius: 8 },
+  topBarSub: { fontSize: 11.5, fontWeight: '600', color: '#8A8799' },
+  versionChip: { backgroundColor: '#F4F3FA', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 999 },
+  topBarVersion: { fontSize: 11, fontWeight: '700', color: '#8A8799' },
   topBarRight: { flexDirection: 'row', alignItems: 'center', gap: 10, zIndex: 50 },
-  topBarFieldLabel: { fontSize: 11, fontWeight: '700', color: colors.muted, letterSpacing: 0.4 },
+  topBarFieldLabel: { fontSize: 11, fontWeight: '800', color: '#8A8799', letterSpacing: 0.8 },
   galleryBtn: {
-    paddingHorizontal: 11, paddingVertical: 7, borderRadius: 9,
-    borderWidth: 1, borderColor: colors.teal, backgroundColor: colors.tealSoft,
+    paddingHorizontal: 13, paddingVertical: 8, borderRadius: 999,
+    borderWidth: 1, borderColor: '#D8D0F8', backgroundColor: '#F4F1FF',
   },
-  galleryBtnOn: { backgroundColor: colors.teal, borderColor: colors.teal },
-  galleryBtnText: { fontSize: 12, fontWeight: '800', color: colors.teal },
+  galleryBtnOn: { backgroundColor: '#17151F', borderColor: '#17151F' },
+  galleryBtnText: { fontSize: 12, fontWeight: '800', color: '#5B3DF5' },
   galleryBtnTextOn: { color: '#ffffff' },
   applyBtn: {
-    paddingHorizontal: 10, paddingVertical: 7, borderRadius: 9,
-    borderWidth: 1, borderColor: colors.line, backgroundColor: '#f9fafb',
+    paddingHorizontal: 13, paddingVertical: 8, borderRadius: 999,
+    borderWidth: 1, borderColor: '#E7E6EE', backgroundColor: '#FFFFFF',
   },
-  applyBtnOn: { backgroundColor: colors.ink, borderColor: colors.ink },
-  applyBtnText: { fontSize: 11.5, fontWeight: '700', color: colors.muted },
+  applyBtnOn: { backgroundColor: '#6B4EF6', borderColor: '#6B4EF6' },
+  applyBtnText: { fontSize: 12, fontWeight: '800', color: '#8A8799' },
   applyBtnTextOn: { color: '#ffffff' },
   body: { flex: 1, flexDirection: 'row' },
 
-  // Left panel
+  // Left panel — 카드형 컨트롤
   leftPanel: {
-    width: 220, backgroundColor: colors.surface,
-    borderRightWidth: 1, borderRightColor: colors.line,
+    width: 236, backgroundColor: '#FBFBFE',
+    borderRightWidth: 1, borderRightColor: '#ECEAF4',
     padding: 16,
   },
-  panelTitle: { fontSize: 11, fontWeight: '700', color: colors.muted, letterSpacing: 0.6, marginBottom: 8, marginTop: 4, textTransform: 'uppercase' as const },
+  panelTitle: { fontSize: 11, fontWeight: '800', color: '#8A8799', letterSpacing: 1, marginBottom: 10, marginTop: 4, textTransform: 'uppercase' as const },
   selectItem: {
-    paddingHorizontal: 10, paddingVertical: 8, borderRadius: 10, marginBottom: 4,
+    paddingHorizontal: 12, paddingVertical: 10, borderRadius: 12, marginBottom: 6,
+    backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#EFEDF6',
   },
-  selectItemActive: { backgroundColor: colors.tealSoft },
-  selectItemOs: { fontSize: 10, fontWeight: '700', color: colors.muted, letterSpacing: 0.4 },
-  selectItemOsActive: { color: colors.teal },
-  selectItemLabel: { fontSize: 13, fontWeight: '500', color: colors.ink },
-  selectItemLabelActive: { fontWeight: '700', color: colors.teal },
-  selectItemSize: { fontSize: 11, color: colors.muted },
-  divider: { height: 1, backgroundColor: colors.line, marginVertical: 16 },
+  selectItemActive: { backgroundColor: '#F4F1FF', borderColor: '#6B4EF6', borderWidth: 1.5 },
+  selectItemOs: {
+    fontSize: 9.5, fontWeight: '800', color: '#8A8799', letterSpacing: 0.6,
+    backgroundColor: '#F1F0F7', alignSelf: 'flex-start' as const,
+    paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6, overflow: 'hidden' as const, marginBottom: 4,
+  },
+  selectItemOsActive: { color: '#4C34C2', backgroundColor: '#EFEBFF' },
+  selectItemLabel: { fontSize: 13, fontWeight: '600', color: '#17151F' },
+  selectItemLabelActive: { fontWeight: '800', color: '#4C34C2' },
+  selectItemSize: { fontSize: 11, fontWeight: '600', color: '#A5A3B2', marginTop: 1 },
+  divider: { height: 1, backgroundColor: '#ECEAF4', marginVertical: 16 },
   screenItemTop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 6 },
 
   // Center
@@ -1989,46 +2011,54 @@ const shell = StyleSheet.create({
   statusBarText: { color: '#fff', fontSize: 10, fontWeight: '600' },
   notch: { width: 80, height: 16, backgroundColor: '#1a1a2e', borderRadius: 12 },
   deviceScreen: { borderRadius: 20, overflow: 'hidden', backgroundColor: colors.surface },
-  deviceInfo: { alignItems: 'center' },
-  deviceInfoText: { fontSize: 11, color: colors.muted },
+  deviceInfo: {
+    alignSelf: 'center' as const, backgroundColor: '#FFFFFF',
+    borderWidth: 1, borderColor: '#ECEAF4',
+    paddingHorizontal: 13, paddingVertical: 6, borderRadius: 999,
+  },
+  deviceInfoText: { fontSize: 11, fontWeight: '600', color: '#8A8799' },
 
-  // Right panel
+  // Right panel — 정보 스튜디오
   rightPanel: {
-    width: 420, backgroundColor: colors.surface,
-    borderLeftWidth: 1, borderLeftColor: colors.line,
+    width: 420, backgroundColor: '#FFFFFF',
+    borderLeftWidth: 1, borderLeftColor: '#ECEAF4',
     flexDirection: 'column',
   },
   screenHeader: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    padding: 16, borderBottomWidth: 1, borderBottomColor: colors.line,
+    padding: 18, borderBottomWidth: 1, borderBottomColor: '#F0EFF6',
   },
-  screenName: { fontSize: 14, fontWeight: '700', color: colors.ink, flex: 1, marginRight: 8 },
+  screenName: { fontSize: 15, fontWeight: '800', color: '#17151F', flex: 1, marginRight: 8, letterSpacing: -0.2 },
   tabs: {
-    flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: colors.line,
+    flexDirection: 'row', margin: 14, marginBottom: 4,
+    backgroundColor: '#F1F0F7', borderRadius: 11, padding: 3,
   },
-  tab: { flex: 1, paddingVertical: 10, alignItems: 'center' },
-  tabActive: { borderBottomWidth: 2, borderBottomColor: colors.teal },
-  tabText: { fontSize: 12, color: colors.muted, fontWeight: '500' },
-  tabTextActive: { color: colors.teal, fontWeight: '700' },
-  tabContent: { flex: 1, padding: 16 },
+  tab: { flex: 1, paddingVertical: 8, alignItems: 'center', borderRadius: 9 },
+  tabActive: {
+    backgroundColor: '#FFFFFF',
+    shadowColor: '#17151F', shadowOpacity: 0.08, shadowRadius: 6, shadowOffset: { width: 0, height: 2 },
+  },
+  tabText: { fontSize: 12.5, color: '#6E6C7A', fontWeight: '600' },
+  tabTextActive: { color: '#17151F', fontWeight: '800' },
+  tabContent: { flex: 1, padding: 18 },
   infoBlock: { gap: 12 },
-  infoText: { fontSize: 13, color: colors.ink, lineHeight: 20 },
+  infoText: { fontSize: 13.5, color: '#3A384A', lineHeight: 22 },
   codeChip: {
-    borderRadius: 10, padding: 10,
-    backgroundColor: colors.canvas, borderWidth: 1, borderColor: colors.line,
+    borderRadius: 12, padding: 12,
+    backgroundColor: '#FAFAFD', borderWidth: 1, borderColor: '#EFEDF6',
   },
-  codeChipB: { borderColor: colors.tealSoft, backgroundColor: '#f0fcfc' },
-  codeChipLabel: { fontSize: 10, fontWeight: '700', color: colors.muted, letterSpacing: 0.4 },
-  codeChipValue: { fontSize: 12, fontWeight: '600', color: colors.teal, marginTop: 2 },
+  codeChipB: { borderColor: '#D8D0F8', backgroundColor: '#F4F1FF' },
+  codeChipLabel: { fontSize: 10, fontWeight: '800', color: '#8A8799', letterSpacing: 0.6 },
+  codeChipValue: { fontSize: 12.5, fontWeight: '700', color: '#5B3DF5', marginTop: 2 },
 
   // Badges
   categoryBadge: {
-    paddingHorizontal: 8, paddingVertical: 3, borderRadius: 10,
-    backgroundColor: colors.canvas,
+    paddingHorizontal: 9, paddingVertical: 4, borderRadius: 999,
+    backgroundColor: '#F1F0F7',
   },
-  badgeNew: { backgroundColor: '#e8f8f0' },
-  badgeMod: { backgroundColor: '#fff4e6' },
-  categoryBadgeText: { fontSize: 10, fontWeight: '700', color: colors.muted },
+  badgeNew: { backgroundColor: '#EFEBFF' },
+  badgeMod: { backgroundColor: '#FFF1E4' },
+  categoryBadgeText: { fontSize: 10.5, fontWeight: '800', color: '#4B4960' },
 });
 
 // 테마 컨텍스트로 감싼 최종 export

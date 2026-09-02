@@ -1,3 +1,4 @@
+import { TypewriterText } from '../../components/TypewriterText';
 import { useTheme } from '../../theme/ThemeContext';
 import { useEffect, useRef, useState } from 'react';
 import { ScrollView, View, Text, TouchableOpacity, StyleSheet, Image, Platform } from 'react-native';
@@ -126,7 +127,7 @@ export function MissionTutorPrevStage({ sessionId, onNext, onBack }: Props) {
           {/* 말풍선 */}
           <View style={[styles.bubble, __mb && { borderRadius: 18, borderWidth: 1.5, borderColor: '#E9E2FB' }]}>
             {BUBBLE_LINES.map((line, i) => (
-              <Text key={i} style={[styles.bubbleText, __mb && { fontSize: 15.5, lineHeight: 24 }, i > 0 && styles.bubbleTextGap]}>{line}</Text>
+              <TypewriterText key={i} active={__mb} delayMs={i * 550} text={line} style={[styles.bubbleText, __mb && { fontSize: 15.5, lineHeight: 24 }, i > 0 && styles.bubbleTextGap]} />
             ))}
             {/* 말풍선 꼬리 */}
             <View style={styles.bubbleTail} />

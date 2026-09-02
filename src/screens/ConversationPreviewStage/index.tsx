@@ -28,6 +28,7 @@
  *   - lines → activity.questions[].listItems.dialogue_content[]
  */
 
+import { TypewriterText } from '../../components/TypewriterText';
 import { useTheme } from '../../theme/ThemeContext';
 import { ThemedGlyph } from '../../components/ThemedGlyph';
 import React, { useRef, useEffect, useState, useCallback } from 'react';
@@ -287,7 +288,7 @@ export function ConversationPreviewStage({
           <View style={[s.introTutorSection, __mbBtn && { paddingBottom: 2 }]}>
             <View style={s.introTutorRow}>
               <View style={[s.introTutorCard, __mbBtn && { borderRadius: 18, borderWidth: 1.5, borderColor: '#E9E2FB' }]}>
-                <Text style={[s.introTutorText, __mbBtn && { fontSize: 15, lineHeight: 23 }]}>{bubbleText}</Text>
+                <TypewriterText active={!!__mbBtn} text={bubbleText} style={[s.introTutorText, __mbBtn && { fontSize: 15, lineHeight: 23 }]} />
                 <TouchableOpacity
                   style={[s.introSpeakerBtn, tutorPlaying && s.introSpeakerBtnActive]}
                   onPress={playTutorAudio}

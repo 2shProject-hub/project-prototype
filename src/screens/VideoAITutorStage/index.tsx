@@ -17,6 +17,7 @@
  *   - ActivityHeader → ActivityLayout (step/totalSteps)
  */
 
+import { TypewriterText } from '../../components/TypewriterText';
 import { useTheme } from '../../theme/ThemeContext';
 import { ThemedGlyph } from '../../components/ThemedGlyph';
 import React, { useRef, useEffect, useState } from 'react';
@@ -187,9 +188,11 @@ export function VideoAITutorStage({
       <View style={s.tutorRow}>
         {/* 말풍선 */}
         <View style={[s.bubble, themeOn && { borderRadius: 18, borderColor: '#E9E2FB' }]}>
-          <Text style={[s.bubbleText, themeOn && { fontSize: 15, lineHeight: 23 }]}>
-            {pick(lang, data.bubbleKo, data.bubbleVi)}
-          </Text>
+          <TypewriterText
+            active={themeOn}
+            text={pick(lang, data.bubbleKo, data.bubbleVi)}
+            style={[s.bubbleText, themeOn && { fontSize: 15, lineHeight: 23 }]}
+          />
           {/* 스피커 버튼 */}
           <TouchableOpacity
             style={[s.speakerBtn, isPlaying && s.speakerBtnActive, themeOn && { backgroundColor: '#F1EDFB' }]}

@@ -36,7 +36,6 @@ export function MbProgressRow({
   onClose: () => void;
 }) {
   const pct = Math.round(percentage);
-  const showPctLabel = !counter.endsWith('%'); // 카운터가 이미 % 면 우측 라벨은 중복이라 숨긴다
   const fill = useRef(new Animated.Value(0)).current;
   const sweep = useRef(new Animated.Value(0)).current;
   const pop = useRef(new Animated.Value(1)).current;
@@ -45,68 +44,85 @@ export function MbProgressRow({
     Animated.timing(fill, { toValue: pct, duration: 520, useNativeDriver: false }).start();
     sweep.setValue(0);
     Animated.timing(sweep, { toValue: 1, duration: 700, useNativeDriver: false }).start();
-    pop.setValue(1.35);
+    pop.setValue(1.3);
     Animated.spring(pop, { toValue: 1, friction: 4, useNativeDriver: false }).start();
   }, [pct, fill, sweep, pop]);
 
-  const trophy = svgDataUri(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">` +
-      `<path d="M6 4h12v3.2c0 3.8-2.6 6.8-6 6.8s-6-3-6-6.8z" fill="#FFC53D"/>` +
-      `<path d="M6 5H3.4c0 3 1.4 4.8 3.4 5.4M18 5h2.6c0 3-1.4 4.8-3.4 5.4" stroke="#FFC53D" stroke-width="1.7" fill="none"/>` +
-      `<rect x="10.6" y="13.6" width="2.8" height="3" fill="#F5A623"/>` +
-      `<rect x="8" y="16.6" width="8" height="2.6" rx="1.2" fill="#F5A623"/>` +
-      `<path d="M9.2 6.4h5.6" stroke="#FFF3D6" stroke-width="1.5" stroke-linecap="round"/></svg>`,
-  );
+  // "12/43" → 앞은 보라 강조, 뒤는 회색 — 상용 강의 앱의 수강 카운터 문법
+  const parts = counter.includes('/') ? counter.split('/') : null;
+  const markerLeft = fill.interpolate({ inputRange: [0, 100], outputRange: ['4%', '100%'] });
 
   return (
-    <View style={{ paddingHorizontal: 16, paddingTop: 12, paddingBottom: 6, flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-      <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-        {/* 트로피 배지 — 알약에 겹침 */}
-        <View
-          style={{
-            width: 36, height: 36, borderRadius: 18, backgroundColor: mb.white,
-            alignItems: 'center', justifyContent: 'center', zIndex: 2,
-            borderWidth: 1, borderColor: '#EEECF5',
-            shadowColor: '#5B8CB8', shadowOpacity: 0.3, shadowRadius: 6, shadowOffset: { width: 0, height: 2 },
-          }}
-        >
-          <Image source={{ uri: trophy }} style={{ width: 25, height: 25 }} />
-        </View>
-        <View style={{ flex: 1, height: 15, marginLeft: -9, borderRadius: 999, backgroundColor: '#ECEAF6', overflow: 'hidden', justifyContent: 'center' }}>
+    <View style={{ paddingHorizontal: 16, paddingTop: 12, paddingBottom: 2, flexDirection: 'row', alignItems: 'flex-start', gap: 12 }}>
+      {/* 트랙 + 마커 + 말풍선 */}
+      <View style={{ flex: 1, height: 44 }}>
+        <View style={{ position: 'absolute', left: 0, right: 0, top: 8.5, height: 7, borderRadius: 999, backgroundColor: '#EAE8F3', overflow: 'hidden' }}>
           <Animated.View
             style={{
               position: 'absolute', left: 0, top: 0, bottom: 0,
               borderRadius: 999,
               backgroundColor: mb.violet,
-              width: fill.interpolate({ inputRange: [0, 100], outputRange: ['17%', '100%'] }),
+              width: fill.interpolate({ inputRange: [0, 100], outputRange: ['4%', '100%'] }),
               overflow: 'hidden',
             }}
           >
             <Animated.View
               style={{
-                position: 'absolute', top: 0, bottom: 0, width: 40,
-                backgroundColor: 'rgba(255,255,255,0.4)',
+                position: 'absolute', top: 0, bottom: 0, width: 36,
+                backgroundColor: 'rgba(255,255,255,0.45)',
                 transform: [
-                  { translateX: sweep.interpolate({ inputRange: [0, 1], outputRange: [-50, 320] }) },
+                  { translateX: sweep.interpolate({ inputRange: [0, 1], outputRange: [-40, 320] }) },
                   { skewX: '-22deg' },
                 ],
               }}
             />
           </Animated.View>
-          {/* 막대 안 카운터 */}
-          <Text style={{ fontFamily: mbFont, fontSize: 10.5, fontWeight: '800', color: mb.white, marginLeft: 20, zIndex: 2 }}>
-            {counter}
-          </Text>
         </View>
-      </View>
-      {showPctLabel ? (
-        <Animated.Text
-          style={{ fontFamily: mbFont, fontSize: 15, fontWeight: '900', color: mb.violetDark, transform: [{ scale: pop }] }}
+
+        {/* 연필 마커 — 진행 지점 */}
+        <Animated.View
+          style={{
+            position: 'absolute', left: markerLeft, top: 0,
+            width: 24, height: 24, borderRadius: 12, marginLeft: -12,
+            backgroundColor: mb.white, borderWidth: 1.5, borderColor: '#DCD2F5',
+            alignItems: 'center', justifyContent: 'center',
+            shadowColor: '#5B3DF5', shadowOpacity: 0.3, shadowRadius: 5, shadowOffset: { width: 0, height: 2 },
+            zIndex: 2,
+          }}
         >
-          {pct}%
-        </Animated.Text>
+          <Image source={{ uri: icon('pencil', mb.violet, 13, 2.4) }} style={{ width: 13, height: 13 }} />
+        </Animated.View>
+
+        {/* % 말풍선 — 마커 아래 */}
+        <Animated.View
+          style={{
+            position: 'absolute', left: markerLeft, top: 27,
+            marginLeft: -21, width: 42, alignItems: 'center',
+            transform: [{ scale: pop }],
+            zIndex: 2,
+          }}
+        >
+          <View style={{ width: 7, height: 7, backgroundColor: '#2A2733', transform: [{ rotate: '45deg' }], marginBottom: -4.5 }} />
+          <View style={{ backgroundColor: '#2A2733', borderRadius: 7, paddingHorizontal: 7, paddingVertical: 2.5 }}>
+            <Text style={{ fontFamily: mbFont, fontSize: 10, fontWeight: '800', color: '#FFFFFF' }}>{pct}%</Text>
+          </View>
+        </Animated.View>
+
+        {/* 스케일 라벨 */}
+        <Text style={{ position: 'absolute', left: 0, top: 27, fontFamily: mbFont, fontSize: 9.5, fontWeight: '700', color: '#B4B1C4' }}>0</Text>
+        {parts ? (
+          <Text style={{ position: 'absolute', right: 0, top: 27, fontFamily: mbFont, fontSize: 9.5, fontWeight: '700', color: '#B4B1C4' }}>{parts[1]}</Text>
+        ) : null}
+      </View>
+
+      {/* 우측 카운터 — 이중톤 */}
+      {parts ? (
+        <Text style={{ fontFamily: mbFont, marginTop: 3 }}>
+          <Text style={{ fontSize: 15, fontWeight: '900', color: mb.violetDark }}>{parts[0]}</Text>
+          <Text style={{ fontSize: 11.5, fontWeight: '700', color: '#8A8799' }}>/{parts[1]}</Text>
+        </Text>
       ) : null}
-      <TouchableOpacity onPress={onClose} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} activeOpacity={0.7}>
+      <TouchableOpacity onPress={onClose} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} activeOpacity={0.7} style={{ marginTop: 3 }}>
         <Image source={{ uri: icon('close', '#7d8aa0', 19, 2.2) }} style={{ width: 19, height: 19 }} />
       </TouchableOpacity>
     </View>

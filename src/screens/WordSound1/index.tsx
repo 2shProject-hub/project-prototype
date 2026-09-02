@@ -4,6 +4,7 @@
  * - 4개 음원 선택지
  * - 공통 ActivityHeader, CtaButton, QuizFeedbackModal 적용
  */
+import { useTheme } from '../../theme/ThemeContext';
 import { ThemedGlyph } from '../../components/ThemedGlyph';
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Platform, ScrollView, Animated } from 'react-native';
@@ -41,6 +42,8 @@ export function WordSound1({
   totalSets = 1,
 }: Props) {
   const { lang } = useLang();
+  const { theme: __mbBT, enabled: __mbBE } = useTheme();
+  const __mbBtn = __mbBE && __mbBT.id === 'malhaeboka';
   const sfx = useSfx();
   const [currentIdx, setCurrentIdx] = useState(0);
   const [selectedItemValue, setSelectedItemValue] = useState<number | null>(null);
@@ -120,7 +123,7 @@ export function WordSound1({
       <ScrollView style={s.scroll} contentContainerStyle={s.content}>
         {/* 질문 제목 */}
         <View style={s.titleBox}>
-          <Text style={s.title}>
+          <Text style={[s.title, __mbBtn && { fontSize: 19.5, lineHeight: 27 }]}>
             {pick(lang, '단어를 보고 음원을 고르세요', 'Nhìn từ rồi chọn âm thanh đúng')}
           </Text>
           <Text style={s.subtitle}>
@@ -147,14 +150,15 @@ export function WordSound1({
                 style={[
                   s.soundCard,
                   { width: '100%' },
+                  __mbBtn && { minHeight: 138, borderRadius: 18 },
                   isSelected && s.soundCardSelected,
                   isPlaying && s.soundCardPlaying,
                 ]}
                 onPress={() => handleSelectAndPlay(item)}
                 activeOpacity={0.7}
               >
-                <View style={[s.badge, isSelected && s.badgeSelected]}>
-                  <Text style={[s.badgeText, isSelected && s.badgeTextSelected]}>
+                <View style={[s.badge, __mbBtn && { backgroundColor: '#7150F0', borderColor: '#7150F0', minWidth: 26, minHeight: 26, alignItems: 'center', justifyContent: 'center' }, isSelected && s.badgeSelected]}>
+                  <Text style={[s.badgeText, __mbBtn && { color: '#FFFFFF', fontSize: 13.5, fontWeight: '800' }, isSelected && s.badgeTextSelected]}>
                     {idx + 1}
                   </Text>
                 </View>

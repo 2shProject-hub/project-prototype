@@ -143,12 +143,14 @@ export function themedChip(t: Theme, state: 'default' | 'selected' | 'correct' |
     text: { color: map.fg, ...bodyFont(t, 700), ...(mb ? { fontSize: 15.5, lineHeight: 22 } : null) } as TextStyle,
     sub: { color: c.muted, ...bodyFont(t), ...(mb ? { fontSize: 14, lineHeight: 20 } : null) } as TextStyle,
     badge: {
-      backgroundColor: state === 'default' ? (mb ? '#EFEAFF' : c.backdrop) : map.border,
+      backgroundColor: state === 'default' ? (mb ? '#7150F0' : c.backdrop) : map.border,
       borderRadius: L.radius === 0 ? 2 : 999,
+      ...(mb ? { minWidth: 26, minHeight: 26, alignItems: 'center' as const, justifyContent: 'center' as const } : null),
     } as ViewStyle,
     badgeText: {
-      color: state === 'default' ? (mb ? '#4C34C2' : c.textSecondary) : readableOn(map.border, ['#ffffff', c.ink]),
+      color: state === 'default' ? (mb ? '#FFFFFF' : c.textSecondary) : readableOn(map.border, ['#ffffff', c.ink]),
       ...bodyFont(t, 700),
+      ...(mb ? { fontSize: 13.5, fontWeight: '800' as const } : null),
     } as TextStyle,
   };
 }
