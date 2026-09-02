@@ -28,6 +28,7 @@
  *   - lines → activity.questions[].listItems.dialogue_content[]
  */
 
+import { useTheme } from '../../theme/ThemeContext';
 import { ThemedGlyph } from '../../components/ThemedGlyph';
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import {
@@ -134,6 +135,8 @@ export function ConversationPreviewStage({
   data = MOCK_CONVERSATION,
 }: Props) {
   const { lang } = useLang();
+  const { theme: __mbBT, enabled: __mbBE } = useTheme();
+  const __mbBtn = __mbBE && __mbBT.id === 'malhaeboka' ? { height: 40, minHeight: 0, paddingVertical: 0, justifyContent: 'center' as const } : null;
 
   const [phase, setPhase] = useState<Phase>(data.aiTutor ? 'intro' : 'main');
   const [tutorPlaying, setTutorPlaying] = useState(false);
@@ -281,7 +284,7 @@ export function ConversationPreviewStage({
           </View>
 
           {/* AI 튜터 하단 */}
-          <View style={s.introTutorSection}>
+          <View style={[s.introTutorSection, __mbBtn && { paddingBottom: 8 }]}>
             <View style={s.introTutorRow}>
               <View style={s.introTutorCard}>
                 <Text style={s.introTutorText}>{bubbleText}</Text>
@@ -295,7 +298,7 @@ export function ConversationPreviewStage({
               </View>
               <Image source={TUTOR_IMAGE as any} style={s.introTutorImg} resizeMode="contain" />
             </View>
-            <TouchableOpacity style={s.introConfirmBtn} onPress={handleConfirm} activeOpacity={0.85}>
+            <TouchableOpacity style={[s.introConfirmBtn, __mbBtn]} onPress={handleConfirm} activeOpacity={0.85}>
               <Text style={s.introConfirmBtnText}>확인</Text>
             </TouchableOpacity>
           </View>
@@ -304,8 +307,8 @@ export function ConversationPreviewStage({
 
       {/* main phase: 하단 CTA */}
       {phase === 'main' && (
-        <View style={s.footer}>
-          <TouchableOpacity style={s.ctaBtn} onPress={handleNext} activeOpacity={0.85}>
+        <View style={[s.footer, __mbBtn && { paddingBottom: 8, paddingTop: 8 }]}>
+          <TouchableOpacity style={[s.ctaBtn, __mbBtn]} onPress={handleNext} activeOpacity={0.85}>
             <Text style={s.ctaBtnText}>
               {pick(lang, '다음', 'Tiếp theo')} →
             </Text>

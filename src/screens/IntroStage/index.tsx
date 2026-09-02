@@ -1,3 +1,4 @@
+import { useTheme } from '../../theme/ThemeContext';
 import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
@@ -12,6 +13,8 @@ interface Props {
 
 export function IntroStage({ onNext, onBack }: Props) {
   const { lang } = useLang();
+  const { theme: __mbT, enabled: __mbE } = useTheme();
+  const __mbBig = __mbE && __mbT.id === 'malhaeboka';
   const intro = SESSION1.intro;
 
   return (
@@ -20,7 +23,7 @@ export function IntroStage({ onNext, onBack }: Props) {
 
       {/* ── 콘텐츠 (수직 중앙 정렬) ── */}
       <View style={styles.content}>
-        <View style={styles.card}>
+        <View style={[styles.card, __mbBig && { alignSelf: 'stretch' as const, flexGrow: 1, justifyContent: 'center' as const, paddingVertical: 34, marginHorizontal: 4 }]}>
           {/* 1. 배지 */}
           <View style={styles.badge}>
             <Text style={styles.badgeText}>{pick(lang, intro.badge, intro.badgeVi)}</Text>
@@ -28,11 +31,11 @@ export function IntroStage({ onNext, onBack }: Props) {
 
           {/* 2. 아이콘 */}
           <View style={styles.iconCircle}>
-            <ThemedGlyph style={styles.iconEmoji} glyph={intro.icon} />
+            <ThemedGlyph style={[styles.iconEmoji, __mbBig && { fontSize: 46 }]} glyph={intro.icon} />
           </View>
 
           {/* 3. 타이틀 */}
-          <Text style={styles.title}>{pick(lang, intro.title, intro.titleVi)}</Text>
+          <Text style={[styles.title, __mbBig && { fontSize: 26, lineHeight: 36 }]}>{pick(lang, intro.title, intro.titleVi)}</Text>
 
           {/* 4. 서브타이틀 */}
           <Text style={styles.subtitle}>{pick(lang, intro.subtitle, intro.subtitleVi)}</Text>

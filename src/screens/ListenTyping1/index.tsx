@@ -161,10 +161,10 @@ export function ListenTyping1({ questions = [], onNext, onBack, currentSetNumber
             <Text style={s.modalTitle}>
               {modalState === 'correct' ? '✅ 정답입니다!' : '❌ 오답입니다'}
             </Text>
-            <Text style={s.modalAnswer}>{pick(lang, '정답: ' + currentQuestion.answer, 'Đáp án: ' + currentQuestion.answer)}</Text>
-            {currentQuestion.answerVi && (
+            {/* 정답은 노출하지 않는다 — 오답이면 다시 풀도록 */}
+            {modalState === 'correct' && currentQuestion.answerVi ? (
               <Text style={s.modalSubText}>{currentQuestion.answerVi}</Text>
-            )}
+            ) : null}
             <TouchableOpacity
               style={s.modalBtn}
               onPress={handleCloseModal}

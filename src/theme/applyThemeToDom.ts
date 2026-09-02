@@ -235,6 +235,21 @@ function normalizeFooterBaseline(): void {
       }
       const pt = parseFloat(cs.paddingTop) || 0;
       if (pt >= 14 && pt <= 32) el.style.paddingTop = '10px';
+      // 바 안의 CTA 버튼 두께도 40px 로 통일 (화면별 자체 버튼 포함)
+      (el.querySelectorAll('div') as NodeListOf<HTMLElement>).forEach((btn) => {
+        const br = btn.getBoundingClientRect();
+        if (br.height >= 44 && br.height <= 62 && br.width >= r.width * 0.42) {
+          const bcs = getComputedStyle(btn);
+          if (bcs.borderRadius !== '0px' && (bcs.justifyContent === 'center' || bcs.alignItems === 'center')) {
+            if (!btn.hasAttribute(FOOTER_ATTR)) btn.setAttribute(FOOTER_ATTR, btn.style.height || '');
+            btn.style.height = '40px';
+            btn.style.minHeight = '0px';
+            btn.style.paddingTop = '0px';
+            btn.style.paddingBottom = '0px';
+            btn.style.justifyContent = 'center';
+          }
+        }
+      });
     });
   });
 }
@@ -242,7 +257,12 @@ function normalizeFooterBaseline(): void {
 function restoreFooterBaseline(): void {
   document.querySelectorAll('[' + FOOTER_ATTR + ']').forEach((n) => {
     const el = n as HTMLElement;
-    el.style.paddingBottom = el.getAttribute(FOOTER_ATTR) || '';
+    // 패딩/높이 어느 쪽이든 인라인 지정만 걷어내면 클래스 값으로 복귀한다
+    el.style.paddingBottom = '';
+    el.style.paddingTop = '';
+    el.style.height = '';
+    el.style.minHeight = '';
+    el.style.justifyContent = '';
     el.removeAttribute(FOOTER_ATTR);
   });
 }

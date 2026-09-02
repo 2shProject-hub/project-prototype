@@ -442,7 +442,8 @@ function LearnStripReal({ theme, lang, picks }: { theme: Theme; lang: Lang; pick
   const c = theme.colors;
   const L = theme.layout;
   const s = spacing(L.density);
-  const h = 66; // 목업과 동일한 요청 치수 — 검증된 사진이 그대로 나온다
+  const h = 66; // ⚠️ 요청 URL 치수 — 바꾸면 검증된 사진이 뒤바뀐다 (표시 크기는 아래 dispH)
+  const dispH = 104; // 표시 높이 — 시원하게 (원본이 2배 해상도라 확대 여유 있음)
   return (
     <View>
       <Text style={[{ fontSize: 10.5, color: c.muted, letterSpacing: theme.type.labelTracking, marginBottom: s.gap }, bodyFont(theme, 700)]}>
@@ -453,7 +454,7 @@ function LearnStripReal({ theme, lang, picks }: { theme: Theme; lang: Lang; pick
           <Image
             key={p.t + p.l}
             source={{ uri: coverPhoto(p.t, 200, h, p.l) }}
-            style={{ flex: 1, height: h, borderRadius: L.radius === 0 ? 0 : Math.min(L.radius, 12) }}
+            style={{ flex: 1, height: dispH, borderRadius: L.radius === 0 ? 0 : Math.min(L.radius, 14) }}
             resizeMode="cover"
           />
         ))}

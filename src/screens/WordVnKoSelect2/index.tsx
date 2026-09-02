@@ -256,7 +256,7 @@ export function WordVnKoSelect2({
                 {word.imageUri ? (
                   <Image
                     source={word.imageUri}
-                    style={mbFill ? { width: '100%', height: 116, borderTopLeftRadius: 12, borderTopRightRadius: 12 } : s.imageCardImg}
+                    style={mbFill ? { width: '100%', height: 148, borderTopLeftRadius: 14, borderTopRightRadius: 14 } : s.imageCardImg}
                     resizeMode={mbFill ? 'cover' : 'contain'}
                   />
                 ) : (
@@ -265,14 +265,14 @@ export function WordVnKoSelect2({
                 <Text
                   style={[
                     s.imageCardText,
-                    mbFill && { marginTop: 9 },
+                    mbFill && { marginTop: 5, marginBottom: 0 },
                     choiceState === 'correct' && s.imageCardText_correct,
                     choiceState === 'wrong' && s.imageCardText_wrong,
                   ]}
                 >
                   {word.text}
                 </Text>
-                {mbFill ? <View style={{ height: 10 }} /> : null}
+                {mbFill ? <View style={{ height: 6 }} /> : null}
               </TouchableOpacity>
             );
           })}

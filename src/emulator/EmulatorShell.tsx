@@ -1417,7 +1417,12 @@ function EmulatorShellInner() {
     if (document.getElementById('kchao-hide-scrollbar')) return;
     const tag = document.createElement('style');
     tag.id = 'kchao-hide-scrollbar';
-    tag.textContent = '[data-device-screen] *::-webkit-scrollbar{width:0!important;height:0!important;display:none!important} [data-device-screen] *{scrollbar-width:none;-ms-overflow-style:none}';
+    tag.textContent =
+      '[data-device-screen] *::-webkit-scrollbar{width:0!important;height:0!important;display:none!important} ' +
+      '[data-device-screen] *{scrollbar-width:none;-ms-overflow-style:none} ' +
+      // 말해보카: 모든 버튼·문항 탭 팝 — 누르면 눌렸다가 스프링으로 복귀 (transform 이라 레이아웃 불변)
+      '[data-mb="1"] [tabindex]{transition:transform 200ms cubic-bezier(.34,1.8,.5,1)!important} ' +
+      '[data-mb="1"] [tabindex]:active{transform:scale(.93)!important}';
     document.head.appendChild(tag);
   }, []);
 
@@ -1596,7 +1601,7 @@ function EmulatorShellInner() {
             </View>
             {/* 화면 렌더링 영역 */}
             <View style={[shell.deviceScreen, { width: frameW, height: frameH - 24 }]} {...({ dataSet: { 'device-screen': '1' } } as any)}>
-              <View style={{ flex: 1 }} {...({ dataSet: applyTheme ? { themed: 'on' } : undefined } as any)}>
+              <View style={{ flex: 1 }} {...({ dataSet: applyTheme ? { themed: 'on', ...(lightFrame ? { mb: '1' } : null) } : undefined } as any)}>
                 <FlowProgressContext.Provider
                   value={flowMode ? { step: currentFlowStep + 1, total: LEARNING_FLOW.length } : null}
                 >

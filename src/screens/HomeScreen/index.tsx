@@ -1,7 +1,7 @@
 import { ThemedGlyph } from '../../components/ThemedGlyph';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import {
-  View, Text, ScrollView, TouchableOpacity, StyleSheet, Image,
+  View, Text, ScrollView, TouchableOpacity, StyleSheet, Image, Animated,
 } from 'react-native';
 import { colors, shadow } from '../../theme/colors';
 import { BottomNav } from '../../components/BottomNav';
@@ -121,9 +121,13 @@ export function HomeScreen({ sessions, setView, onStartSession }: Props) {
                 <Text style={styles.lessonBadgeText}>{LESSON.number}</Text>
               </View>
               <Text style={styles.heroTitle}>{LESSON.title}</Text>
-              <Text style={styles.heroSummary}>
-                {pick(lang, LESSON.summary, LESSON.summaryVi)}
-              </Text>
+              {brandCrest ? (
+                <ReadingPulse text={pick(lang, LESSON.summary, LESSON.summaryVi)} style={styles.heroSummary} />
+              ) : (
+                <Text style={styles.heroSummary}>
+                  {pick(lang, LESSON.summary, LESSON.summaryVi)}
+                </Text>
+              )}
             </View>
             <View style={styles.heroImageBox}>
               {brandCrest ? (
@@ -276,6 +280,43 @@ const ring = StyleSheet.create({
 });
 
 // ── 메인 스타일 ──────────────────────────────────────────────────────
+// 단어별 리딩 모션 — 순서대로 커졌다 줄며 읽어주는 느낌 (말해보카)
+function ReadingPulse({ text, style }: { text: string; style?: any }) {
+  const words = text.split(' ');
+  const anims = useRef(words.map(() => new Animated.Value(0))).current;
+  useEffect(() => {
+    const seq = Animated.loop(
+      Animated.sequence([
+        ...anims.map((a) =>
+          Animated.sequence([
+            Animated.timing(a, { toValue: 1, duration: 240, useNativeDriver: false }),
+            Animated.timing(a, { toValue: 0, duration: 240, useNativeDriver: false }),
+          ]),
+        ),
+        Animated.delay(1200),
+      ]),
+    );
+    seq.start();
+    return () => seq.stop();
+  }, [anims]);
+  return (
+    <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+      {words.map((w, i) => (
+        <Animated.View
+          key={i}
+          style={{ transform: [{ scale: anims[i].interpolate({ inputRange: [0, 1], outputRange: [1, 1.16] }) }] }}
+        >
+          <Animated.Text
+            style={[style, { marginRight: 4, opacity: anims[i].interpolate({ inputRange: [0, 1], outputRange: [0.86, 1] }) }]}
+          >
+            {w}
+          </Animated.Text>
+        </Animated.View>
+      ))}
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.surface },
 

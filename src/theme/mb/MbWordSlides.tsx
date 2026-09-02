@@ -147,7 +147,7 @@ export function MbWordSlides({ onNext, onBack, slides, flowStep, flowTotal }: Pr
 
 // ── 슬라이드 본문 ────────────────────────────────────────────────
 
-function PhotoCard({ img, ko, vi }: { img: any; ko: string; vi: string }) {
+function PhotoCard({ img, ko, vi, fit }: { img: any; ko: string; vi: string; fit?: 'cover' | 'contain' }) {
   return (
     <View
       style={{
@@ -162,7 +162,7 @@ function PhotoCard({ img, ko, vi }: { img: any; ko: string; vi: string }) {
         shadowColor: '#3E6D96', shadowOpacity: 0.08, shadowRadius: 8, shadowOffset: { width: 0, height: 3 },
       }}
     >
-      <Image source={img} style={{ width: '100%', height: 112, borderRadius: 12 }} resizeMode="cover" />
+      <Image source={img} style={{ width: '100%', height: 128, borderRadius: 12 }} resizeMode={fit ?? 'cover'} />
       <View style={{ alignItems: 'center', gap: 1, paddingBottom: 2 }}>
         <Text style={mbDisplay(19, '800')}>{ko}</Text>
         <Text style={mbBody(12, '600')}>{vi}</Text>
@@ -198,7 +198,7 @@ function IntroBody() {
       </View>
       <View style={{ flexDirection: 'row', gap: 10, marginTop: 2 }}>
         <PhotoCard img={IMG_FLAG} ko="베트남" vi="Việt Nam" />
-        <PhotoCard img={IMG_PERSON} ko="베트남 사람" vi="người Việt Nam" />
+        <PhotoCard img={IMG_PERSON} ko="베트남 사람" vi="người Việt Nam" fit="contain" />
       </View>
       {/* 핵심 규칙 — 빈 공간 없이 화면을 채우는 안내 스트립 */}
       <View

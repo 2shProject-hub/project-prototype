@@ -1,3 +1,4 @@
+import { useTheme } from '../../theme/ThemeContext';
 import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { useEffect, useRef, useState } from 'react';
 import {
@@ -32,6 +33,8 @@ function shuffle<T>(arr: T[]): T[] {
 
 export function WordBuildStage({ onComplete, onBack }: Props) {
   const { lang } = useLang();
+  const { theme: __mbBT, enabled: __mbBE } = useTheme();
+  const __mbBtn = __mbBE && __mbBT.id === 'malhaeboka' ? { height: 40, minHeight: 0, paddingVertical: 0, justifyContent: 'center' as const } : null;
   const sfx = useSfx();
 
   const [quizIdx, setQuizIdx] = useState(0);
@@ -254,7 +257,7 @@ export function WordBuildStage({ onComplete, onBack }: Props) {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.keyboardBtn}
+            style={[styles.keyboardBtn, __mbBtn]}
             onPress={() => setShowKeyboard(false)}
             activeOpacity={0.7}
           >
@@ -310,7 +313,7 @@ export function WordBuildStage({ onComplete, onBack }: Props) {
           </View>
 
           <TouchableOpacity
-            style={styles.keyboardBtn}
+            style={[styles.keyboardBtn, __mbBtn]}
             onPress={() => setShowKeyboard(true)}
             activeOpacity={0.7}
           >
@@ -348,11 +351,8 @@ export function WordBuildStage({ onComplete, onBack }: Props) {
             {feedback === 'wrong' && (
               <>
                 <Text style={styles.modalEmoji}>❌</Text>
-                <Text style={styles.modalTitle}>{pick(lang, '정답을 확인하세요', 'Xem đáp án')}</Text>
-                <View style={styles.modalAnswerBox}>
-                  <Text style={styles.modalAnswerLabel}>{pick(lang, '정답', 'Đáp án')}</Text>
-                  <Text style={styles.modalAnswer}>{quiz.ko}  ·  {quiz.vi}</Text>
-                </View>
+                <Text style={styles.modalTitle}>{pick(lang, '다시 한번 생각해 보세요', 'Hãy thử nghĩ lại nhé')}</Text>
+                
                 <TouchableOpacity style={styles.modalBtn} onPress={onFeedbackClose} activeOpacity={0.85}>
                   <Text style={styles.modalBtnText}>{pick(lang, '다음', 'Tiếp theo')}</Text>
                 </TouchableOpacity>

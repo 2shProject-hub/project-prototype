@@ -29,6 +29,7 @@
  *   - lines → activity.questions[].listItems.dialogue_content[]
  */
 
+import { useTheme } from '../../theme/ThemeContext';
 import { ThemedGlyph } from '../../components/ThemedGlyph';
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import {
@@ -185,6 +186,8 @@ export function ConversationShadowingStage({
   data = MOCK_CONVERSATION_SHADOWING,
 }: Props) {
   const { lang } = useLang();
+  const { theme: __mbBT, enabled: __mbBE } = useTheme();
+  const __mbBtn = __mbBE && __mbBT.id === 'malhaeboka' ? { height: 40, minHeight: 0, paddingVertical: 0, justifyContent: 'center' as const } : null;
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const micTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const tutorAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -405,7 +408,7 @@ export function ConversationShadowingStage({
           </View>
 
           {/* AI 튜터 하단 */}
-          <View style={s.introTutorSection}>
+          <View style={[s.introTutorSection, __mbBtn && { paddingBottom: 8 }]}>
             <View style={s.introTutorRow}>
               <View style={s.introTutorCard}>
                 <Text style={s.introTutorText}>{bubbleText}</Text>
@@ -419,7 +422,7 @@ export function ConversationShadowingStage({
               </View>
               <Image source={TUTOR_IMAGE as any} style={s.introTutorImg} resizeMode="contain" />
             </View>
-            <TouchableOpacity style={s.introConfirmBtn} onPress={handleConfirm} activeOpacity={0.85}>
+            <TouchableOpacity style={[s.introConfirmBtn, __mbBtn]} onPress={handleConfirm} activeOpacity={0.85}>
               <Text style={s.introConfirmBtnText}>확인</Text>
             </TouchableOpacity>
           </View>

@@ -79,7 +79,9 @@ export function QuizFeedbackModal({
     : pick(lang, '다시 풀기', 'Thử lại');
 
   const displayTitle = title ? pick(lang, title, titleVi || title) : defaultTitle;
-  const displayAnswer = answerText ? pick(lang, answerText, answerTextVi || answerText) : null;
+  // 정답 노출 금지(사용자 확정) — 다시 풀기 학습 흐름을 지키기 위해 정답 박스는 그리지 않는다
+  const displayAnswer = null as string | null;
+  void answerText; void answerTextVi;
   const displayExplanation = explanation ? pick(lang, explanation, explanationVi || explanation) : null;
   const displayBtnText = nextText ? pick(lang, nextText, nextTextVi || nextText) : defaultNextText;
 
