@@ -65,7 +65,7 @@ export function SentenceSelect1({
     if (correct) {
       sfx.play('correct');
     } else {
-      sfx.play('wrong');
+      sfx.play('incorrect');
     }
   };
 

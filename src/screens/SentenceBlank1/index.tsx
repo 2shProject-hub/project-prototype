@@ -89,7 +89,7 @@ export function SentenceBlank1({
       const newFail = failCount + 1;
       setFailCount(newFail);
       if (newFail >= FAIL_MAX) {
-        sfx.play('wrong');
+        sfx.play('incorrect');
         setShowAnswer(true);
         setShowModal(true);
       } else {
