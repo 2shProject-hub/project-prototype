@@ -19,7 +19,7 @@
 import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { useTheme } from '../../theme/ThemeContext';
 import { ThemedBody } from './ThemedBody';
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ScrollView, View, Text, TouchableOpacity, StyleSheet, Modal, Platform, Animated, Image } from 'react-native';
 import { colors, radius, spacing, shadow } from '../../theme';
 import { useLang, pick, ActivityHeader, CtaButton } from '../../components';
@@ -71,43 +71,6 @@ export function SetWordbookEvalStage({
   const [tab, setTab] = useState<'all' | 'ko' | 'vi'>('all');
   const [speed, setSpeed] = useState<0.5 | 1.0 | 1.5>(1.0);
 
-  // Set 1 안내 토스트 팝업 상태
-  const [showToast, setShowToast] = useState(setNumber === 1);
-  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-
-  // 음원 파일 재생
-  const playToastAudio = () => {
-    if (Platform.OS !== 'web') return;
-
-    try {
-      const audioSrc = require('../../../assets/sounds/word_set_1.mp3');
-      if (!audioSrc) return;
-
-      if (audioRef.current) {
-        audioRef.current.pause();
-      }
-
-      const audio = new Audio(audioSrc);
-      audioRef.current = audio;
-      setIsAudioPlaying(true);
-
-      audio.play().catch(() => {
-        setIsAudioPlaying(false);
-      });
-
-      audio.onended = () => {
-        setIsAudioPlaying(false);
-      };
-
-      audio.onerror = () => {
-        setIsAudioPlaying(false);
-      };
-    } catch (e) {
-      setIsAudioPlaying(false);
-    }
-  };
-
   const speakKo = (text: string) => {
     if (Platform.OS === 'web' && 'speechSynthesis' in window) {
       window.speechSynthesis.cancel();
@@ -116,34 +79,6 @@ export function SetWordbookEvalStage({
       utterance.rate = speed;
       window.speechSynthesis.speak(utterance);
     }
-  };
-
-  // Set 1 진입 시 자동 음원 재생
-  useEffect(() => {
-    if (setNumber === 1) {
-      const timer = setTimeout(() => {
-        playToastAudio();
-      }, 500);
-      return () => {
-        clearTimeout(timer);
-        audioRef.current?.pause();
-        audioRef.current = null;
-      };
-    }
-    return () => {
-      audioRef.current?.pause();
-      audioRef.current = null;
-    };
-  }, [setNumber]);
-
-  // 토스트 팝업 닫기
-  const handleCloseToast = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current = null;
-    }
-    setIsAudioPlaying(false);
-    setShowToast(false);
   };
 
   // 발음 평가 상태
@@ -313,10 +248,6 @@ export function SetWordbookEvalStage({
           onTab={(t) => { setTab(t); sfx.play(); }}
           speed={speed}
           setSpeed={setSpeed}
-          showToast={showToast && setNumber === 1}
-          isAudioPlaying={isAudioPlaying}
-          onCloseToast={handleCloseToast}
-          onToastAudio={playToastAudio}
           speakKo={speakKo}
           onBack={onBack}
           onPron={() => { setPronIdx(0); setShowPronModal(true); sfx.play(); }}
@@ -354,52 +285,24 @@ export function SetWordbookEvalStage({
           </Text>
         </View>
 
-        {/* Set 1 안내(토스트) 팝업 */}
-        {showToast && setNumber === 1 ? (
-          <View style={s.toastBox}>
-            <TouchableOpacity
-              style={s.toastCloseBtn}
-              onPress={handleCloseToast}
-              activeOpacity={0.7}
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-            >
-              <Text style={s.toastCloseText}>✕</Text>
-            </TouchableOpacity>
-
-            <Text style={s.toastMessage}>
-              Xem nghĩa và cách phát âm của từng từ. Bấm vào từ để tự luyện phát âm luôn nhé.
-            </Text>
-
-            <View style={s.toastBottomRow}>
+        {/* 재생 배속 바 */}
+        <View style={s.speedBarWrap}>
+          <Text style={s.speedBarLabel}>재생 속도</Text>
+          <View style={s.speedBtnGroup}>
+            {([0.5, 1.0, 1.5] as const).map((spd) => (
               <TouchableOpacity
-                style={[s.toastSpeakerBtn, isAudioPlaying && s.toastSpeakerPlaying]}
-                onPress={playToastAudio}
+                key={spd}
+                style={[s.speedBtn, speed === spd && s.speedBtnActive]}
+                onPress={() => setSpeed(spd)}
                 activeOpacity={0.7}
               >
-                <ThemedGlyph style={s.toastSpeakerIcon} glyph={isAudioPlaying ? '🔊' : '🔈'} />
+                <Text style={[s.speedBtnText, speed === spd && s.speedBtnTextActive]}>
+                  {spd}x
+                </Text>
               </TouchableOpacity>
-            </View>
+            ))}
           </View>
-        ) : (
-          /* 안내 팝업 닫힘 시 또는 Set 2, 3에서는 재생 배속 바 노출 */
-          <View style={s.speedBarWrap}>
-            <Text style={s.speedBarLabel}>재생 속도</Text>
-            <View style={s.speedBtnGroup}>
-              {([0.5, 1.0, 1.5] as const).map((spd) => (
-                <TouchableOpacity
-                  key={spd}
-                  style={[s.speedBtn, speed === spd && s.speedBtnActive]}
-                  onPress={() => setSpeed(spd)}
-                  activeOpacity={0.7}
-                >
-                  <Text style={[s.speedBtnText, speed === spd && s.speedBtnTextActive]}>
-                    {spd}x
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-        )}
+        </View>
 
         {/* 보기 모드 탭: 전체 보기 | 한국어 보기 | 베트남어 보기 */}
         <View style={s.tabContainer}>
@@ -577,52 +480,7 @@ const s = StyleSheet.create({
     color: '#9ca3af',
   },
 
-  // Set 1 안내(토스트) 팝업
-  toastBox: {
-    backgroundColor: '#e6f8f7',
-    borderWidth: 1.5,
-    borderColor: '#00a8a6',
-    borderRadius: 14,
-    paddingHorizontal: 16,
-    paddingTop: 14,
-    paddingBottom: 10,
-    marginBottom: 18,
-    position: 'relative',
-  },
-  toastCloseBtn: {
-    position: 'absolute',
-    top: 8,
-    right: 10,
-    padding: 4,
-  },
-  toastCloseText: {
-    fontSize: 14,
-    color: '#6b7280',
-    fontWeight: '700',
-  },
-  toastMessage: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: '#111827',
-    lineHeight: 19,
-    paddingRight: 20,
-  },
-  toastBottomRow: {
-    alignItems: 'flex-end',
-    marginTop: 4,
-  },
-  toastSpeakerBtn: {
-    padding: 4,
-    borderRadius: 8,
-  },
-  toastSpeakerPlaying: {
-    backgroundColor: '#b2ecea',
-  },
-  toastSpeakerIcon: {
-    fontSize: 18,
-  },
-
-  // 재생 속도 바 (토스트 닫힘 시 노출)
+  // 재생 속도 바
   speedBarWrap: {
     flexDirection: 'row',
     alignItems: 'center',

@@ -1,18 +1,16 @@
-import { useTheme } from '../../theme/ThemeContext';
-import React from 'react';
 /**
  * 단어를 보고 음원 선택 (WordSound1)
  * - 한국어/베트남어 단어 텍스트 제시
  * - 4개 음원 선택지
- * - 1번 세트에서 베트남어 안내 토스트 팝업 및 자동 음원 재생
  * - 공통 ActivityHeader, CtaButton, QuizFeedbackModal 적용
  */
 import { ThemedGlyph } from '../../components/ThemedGlyph';
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Platform, ScrollView, Animated } from 'react-native';
 import { colors, radius, spacing, shadow } from '../../theme';
 import { useLang, pick, ActivityHeader, CtaButton, QuizFeedbackModal } from '../../components';
 import { useSfx } from '../../hooks/useSfx';
+import { playExclusive, stopExclusive } from '../../utils/audioPlayer';
 
 interface SoundItem {
   value: number;
@@ -43,19 +41,12 @@ export function WordSound1({
   totalSets = 1,
 }: Props) {
   const { lang } = useLang();
-  const { theme: __mbBT, enabled: __mbBE } = useTheme();
-  const __mbBtn = __mbBE && __mbBT.id === 'malhaeboka' ? { height: 40, minHeight: 0, paddingVertical: 0, justifyContent: 'center' as const } : null;
   const sfx = useSfx();
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const toastAudioRef = useRef<HTMLAudioElement | null>(null);
-
   const [currentIdx, setCurrentIdx] = useState(0);
   const [selectedItemValue, setSelectedItemValue] = useState<number | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   const [playingValue, setPlayingValue] = useState<number | null>(null);
-  const [showToast, setShowToast] = useState(currentSetNumber === 1);
-  const [isToastAudioPlaying, setIsToastAudioPlaying] = useState(false);
 
   const currentQuestion = questions[currentIdx];
   if (!currentQuestion) {
@@ -66,85 +57,19 @@ export function WordSound1({
     );
   }
 
-  const playToastAudio = () => {
-    if (Platform.OS !== 'web') return;
-
-    try {
-      const audioSrc = require('../../../assets/sounds/260825_word_1.mp3');
-      if (!audioSrc) return;
-
-      if (toastAudioRef.current) {
-        toastAudioRef.current.pause();
-      }
-
-      const audio = new Audio(audioSrc);
-      toastAudioRef.current = audio;
-      setIsToastAudioPlaying(true);
-
-      audio.play().catch(() => {
-        setIsToastAudioPlaying(false);
-      });
-
-      audio.onended = () => {
-        setIsToastAudioPlaying(false);
-      };
-
-      audio.onerror = () => {
-        setIsToastAudioPlaying(false);
-      };
-    } catch {
-      setIsToastAudioPlaying(false);
-    }
-  };
-
-  const handleCloseToast = () => {
-    if (toastAudioRef.current) {
-      toastAudioRef.current.pause();
-      toastAudioRef.current = null;
-    }
-    setIsToastAudioPlaying(false);
-    setShowToast(false);
-  };
-
   useEffect(() => {
-    if (currentSetNumber === 1 && showToast) {
-      const timer = setTimeout(() => {
-        playToastAudio();
-      }, 500);
-      return () => {
-        clearTimeout(timer);
-        toastAudioRef.current?.pause();
-        toastAudioRef.current = null;
-        audioRef.current?.pause();
-        audioRef.current = null;
-      };
-    }
     return () => {
-      toastAudioRef.current?.pause();
-      toastAudioRef.current = null;
-      audioRef.current?.pause();
-      audioRef.current = null;
+      stopExclusive();
     };
-  }, [currentSetNumber, showToast]);
+  }, []);
 
   const playAudio = (audioSrc?: string, itemVal?: number) => {
     if (!audioSrc || Platform.OS !== 'web') return;
-
-    if (audioRef.current) {
-      audioRef.current.pause();
-    }
-
-    try {
-      const audio = new Audio(audioSrc);
-      audioRef.current = audio;
-      if (itemVal !== undefined) setPlayingValue(itemVal);
-
-      audio.play().catch(() => setPlayingValue(null));
-      audio.onended = () => setPlayingValue(null);
-      audio.onerror = () => setPlayingValue(null);
-    } catch {
-      setPlayingValue(null);
-    }
+    if (itemVal !== undefined) setPlayingValue(itemVal);
+    playExclusive(audioSrc, {
+      onEnded: () => setPlayingValue(null),
+      onError: () => setPlayingValue(null),
+    });
   };
 
   const handleSelectAndPlay = (item: SoundItem) => {
@@ -209,34 +134,6 @@ export function WordSound1({
             <Text style={s.wordText}>{currentQuestion.desc}</Text>
           </View>
         </View>
-
-        {/* 1번 세트 안내 토스트 팝업 */}
-        {showToast && currentSetNumber === 1 && (
-          <View style={[s.toastBox, __mbBtn && { backgroundColor: '#EFEAFF', borderWidth: 1.5, borderColor: '#CBBAF8', borderRadius: 14 }, __mbBtn && { backgroundColor: '#EFEAFF', borderWidth: 1.5, borderColor: '#CBBAF8', borderRadius: 14 }]}>
-            <TouchableOpacity
-              style={s.toastCloseBtn}
-              onPress={handleCloseToast}
-              activeOpacity={0.7}
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-            >
-              <Text style={s.toastCloseText}>✕</Text>
-            </TouchableOpacity>
-
-            <Text style={[s.toastMessage, __mbBtn && { fontSize: 14.5, lineHeight: 21, color: '#3D2E86', fontWeight: '600' as const }, __mbBtn && { fontSize: 14.5, lineHeight: 21, color: '#3D2E86', fontWeight: '600' as const }]}>
-              Nghe và xác nhận âm thanh đúng. Bấm để nghe trước, bấm lại lần nữa để chọn.
-            </Text>
-
-            <View style={s.toastBottomRow}>
-              <TouchableOpacity
-                style={[s.toastSpeakerBtn, isToastAudioPlaying && s.toastSpeakerPlaying]}
-                onPress={playToastAudio}
-                activeOpacity={0.7}
-              >
-                <ThemedGlyph style={s.toastSpeakerIcon} glyph={isToastAudioPlaying ? '🔊' : '🔈'} />
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
 
         {/* 음원 선택지 그리드 (2x2) */}
         <View style={s.soundGrid}>
@@ -369,58 +266,6 @@ const s = StyleSheet.create({
     fontSize: 26,
     fontWeight: '800',
     color: colors.tealDark,
-  },
-  toastBox: {
-    backgroundColor: colors.bgSubtle,
-    borderRadius: radius.lg,
-    borderWidth: 1.5,
-    borderColor: colors.border,
-    padding: spacing.md,
-    marginBottom: spacing.lg,
-    position: 'relative',
-    ...shadow.soft,
-  },
-  toastCloseBtn: {
-    position: 'absolute',
-    top: spacing.sm,
-    right: spacing.sm,
-    width: 24,
-    height: 24,
-    borderRadius: radius.pill,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  toastCloseText: {
-    fontSize: 14,
-    color: colors.textMuted,
-    fontWeight: '700',
-  },
-  toastMessage: {
-    fontSize: 13,
-    color: colors.textSecondary,
-    lineHeight: 18,
-    marginRight: spacing.xl,
-    fontWeight: '500',
-  },
-  toastBottomRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: spacing.sm,
-  },
-  toastSpeakerBtn: {
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xxs,
-    borderRadius: radius.sm,
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  toastSpeakerPlaying: {
-    backgroundColor: colors.tealSoft,
-    borderColor: colors.teal,
-  },
-  toastSpeakerIcon: {
-    fontSize: 14,
   },
   soundGrid: {
     flexDirection: 'row',

@@ -55,6 +55,16 @@ export const BASE_SCREEN_REGISTRY: ScreenMeta[] = [
     sourceBRef: 'IntroTutorStage',
   },
   {
+    id: 'intro-word',
+    label: '4-1. 학습소개(단어)',
+    category: '신규',
+    description: '단어 학습 시작 전 오늘의 단어와 학습 성과를 미리 안내하는 인트로 화면. 나라/국적 단어 15개 학습 동기를 높인다.',
+    devNotes: '참고: IntroTutorStage 재사용\n- badge / icon / title / subtitle / achievement 구조\n- AI 튜터 오버레이: 진입 시 dim + 썸네일 + 말풍선 + 음원 자동 재생',
+    designNotes: '4-1-2와 동일 구조 (텍스트만 변경). 배지: 오늘의 단어, 아이콘: 📖',
+    sourceAFile: 'src/screens/activity/preview/PreviewIntro4.tsx',
+    sourceBRef: 'IntroTutorStage',
+  },
+  {
     id: 'intro-tutor-2',
     label: '4-1-2. 학습 소개(문법 퀴즈)',
     category: '신규',

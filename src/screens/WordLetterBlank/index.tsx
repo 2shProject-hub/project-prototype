@@ -4,8 +4,6 @@
  * - 1번 세트에서 베트남어 안내 토스트 팝업 및 자동 음원 재생
  * - 공통 ActivityHeader, AudioPlayButton, CtaButton, QuizFeedbackModal 적용
  */
-import { useTheme } from '../../theme/ThemeContext';
-import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { useState, useRef, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Platform, ScrollView } from 'react-native';
 import { colors, radius, spacing, shadow } from '../../theme';
@@ -39,11 +37,8 @@ export function WordLetterBlank({
   totalSets = 1,
 }: Props) {
   const { lang } = useLang();
-  const { theme: __mbBT, enabled: __mbBE } = useTheme();
-  const __mbBtn = __mbBE && __mbBT.id === 'malhaeboka' ? { height: 40, minHeight: 0, paddingVertical: 0, justifyContent: 'center' as const } : null;
   const sfx = useSfx();
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const toastAudioRef = useRef<HTMLAudioElement | null>(null);
 
   const [currentIdx, setCurrentIdx] = useState(0);
   const [selectedTiles, setSelectedTiles] = useState<string[]>([]);
@@ -51,8 +46,6 @@ export function WordLetterBlank({
   const [showModal, setShowModal] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [showToast, setShowToast] = useState(currentSetNumber === 1);
-  const [isToastAudioPlaying, setIsToastAudioPlaying] = useState(false);
 
   const currentQuestion = questions[currentIdx];
   if (!currentQuestion) {
@@ -63,66 +56,12 @@ export function WordLetterBlank({
     );
   }
 
-  const playToastAudio = () => {
-    if (Platform.OS !== 'web') return;
-
-    try {
-      const audioSrc = require('../../../assets/sounds/260825_word_2.mp3');
-      if (!audioSrc) return;
-
-      if (toastAudioRef.current) {
-        toastAudioRef.current.pause();
-      }
-
-      const audio = new Audio(audioSrc);
-      toastAudioRef.current = audio;
-      setIsToastAudioPlaying(true);
-
-      audio.play().catch(() => {
-        setIsToastAudioPlaying(false);
-      });
-
-      audio.onended = () => {
-        setIsToastAudioPlaying(false);
-      };
-
-      audio.onerror = () => {
-        setIsToastAudioPlaying(false);
-      };
-    } catch {
-      setIsToastAudioPlaying(false);
-    }
-  };
-
-  const handleCloseToast = () => {
-    if (toastAudioRef.current) {
-      toastAudioRef.current.pause();
-      toastAudioRef.current = null;
-    }
-    setIsToastAudioPlaying(false);
-    setShowToast(false);
-  };
-
   useEffect(() => {
-    if (currentSetNumber === 1 && showToast) {
-      const timer = setTimeout(() => {
-        playToastAudio();
-      }, 500);
-      return () => {
-        clearTimeout(timer);
-        toastAudioRef.current?.pause();
-        toastAudioRef.current = null;
-        audioRef.current?.pause();
-        audioRef.current = null;
-      };
-    }
     return () => {
-      toastAudioRef.current?.pause();
-      toastAudioRef.current = null;
       audioRef.current?.pause();
       audioRef.current = null;
     };
-  }, [currentSetNumber, showToast]);
+  }, []);
 
   const playAudio = () => {
     if (!currentQuestion.audioUrl || Platform.OS !== 'web') return;
@@ -230,34 +169,6 @@ export function WordLetterBlank({
             disabled={!currentQuestion.audioUrl}
           />
         </View>
-
-        {/* 1번 세트 안내 토스트 팝업 */}
-        {showToast && currentSetNumber === 1 && (
-          <View style={[s.toastBox, __mbBtn && { backgroundColor: '#EFEAFF', borderWidth: 1.5, borderColor: '#CBBAF8', borderRadius: 14 }, __mbBtn && { backgroundColor: '#EFEAFF', borderWidth: 1.5, borderColor: '#CBBAF8', borderRadius: 14 }]}>
-            <TouchableOpacity
-              style={s.toastCloseBtn}
-              onPress={handleCloseToast}
-              activeOpacity={0.7}
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-            >
-              <Text style={s.toastCloseText}>✕</Text>
-            </TouchableOpacity>
-
-            <Text style={[s.toastMessage, __mbBtn && { fontSize: 14.5, lineHeight: 21, color: '#3D2E86', fontWeight: '600' as const }, __mbBtn && { fontSize: 14.5, lineHeight: 21, color: '#3D2E86', fontWeight: '600' as const }]}>
-              Nghe rồi tự chọn chữ để ghép thành từ. Bấm vào thẻ đúng theo thứ tự bạn nghe được.
-            </Text>
-
-            <View style={s.toastBottomRow}>
-              <TouchableOpacity
-                style={[s.toastSpeakerBtn, isToastAudioPlaying && s.toastSpeakerPlaying]}
-                onPress={playToastAudio}
-                activeOpacity={0.7}
-              >
-                <ThemedGlyph style={s.toastSpeakerIcon} glyph={isToastAudioPlaying ? '🔊' : '🔈'} />
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
 
         {/* 빈칸 채우기 보드 */}
         <View style={s.boardContainer}>
@@ -370,58 +281,6 @@ const s = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginVertical: spacing.lg,
-  },
-  toastBox: {
-    backgroundColor: colors.bgSubtle,
-    borderRadius: radius.lg,
-    borderWidth: 1.5,
-    borderColor: colors.border,
-    padding: spacing.md,
-    marginBottom: spacing.lg,
-    position: 'relative',
-    ...shadow.soft,
-  },
-  toastCloseBtn: {
-    position: 'absolute',
-    top: spacing.sm,
-    right: spacing.sm,
-    width: 24,
-    height: 24,
-    borderRadius: radius.pill,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  toastCloseText: {
-    fontSize: 14,
-    color: colors.textMuted,
-    fontWeight: '700',
-  },
-  toastMessage: {
-    fontSize: 13,
-    color: colors.textSecondary,
-    lineHeight: 18,
-    marginRight: spacing.xl,
-    fontWeight: '500',
-  },
-  toastBottomRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: spacing.sm,
-  },
-  toastSpeakerBtn: {
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xxs,
-    borderRadius: radius.sm,
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  toastSpeakerPlaying: {
-    backgroundColor: colors.tealSoft,
-    borderColor: colors.teal,
-  },
-  toastSpeakerIcon: {
-    fontSize: 14,
   },
   boardContainer: {
     backgroundColor: colors.surface,

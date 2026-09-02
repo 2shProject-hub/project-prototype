@@ -39,10 +39,6 @@ export interface ThemedBodyProps {
   onTab: (t: 'all' | 'ko' | 'vi') => void;
   speed: 0.5 | 1.0 | 1.5;
   setSpeed: (s: 0.5 | 1.0 | 1.5) => void;
-  showToast: boolean;
-  isAudioPlaying: boolean;
-  onCloseToast: () => void;
-  onToastAudio: () => void;
   speakKo: (text: string) => void;
   onBack?: () => void;
   onPron: () => void;
@@ -148,47 +144,7 @@ export function ThemedBody(p: ThemedBodyProps) {
     </>
   );
 
-  const Toast = p.showToast ? (
-    <View
-      style={{
-        marginTop: s.block,
-        borderRadius: L.radius,
-        backgroundColor: c.primarySoft,
-        borderWidth: Math.max(1, L.hairline),
-        borderColor: c.primary,
-        paddingHorizontal: s.row + 2,
-        paddingTop: s.row,
-        paddingBottom: 8,
-      }}
-    >
-      <TouchableOpacity
-        style={{ position: 'absolute', top: 8, right: 10, padding: 4, zIndex: 2 }}
-        onPress={p.onCloseToast}
-        activeOpacity={0.7}
-        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-      >
-        <Text style={[{ fontSize: 13, color: c.muted }, bodyFont(theme, 700)]}>✕</Text>
-      </TouchableOpacity>
-      <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 10 }}>
-        {assets?.bubble ? (
-          <Image source={assets.bubble} style={{ width: 34, height: 46, marginTop: 2 }} resizeMode="contain" />
-        ) : null}
-        <Text
-          style={[
-            { flex: 1, fontSize: t.bodySize - 1, color: readableOn(c.primarySoft, [c.primaryDark, c.ink]), lineHeight: Math.round((t.bodySize - 1) * t.bodyLine), paddingRight: 20 },
-            bodyFont(theme, 600),
-          ]}
-        >
-          Xem nghĩa và cách phát âm của từng từ. Bấm vào từ để tự luyện phát âm luôn nhé.
-        </Text>
-      </View>
-      <View style={{ alignItems: 'flex-end', marginTop: 4 }}>
-        <TouchableOpacity onPress={p.onToastAudio} activeOpacity={0.7} style={{ padding: 4 }}>
-          <ThemedGlyph style={{ fontSize: 15, opacity: p.isAudioPlaying ? 1 : 0.55 }} glyph={p.isAudioPlaying ? '🔊' : '🔈'} />
-        </TouchableOpacity>
-      </View>
-    </View>
-  ) : (
+  const SpeedBar = (
     <View
       style={[
         { marginTop: s.block, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: isRule ? 0 : s.row, paddingVertical: 8 },
@@ -442,7 +398,7 @@ export function ThemedBody(p: ThemedBodyProps) {
         )}
 
         {Stats}
-        {Toast}
+        {SpeedBar}
         {st !== 'tabs-list' && Tabs}
         <WordList />
       </ScrollView>

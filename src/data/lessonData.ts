@@ -1416,7 +1416,8 @@ export const MOCK_LISTEN_SPEAK_INTERACTIVE_TRY = {
 export const LEARNING_FLOW = [
   { screenId: 'home', label: '1. 홈 화면 / 코스 안내', step: 1 },
   { screenId: 'mission-tutor', label: '2-1. 학습 미션(튜터)', step: 2 },
-  { screenId: 'word-intro-slides', label: '2-W. 단어 슬라이드', step: 3 },
+  { screenId: 'intro-word', label: '4-1. 학습소개(단어)', step: 3 },
+  { screenId: 'word-intro-slides', label: '2-W. 단어 슬라이드', step: 4 },
   // 세트 1
   { screenId: 'set-wordbook-eval', label: '5-2. 단어장과 발음평가', step: 4, setNumber: 1 },
   { screenId: 'word-vn-ko-select-2', label: '29. 베트남어 단어 보고 한국어 선택', step: 6, setNumber: 1 },
@@ -2211,6 +2212,12 @@ export const MOCK_CONVERSATION_SHADOWING: ConversationData = {
     bubbleVi: 'Thật tuyệt! Hãy nhìn vào hội thoại, nhấn nút micro và đọc theo nhé.',
     audioSrc: require('../../assets/ai-dec/ai-dec-1.mp3') as string,
   },
+  lines: [
+    { ...MOCK_CONVERSATION.lines[0], audioSrc: require('../../assets/sounds/con-1.mp3') as string },
+    { ...MOCK_CONVERSATION.lines[1], audioSrc: require('../../assets/sounds/con-2.mp3') as string },
+    { ...MOCK_CONVERSATION.lines[2], audioSrc: require('../../assets/sounds/con-3.mp3') as string },
+    { ...MOCK_CONVERSATION.lines[3], audioSrc: require('../../assets/sounds/con-4.mp3') as string },
+  ],
 };
 
 

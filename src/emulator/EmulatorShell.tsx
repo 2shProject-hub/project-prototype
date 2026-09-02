@@ -71,7 +71,7 @@ const DEVICES = [
 // 자체 캐릭터가 있는 화면(홈·5-2·세트완료·축하)과 튜터 아바타·화자 썸네일이 있는 화면은 제외 —
 // 캐릭터가 아바타를 가리면 안 된다.
 const STICKER_EXCLUDE = new Set([
-  'home', 'mission-tutor', 'intro-tutor', 'intro-tutor-2', 'intro-eval',
+  'home', 'mission-tutor', 'intro-word', 'intro-tutor', 'intro-tutor-2', 'intro-eval',
   'video-ai-tutor', 'ai-tutor-desc', 'conversation-preview', 'conversation-shadowing',
   'dialogue-listen-write', 'practice-check', 'word-intro-slides', 'grammar-detail',
   'vocab-wordbook-voice',
@@ -399,7 +399,7 @@ function ScreenRenderer({ screenId, onNavigate, flowStep, flowTotal }: { screenI
 
   // ──── Mock 데이터 ────────────────────────────────────────────
   const listenSelectQuestions = [
-    { no: 1, desc: '다음 음성을 듣고 맞는 단어를 선택하세요', viText: 'Nghe âm thanh và chọn từ đúng', words: ['베트남', '한국', '일본'], answer: '베트남', audioUrl: '' },
+    { no: 1, desc: '다음 음성을 듣고 맞는 단어를 선택하세요', viText: 'Nghe âm thanh và chọn từ đúng', words: ['베트남', '한국', '일본'], answer: '베트남', audioUrl: require('../../assets/sounds/1_vietnam.mp3') as string },
     { no: 2, desc: '다음 음성을 듣고 맞는 단어를 선택하세요', viText: 'Nghe âm thanh và chọn từ đúng', words: ['인도네시아', '러시아', '태국'], answer: '인도네시아', audioUrl: '' },
   ];
 
@@ -599,6 +599,28 @@ function ScreenRenderer({ screenId, onNavigate, flowStep, flowTotal }: { screenI
         <VocabWordbookVoiceStage
           onNext={() => onNavigate('intro')}
           onBack={() => onNavigate('mission')}
+        />
+      );
+    case 'intro-word':
+      return (
+        <IntroTutorStage
+          onNext={() => onNavigate('word-intro-slides')}
+          onBack={() => onNavigate('mission-tutor')}
+          introData={{
+            badge: '오늘의 단어',
+            badgeVi: 'Từ vựng hôm nay',
+            icon: '📖',
+            title: '나라와 국적 단어를 살펴봐요.',
+            titleVi: 'Cùng xem qua từ vựng về quốc gia và quốc tịch nhé.',
+            subtitle: '단어를 하나씩 눈으로 확인하고 소리 내어 읽어봐요.',
+            subtitleVi: 'Hãy xem và đọc to từng từ một nhé.',
+            achievement: {
+              label: '학습성과',
+              labelVi: 'Kết quả học tập',
+              desc: '나라와 국적 단어 15개를 알아볼 수 있어요.',
+              descVi: 'Bạn có thể nhận biết 15 từ về quốc gia và quốc tịch.',
+            },
+          }}
         />
       );
     case 'intro-tutor':
@@ -950,7 +972,7 @@ function ScreenRenderer({ screenId, onNavigate, flowStep, flowTotal }: { screenI
       return (
         <ListenSelect1
           questions={[
-            { no: 1, desc: '소리를 듣고 단어를 고르세요', words: ['베트남', '한국', '인도네시아', '러시아'], answer: '베트남', viText: 'Hãy nghe đoạn âm thanh rồi chọn từ tương ứng nhé.' },
+            { no: 1, desc: '소리를 듣고 단어를 고르세요', words: ['베트남', '한국', '인도네시아', '러시아'], answer: '베트남', viText: 'Hãy nghe đoạn âm thanh rồi chọn từ tương ứng nhé.', audioUrl: require('../../assets/sounds/1_vietnam.mp3') as string },
           ]}
           currentSetNumber={1}
           totalSets={3}
@@ -982,7 +1004,7 @@ function ScreenRenderer({ screenId, onNavigate, flowStep, flowTotal }: { screenI
       return (
         <WordSound1
           questions={[
-            { no: 1, desc: '미국', viText: 'Hoa Kỳ', answer: 1, items: [{ value: 1, audioSrc: 'https://via.placeholder.com/audio?text=america' }, { value: 2, audioSrc: 'https://via.placeholder.com/audio?text=japan' }, { value: 3, audioSrc: 'https://via.placeholder.com/audio?text=korea' }, { value: 4, audioSrc: 'https://via.placeholder.com/audio?text=vietnam' }] },
+            { no: 1, desc: '미국', viText: 'Hoa Kỳ', answer: 1, items: [{ value: 1, audioSrc: require('../../assets/sounds/5_usa.mp3') as string }, { value: 2, audioSrc: require('../../assets/sounds/8_france.mp3') as string }, { value: 3, audioSrc: require('../../assets/sounds/9_china.mp3') as string }, { value: 4, audioSrc: require('../../assets/sounds/12_germany.mp3') as string }] },
           ]}
           currentSetNumber={1}
           totalSets={3}
