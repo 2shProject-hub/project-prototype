@@ -4,6 +4,7 @@
  * - 1번 세트에서 베트남어 안내 토스트 팝업 및 자동 음원 재생
  * - 공통 ActivityHeader, AudioPlayButton, CtaButton, QuizFeedbackModal 적용
  */
+import { useTheme } from '../../theme/ThemeContext';
 import { useState, useRef, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Platform, ScrollView } from 'react-native';
 import { colors, radius, spacing, shadow } from '../../theme';
@@ -37,6 +38,8 @@ export function WordLetterBlank({
   totalSets = 1,
 }: Props) {
   const { lang } = useLang();
+  const { theme: __mbBT, enabled: __mbBE } = useTheme();
+  const __mbBtn = __mbBE && __mbBT.id === 'malhaeboka';
   const sfx = useSfx();
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -151,10 +154,10 @@ export function WordLetterBlank({
       <ScrollView style={s.scroll} contentContainerStyle={s.content}>
         {/* 질문 제목 */}
         <View style={s.titleBox}>
-          <Text style={s.title}>
+          <Text style={[s.title, __mbBtn && { fontSize: 19.5, lineHeight: 27 }]}>
             {pick(lang, '소리를 듣고 빈칸을 채우세요', 'Hãy nghe đoạn âm thanh rồi điền vào chỗ trống nhé')}
           </Text>
-          <Text style={s.subtitle}>
+          <Text style={[s.subtitle, __mbBtn && { fontSize: 14.5, lineHeight: 21 }]}>
             {pick(lang, 'Hãy nghe đoạn âm thanh rồi điền vào chỗ trống nhé', '소리를 듣고 빈칸을 채우세요')}
           </Text>
         </View>
@@ -178,12 +181,12 @@ export function WordLetterBlank({
               return (
                 <TouchableOpacity
                   key={idx}
-                  style={[s.slot, filledValue && s.slotFilled]}
+                  style={[s.slot, __mbBtn && { width: 76, height: 76, borderRadius: 16 }, filledValue && s.slotFilled]}
                   onPress={() => handleRemoveTile(idx)}
                   disabled={filledValue === undefined}
                   activeOpacity={0.7}
                 >
-                  <Text style={[s.slotText, filledValue && s.slotTextFilled]}>
+                  <Text style={[s.slotText, __mbBtn && { fontSize: 30 }, filledValue && s.slotTextFilled]}>
                     {filledValue || ''}
                   </Text>
                 </TouchableOpacity>
@@ -202,12 +205,12 @@ export function WordLetterBlank({
             return (
               <TouchableOpacity
                 key={idx}
-                style={[s.tile, isUsed && s.tileUsed]}
+                style={[s.tile, __mbBtn && { width: 58, height: 58, borderRadius: 14 }, isUsed && s.tileUsed]}
                 onPress={() => handleSelectTile(idx)}
                 disabled={isUsed}
                 activeOpacity={0.7}
               >
-                <Text style={[s.tileText, isUsed && s.tileTextUsed]}>
+                <Text style={[s.tileText, __mbBtn && { fontSize: 22 }, isUsed && s.tileTextUsed]}>
                   {tile}
                 </Text>
               </TouchableOpacity>

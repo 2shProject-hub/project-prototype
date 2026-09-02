@@ -324,9 +324,10 @@ function ScreenSticker({ theme, enabled, screenId }: { theme: Theme; enabled: bo
         });
         // 이미지·캔버스(차트/사진)는 약한 가중치로 회피 — 텍스트만큼 절대적이진 않지만 되도록 안 가린다
         const media: Array<{ left: number; right: number; top: number; bottom: number }> = [];
-        frame.querySelectorAll('img,canvas').forEach((n) => {
+        frame.querySelectorAll('img,canvas,[tabindex]').forEach((n) => {
           const r = (n as HTMLElement).getBoundingClientRect();
           if (r.width < 24 || r.height < 24) return;
+          if (r.width > fr.width * 0.96 && r.height > 200) return; // 화면급 래퍼는 제외
           media.push({ left: r.left, right: r.right, top: r.top, bottom: r.bottom });
         });
         const sides: Array<'l' | 'r'> = flipped ? ['l', 'r'] : ['r', 'l'];
@@ -1625,6 +1626,29 @@ function EmulatorShellInner() {
   // 모바일 목업 안에서는 스크롤이 동작하되 스크롤바는 보이지 않는다
   useEffect(() => {
     if (typeof document === 'undefined') return;
+    // 빠른 클릭은 :active 가 한 프레임도 안 보인다 — 탭 순간 스프링 팝을 원샷 재생
+    const w = window as unknown as { __kchaoTapPop?: boolean };
+    if (!w.__kchaoTapPop) {
+      w.__kchaoTapPop = true;
+      document.addEventListener(
+        'pointerdown',
+        (ev) => {
+          const t = ev.target as HTMLElement | null;
+          const el = t && t.closest ? (t.closest('[data-mb="1"] [tabindex]') as HTMLElement | null) : null;
+          if (!el || typeof el.animate !== 'function') return;
+          el.animate(
+            [
+              { transform: 'scale(1)' },
+              { transform: 'scale(0.93)', offset: 0.35 },
+              { transform: 'scale(1.03)', offset: 0.75 },
+              { transform: 'scale(1)' },
+            ],
+            { duration: 300, easing: 'cubic-bezier(.34,1.6,.5,1)' },
+          );
+        },
+        { capture: true, passive: true },
+      );
+    }
     if (document.getElementById('kchao-hide-scrollbar')) return;
     const tag = document.createElement('style');
     tag.id = 'kchao-hide-scrollbar';

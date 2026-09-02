@@ -1,3 +1,5 @@
+import { useTheme } from '../../theme/ThemeContext';
+import { svgDataUri } from '../../theme/graphics';
 import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { useState } from 'react';
 import {
@@ -21,7 +23,34 @@ interface CultureStageProps {
 // source: require() 로컬 에셋 또는 { uri } 원격 URL 모두 지원
 // 이식 시: source를 ADMIN API 응답의 파일 URL({ uri })로 교체
 //          영상은 Platform.OS === 'web' 분기 후 React.createElement('video') 사용
+// 말해보카: 소스 없는 히어로는 회색 박스 대신 코드 렌더 배너 — 인사말 모티프
+function mbCultureHero(): string {
+  const esc = (t: string) => t.replace(/[^\x20-\x7E]/g, (ch) => '&#' + ch.charCodeAt(0) + ';');
+  const ko = esc('안녕하세요!');
+  const vi = esc('Xin chào!');
+  const label = esc('한국의 인사말');
+  return svgDataUri(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360">` +
+    `<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#EFEAFF"/><stop offset="1" stop-color="#DFF1FE"/></linearGradient></defs>` +
+    `<rect width="640" height="360" fill="url(#bg)"/>` +
+    `<circle cx="70" cy="300" r="90" fill="#7B2FF2" opacity="0.07"/>` +
+    `<circle cx="590" cy="60" r="110" fill="#0EA5E9" opacity="0.08"/>` +
+    `<circle cx="530" cy="320" r="46" fill="#F59E0B" opacity="0.1"/>` +
+    `<rect x="88" y="96" rx="26" width="220" height="76" fill="#FFFFFF" stroke="#E5DFF7" stroke-width="3"/>` +
+    `<path d="M128 172 l-12 24 34 -24 z" fill="#FFFFFF" stroke="#E5DFF7" stroke-width="3"/>` +
+    `<text x="198" y="144" text-anchor="middle" font-family="Pretendard, sans-serif" font-size="30" font-weight="800" fill="#4C34C2">${ko}</text>` +
+    `<rect x="332" y="180" rx="26" width="212" height="76" fill="#7B2FF2"/>` +
+    `<path d="M512 256 l12 24 -34 -24 z" fill="#7B2FF2"/>` +
+    `<text x="438" y="228" text-anchor="middle" font-family="Pretendard, sans-serif" font-size="30" font-weight="800" fill="#FFFFFF">${vi}</text>` +
+    `<rect x="240" y="286" rx="16" width="160" height="38" fill="#FFFFFF" opacity="0.85"/>` +
+    `<text x="320" y="311" text-anchor="middle" font-family="Pretendard, sans-serif" font-size="17" font-weight="700" fill="#4B4660">${label}</text>` +
+    `</svg>`,
+  );
+}
+
 function HeroMedia({ heroMedia }: { heroMedia: CultureActivityData['heroMedia'] }) {
+  const { theme: __hmT, enabled: __hmE } = useTheme();
+  const __hm = __hmE && __hmT.id === 'malhaeboka';
   if (!heroMedia) return null;
 
   const imageSource = heroMedia.source ?? (heroMedia.uri ? { uri: heroMedia.uri } : null);
@@ -43,6 +72,13 @@ function HeroMedia({ heroMedia }: { heroMedia: CultureActivityData['heroMedia'] 
 
   // 소스 미등록 시 플레이스홀더 (lang prop 불필요 — HeroMedia는 순수 UI)
   // 플레이스홀더 텍스트는 Korean-only로 유지 (ADMIN 콘텐츠 등록 전 개발용)
+  if (__hm) {
+    return (
+      <View style={{ width: '100%', aspectRatio: 16 / 9, borderRadius: 16, overflow: 'hidden' }}>
+        <Image source={{ uri: mbCultureHero() }} style={{ width: '100%', height: '100%' }} resizeMode="cover" />
+      </View>
+    );
+  }
   return (
     <View style={hero.placeholder}>
       <ThemedGlyph style={hero.placeholderIcon} glyph={heroMedia.type === 'video' ? '🎬' : '🖼️'} />
@@ -108,14 +144,16 @@ const sub = StyleSheet.create({
 
 // ─── 콘텐츠 카드 ─────────────────────────────────────────────────────
 function ContentCard({ item, lang }: { item: CultureActivityData['contents'][number]; lang: string }) {
+  const { theme: __ccT, enabled: __ccE } = useTheme();
+  const __cc = __ccE && __ccT.id === 'malhaeboka';
   return (
     <View style={cc.wrap}>
       {/* [questionContent] — Source A: questionContent 슬롯에 해당 */}
       <View style={cc.titleRow}>
         {item.icon && <ThemedGlyph style={cc.icon} glyph={item.icon} />}
-        <Text style={cc.title}>{pick(lang, item.title, item.titleVi ?? item.title)}</Text>
+        <Text style={[cc.title, __cc && { fontSize: 17.5 }]}>{pick(lang, item.title, item.titleVi ?? item.title)}</Text>
       </View>
-      <Text style={cc.description}>{pick(lang, item.description, item.descriptionVi ?? item.description)}</Text>
+      <Text style={[cc.description, __cc && { fontSize: 14.5, lineHeight: 22 }]}>{pick(lang, item.description, item.descriptionVi ?? item.description)}</Text>
       {/* [/questionContent] */}
 
       {/* [answerContent] — 세부 항목 목록 */}

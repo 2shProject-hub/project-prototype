@@ -4,6 +4,7 @@
  * - FAIL_MAX=2: 2회 오답 시 정답 공개
  * - Source A: SentenceBlank1 / templateCd: sentence_comp / Act06
  */
+import { useTheme } from '../../theme/ThemeContext';
 import { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { colors, radius, spacing, shadow } from '../../theme';
@@ -36,6 +37,8 @@ export function SentenceBlank1({
   totalSets = 1,
 }: Props) {
   const { lang } = useLang();
+  const { theme: __mbBtnT, enabled: __mbBtnE } = useTheme();
+  const __mbBtn = __mbBtnE && __mbBtnT.id === 'malhaeboka';
   const sfx = useSfx();
 
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -164,6 +167,7 @@ export function SentenceBlank1({
                 key={idx}
                 style={[
                   s.choiceBtn,
+                  __mbBtn && { minHeight: 54, paddingHorizontal: 20, borderRadius: 16, borderColor: '#E5DFF7' },
                   selected === word && !showAnswer && s.choiceBtnSelected,
                   state === 'correct' && s.choiceBtnCorrect,
                   state === 'wrong' && s.choiceBtnWrong,
@@ -175,6 +179,7 @@ export function SentenceBlank1({
               >
                 <Text style={[
                   s.choiceText,
+                  __mbBtn && { fontSize: 16.5 },
                   selected === word && !showAnswer && s.choiceTextSelected,
                   state === 'correct' && s.choiceTextCorrect,
                   state === 'wrong' && s.choiceTextWrong,

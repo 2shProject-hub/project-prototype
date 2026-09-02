@@ -120,14 +120,17 @@ export function themedChip(t: Theme, state: 'default' | 'selected' | 'correct' |
   const blocky = L.list === 'block';
   const hair = blocky ? Math.max(1.5, L.hairline * 2) : Math.max(1, L.hairline);
 
+  const mb = t.id === 'malhaeboka';
   const map = {
-    default: { border: blocky ? c.ink : c.line, bg: L.list === 'inset' ? c.backdrop : c.surface, fg: c.ink },
+    // 말해보카: 기본 상태도 흰 카드 — 회색 인셋은 프로토타입처럼 보인다
+    default: mb
+      ? { border: '#E5DFF7', bg: c.surface, fg: c.ink }
+      : { border: blocky ? c.ink : c.line, bg: L.list === 'inset' ? c.backdrop : c.surface, fg: c.ink },
     selected: { border: c.primary, bg: c.primarySoft, fg: readableOn(c.primarySoft, [c.primaryDark, c.ink]) },
     correct: { border: c.success, bg: c.successSoft, fg: readableOn(c.successSoft, [c.success, c.ink]) },
     wrong: { border: c.danger, bg: c.dangerSoft, fg: readableOn(c.dangerSoft, [c.danger, c.ink]) },
   }[state];
 
-  const mb = t.id === 'malhaeboka';
   return {
     box: {
       borderRadius: r,
@@ -140,11 +143,11 @@ export function themedChip(t: Theme, state: 'default' | 'selected' | 'correct' |
     text: { color: map.fg, ...bodyFont(t, 700), ...(mb ? { fontSize: 15.5, lineHeight: 22 } : null) } as TextStyle,
     sub: { color: c.muted, ...bodyFont(t), ...(mb ? { fontSize: 14, lineHeight: 20 } : null) } as TextStyle,
     badge: {
-      backgroundColor: state === 'default' ? c.backdrop : map.border,
+      backgroundColor: state === 'default' ? (mb ? '#EFEAFF' : c.backdrop) : map.border,
       borderRadius: L.radius === 0 ? 2 : 999,
     } as ViewStyle,
     badgeText: {
-      color: state === 'default' ? c.textSecondary : readableOn(map.border, ['#ffffff', c.ink]),
+      color: state === 'default' ? (mb ? '#4C34C2' : c.textSecondary) : readableOn(map.border, ['#ffffff', c.ink]),
       ...bodyFont(t, 700),
     } as TextStyle,
   };

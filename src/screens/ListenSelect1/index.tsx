@@ -3,6 +3,7 @@
  * - 프로그레스바 헤더
  * - 공통 ActivityHeader, AudioPlayButton, ChoiceChip, QuizFeedbackModal, CtaButton 적용
  */
+import { useTheme } from '../../theme/ThemeContext';
 import { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Platform, ScrollView } from 'react-native';
 import { colors, radius, spacing, shadow } from '../../theme';
@@ -35,6 +36,8 @@ export function ListenSelect1({
   totalSets = 1,
 }: Props) {
   const { lang } = useLang();
+  const { theme: __mbBT, enabled: __mbBE } = useTheme();
+  const __mbBtn = __mbBE && __mbBT.id === 'malhaeboka';
   const sfx = useSfx();
   const [currentIdx, setCurrentIdx] = useState(0);
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
@@ -109,9 +112,9 @@ export function ListenSelect1({
       <ScrollView style={s.scroll} contentContainerStyle={s.content}>
         {/* 질문 제목 */}
         <View style={s.titleBox}>
-          <Text style={s.title}>{currentQuestion.desc}</Text>
+          <Text style={[s.title, __mbBtn && { fontSize: 19.5, lineHeight: 27 }]}>{currentQuestion.desc}</Text>
           {currentQuestion.viText && (
-            <Text style={s.subtitle}>{currentQuestion.viText}</Text>
+            <Text style={[s.subtitle, __mbBtn && { fontSize: 14.5, lineHeight: 21 }]}>{currentQuestion.viText}</Text>
           )}
         </View>
 

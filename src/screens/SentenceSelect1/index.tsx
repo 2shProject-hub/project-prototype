@@ -3,6 +3,7 @@
  * - 베트남어 문장을 읽고 한국어 문장 선택지 중 뜻에 맞는 것 고르기
  * - 공통 ActivityHeader, ChoiceChip, CtaButton, QuizFeedbackModal 적용
  */
+import { useTheme } from '../../theme/ThemeContext';
 import { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { colors, radius, spacing, shadow } from '../../theme';
@@ -32,6 +33,8 @@ export function SentenceSelect1({
   totalSets = 1,
 }: Props) {
   const { lang } = useLang();
+  const { theme: __mbBtnT, enabled: __mbBtnE } = useTheme();
+  const __mbBtn = __mbBtnE && __mbBtnT.id === 'malhaeboka';
   const sfx = useSfx();
 
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -91,14 +94,14 @@ export function SentenceSelect1({
       <ScrollView style={s.scroll} contentContainerStyle={s.content}>
         {/* 질문 제목 */}
         <View style={s.titleBox}>
-          <Text style={s.title}>
+          <Text style={[s.title, __mbBtn && { fontSize: 19.5, lineHeight: 27 }]}>
             {pick(lang, '뜻에 맞는 문장을 고르세요', 'Hãy chọn câu có nghĩa phù hợp')}
           </Text>
         </View>
 
         {/* 베트남어 지문 카드 */}
         <View style={s.textCard}>
-          <Text style={s.subtitle}>
+          <Text style={[s.subtitle, __mbBtn && { fontSize: 14.5, lineHeight: 21 }]}>
             {pick(lang, 'Tiếng Việt:', 'Tiếng Việt:')}
           </Text>
           <Text style={s.viSentence}>{currentQuestion.viSentence}</Text>

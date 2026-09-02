@@ -6,6 +6,7 @@
  * - 텍스트 입력 필드
  * - 정답/오답 피드백
  */
+import { useTheme } from '../../theme/ThemeContext';
 import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { useState, useRef, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Modal, ScrollView, TextInput, Platform } from 'react-native';
@@ -31,6 +32,8 @@ interface Props {
 
 export function ListenTyping1({ questions = [], onNext, onBack, currentSetNumber = 1, totalSets = 1 }: Props) {
   const { lang } = useLang();
+  const { theme: __mbBtnT, enabled: __mbBtnE } = useTheme();
+  const __mbBtn = __mbBtnE && __mbBtnT.id === 'malhaeboka';
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -105,7 +108,7 @@ export function ListenTyping1({ questions = [], onNext, onBack, currentSetNumber
       <ScrollView style={s.scroll} contentContainerStyle={s.content}>
         {/* 질문 제목 */}
         <View style={s.titleBox}>
-          <Text style={s.title}>{pick(lang, '음원을 듣고 답을 입력해주세요', 'Hãy nghe âm thanh và nhập câu trả lời')}</Text>
+          <Text style={[s.title, __mbBtn && { fontSize: 19.5, lineHeight: 27 }]}>{pick(lang, '음원을 듣고 답을 입력해주세요', 'Hãy nghe âm thanh và nhập câu trả lời')}</Text>
         </View>
 
         {/* 음원 재생 카드 */}
@@ -122,9 +125,9 @@ export function ListenTyping1({ questions = [], onNext, onBack, currentSetNumber
 
         {/* 힌트 (있으면 표시) */}
         {currentQuestion.hint && (
-          <View style={s.hintCard}>
+          <View style={[s.hintCard, __mbBtn && { paddingVertical: 14, paddingHorizontal: 16, borderRadius: 15 }]}>
             <ThemedGlyph style={s.hintLabel} glyph="💡" /><Text style={s.hintLabel}> {pick(lang, '힌트', 'Gợi ý')}:</Text>
-            <Text style={s.hintText}>{currentQuestion.hint}</Text>
+            <Text style={[s.hintText, __mbBtn && { fontSize: 15, lineHeight: 22 }]}>{currentQuestion.hint}</Text>
           </View>
         )}
 
@@ -132,7 +135,7 @@ export function ListenTyping1({ questions = [], onNext, onBack, currentSetNumber
         <View style={s.inputContainer}>
           <Text style={s.inputLabel}>{pick(lang, '답:', 'Câu trả lời:')}</Text>
           <TextInput
-            style={s.textInput}
+            style={[s.textInput, __mbBtn && { height: 58, fontSize: 17, borderRadius: 16, paddingHorizontal: 16 }]}
             placeholder={pick(lang, '여기에 입력하세요', 'Nhập tại đây')}
             placeholderTextColor={colors.muted}
             value={inputValue}
