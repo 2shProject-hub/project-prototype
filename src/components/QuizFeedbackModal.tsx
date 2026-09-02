@@ -2,7 +2,6 @@ import React from 'react';
 import {
   View,
   Text,
-  Modal,
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -85,14 +84,10 @@ export function QuizFeedbackModal({
   const displayExplanation = explanation ? pick(lang, explanation, explanationVi || explanation) : null;
   const displayBtnText = nextText ? pick(lang, nextText, nextTextVi || nextText) : defaultNextText;
 
+  if (!visible) return null;
+
   return (
-    <Modal
-      visible={visible}
-      transparent
-      animationType="fade"
-      statusBarTranslucent
-      onRequestClose={onClose}
-    >
+    <View style={[StyleSheet.absoluteFill, { zIndex: 200 }]}>
       <TouchableWithoutFeedback onPress={onClose}>
         <View style={[styles.backdrop, asset && { backgroundColor: 'rgba(22,20,32,0.06)' }]}>
           <TouchableWithoutFeedback>
@@ -153,7 +148,7 @@ export function QuizFeedbackModal({
           </TouchableWithoutFeedback>
         </View>
       </TouchableWithoutFeedback>
-    </Modal>
+    </View>
   );
 }
 
