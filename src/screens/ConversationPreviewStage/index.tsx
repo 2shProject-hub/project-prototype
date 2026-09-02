@@ -285,12 +285,12 @@ export function ConversationPreviewStage({
           </View>
 
           {/* AI 튜터 하단 */}
-          <View style={[s.introTutorSection, __mbBtn && { paddingBottom: 2 }]}>
+          <View style={[s.introTutorSection, __mbBtn && { paddingBottom: 1 }]}>
             <View style={s.introTutorRow}>
               <View style={[s.introTutorCard, __mbBtn && { borderRadius: 18, borderWidth: 1.5, borderColor: '#E9E2FB' }]}>
                 <TypewriterText active={!!__mbBtn} text={bubbleText} style={[s.introTutorText, __mbBtn && { fontSize: 15, lineHeight: 23 }]} />
                 <TouchableOpacity
-                  style={[s.introSpeakerBtn, tutorPlaying && s.introSpeakerBtnActive]}
+                  style={[s.introSpeakerBtn, tutorPlaying && s.introSpeakerBtnActive, __mbBtn && { backgroundColor: '#EFEAFF' }]}
                   onPress={playTutorAudio}
                   activeOpacity={0.7}
                 >

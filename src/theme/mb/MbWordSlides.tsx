@@ -140,11 +140,11 @@ export function MbWordSlides({ onNext, onBack, slides, flowStep, flowTotal }: Pr
               activeOpacity={0.7}
               style={{
                 width: 42, height: 42, borderRadius: 21,
-                backgroundColor: needsTap ? mb.violet : mb.lavender,
+                backgroundColor: mb.lavender,
                 alignItems: 'center', justifyContent: 'center',
               }}
             >
-              <Image source={{ uri: icon('volume', needsTap ? '#FFFFFF' : mb.violet, 21, 2) }} style={{ width: 21, height: 21 }} />
+              <Image source={{ uri: icon('volume', mb.violet, 21, 2) }} style={{ width: 21, height: 21 }} />
             </TouchableOpacity>
           </View>
           <Image source={TUTOR_IMAGE as any} style={{ width: 88, height: 108 }} resizeMode="contain" />
@@ -239,32 +239,35 @@ function IntroBody() {
 
 function QuizBody({ a, aImg, answer, ansImg }: { a: string; aImg: any; answer: string; ansImg: any }) {
   return (
-    <View style={{ flex: 1, gap: 14 }}>
+    <View style={{ flex: 1, gap: 12 }}>
       <View style={{ alignSelf: 'flex-start', backgroundColor: '#FFE8F1', borderRadius: 8, paddingHorizontal: 9, paddingVertical: 4 }}>
         <Text style={{ fontFamily: mbFont, fontSize: 11, fontWeight: '800', color: '#E0447C' }}>Quiz</Text>
       </View>
-      <Text style={mbDisplay(23, '800')}>단어를 합쳐 볼까요?</Text>
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 9 }}>
-        <View style={{ flex: 1, alignItems: 'center', gap: 5 }}>
-          <Image source={aImg} style={{ width: '100%', height: 84, borderRadius: 12 }} resizeMode="cover" />
-          <Text style={mbDisplay(16, '800')}>{a}</Text>
+      <Text style={mbDisplay(24, '800')}>단어를 합쳐 볼까요?</Text>
+      {/* 하단이 비지 않게 — 남는 높이를 문제·정답이 나눠 가진다 */}
+      <View style={{ flex: 1, justifyContent: 'center', gap: 30 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+          <View style={{ flex: 1, alignItems: 'center', gap: 7 }}>
+            <Image source={aImg} style={{ width: '100%', height: 148, borderRadius: 14 }} resizeMode="cover" />
+            <Text style={mbDisplay(17, '800')}>{a}</Text>
+          </View>
+          <Text style={[mbDisplay(28, '900'), { color: mb.violet }]}>+</Text>
+          <View style={{ flex: 1, height: 148, borderRadius: 14, backgroundColor: mb.lavender, alignItems: 'center', justifyContent: 'center' }}>
+            <Text style={[mbDisplay(20, '800'), { color: mb.violetDark }]}>사람</Text>
+          </View>
         </View>
-        <Text style={[mbDisplay(24, '900'), { color: mb.violet }]}>+</Text>
-        <View style={{ flex: 1, height: 84, borderRadius: 12, backgroundColor: mb.lavender, alignItems: 'center', justifyContent: 'center' }}>
-          <Text style={[mbDisplay(18, '800'), { color: mb.violetDark }]}>사람</Text>
+        {/* 정답 — 실물의 정답 칩처럼 바이올렛 필 */}
+        <View
+          style={{
+            flexDirection: 'row', alignItems: 'center', gap: 14,
+            backgroundColor: mb.violet, borderRadius: 16, padding: 16,
+            shadowColor: mb.violet, shadowOpacity: 0.3, shadowRadius: 10, shadowOffset: { width: 0, height: 4 },
+          }}
+        >
+          <Image source={ansImg} style={{ width: 72, height: 72, borderRadius: 14 }} resizeMode="cover" />
+          <Text style={[mbDisplay(23, '900'), { color: mb.white, flex: 1 }]}>{answer}</Text>
+          <Image source={{ uri: icon('check', '#FFFFFF', 22, 2.6) }} style={{ width: 22, height: 22 }} />
         </View>
-      </View>
-      {/* 정답 — 실물의 정답 칩처럼 바이올렛 필 */}
-      <View
-        style={{
-          flexDirection: 'row', alignItems: 'center', gap: 12,
-          backgroundColor: mb.violet, borderRadius: 14, padding: 12,
-          shadowColor: mb.violet, shadowOpacity: 0.3, shadowRadius: 10, shadowOffset: { width: 0, height: 4 },
-        }}
-      >
-        <Image source={ansImg} style={{ width: 52, height: 52, borderRadius: 10 }} resizeMode="cover" />
-        <Text style={[mbDisplay(21, '900'), { color: mb.white, flex: 1 }]}>{answer}</Text>
-        <Image source={{ uri: icon('check', '#FFFFFF', 20, 2.6) }} style={{ width: 20, height: 20 }} />
       </View>
     </View>
   );

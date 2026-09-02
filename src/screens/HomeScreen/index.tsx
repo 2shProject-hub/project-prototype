@@ -1,5 +1,5 @@
 import React from 'react';
-import { tileIcon } from '../../theme/graphics';
+import { tileIcon, icon } from '../../theme/graphics';
 
 // 차시별 타일 — 벡터 생성이라 원 어느 크기에서도 또렷하다. 차시 내용과 의미를 맞춘 6종.
 const SESSION_TILES: string[] = [
@@ -130,7 +130,10 @@ export function HomeScreen({ sessions, setView, onStartSession }: Props) {
         </View>
       ) : (
         <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
-          {/* ── 히어로 카드 ── */}
+          {/* ── 히어로 카드 — MB 는 1과·1~6차시 스와이프 슬라이드(NOW 차시부터) ── */}
+          {brandCrest ? (
+            <MbHeroPager lang={lang} sessions={sessions} crest={brandCrest} />
+          ) : (
           <View style={styles.hero}>
             <View style={styles.heroText}>
               <View style={styles.lessonBadge}>
@@ -153,6 +156,7 @@ export function HomeScreen({ sessions, setView, onStartSession }: Props) {
               )}
             </View>
           </View>
+          )}
 
           {/* ── 전체 진도 ── */}
           <View style={styles.progressSection}>
@@ -310,6 +314,82 @@ const ring = StyleSheet.create({
 
 // ── 메인 스타일 ──────────────────────────────────────────────────────
 // 단어별 리딩 모션 — 순서대로 커졌다 줄며 읽어주는 느낌 (말해보카)
+// MB 홈 히어로 — 1과 소개 + 1~6차시를 좌우 스와이프 슬라이드로. 시작 페이지는 진행중(NOW) 차시.
+function MbHeroPager({ lang, sessions, crest }: { lang: any; sessions: Record<number, SessionState>; crest: any }) {
+  const [w, setW] = useState(0);
+  const [pg, setPg] = useState(0);
+  const sv = useRef<ScrollView>(null);
+  const nowId = [...SESSIONS].reverse().find((x) => (x.id === 1 || x.id === 2) && !(sessions[x.id]?.completed ?? false))?.id ?? 1;
+  // RN-web 의 onScroll 이 간헐적으로 유실돼 도트가 어긋난다 — DOM scroll 을 직접 구독해 동기화.
+  useEffect(() => {
+    if (w <= 0) return;
+    sv.current?.scrollTo({ x: w * nowId, animated: false });
+    setPg(nowId);
+    const node: any = (sv.current as any)?.getScrollableNode?.();
+    if (!node) return;
+    const sync = () => setPg(Math.min(SESSIONS.length, Math.max(0, Math.round(node.scrollLeft / w))));
+    node.addEventListener('scroll', sync, { passive: true });
+    const t = setInterval(sync, 400);
+    return () => { node.removeEventListener('scroll', sync); clearInterval(t); };
+  }, [w, nowId]);
+  const pages = [
+    { badge: LESSON.number, title: LESSON.title, sub: pick(lang, LESSON.summary, LESSON.summaryVi), now: false, done: false },
+    ...SESSIONS.map((s) => ({
+      badge: `${s.id}차시`,
+      title: s.title,
+      sub: `${s.label} · ${s.expression}`,
+      now: s.id === nowId,
+      done: sessions[s.id]?.completed ?? false,
+    })),
+  ];
+  return (
+    <View
+      style={[styles.hero, { flexDirection: 'column', alignItems: 'stretch', padding: 0, gap: 0 }]}
+      onLayout={(e) => setW(e.nativeEvent.layout.width)}
+    >
+      {w > 0 && (
+        <ScrollView
+          ref={sv}
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          scrollEventThrottle={64}
+        >
+          {pages.map((p, i) => (
+            <View key={i} style={{ width: w, flexDirection: 'row', alignItems: 'center', gap: 16, paddingHorizontal: 20, paddingTop: 18, paddingBottom: 10 }}>
+              <View style={{ flex: 1, gap: 6 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                  <View style={styles.lessonBadge}>
+                    <Text style={styles.lessonBadgeText}>{p.badge}</Text>
+                  </View>
+                  {p.now ? (
+                    <View style={{ backgroundColor: '#6C1FE0', borderRadius: 999, paddingHorizontal: 9, paddingVertical: 3.5 }}>
+                      <Text style={{ fontSize: 10, fontWeight: '900', color: '#FFFFFF', letterSpacing: 0.5 }}>NOW</Text>
+                    </View>
+                  ) : null}
+                  {p.done ? (
+                    <Image source={{ uri: icon('check', '#22A45D', 15, 3) }} style={{ width: 15, height: 15 }} />
+                  ) : null}
+                </View>
+                <Text style={[styles.heroTitle, { fontSize: 24, letterSpacing: -0.5 }]}>{p.title}</Text>
+                <ReadingPulse text={p.sub} style={[styles.heroSummary, { fontSize: 16, lineHeight: 24, fontWeight: '600', color: '#332F45' }]} />
+              </View>
+              <View style={styles.heroImageBox}>
+                <Image source={crest} style={{ width: 56, height: 72 }} resizeMode="contain" />
+              </View>
+            </View>
+          ))}
+        </ScrollView>
+      )}
+      <View key={`mb-dots-${pg}`} style={{ flexDirection: 'row', justifyContent: 'center', gap: 5, paddingBottom: 12 }}>
+        {pages.map((_, i) => (
+          <View key={i} style={{ width: i === pg ? 16 : 6, height: 6, borderRadius: 3, backgroundColor: i === pg ? '#6C1FE0' : '#DDD2F0' }} />
+        ))}
+      </View>
+    </View>
+  );
+}
+
 function ReadingPulse({ text, style }: { text: string; style?: any }) {
   const words = text.split(' ');
   const anims = useRef(words.map(() => new Animated.Value(0))).current;

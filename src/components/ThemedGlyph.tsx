@@ -54,7 +54,7 @@ export function ThemedGlyph({ glyph, style }: Props) {
   const flat = StyleSheet.flatten(style) ?? {};
   const size = typeof flat.fontSize === 'number' ? flat.fontSize : 18;
   // 전구·키보드처럼 디테일이 많은 실사 글리프는 같은 fontSize 라도 작아 보인다 — 키별 배율 부스트
-  const boost = key === 'hint' ? 1.7 : key === 'kbd' ? 1.55 : key === 'speakerOn' || key === 'speakerOff' ? 1.3 : 1;
+  const boost = key === 'hint' ? 1.7 : key === 'kbd' ? 1.55 : key === 'mic' ? 1.5 : key === 'speakerOn' || key === 'speakerOff' ? 1.3 : 1;
   return (
     <Image
       source={img}

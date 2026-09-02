@@ -58,7 +58,7 @@ export function IntroEvalStage({ onNext, onBack }: Props) {
 
           {/* 2. 아이콘 */}
           <View style={[styles.iconCircle, __mbBig && { width: 118, height: 118, borderRadius: 59 }]}>
-            <ThemedGlyph style={[styles.iconEmoji, __mbBig && { fontSize: 58 }]} glyph={intro.icon} />
+            <ThemedGlyph style={[styles.iconEmoji, __mbBig && { fontSize: 68 }]} glyph={intro.icon} />
           </View>
 
           {/* 3. 타이틀 */}

@@ -204,13 +204,32 @@ export function SentenceBuildStage({ onComplete, onBack }: Props) {
             </Animated.View>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.speedToggle}
-            onPress={() => setShowSpeedPicker(p => !p)}
-            activeOpacity={0.7}
-          >
-            <Text style={styles.speedToggleText}>{speed}x</Text>
-          </TouchableOpacity>
+          {__mbBtn ? (
+            <View style={{ flexDirection: 'row', gap: 6 }}>
+              {(['0.5', '1.0', '1.5'] as Speed[]).map((sp) => (
+                <TouchableOpacity
+                  key={sp}
+                  onPress={() => setSpeed(sp)}
+                  activeOpacity={0.8}
+                  style={{
+                    paddingHorizontal: 11, paddingVertical: 5, borderRadius: 999,
+                    backgroundColor: speed === sp ? '#7150F0' : '#FFFFFF',
+                    borderWidth: 1, borderColor: speed === sp ? '#7150F0' : '#E7E4F0',
+                  }}
+                >
+                  <Text style={{ fontSize: 13.5, fontWeight: '800', color: speed === sp ? '#FFFFFF' : '#6D6A7C' }}>{sp}x</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          ) : (
+            <TouchableOpacity
+              style={styles.speedToggle}
+              onPress={() => setShowSpeedPicker(p => !p)}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.speedToggleText}>{speed}x</Text>
+            </TouchableOpacity>
+          )}
         </View>
 
         {/* 답 조립 영역 */}

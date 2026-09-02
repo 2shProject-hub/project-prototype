@@ -32,6 +32,7 @@
 import { TypewriterText } from '../../components/TypewriterText';
 import { useTheme } from '../../theme/ThemeContext';
 import { ThemedGlyph } from '../../components/ThemedGlyph';
+import { icon } from '../../theme/graphics';
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import {
   View, Text, TouchableOpacity, StyleSheet, Animated, Modal, Platform, Image,
@@ -387,7 +388,11 @@ export function ConversationShadowingStage({
                 disabled={isRecording}
                 activeOpacity={0.8}
               >
-                <ThemedGlyph style={s.micIcon} glyph={isRecording ? '⏺' : '🎤'} />
+                {__mbBtn ? (
+                  <Image source={{ uri: icon(isRecording ? 'pause' : 'headphones', '#FFFFFF', 38, 2.1) }} style={{ width: 38, height: 38 }} />
+                ) : (
+                  <ThemedGlyph style={s.micIcon} glyph={isRecording ? '⏺' : '🎤'} />
+                )}
               </TouchableOpacity>
             </Animated.View>
           </View>
@@ -409,12 +414,12 @@ export function ConversationShadowingStage({
           </View>
 
           {/* AI 튜터 하단 */}
-          <View style={[s.introTutorSection, __mbBtn && { paddingBottom: 2 }]}>
+          <View style={[s.introTutorSection, __mbBtn && { paddingBottom: 1 }]}>
             <View style={s.introTutorRow}>
               <View style={[s.introTutorCard, __mbBtn && { borderRadius: 18, borderWidth: 1.5, borderColor: '#E9E2FB' }]}>
                 <TypewriterText active={!!__mbBtn} text={bubbleText} style={[s.introTutorText, __mbBtn && { fontSize: 15, lineHeight: 23 }]} />
                 <TouchableOpacity
-                  style={[s.introSpeakerBtn, tutorPlaying && s.introSpeakerBtnActive]}
+                  style={[s.introSpeakerBtn, tutorPlaying && s.introSpeakerBtnActive, __mbBtn && { backgroundColor: '#EFEAFF' }]}
                   onPress={playTutorAudio}
                   activeOpacity={0.7}
                 >

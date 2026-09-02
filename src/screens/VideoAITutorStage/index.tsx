@@ -182,7 +182,7 @@ export function VideoAITutorStage({
       </View>
 
       {/* 스페이서 */}
-      <View style={[s.spacer, themeOn && { flex: 0, height: 12 }]} />
+      <View style={s.spacer} />
 
       {/* AI 튜터 영역: 말풍선 + 썸네일 */}
       <View style={s.tutorRow}>
@@ -215,7 +215,7 @@ export function VideoAITutorStage({
       </View>
 
       {/* 하단 CTA */}
-      <View style={s.footer}>
+      <View style={[s.footer, themeOn && { paddingBottom: 1, paddingTop: 6 }]}>
         <TouchableOpacity style={s.ctaBtn} onPress={handleNext} activeOpacity={0.85}>
           <Text style={s.ctaBtnText}>
             {pick(lang, '다음', 'Tiếp theo')} →
