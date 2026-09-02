@@ -2,6 +2,7 @@ import { useTheme } from '../../theme/ThemeContext';
 
 // 말해보카: 벡터 글리프 대신 상황 실사진 — 키보드(문법 연습)·마이크(말하기 평가)
 const MB_ICON_PHOTOS: Record<string, any> = {
+  '📖': require('../../../assets/themes/malhaeboka/thumb-vocab.png'),
   '📝': require('../../../assets/themes/malhaeboka/photo-keyboard.png'),
   '⌨': require('../../../assets/themes/malhaeboka/photo-keyboard.png'),
   '🎤': require('../../../assets/themes/malhaeboka/photo-mic.png'),

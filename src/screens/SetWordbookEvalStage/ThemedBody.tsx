@@ -309,7 +309,7 @@ export function ThemedBody(p: ThemedBodyProps) {
         ) : MB_PHOTOS[w.ko] ? (
           <Image
             source={MB_PHOTOS[w.ko]}
-            style={{ width: 38, height: 38, borderRadius: 10, backgroundColor: '#EFEDF6', borderWidth: 1, borderColor: '#E7E4F0' }}
+            style={{ width: 58, height: 58, borderRadius: 14, backgroundColor: '#EFEDF6', borderWidth: 1, borderColor: '#E7E4F0' }}
             resizeMode="cover"
           />
         ) : (
