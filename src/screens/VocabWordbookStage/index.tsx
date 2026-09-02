@@ -1,6 +1,6 @@
 import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { useRef, useState } from 'react';
-import { ScrollView, View, Text, TouchableOpacity, StyleSheet, Modal, Platform } from 'react-native';
+import { ScrollView, View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { colors } from '../../theme/colors';
 import { SESSION1, STAGE_ORDER, STAGE_LABELS, MOCK_ADMIN_WORDBOOK_ACTIVITY } from '../../data/lessonData';
 import { useLang, pick } from '../../components/LangContext';
@@ -247,7 +247,8 @@ export function VocabWordbookStage({ onNext, onBack }: Props) {
       </View>
 
       {/* ── 1. 단어 발음 평가 모달 (Source A 구현 재현) ── */}
-      <Modal visible={showPronModal} animationType="slide" transparent={false}>
+      {showPronModal && (
+      <View style={[StyleSheet.absoluteFill, { zIndex: 200 }]}>
         <View style={styles.pronModalContainer}>
           {/* 모달 헤더 */}
           <View style={styles.header}>
@@ -294,7 +295,8 @@ export function VocabWordbookStage({ onNext, onBack }: Props) {
         </View>
 
         {/* ── 2. 모의 발음 평가 결과 모달 (PronSimpleModal 재현) ── */}
-        <Modal visible={showResultModal} transparent animationType="fade">
+        {showResultModal && (
+        <View style={[StyleSheet.absoluteFill, { zIndex: 10 }]}>
           <View style={styles.resultBackdrop}>
             <View style={styles.resultCard}>
               <Text style={styles.resultTitle}>발음 평가 결과</Text>
@@ -331,8 +333,10 @@ export function VocabWordbookStage({ onNext, onBack }: Props) {
               </View>
             </View>
           </View>
-        </Modal>
-      </Modal>
+        </View>
+        )}
+      </View>
+      )}
     </View>
   );
 }
