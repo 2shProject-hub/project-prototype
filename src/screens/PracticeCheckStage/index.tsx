@@ -1,3 +1,4 @@
+import { useTheme } from '../../theme/ThemeContext';
 import { ThemedGlyph } from '../../components/ThemedGlyph';
 import React, { useRef, useState, useEffect } from 'react';
 import {
@@ -107,6 +108,8 @@ function PracticeCheckBubble({
 export default function PracticeCheckStage({ onNext, onBack, data }: Props) {
   const d = data ?? MOCK_PRACTICE_CHECK;
   const { lang } = useLang();
+  const { theme: __mbBT, enabled: __mbBE } = useTheme();
+  const __mbBtn = __mbBE && __mbBT.id === 'malhaeboka' ? { height: 40, minHeight: 0, paddingVertical: 0, justifyContent: 'center' as const } : null;
 
   const [screenIndex, setScreenIndex] = useState(0);
   const [picks, setPicks] = useState<Picks>({});
@@ -262,7 +265,7 @@ export default function PracticeCheckStage({ onNext, onBack, data }: Props) {
           </View>
 
           {/* 하단: 말풍선 + 튜터 이미지 + [확인] 버튼 */}
-          <View style={styles.introTutorSection}>
+          <View style={[styles.introTutorSection, __mbBtn && { paddingBottom: 8 }]}>
             <View style={styles.introTutorRow}>
               <View style={styles.introTutorCard}>
                 <Text style={styles.introTutorText}>{BUBBLE_TEXT}</Text>
@@ -276,7 +279,7 @@ export default function PracticeCheckStage({ onNext, onBack, data }: Props) {
               </View>
               <Image source={TUTOR_IMAGE as any} style={styles.introTutorImg} resizeMode="contain" />
             </View>
-            <TouchableOpacity style={styles.introConfirmBtn} onPress={handleOverlayConfirm} activeOpacity={0.85}>
+            <TouchableOpacity style={[styles.introConfirmBtn, __mbBtn]} onPress={handleOverlayConfirm} activeOpacity={0.85}>
               <Text style={styles.introConfirmBtnText}>확인</Text>
             </TouchableOpacity>
           </View>

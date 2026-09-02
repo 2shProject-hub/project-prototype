@@ -291,7 +291,7 @@ export function SentenceBuildStage({ onComplete, onBack }: Props) {
             onPress={() => { setShowKeyboard(false); setSelected([]); }}
             activeOpacity={0.7}
           >
-            <Text style={styles.keyboardBtnText}>
+            <Text style={[styles.keyboardBtnText, __mbBtn, __mbBtn]}>
               🃏 {pick(lang, '단어 카드로 풀기', 'Quay lại thẻ từ')}
             </Text>
           </TouchableOpacity>
@@ -346,7 +346,7 @@ export function SentenceBuildStage({ onComplete, onBack }: Props) {
             onPress={() => setShowKeyboard(true)}
             activeOpacity={0.7}
           >
-            <Text style={styles.keyboardBtnText}>
+            <Text style={[styles.keyboardBtnText, __mbBtn, __mbBtn]}>
               ⌨ {pick(lang, '키보드 사용하기', 'Dùng bàn phím')}
             </Text>
           </TouchableOpacity>
@@ -355,7 +355,7 @@ export function SentenceBuildStage({ onComplete, onBack }: Props) {
 
       {/* ── 피드백 모달 (absolute — 에뮬레이터 프레임 안에 표시) ── */}
       {feedback !== null && (
-        <View style={styles.modalBackdrop}>
+        <View style={[styles.modalBackdrop, __mbBtn && { backgroundColor: 'rgba(22,20,32,0.06)' }]}>
           <View style={styles.modalSheet}>
             {feedback === 'correct' && (
               <>

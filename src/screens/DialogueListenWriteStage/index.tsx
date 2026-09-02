@@ -1,3 +1,4 @@
+import { useTheme } from '../../theme/ThemeContext';
 import { ThemedGlyph } from '../../components/ThemedGlyph';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
@@ -80,6 +81,8 @@ type Phase = 'intro' | 'main';
 export default function DialogueListenWriteStage({ onNext, onBack, data }: Props) {
   const d = data ?? MOCK_DIALOGUE_LISTEN_WRITE;
   const { lang } = useLang();
+  const { theme: __mbBT, enabled: __mbBE } = useTheme();
+  const __mbBtn = __mbBE && __mbBT.id === 'malhaeboka' ? { height: 40, minHeight: 0, paddingVertical: 0, justifyContent: 'center' as const } : null;
 
   const [phase, setPhase] = useState<Phase>(d.aiTutor ? 'intro' : 'main');
   const [tutorPlaying, setTutorPlaying] = useState(false);
@@ -218,7 +221,7 @@ export default function DialogueListenWriteStage({ onNext, onBack, data }: Props
             </View>
           </View>
 
-          <View style={styles.introTutorSection}>
+          <View style={[styles.introTutorSection, __mbBtn && { paddingBottom: 8 }]}>
             <View style={styles.introTutorRow}>
               <View style={styles.introTutorCard}>
                 <Text style={styles.introTutorText}>{tutorBubble}</Text>
@@ -232,7 +235,7 @@ export default function DialogueListenWriteStage({ onNext, onBack, data }: Props
               </View>
               <Image source={TUTOR_IMAGE as any} style={styles.introTutorImg} resizeMode="contain" />
             </View>
-            <TouchableOpacity style={styles.introConfirmBtn} onPress={handleConfirmIntro} activeOpacity={0.85}>
+            <TouchableOpacity style={[styles.introConfirmBtn, __mbBtn]} onPress={handleConfirmIntro} activeOpacity={0.85}>
               <Text style={styles.introConfirmBtnText}>확인</Text>
             </TouchableOpacity>
           </View>

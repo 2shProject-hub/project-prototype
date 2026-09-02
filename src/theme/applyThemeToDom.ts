@@ -129,6 +129,12 @@ function transformDeclarations(cssText: string, replacements: Array<[string, str
       changed = true;
     }
 
+    // 말해보카: 카드 음영을 입체적으로 통일 — 얕고 흐릿한 그림자를 떠 있는 느낌으로
+    if (theme.id === 'malhaeboka' && prop === 'box-shadow' && val.trim() !== 'none') {
+      val = ' 0 6px 18px rgba(52,62,105,0.14)';
+      changed = true;
+    }
+
     // 말해보카: 큰 글자(제목류)는 트래킹을 타이트하게 — 2026 타이포 트렌드
     if (theme.id === 'malhaeboka' && prop === 'font-size') {
       const m = val.match(/(\d+(?:\.\d+)?)px/);

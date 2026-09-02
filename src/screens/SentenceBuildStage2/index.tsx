@@ -190,7 +190,7 @@ export function SentenceBuildStage2({ onComplete, onBack }: Props) {
       )}
 
       {/* ── Footer ── */}
-      <View style={styles.footer}>
+      <View style={[styles.footer, __mbBtn && { paddingBottom: 8 }]}>
         <View style={styles.footerRow}>
           <View style={{ flex: 1 }}>
             {inputMode === 'tile' ? (
@@ -221,11 +221,11 @@ export function SentenceBuildStage2({ onComplete, onBack }: Props) {
         </View>
 
         {inputMode === 'tile' ? (
-          <TouchableOpacity style={styles.modeBtn} onPress={() => switchMode('keyboard')} activeOpacity={0.7}>
+          <TouchableOpacity style={[styles.modeBtn, __mbBtn]} onPress={() => switchMode('keyboard')} activeOpacity={0.7}>
             <Text style={styles.modeBtnText}>⌨ {pick(lang, '키보드 사용하기', 'Dùng bàn phím')}</Text>
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity style={styles.modeBtn} onPress={() => switchMode('tile')} activeOpacity={0.7}>
+          <TouchableOpacity style={[styles.modeBtn, __mbBtn]} onPress={() => switchMode('tile')} activeOpacity={0.7}>
             <Text style={styles.modeBtnText}>🃏 {pick(lang, '단어 카드로 풀기', 'Dùng thẻ từ')}</Text>
           </TouchableOpacity>
         )}
@@ -233,7 +233,7 @@ export function SentenceBuildStage2({ onComplete, onBack }: Props) {
 
       {/* ── 피드백 모달 (absolute — 에뮬레이터 프레임 안에 표시) ── */}
       {feedback !== null && (
-        <View style={styles.modalBackdrop}>
+        <View style={[styles.modalBackdrop, __mbBtn && { backgroundColor: 'rgba(22,20,32,0.06)' }]}>
           <View style={styles.modalSheet}>
             {feedback === 'correct' && (
               <>
