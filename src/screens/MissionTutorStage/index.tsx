@@ -126,7 +126,7 @@ export function MissionTutorStage({ sessionId, onNext, onBack }: Props) {
           {/* 말풍선 */}
           <View style={[styles.bubble, __mb && { borderRadius: 18, borderWidth: 1.5, borderColor: '#E9E2FB' }]}>
             {BUBBLE_LINES.map((line, i) => (
-              <TypewriterText key={i} active={__mb} delayMs={i * 550} text={line} style={[styles.bubbleText, __mb && { fontSize: 15.5, lineHeight: 24 }, i > 0 && styles.bubbleTextGap]} />
+              <TypewriterText key={i} active={__mb} delayMs={BUBBLE_LINES.slice(0, i).reduce((a, l) => a + l.length, 0) * (1000 / 58) + i * 300} text={line} style={[styles.bubbleText, __mb && { fontSize: 15.5, lineHeight: 24 }, i > 0 && styles.bubbleTextGap]} />
             ))}
             {/* 말풍선 꼬리 */}
             <View style={styles.bubbleTail} />
