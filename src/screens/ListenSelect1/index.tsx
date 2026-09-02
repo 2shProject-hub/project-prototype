@@ -4,8 +4,14 @@
  * - 공통 ActivityHeader, AudioPlayButton, ChoiceChip, QuizFeedbackModal, CtaButton 적용
  */
 import { useTheme } from '../../theme/ThemeContext';
+
+// 나라 보기 → 해당 나라 국기 (flagcdn — 국가코드 고정)
+const LS_FLAGS: Record<string, string> = {
+  '베트남': 'vn', '한국': 'kr', '인도네시아': 'id', '러시아': 'ru',
+  '미국': 'us', '프랑스': 'fr', '중국': 'cn', '독일': 'de',
+};
 import { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Platform, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Platform, ScrollView, Image } from 'react-native';
 import { colors, radius, spacing, shadow } from '../../theme';
 import { useLang, pick, ActivityHeader, CtaButton, QuizFeedbackModal, ChoiceChip, AudioPlayButton } from '../../components';
 import { useSfx } from '../../hooks/useSfx';
@@ -143,6 +149,12 @@ export function ListenSelect1({
                   text={word}
                   badge={idx + 1}
                   state={choiceState}
+                  icon={__mbBtn && LS_FLAGS[word] ? (
+                    <Image
+                      source={{ uri: `https://flagcdn.com/w80/${LS_FLAGS[word]}.png` }}
+                      style={{ width: 36, height: 25, borderRadius: 5, borderWidth: 1, borderColor: '#E7E4F0' }}
+                    />
+                  ) : undefined}
                   onPress={() => handleSelect(word, idx)}
                   disabled={showModal}
                   size="lg"

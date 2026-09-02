@@ -89,7 +89,7 @@ export function HomeScreen({ sessions, setView, onStartSession }: Props) {
             onPress={() => setSubTab(tab)}
             activeOpacity={0.7}
           >
-            <Text style={[styles.subTabText, subTab === tab && styles.subTabTextActive]}>
+            <Text style={[styles.subTabText, brandCrest && { fontSize: 16, fontWeight: '800' }, subTab === tab && styles.subTabTextActive, brandCrest && subTab === tab && { fontSize: 16, fontWeight: '900' }]}>
               {tab === 'my'
                 ? pick(lang, '나의 코스', 'Khóa của tôi')
                 : pick(lang, '전체 코스', 'Tất cả khóa học')
@@ -201,7 +201,7 @@ export function HomeScreen({ sessions, setView, onStartSession }: Props) {
                     <View style={[styles.dot, { backgroundColor: '#FFFFFF', borderWidth: 2, borderColor: '#ECE7FA' }, showNow ? { borderColor: '#B9A5F5', borderWidth: 2 } : null]}>
                       <Image
                         source={brandRowIcons[idx % brandRowIcons.length]}
-                        style={{ width: 32, height: 32, borderRadius: 9, opacity: unlocked ? 1 : 0.38 }}
+                        style={{ width: 34, height: 34, borderRadius: 9, marginTop: 1, opacity: unlocked ? 1 : 0.38 }}
                         resizeMode="contain"
                       />
                       {completed ? (
