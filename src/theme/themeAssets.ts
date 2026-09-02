@@ -9,6 +9,8 @@
 //  - 퀵메뉴 아이콘 4종: 캐릭터 상점 · 도전 과제 · 영어 사전 · 기억력 부스터
 // ⚠️ 디자인 시안 비교용 참조 자산이다 — 실서비스 출시물에 쓰면 안 된다(타사 저작물).
 
+import { icon } from './graphics';
+
 export interface ThemeAssets {
   /** 완료(축하) 화면의 얼굴 — 메인 마스코트 */
   character: any;
@@ -43,20 +45,22 @@ export const THEME_ASSETS: Record<string, ThemeAssets> = {
       require('../../assets/themes/malhaeboka/icon-boost.png'),
     ],
     // 말해보카 하단 내비 글리프(어휘·리스닝·리그·프리미엄)를 우리 탭에 대응
+    // 하단 내비 — 상용 수준 선명도를 위해 벡터 스트로크로 (활성 보라 / 비활성 회색)
     navIcons: {
-      home: { on: require('../../assets/themes/malhaeboka/nav-vocab-on.png'), off: require('../../assets/themes/malhaeboka/nav-vocab-off.png') },
-      report: { on: require('../../assets/themes/malhaeboka/nav-league-on.png'), off: require('../../assets/themes/malhaeboka/nav-league-off.png') },
-      'ai-talk': { on: require('../../assets/themes/malhaeboka/nav-listen-on.png'), off: require('../../assets/themes/malhaeboka/nav-listen-off.png') },
-      'my-info': { on: require('../../assets/themes/malhaeboka/nav-crown-on.png'), off: require('../../assets/themes/malhaeboka/nav-crown-off.png') },
+      home: { on: { uri: icon('home', '#7150F0', 24, 2.1) }, off: { uri: icon('home', '#A5A1B8', 24, 2) } },
+      report: { on: { uri: icon('chart', '#7150F0', 24, 2.1) }, off: { uri: icon('chart', '#A5A1B8', 24, 2) } },
+      'ai-talk': { on: { uri: icon('headphones', '#7150F0', 24, 2.1) }, off: { uri: icon('headphones', '#A5A1B8', 24, 2) } },
+      'my-info': { on: { uri: icon('crown', '#7150F0', 24, 2.1) }, off: { uri: icon('crown', '#A5A1B8', 24, 2) } },
     },
     crest: require('../../assets/themes/malhaeboka/char-fish.png'),
     glyphs: {
-      speakerOn: require('../../assets/themes/malhaeboka/nav-listen-on.png'),
-      speakerOff: require('../../assets/themes/malhaeboka/nav-listen-off.png'),
+      // 재생중=검은 해드셋(잘 보이게) / 대기=회색 해드셋 — 2026 벡터 스트로크
+      speakerOn: { uri: icon('headphones', '#26223A', 24, 2.1) },
+      speakerOff: { uri: icon('headphones', '#4B4660', 24, 2.1) },
       mic: require('../../assets/themes/malhaeboka/glyph-mic.png'),
       hint: require('../../assets/themes/malhaeboka/glyph-hint.png'),
-      book: require('../../assets/themes/malhaeboka/nav-vocab-on.png'),
-      play: require('../../assets/themes/malhaeboka/glyph-play.png'),
+      book: { uri: icon('bookopen', '#4C34C2', 24, 2) },
+      play: { uri: icon('play', '#7150F0', 24, 2) },
       school: require('../../assets/themes/malhaeboka/char-fish.png'),
       write: require('../../assets/themes/malhaeboka/glyph-keyboard.png'),
       quest: require('../../assets/themes/malhaeboka/icon-quest.png'),

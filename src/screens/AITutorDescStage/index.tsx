@@ -15,6 +15,7 @@
  *   - ActivityHeader → ActivityLayout (step/totalSteps)
  */
 
+import { useTheme } from '../../theme/ThemeContext';
 import { ThemedGlyph } from '../../components/ThemedGlyph';
 import React, { useRef, useEffect, useState } from 'react';
 import {
@@ -50,6 +51,7 @@ export function AITutorDescStage({
   data = MOCK_AI_TUTOR_DESC,
 }: Props) {
   const { lang } = useLang();
+  const { enabled: themeOn } = useTheme();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -119,7 +121,7 @@ export function AITutorDescStage({
           </Text>
           {/* 스피커 버튼 */}
           <TouchableOpacity
-            style={[s.speakerBtn, isPlaying && s.speakerBtnActive]}
+            style={[s.speakerBtn, isPlaying && s.speakerBtnActive, themeOn && { backgroundColor: '#F1EDFB' }]}
             onPress={handleReplay}
             activeOpacity={0.7}
             hitSlop={8}

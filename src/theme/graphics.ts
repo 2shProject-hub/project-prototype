@@ -38,7 +38,7 @@ function uri(svg: string): string {
 const wrap = (inner: string, size = 24) =>
   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="${size}" height="${size}" fill="none">${inner}</svg>`;
 
-type IconName = 'volume' | 'mic' | 'check' | 'chevron' | 'play' | 'sparkle' | 'bookmark' | 'close' | 'back';
+type IconName = 'volume' | 'mic' | 'check' | 'chevron' | 'play' | 'sparkle' | 'bookmark' | 'close' | 'back' | 'headphones' | 'home' | 'chart' | 'crown' | 'bookopen';
 
 const PATHS: Record<IconName, (c: string, w: number) => string> = {
   // 2026 표준 스트로크 아이콘 (Lucide 계열 라운드 스트로크) — 촌스러운 자작 패스 대체
@@ -59,6 +59,20 @@ const PATHS: Record<IconName, (c: string, w: number) => string> = {
   bookmark: (c, w) => `<path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" stroke="${c}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round" fill="none"/>`,
   close: (c, w) => `<path d="M18 6 6 18M6 6l12 12" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`,
   back: (c, w) => `<path d="m15 18-6-6 6-6" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`,
+  headphones: (c, w) =>
+    `<path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`,
+  home: (c, w) =>
+    `<path d="m3 9.5 9-7 9 7V20a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke="${c}" stroke-width="${w}" stroke-linejoin="round" fill="none"/>` +
+    `<path d="M9.5 22v-8h5v8" stroke="${c}" stroke-width="${w}" stroke-linejoin="round" fill="none"/>`,
+  chart: (c, w) =>
+    `<path d="M3 3v16a2 2 0 0 0 2 2h16" stroke="${c}" stroke-width="${w}" stroke-linecap="round" fill="none"/>` +
+    `<path d="M18 17V9M13 17V5M8 17v-4" stroke="${c}" stroke-width="${w}" stroke-linecap="round" fill="none"/>`,
+  crown: (c, w) =>
+    `<path d="M11.6 3.3a.5.5 0 0 1 .8 0l3 5.6a1 1 0 0 0 1.5.3l4.3-3.7a.5.5 0 0 1 .8.5l-2.8 10.3a1 1 0 0 1-1 .7H5.8a1 1 0 0 1-1-.7L2 6a.5.5 0 0 1 .8-.5l4.3 3.7a1 1 0 0 0 1.5-.3z" stroke="${c}" stroke-width="${w}" stroke-linejoin="round" fill="none"/>` +
+    `<path d="M5 21h14" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`,
+  bookopen: (c, w) =>
+    `<path d="M12 7v14" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>` +
+    `<path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" stroke="${c}" stroke-width="${w}" stroke-linejoin="round" fill="none"/>`,
 };
 
 export function icon(name: IconName, color: string, size = 20, strokeWidth = 1.7): string {
