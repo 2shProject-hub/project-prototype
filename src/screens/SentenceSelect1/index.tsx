@@ -101,17 +101,11 @@ export function SentenceSelect1({
 
         {/* 베트남어 지문 카드 */}
         <View style={s.textCard}>
-          <Text style={[s.subtitle, __mbBtn && { fontSize: 14.5, lineHeight: 21 }]}>
-            {pick(lang, 'Tiếng Việt:', 'Tiếng Việt:')}
-          </Text>
           <Text style={s.viSentence}>{currentQuestion.viSentence}</Text>
         </View>
 
         {/* 한국어 문장 선택지 */}
         <View style={s.choicesSection}>
-          <Text style={s.choiceSectionLabel}>
-            {pick(lang, '한국어 선택지:', 'Lựa chọn Tiếng Hàn:')}
-          </Text>
           <View style={s.choicesList}>
             {currentQuestion.choices.map((choice, idx) => (
               <ChoiceChip
@@ -190,12 +184,6 @@ const s = StyleSheet.create({
     borderColor: colors.teal,
     ...shadow.soft,
   },
-  subtitle: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: colors.muted,
-    marginBottom: spacing.xs,
-  },
   viSentence: {
     fontSize: 16,
     fontWeight: '700',
@@ -205,12 +193,6 @@ const s = StyleSheet.create({
   },
   choicesSection: {
     marginBottom: spacing.xl,
-  },
-  choiceSectionLabel: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: colors.textSecondary,
-    marginBottom: spacing.md,
   },
   choicesList: {
     gap: spacing.md,
