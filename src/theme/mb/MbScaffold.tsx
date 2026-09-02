@@ -123,7 +123,7 @@ export function MbProgressRow({
             zIndex: 2,
           }}
         >
-          <Image source={{ uri: icon('pencil', mb.violet, 13, 2.4) }} style={{ width: 13, height: 13 }} />
+          <Image source={require('../../../assets/themes/malhaeboka/icon-pencil-egg.png')} style={{ width: 16, height: 16 }} resizeMode="contain" />
         </Animated.View>
 
         {/* % 말풍선 — 마커 아래 */}
