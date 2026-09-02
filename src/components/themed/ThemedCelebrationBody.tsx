@@ -79,7 +79,11 @@ export function ThemedCelebrationBody({
   // 세트 완료(33~35)는 브랜드 테마에서 캐릭터를 두지 않는다 (사용자 확정: 폭죽·타이틀만)
   const hideArt = !!asset && setNumber != null;
   const photoTop = art.kind === 'photo' || st === 'hero-list';
-  const variant = Math.max(0, THEMES.findIndex((x) => x.id === theme.id));
+  // 완료 화면마다 폭죽이 달라야 한다 — 테마 인덱스에 화면 제목 해시를 섞어
+  // 터짐 종류(variant)·세기·색 배열이 화면별로 갈린다
+  let titleHash = 0;
+  for (let i = 0; i < titleKo.length; i++) titleHash = (titleHash * 31 + titleKo.charCodeAt(i)) >>> 0;
+  const variant = Math.max(0, THEMES.findIndex((x) => x.id === theme.id)) + (titleHash % 9);
   const learnPicks = LEARN_PICKS[theme.id] ?? LEARN_FALLBACK;
   const bandPick = BAND_PICKS[theme.id] ?? { t: learnPicks[0].t, l: theme.photo.lock + 3 };
 
@@ -108,9 +112,13 @@ export function ThemedCelebrationBody({
         width={band.w}
         height={band.h}
         variant={variant}
-        power={mood === 'loud' ? 1 : mood === 'warm' ? 0.82 : 0.6}
+        power={(mood === 'loud' ? 1 : mood === 'warm' ? 0.82 : 0.6) + (titleHash % 3) * 0.07}
         blend={bright || st === 'grid' ? 'normal' : 'add'}
-        colors={bright || st === 'grid' ? [c.accent, c.primaryDark, c.ink] : ['#ffffff', c.accent, c.primarySoft]}
+        colors={
+          bright || st === 'grid'
+            ? [[c.accent, c.primaryDark, c.ink], [c.primaryDark, c.accent, '#FFD644'], [c.accent, '#23D96C', c.primaryDark]][titleHash % 3]
+            : [['#ffffff', c.accent, c.primarySoft], ['#ffffff', '#FFD644', c.accent], ['#ffffff', c.primarySoft, '#7EE2A8']][titleHash % 3]
+        }
       />
     </View>
   ) : null;
@@ -232,7 +240,7 @@ export function ThemedCelebrationBody({
       </ScrollView>
 
       {/* ── 하단 CTA — 실동작 버튼 ── */}
-      <View style={{ paddingHorizontal: L.edge, paddingTop: Math.min(s.gap, 10), paddingBottom: asset ? 8 : s.row + 6 }}>
+      <View style={{ paddingHorizontal: L.edge, paddingTop: Math.min(s.gap, 10), paddingBottom: asset ? 6 : s.row + 6 }}>
         <CtaButton title={pick(lang, ctaKo, ctaVi)} onPress={onNext} size="lg" />
       </View>
     </View>

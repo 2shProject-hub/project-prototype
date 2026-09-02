@@ -237,7 +237,7 @@ function normalizeFooterBaseline(): void {
       const pb = parseFloat(cs.paddingBottom) || 0;
       if (pb >= 11 && pb <= 40) {
         if (!el.hasAttribute(FOOTER_ATTR)) el.setAttribute(FOOTER_ATTR, el.style.paddingBottom || '');
-        el.style.paddingBottom = '8px';
+        el.style.paddingBottom = '6px';
       }
       const pt = parseFloat(cs.paddingTop) || 0;
       if (pt >= 14 && pt <= 32) el.style.paddingTop = '10px';

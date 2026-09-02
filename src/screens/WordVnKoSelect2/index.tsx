@@ -42,6 +42,8 @@ export function WordVnKoSelect2({
   totalSets = 1,
 }: Props) {
   const { lang } = useLang();
+  const { theme: __mbBT, enabled: __mbBE } = useTheme();
+  const __mbBtn = __mbBE && __mbBT.id === 'malhaeboka' ? { height: 40, minHeight: 0, paddingVertical: 0, justifyContent: 'center' as const } : null;
   const { enabled: __mbOn, theme: __mbTheme } = useTheme();
   const mbFill = __mbOn && __mbTheme.id === 'malhaeboka';
   const sfx = useSfx();
@@ -205,7 +207,7 @@ export function WordVnKoSelect2({
 
         {/* 1번 세트 안내 토스트 팝업 */}
         {showToast && currentSetNumber === 1 && (
-          <View style={s.toastBox}>
+          <View style={[s.toastBox, __mbBtn && { backgroundColor: '#EFEAFF', borderWidth: 1.5, borderColor: '#CBBAF8', borderRadius: 14 }, __mbBtn && { backgroundColor: '#EFEAFF', borderWidth: 1.5, borderColor: '#CBBAF8', borderRadius: 14 }]}>
             <TouchableOpacity
               style={s.toastCloseBtn}
               onPress={handleCloseToast}
@@ -215,7 +217,7 @@ export function WordVnKoSelect2({
               <Text style={s.toastCloseText}>✕</Text>
             </TouchableOpacity>
 
-            <Text style={s.toastMessage}>
+            <Text style={[s.toastMessage, __mbBtn && { fontSize: 14.5, lineHeight: 21, color: '#3D2E86', fontWeight: '600' as const }, __mbBtn && { fontSize: 14.5, lineHeight: 21, color: '#3D2E86', fontWeight: '600' as const }]}>
               Nghe bằng tai rồi giải. Nghe âm thanh và chọn chữ đúng.
             </Text>
 

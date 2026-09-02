@@ -120,9 +120,9 @@ export function HomeScreen({ sessions, setView, onStartSession }: Props) {
               <View style={styles.lessonBadge}>
                 <Text style={styles.lessonBadgeText}>{LESSON.number}</Text>
               </View>
-              <Text style={styles.heroTitle}>{LESSON.title}</Text>
+              <Text style={[styles.heroTitle, brandCrest && { fontSize: 24, letterSpacing: -0.5 }]}>{LESSON.title}</Text>
               {brandCrest ? (
-                <ReadingPulse text={pick(lang, LESSON.summary, LESSON.summaryVi)} style={styles.heroSummary} />
+                <ReadingPulse text={pick(lang, LESSON.summary, LESSON.summaryVi)} style={[styles.heroSummary, { fontSize: 14.5, lineHeight: 21, color: '#3F3D4D' }]} />
               ) : (
                 <Text style={styles.heroSummary}>
                   {pick(lang, LESSON.summary, LESSON.summaryVi)}
@@ -131,7 +131,7 @@ export function HomeScreen({ sessions, setView, onStartSession }: Props) {
             </View>
             <View style={styles.heroImageBox}>
               {brandCrest ? (
-                <Image source={brandCrest} style={{ width: 44, height: 56 }} resizeMode="contain" />
+                <Image source={brandCrest} style={{ width: 56, height: 72 }} resizeMode="contain" />
               ) : (
                 <ThemedGlyph style={styles.heroEmoji} glyph="🏫" />
               )}

@@ -277,8 +277,9 @@ export function SentenceBuildStage({ onComplete, onBack }: Props) {
             placeholder={pick(lang, '한국어 문장을 입력하세요', 'Nhập câu tiếng Hàn')}
             autoFocus
           />
+          <View style={__mbBtn ? { flexDirection: 'row' as const, alignItems: 'center' as const, gap: 8, marginTop: 12 } : null}>
           <TouchableOpacity
-            style={[styles.ctaBtn, { marginTop: 12 }, !keyboardText.trim() && styles.ctaBtnDisabled]}
+            style={[styles.ctaBtn, __mbBtn ? { flex: 1 } : { marginTop: 12 }, !keyboardText.trim() && styles.ctaBtnDisabled]}
             onPress={onKeyboardConfirm}
             disabled={!keyboardText.trim()}
             activeOpacity={0.85}
@@ -287,7 +288,7 @@ export function SentenceBuildStage({ onComplete, onBack }: Props) {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.keyboardBtn, __mbBtn]}
+            style={[styles.keyboardBtn, __mbBtn, __mbBtn && { paddingHorizontal: 12, flexShrink: 1, marginTop: 0, alignSelf: 'auto' as const }]}
             onPress={() => { setShowKeyboard(false); setSelected([]); }}
             activeOpacity={0.7}
           >
@@ -295,6 +296,7 @@ export function SentenceBuildStage({ onComplete, onBack }: Props) {
               🃏 {pick(lang, '단어 카드로 풀기', 'Quay lại thẻ từ')}
             </Text>
           </TouchableOpacity>
+          </View>
         </View>
       )}
 
@@ -320,8 +322,8 @@ export function SentenceBuildStage({ onComplete, onBack }: Props) {
 
       {/* ── Footer ── */}
       {!showKeyboard && (
-        <View style={styles.footer}>
-          <View style={styles.footerRow}>
+        <View style={[styles.footer, __mbBtn && { paddingBottom: 6, flexDirection: 'row' as const, alignItems: 'center' as const, gap: 8 }]}>
+          <View style={[styles.footerRow, __mbBtn && { flex: 1 }]}>
             <View style={{ flex: 1 }}>
               <CtaButton
                 title={pick(lang, '확인', 'Xác nhận')}
@@ -332,7 +334,7 @@ export function SentenceBuildStage({ onComplete, onBack }: Props) {
             </View>
 
             <TouchableOpacity
-              style={styles.hintBtn}
+              style={[styles.hintBtn, __mbBtn && { height: 40 }]}
               onPress={() => setShowHint(h => !h)}
               activeOpacity={0.8}
             >
@@ -342,7 +344,7 @@ export function SentenceBuildStage({ onComplete, onBack }: Props) {
           </View>
 
           <TouchableOpacity
-            style={[styles.keyboardBtn, __mbBtn]}
+            style={[styles.keyboardBtn, __mbBtn, __mbBtn && { paddingHorizontal: 12, flexShrink: 1, marginTop: 0, alignSelf: 'auto' as const }]}
             onPress={() => setShowKeyboard(true)}
             activeOpacity={0.7}
           >

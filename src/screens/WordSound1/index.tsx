@@ -1,3 +1,4 @@
+import { useTheme } from '../../theme/ThemeContext';
 import React from 'react';
 /**
  * 단어를 보고 음원 선택 (WordSound1)
@@ -42,6 +43,8 @@ export function WordSound1({
   totalSets = 1,
 }: Props) {
   const { lang } = useLang();
+  const { theme: __mbBT, enabled: __mbBE } = useTheme();
+  const __mbBtn = __mbBE && __mbBT.id === 'malhaeboka' ? { height: 40, minHeight: 0, paddingVertical: 0, justifyContent: 'center' as const } : null;
   const sfx = useSfx();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const toastAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -209,7 +212,7 @@ export function WordSound1({
 
         {/* 1번 세트 안내 토스트 팝업 */}
         {showToast && currentSetNumber === 1 && (
-          <View style={s.toastBox}>
+          <View style={[s.toastBox, __mbBtn && { backgroundColor: '#EFEAFF', borderWidth: 1.5, borderColor: '#CBBAF8', borderRadius: 14 }, __mbBtn && { backgroundColor: '#EFEAFF', borderWidth: 1.5, borderColor: '#CBBAF8', borderRadius: 14 }]}>
             <TouchableOpacity
               style={s.toastCloseBtn}
               onPress={handleCloseToast}
@@ -219,7 +222,7 @@ export function WordSound1({
               <Text style={s.toastCloseText}>✕</Text>
             </TouchableOpacity>
 
-            <Text style={s.toastMessage}>
+            <Text style={[s.toastMessage, __mbBtn && { fontSize: 14.5, lineHeight: 21, color: '#3D2E86', fontWeight: '600' as const }, __mbBtn && { fontSize: 14.5, lineHeight: 21, color: '#3D2E86', fontWeight: '600' as const }]}>
               Nghe và xác nhận âm thanh đúng. Bấm để nghe trước, bấm lại lần nữa để chọn.
             </Text>
 

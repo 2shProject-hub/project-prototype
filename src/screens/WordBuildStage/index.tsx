@@ -247,8 +247,9 @@ export function WordBuildStage({ onComplete, onBack }: Props) {
             placeholder={pick(lang, '한국어로 입력하세요', 'Nhập bằng tiếng Hàn')}
             autoFocus
           />
+          <View style={__mbBtn ? { flexDirection: 'row' as const, alignItems: 'center' as const, gap: 8, marginTop: 12 } : null}>
           <TouchableOpacity
-            style={[styles.ctaBtn, !keyboardText.trim() && styles.ctaBtnDisabled]}
+            style={[styles.ctaBtn, __mbBtn && { flex: 1 }, !keyboardText.trim() && styles.ctaBtnDisabled]}
             onPress={onKeyboardConfirm}
             disabled={!keyboardText.trim()}
             activeOpacity={0.85}
@@ -257,7 +258,7 @@ export function WordBuildStage({ onComplete, onBack }: Props) {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.keyboardBtn, __mbBtn]}
+            style={[styles.keyboardBtn, __mbBtn, __mbBtn && { paddingHorizontal: 12, flexShrink: 1, marginTop: 0, alignSelf: 'auto' as const }]}
             onPress={() => setShowKeyboard(false)}
             activeOpacity={0.7}
           >
@@ -265,6 +266,7 @@ export function WordBuildStage({ onComplete, onBack }: Props) {
               🔤 {pick(lang, '글자 카드로 돌아가기', 'Quay lại thẻ chữ')}
             </Text>
           </TouchableOpacity>
+          </View>
         </View>
       )}
 
@@ -291,10 +293,10 @@ export function WordBuildStage({ onComplete, onBack }: Props) {
 
       {/* ── 확인 + 힌트 ── */}
       {!showKeyboard && (
-        <View style={styles.footer}>
-          <View style={styles.footerRow}>
+        <View style={[styles.footer, __mbBtn && { paddingBottom: 6, flexDirection: 'row' as const, alignItems: 'center' as const, gap: 8 }]}>
+          <View style={[styles.footerRow, __mbBtn && { flex: 1 }]}>
             <TouchableOpacity
-              style={[styles.ctaBtn, styles.ctaBtnFlex, !allFilled && styles.ctaBtnDisabled]}
+              style={[styles.ctaBtn, styles.ctaBtnFlex, __mbBtn, !allFilled && styles.ctaBtnDisabled]}
               onPress={onConfirm}
               disabled={!allFilled}
               activeOpacity={0.85}
@@ -303,7 +305,7 @@ export function WordBuildStage({ onComplete, onBack }: Props) {
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={styles.hintBtn}
+              style={[styles.hintBtn, __mbBtn && { height: 40 }]}
               onPress={() => setShowHint(h => !h)}
               activeOpacity={0.8}
             >
@@ -313,7 +315,7 @@ export function WordBuildStage({ onComplete, onBack }: Props) {
           </View>
 
           <TouchableOpacity
-            style={[styles.keyboardBtn, __mbBtn]}
+            style={[styles.keyboardBtn, __mbBtn, __mbBtn && { paddingHorizontal: 12, flexShrink: 1, marginTop: 0, alignSelf: 'auto' as const }]}
             onPress={() => setShowKeyboard(true)}
             activeOpacity={0.7}
           >

@@ -190,8 +190,8 @@ export function SentenceBuildStage2({ onComplete, onBack }: Props) {
       )}
 
       {/* ── Footer ── */}
-      <View style={[styles.footer, __mbBtn && { paddingBottom: 8 }]}>
-        <View style={styles.footerRow}>
+      <View style={[styles.footer, __mbBtn && { paddingBottom: 6, flexDirection: 'row' as const, alignItems: 'center' as const, gap: 8 }]}>
+        <View style={[styles.footerRow, __mbBtn && { flex: 1 }]}>
           <View style={{ flex: 1 }}>
             {inputMode === 'tile' ? (
               <CtaButton
@@ -211,7 +211,7 @@ export function SentenceBuildStage2({ onComplete, onBack }: Props) {
           </View>
 
           <TouchableOpacity
-            style={styles.hintBtn}
+            style={[styles.hintBtn, __mbBtn && { height: 40 }]}
             onPress={() => setShowHint(h => !h)}
             activeOpacity={0.8}
           >
@@ -221,11 +221,11 @@ export function SentenceBuildStage2({ onComplete, onBack }: Props) {
         </View>
 
         {inputMode === 'tile' ? (
-          <TouchableOpacity style={[styles.modeBtn, __mbBtn]} onPress={() => switchMode('keyboard')} activeOpacity={0.7}>
+          <TouchableOpacity style={[styles.modeBtn, __mbBtn, __mbBtn && { paddingHorizontal: 12, flexShrink: 1 }]} onPress={() => switchMode('keyboard')} activeOpacity={0.7}>
             <Text style={styles.modeBtnText}>⌨ {pick(lang, '키보드 사용하기', 'Dùng bàn phím')}</Text>
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity style={[styles.modeBtn, __mbBtn]} onPress={() => switchMode('tile')} activeOpacity={0.7}>
+          <TouchableOpacity style={[styles.modeBtn, __mbBtn, __mbBtn && { paddingHorizontal: 12, flexShrink: 1 }]} onPress={() => switchMode('tile')} activeOpacity={0.7}>
             <Text style={styles.modeBtnText}>🃏 {pick(lang, '단어 카드로 풀기', 'Dùng thẻ từ')}</Text>
           </TouchableOpacity>
         )}

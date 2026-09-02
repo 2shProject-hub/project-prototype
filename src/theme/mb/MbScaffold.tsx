@@ -174,7 +174,7 @@ export function MbNavBar({
         gap: 8,
         paddingHorizontal: 14,
         paddingTop: 5,
-        paddingBottom: 8,
+        paddingBottom: 6,
       }}
     >
       <TouchableOpacity

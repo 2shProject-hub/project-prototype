@@ -119,6 +119,22 @@ const CHEERS: Array<[string, string]> = [
   ['배움에 늦음은 없어요', 'Học không bao giờ là muộn'],
   ['내 페이스대로 가요', 'Đi theo nhịp của mình'],
   ['오늘도 한 뼘 성장!', 'Hôm nay lại lớn thêm một chút!'],
+  ['그 발음 아주 좋아요!', 'Phát âm đó hay lắm!'],
+  ['기억력이 반짝반짝!', 'Trí nhớ sáng lấp lánh!'],
+  ['꼼꼼하게 잘 보고 있네요!', 'Bạn quan sát kỹ thật đấy!'],
+  ['지금 페이스 딱 좋아요', 'Nhịp này chuẩn luôn'],
+  ['한국어가 가까워지고 있어요', 'Tiếng Hàn đang gần bạn hơn'],
+  ['어려운 걸 해내는 중!', 'Bạn đang làm điều khó đấy!'],
+  ['오늘 배운 건 내일의 무기!', 'Hôm nay học, mai là vũ khí!'],
+  ['듣는 귀가 예리해요!', 'Đôi tai thật tinh!'],
+  ['정확도가 올라가요!', 'Độ chính xác đang tăng!'],
+  ['스스로 해내서 멋져요', 'Tự làm được, thật tuyệt'],
+  ['모르면 배우면 돼요!', 'Chưa biết thì học thôi!'],
+  ['좋은 습관이 자라요', 'Thói quen tốt đang lớn lên'],
+  ['한 문제씩 차근차근', 'Từng câu một, chậm mà chắc'],
+  ['오늘의 미션 클리어 중!', 'Đang phá đảo nhiệm vụ hôm nay!'],
+  ['베트남에서 한국까지 파이팅!', 'Từ Việt Nam đến Hàn Quốc, cố lên!'],
+  ['당신의 노력이 보여요', 'Thấy rõ nỗ lực của bạn'],
 ];
 // 반복 방지용 셔플 백 — 풀 전체를 다 쓰기 전에는 같은 것이 다시 나오지 않는다
 function makeBag(size: number) {
@@ -136,10 +152,43 @@ function makeBag(size: number) {
 }
 // 캐릭터는 원본 12종 × 좌/우 빼꼼 = 24변형 (+틸트 미세 변주)
 const drawSticker = makeBag(24);
-const drawCheer = makeBag(44);
+const drawCheer = makeBag(60);
+
+// 말해보카: 화면 전환 시 페이드+라이즈 — 상용 앱의 화면 진입 이펙트
+function MbScreenTransition({ enabled, screenKey, children }: { enabled: boolean; screenKey: string; children: React.ReactNode }) {
+  const a = useRef(new Animated.Value(1)).current;
+  useEffect(() => {
+    if (!enabled) { a.setValue(1); return; }
+    a.setValue(0);
+    Animated.timing(a, { toValue: 1, duration: 240, useNativeDriver: false }).start();
+  }, [screenKey, enabled, a]);
+  if (!enabled) return <View style={{ flex: 1 }}>{children}</View>;
+  return (
+    <Animated.View
+      style={{
+        flex: 1,
+        opacity: a,
+        transform: [{ translateY: a.interpolate({ inputRange: [0, 1], outputRange: [10, 0] }) }],
+      }}
+    >
+      {children}
+    </Animated.View>
+  );
+}
 
 function ScreenSticker({ theme, enabled, screenId }: { theme: Theme; enabled: boolean; screenId: string }) {
   const { lang } = useLang();
+  // 눈 깜빡임 — 감은 눈 프레임이 있으면 표시 중 1~2회 깜빡인다
+  const [blinkOn, setBlinkOn] = useState(false);
+  useEffect(() => {
+    let alive = true;
+    const timers: Array<ReturnType<typeof setTimeout>> = [];
+    [700, 1500].forEach((at) => {
+      timers.push(setTimeout(() => { if (alive) setBlinkOn(true); }, at));
+      timers.push(setTimeout(() => { if (alive) setBlinkOn(false); }, at + 130));
+    });
+    return () => { alive = false; timers.forEach(clearTimeout); };
+  }, [screenId]);
   // 등장(빠르게) → 응원 멘트 → 멘트와 캐릭터가 함께 퇴장. 화면을 오래 가리지 않는다.
   const charY = useRef(new Animated.Value(60)).current;
   const charOp = useRef(new Animated.Value(1)).current;
@@ -148,7 +197,7 @@ function ScreenSticker({ theme, enabled, screenId }: { theme: Theme; enabled: bo
   const bob = useRef(new Animated.Value(0)).current;
   const squash = useRef(new Animated.Value(1)).current;
   // 방문할 때마다 셔플 백에서 뽑는다 — 풀을 다 돌기 전엔 반복 없음
-  const picked = useMemo(() => ({ s: drawSticker(), c: drawCheer(), tilt: [-6, 0, 6][Math.floor(Math.random() * 3)] }), [screenId]);
+  const picked = useMemo(() => ({ s: drawSticker(), c: drawCheer(), tilt: [-6, 0, 6][Math.floor(Math.random() * 3)], size: [0.9, 1, 1.12][Math.floor(Math.random() * 3)] }), [screenId]);
   useEffect(() => {
     charY.setValue(60);
     charOp.setValue(1);
@@ -241,7 +290,7 @@ function ScreenSticker({ theme, enabled, screenId }: { theme: Theme; enabled: bo
         />
       </Animated.View>
       <Animated.Image
-        source={st.img}
+        source={blinkOn && st.blink ? st.blink : st.img}
         style={{
           width: st.w, height: st.h, opacity: charOp,
           transform: [
@@ -249,6 +298,7 @@ function ScreenSticker({ theme, enabled, screenId }: { theme: Theme; enabled: bo
             { scaleX: flip ? -1 : 1 },
             { scaleY: squash },
             { rotate: `${picked.tilt}deg` },
+            { scale: picked.size },
           ],
         }}
         resizeMode="contain"
@@ -1601,6 +1651,7 @@ function EmulatorShellInner() {
             </View>
             {/* 화면 렌더링 영역 */}
             <View style={[shell.deviceScreen, { width: frameW, height: frameH - 24 }]} {...({ dataSet: { 'device-screen': '1' } } as any)}>
+              <MbScreenTransition enabled={lightFrame} screenKey={activeScreenId || screenId}>
               <View style={{ flex: 1 }} {...({ dataSet: applyTheme ? { themed: 'on', ...(lightFrame ? { mb: '1' } : null) } : undefined } as any)}>
                 <FlowProgressContext.Provider
                   value={flowMode ? { step: currentFlowStep + 1, total: LEARNING_FLOW.length } : null}
@@ -1615,6 +1666,7 @@ function EmulatorShellInner() {
                 <ScreenSticker theme={activeTheme} enabled={applyTheme} screenId={activeScreenId || screenId} />
                 </FlowProgressContext.Provider>
               </View>
+              </MbScreenTransition>
             </View>
           </View>
 

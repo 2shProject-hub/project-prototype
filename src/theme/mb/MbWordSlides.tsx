@@ -17,6 +17,18 @@ const IMG_PERSON = require('../../../assets/word-slides/vietnam-person.png');
 const IMG_KOREA = require('../../../assets/SetWordbookEvalStage/2_korea.png');
 const IMG_SARAM = require('../../../assets/SetWordbookEvalStage/preson.png');
 const CHAR_FISH = require('../../../assets/themes/malhaeboka/sticker-goldfish.png');
+const CHAR_FISH_BLINK = require('../../../assets/themes/malhaeboka/blink-sticker-goldfish.png');
+
+// 2.6초 주기로 130ms 눈을 감는다
+function useBlink(): boolean {
+  const [on, setOn] = useState(false);
+  useEffect(() => {
+    let open: ReturnType<typeof setTimeout> | null = null;
+    const iv = setInterval(() => { setOn(true); open = setTimeout(() => setOn(false), 130); }, 2600);
+    return () => { clearInterval(iv); if (open) clearTimeout(open); };
+  }, []);
+  return on;
+}
 
 interface Props {
   onNext: () => void;
@@ -172,6 +184,7 @@ function PhotoCard({ img, ko, vi, fit }: { img: any; ko: string; vi: string; fit
 }
 
 function IntroBody() {
+  const fishBlink = useBlink();
   const bob = useRef(new Animated.Value(0)).current;
   useEffect(() => {
     const loop = Animated.loop(
@@ -187,7 +200,7 @@ function IntroBody() {
     <View style={{ flex: 1, gap: 14 }}>
       {/* 캐릭터가 오늘의 단어를 소개 — 문구와 배치를 맞춘다 */}
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-        <Animated.Image source={CHAR_FISH} style={{ width: 34, height: 36, transform: [{ translateY: bob }] }} resizeMode="contain" />
+        <Animated.Image source={fishBlink ? CHAR_FISH_BLINK : CHAR_FISH} style={{ width: 34, height: 36, transform: [{ translateY: bob }] }} resizeMode="contain" />
         <View style={{ backgroundColor: mb.lavender, borderRadius: 9, paddingHorizontal: 12, paddingVertical: 6 }}>
           <Text style={{ fontFamily: mbFont, fontSize: 12.5, fontWeight: '800', color: mb.violetDark }}>오늘의 단어</Text>
         </View>
@@ -250,10 +263,11 @@ function QuizBody({ a, aImg, answer, ansImg }: { a: string; aImg: any; answer: s
 }
 
 function OutroBody() {
+  const fishBlink2 = useBlink();
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 10 }}>
       {/* 캐릭터가 축하 — 문구와 짝 */}
-      <Image source={CHAR_FISH} style={{ width: 88, height: 92 }} resizeMode="contain" />
+      <Image source={fishBlink2 ? CHAR_FISH_BLINK : CHAR_FISH} style={{ width: 88, height: 92 }} resizeMode="contain" />
       <Text style={mbDisplay(28)}>훌륭해요!</Text>
       <Text style={[mbBody(14, '600'), { textAlign: 'center' }]}>이제 더 많은 단어를 배워봐요.</Text>
     </View>
