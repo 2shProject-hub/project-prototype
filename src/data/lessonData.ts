@@ -709,39 +709,39 @@ export const MOCK_SLIDE_EXPLAIN: SlideExplainData = {
   title: '저는 N이에요/예요',
   slides: [
     {
-      image: require('../../assets/slide-explain-1.png'),
+      image: require('../../assets/14-sliders/slider-1.png'),
       text: "-이에요/-예요는 이름이나 국적 등을 말할 때 써요. '~이다'라는 뜻이고, 영어의 am/is/are와 비슷해요. 앞 단어에 받침이 있으면 -이에요, 받침이 없으면 -예요를 써요.",
     },
     {
-      image: require('../../assets/slide-explain-2.png'),
+      image: require('../../assets/14-sliders/slider-2.png'),
       text: '글자 밑에 빨간 표시를 보세요. 저게 "받침"이에요. 받침이 있는 글자도 있고, 없는 글자도 있어요.',
     },
     {
-      image: require('../../assets/slide-explain-3.png'),
+      image: require('../../assets/14-sliders/slider-3.png'),
       text: '위의 두 이름 중에서 받침이 있는 것은 무엇일까요? "유진", "타오"',
     },
     {
-      image: require('../../assets/slide-explain-4.png'),
+      image: require('../../assets/14-sliders/slider-4.png'),
       text: '"유진"은 받침이 있어요. "타오"는 받침이 없어요.',
     },
     {
-      image: require('../../assets/slide-explain-5.png'),
+      image: require('../../assets/14-sliders/slider-5.png'),
       text: '받침이 있으면 "-이에요"를 붙여요: 유진 + -이에요 = 유진이에요',
     },
     {
-      image: require('../../assets/slide-explain-6.png'),
+      image: require('../../assets/14-sliders/slider-6.png'),
       text: '문장으로 써볼까요? "안녕하세요? 저는 유진이에요."',
     },
     {
-      image: require('../../assets/slide-explain-7.png'),
+      image: require('../../assets/14-sliders/slider-7.png'),
       text: '받침이 없으면 "-예요"를 붙여요: 타오 + -예요 = 타오예요',
     },
     {
-      image: require('../../assets/slide-explain-8.png'),
+      image: require('../../assets/14-sliders/slider-8.png'),
       text: '문장으로 써볼까요? "반가워요. 저는 타오예요."',
     },
     {
-      image: require('../../assets/slide-explain-9.png'),
+      image: require('../../assets/14-sliders/slider-9.png'),
       text: '정리해요: 받침 있으면 "-이에요", 받침 없으면 "-예요"!',
     },
   ],
