@@ -20,7 +20,7 @@ import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { useTheme } from '../../theme/ThemeContext';
 import { ThemedBody } from './ThemedBody';
 import React, { useState } from 'react';
-import { ScrollView, View, Text, TouchableOpacity, StyleSheet, Modal, Platform, Animated, Image } from 'react-native';
+import { ScrollView, View, Text, TouchableOpacity, StyleSheet, Platform, Animated, Image } from 'react-native';
 import { colors, radius, spacing, shadow } from '../../theme';
 import { useLang, pick, ActivityHeader, CtaButton } from '../../components';
 import { useSfx } from '../../hooks/useSfx';
@@ -119,7 +119,8 @@ export function SetWordbookEvalStage({
   const modals = (
     <>
       {/* ─── 단어 발음평가 모달 ──────────────────────────────────────── */}
-      <Modal visible={showPronModal} animationType="slide" transparent>
+      {showPronModal && (
+      <View style={[StyleSheet.absoluteFill, { zIndex: 200 }]}>
         <View style={[s.modalOverlay, themeEnabled && { backgroundColor: 'rgba(22,20,32,0.06)' }]}>
           <View style={s.modalContainer}>
             <View style={s.modalHeader}>
@@ -194,10 +195,12 @@ export function SetWordbookEvalStage({
             </View>
           </View>
         </View>
-      </Modal>
+      </View>
+      )}
 
       {/* ─── 발음 평가 결과 모달 ──────────────────────────────────── */}
-      <Modal visible={showResultModal} animationType="fade" transparent>
+      {showResultModal && (
+      <View style={[StyleSheet.absoluteFill, { zIndex: 210 }]}>
         <View style={[s.modalOverlay, themeEnabled && { backgroundColor: 'rgba(22,20,32,0.06)' }]}>
           <View style={s.resultContainer}>
             <Text style={s.resultTitle}>🎉 발음 평가 결과</Text>
@@ -229,7 +232,8 @@ export function SetWordbookEvalStage({
             </TouchableOpacity>
           </View>
         </View>
-      </Modal>
+      </View>
+      )}
     </>
   );
 
