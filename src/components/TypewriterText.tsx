@@ -7,7 +7,7 @@ export function TypewriterText({
   text,
   style,
   active = true,
-  cps = 42,
+  cps = 58,
   delayMs = 0,
   numberOfLines,
 }: {

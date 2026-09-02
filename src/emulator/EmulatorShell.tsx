@@ -3,7 +3,7 @@
  * 구성: 좌측 컨트롤 패널 | 중앙 디바이스 프레임 | 우측 정보 패널
  */
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Platform, Image, Animated } from 'react-native';
-import { useEffect, useState, useRef, useMemo } from 'react';
+import { useEffect, useState, useRef, useMemo, useLayoutEffect } from 'react';
 import { colors } from '../theme/colors';
 import { LangProvider } from '../components/LangContext';
 import { SCREEN_REGISTRY, getScreen } from './screenRegistry';
@@ -167,7 +167,7 @@ function MbScreenTransition({ enabled, screenKey, children }: { enabled: boolean
   useEffect(() => {
     if (!enabled) { a.setValue(1); return; }
     a.setValue(0);
-    Animated.timing(a, { toValue: 1, duration: 240, useNativeDriver: false }).start();
+    Animated.timing(a, { toValue: 1, duration: 180, useNativeDriver: false }).start();
   }, [screenKey, enabled, a]);
   if (!enabled) return <View style={{ flex: 1 }}>{children}</View>;
   return (
@@ -175,7 +175,7 @@ function MbScreenTransition({ enabled, screenKey, children }: { enabled: boolean
       style={{
         flex: 1,
         opacity: a,
-        transform: [{ translateY: a.interpolate({ inputRange: [0, 1], outputRange: [10, 0] }) }],
+        // 세로 이동 없이 페이드만 — 전환 때 레이아웃이 밀려 보이는 느낌을 없앤다
       }}
     >
       {children}
@@ -1594,12 +1594,14 @@ function EmulatorShellInner() {
   // Flow 모드일 때 현재 screenId 결정
   const activeScreenId = flowMode ? LEARNING_FLOW[currentFlowStep]?.screenId : screenId;
   // 고른 테마를 실제 화면들에 입힌다. 화면 컴포넌트는 건드리지 않으므로 기능은 그대로 동작한다.
-  useEffect(() => {
+  // 페인트 전에 입혀야 전환 직후 푸터/여백이 눈앞에서 움직이지 않는다 (틀어짐 최소화)
+  useLayoutEffect(() => {
     const t = applyTheme ? activeTheme : null;
     applyThemeToDom(t);
-    // 화면 전환 직후에는 아직 DOM 이 다 그려지지 않았을 수 있어 한 번 더 입힌다
+    // 늦게 마운트되는 DOM 은 전환 페이드가 끝나기 전(80ms)과 안전망(350ms)에서 한 번씩 더
+    const early = setTimeout(() => applyThemeToDom(t), 80);
     const again = setTimeout(() => applyThemeToDom(t), 350);
-    return () => clearTimeout(again);
+    return () => { clearTimeout(early); clearTimeout(again); };
   }, [applyTheme, activeTheme, activeScreenId, screenId]);
 
   const device = DEVICES.find((d) => d.id === deviceId) ?? DEVICES[0];

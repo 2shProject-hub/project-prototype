@@ -125,9 +125,7 @@ export function LearningReportStage({ data, onNext, onBack }: Props) {
             {/* 어휘 */}
             <View style={[s.summaryItem, __mbRp && { gap: 7 }]}>
               {__mbRp ? (
-                <View style={{ width: 42, height: 42, borderRadius: 21, backgroundColor: '#EFEAFF', alignItems: 'center', justifyContent: 'center' }}>
-                  <Image source={{ uri: icon('bookopen', '#5B3DF5', 22, 2) }} style={{ width: 22, height: 22 }} />
-                </View>
+                <Image source={require('../../../assets/themes/malhaeboka/thumb-vocab.png')} style={{ width: 46, height: 46, borderRadius: 23, borderWidth: 1.5, borderColor: '#E5DFF7' }} />
               ) : (
                 <ThemedGlyph style={s.summaryIcon} glyph="📚" />
               )}
@@ -138,9 +136,7 @@ export function LearningReportStage({ data, onNext, onBack }: Props) {
             {/* 발음평가 */}
             <View style={[s.summaryItem, __mbRp && { gap: 7 }]}>
               {__mbRp ? (
-                <View style={{ width: 42, height: 42, borderRadius: 21, backgroundColor: '#E0F2FE', alignItems: 'center', justifyContent: 'center' }}>
-                  <Image source={{ uri: icon('mic', '#0284C7', 22, 2) }} style={{ width: 22, height: 22 }} />
-                </View>
+                <Image source={require('../../../assets/themes/malhaeboka/thumb-speak.png')} style={{ width: 46, height: 46, borderRadius: 23, borderWidth: 1.5, borderColor: '#E5DFF7' }} />
               ) : (
                 <ThemedGlyph style={s.summaryIcon} glyph="🎤" />
               )}
@@ -151,9 +147,7 @@ export function LearningReportStage({ data, onNext, onBack }: Props) {
             {/* 확인 문제 */}
             <View style={[s.summaryItem, __mbRp && { gap: 7 }]}>
               {__mbRp ? (
-                <View style={{ width: 42, height: 42, borderRadius: 21, backgroundColor: '#D1FAE5', alignItems: 'center', justifyContent: 'center' }}>
-                  <Image source={{ uri: icon('check', '#059669', 22, 2.4) }} style={{ width: 22, height: 22 }} />
-                </View>
+                <Image source={require('../../../assets/themes/malhaeboka/thumb-check.png')} style={{ width: 46, height: 46, borderRadius: 23, borderWidth: 1.5, borderColor: '#E5DFF7' }} />
               ) : (
                 <Text style={s.summaryIcon}>✓</Text>
               )}
