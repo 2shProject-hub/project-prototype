@@ -179,7 +179,7 @@ export function ThemedBody(p: ThemedBodyProps) {
         isRule ? { borderBottomWidth: L.hairline, borderBottomColor: c.line, paddingBottom: s.row } : boxOf(),
       ]}
     >
-      <Text style={[{ fontSize: t.bodySize - 1, color: c.textSecondary }, bodyFont(theme, 600)]}>재생 속도</Text>
+      <Text style={[{ fontSize: t.bodySize - 1, color: c.textSecondary }, bodyFont(theme, 600), theme.id === 'malhaeboka' && { fontSize: 17, fontWeight: '800' as const, color: '#4C34C2' }]}>재생 속도</Text>
       <View style={{ flexDirection: 'row', gap: 6 }}>
         {([0.5, 1.0, 1.5] as const).map((spd) => {
           const on = p.speed === spd;

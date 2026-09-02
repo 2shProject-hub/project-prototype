@@ -76,7 +76,7 @@ export function HomeScreen({ sessions, setView, onStartSession }: Props) {
         </View>
         <View style={styles.boltBadge}>
           {brandCrest ? (
-            <Image source={require('../../../assets/themes/malhaeboka/icon-bolt.png')} style={{ width: 32, height: 32 }} resizeMode="contain" />
+            <Image source={require('../../../assets/themes/malhaeboka/icon-bolt.png')} style={{ width: 42, height: 42 }} resizeMode="contain" />
           ) : (
             <Text style={styles.boltIcon}>⚡</Text>
           )}
