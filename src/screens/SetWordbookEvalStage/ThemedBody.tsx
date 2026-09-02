@@ -18,6 +18,20 @@ const MB_FLAGS: Record<string, string> = {
   '미국': 'us', '프랑스': 'fr', '중국': 'cn', '독일': 'de',
 };
 
+// 직업·명사 단어 → 상황 실사진 (프로젝트에 이미 있는 단어 사진 에셋)
+const MB_PHOTOS: Record<string, any> = {
+  '사람': require('../../../assets/SetWordbookEvalStage/preson.png'),
+  '학생': require('../../../assets/SetWordbookEvalStage/1_student.png'),
+  '선생님': require('../../../assets/SetWordbookEvalStage/2_teacher.png'),
+  '회사원': require('../../../assets/SetWordbookEvalStage/6_employee.png'),
+  '의사': require('../../../assets/SetWordbookEvalStage/4_doctor.png'),
+  '가수': require('../../../assets/SetWordbookEvalStage/11_singer.png'),
+  '요리사': require('../../../assets/SetWordbookEvalStage/8_chef.png'),
+  '친구': require('../../../assets/SetWordbookEvalStage/friend.png'),
+  '이름': require('../../../assets/SetWordbookEvalStage/name.png'),
+  '나라': require('../../../assets/SetWordbookEvalStage/nara.png'),
+};
+
 import { BlinkSprite } from '../../theme/BlinkSprite';
 import React, { useEffect, useRef, useState } from 'react';
 import { ScrollView, View, Text, TouchableOpacity, Image, Animated, type ViewStyle } from 'react-native';
@@ -290,6 +304,12 @@ export function ThemedBody(p: ThemedBodyProps) {
           <Image
             source={{ uri: `https://flagcdn.com/w80/${MB_FLAGS[w.ko]}.png` }}
             style={{ width: 38, height: 27, borderRadius: 5, backgroundColor: '#EFEDF6', borderWidth: 1, borderColor: '#E7E4F0' }}
+            resizeMode="cover"
+          />
+        ) : MB_PHOTOS[w.ko] ? (
+          <Image
+            source={MB_PHOTOS[w.ko]}
+            style={{ width: 38, height: 38, borderRadius: 10, backgroundColor: '#EFEDF6', borderWidth: 1, borderColor: '#E7E4F0' }}
             resizeMode="cover"
           />
         ) : (

@@ -4,9 +4,10 @@
  * - 4단계 (1/4, 2/4, 3/4, 4/4)
  * - 공통 ActivityHeader, CtaButton 적용
  */
+import { useTheme } from '../../theme/ThemeContext';
 import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { useState, useRef } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, TextInput, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, TextInput, Platform, Image } from 'react-native';
 import { colors, radius, spacing, shadow } from '../../theme';
 import { useLang, pick, ActivityHeader, CtaButton } from '../../components';
 
@@ -39,6 +40,8 @@ export function SpeakingEvalStage({
   totalSets = 1,
 }: Props) {
   const { lang } = useLang();
+  const { theme: __mbBT, enabled: __mbBE } = useTheme();
+  const __mbBtn = __mbBE && __mbBT.id === 'malhaeboka';
   const [currentIdx, setCurrentIdx] = useState(0);
   const [inputs, setInputs] = useState<string[]>([]);
   const [isRecording, setIsRecording] = useState(false);
@@ -164,11 +167,15 @@ export function SpeakingEvalStage({
         <View style={s.recordingBox}>
           <View style={s.recordingControls}>
             <TouchableOpacity
-              style={[s.micButton, isRecording && s.micButtonActive]}
+              style={[s.micButton, __mbBtn && { overflow: 'hidden', borderColor: '#7150F0', backgroundColor: '#EFEAFF' }, isRecording && s.micButtonActive]}
               onPress={isRecording ? stopRecording : startRecording}
               activeOpacity={0.7}
             >
-              <ThemedGlyph style={s.micIcon} glyph="🎤" />
+              {__mbBtn ? (
+                <Image source={require('../../../assets/themes/malhaeboka/photo-mic.png')} style={{ width: '100%', height: '100%' }} resizeMode="cover" />
+              ) : (
+                <ThemedGlyph style={s.micIcon} glyph="🎤" />
+              )}
             </TouchableOpacity>
           </View>
           <Text style={s.recordingHint}>

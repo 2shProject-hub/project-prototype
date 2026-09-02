@@ -1,7 +1,14 @@
 import { useTheme } from '../../theme/ThemeContext';
+
+// 말해보카: 벡터 글리프 대신 상황 실사진 — 키보드(문법 연습)·마이크(말하기 평가)
+const MB_ICON_PHOTOS: Record<string, any> = {
+  '📝': require('../../../assets/themes/malhaeboka/photo-keyboard.png'),
+  '⌨': require('../../../assets/themes/malhaeboka/photo-keyboard.png'),
+  '🎤': require('../../../assets/themes/malhaeboka/photo-mic.png'),
+};
 import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { useEffect, useRef, useState } from 'react';
-import { View, Text, StyleSheet, Platform } from 'react-native';
+import { View, Text, StyleSheet, Platform, Image } from 'react-native';
 import { colors, radius, spacing, shadow } from '../../theme';
 import { SESSION1 } from '../../data/lessonData';
 import { useLang, pick, ActivityHeader, CtaButton } from '../../components';
@@ -74,8 +81,12 @@ export function IntroTutorStage({ onNext, onBack, introData }: Props) {
           </View>
 
           {/* 2. 아이콘 */}
-          <View style={[styles.iconCircle, __mbBig && { width: 92, height: 92 }]}>
-            <ThemedGlyph style={[styles.iconEmoji, __mbBig && { fontSize: 46 }]} glyph={intro.icon} />
+          <View style={[styles.iconCircle, __mbBig && { width: 92, height: 92, overflow: 'hidden' as const }]}>
+            {__mbBig && MB_ICON_PHOTOS[intro.icon] ? (
+              <Image source={MB_ICON_PHOTOS[intro.icon]} style={{ width: '100%', height: '100%' }} resizeMode="cover" />
+            ) : (
+              <ThemedGlyph style={[styles.iconEmoji, __mbBig && { fontSize: 46 }]} glyph={intro.icon} />
+            )}
           </View>
 
           {/* 3. 타이틀 */}
