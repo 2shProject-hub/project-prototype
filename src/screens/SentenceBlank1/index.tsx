@@ -1,12 +1,13 @@
 /**
  * 문장 빈칸 채우기 (SentenceBlank1)
- * - 베트남어 지문을 읽고 한국어 문장의 빈칸을 단어로 채우기
- * - 공통 ActivityHeader, ChoiceChip, CtaButton, QuizFeedbackModal 적용
+ * - 베트남어 지문을 읽고 한국어 문장의 빈칸에 알맞은 단어를 선택
+ * - FAIL_MAX=2: 2회 오답 시 정답 공개
+ * - Source A: SentenceBlank1 / templateCd: sentence_comp / Act06
  */
 import { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { colors, radius, spacing, shadow } from '../../theme';
-import { useLang, pick, ActivityHeader, CtaButton, QuizFeedbackModal, ChoiceChip } from '../../components';
+import { useLang, pick, ActivityHeader, CtaButton, QuizFeedbackModal } from '../../components';
 import { useSfx } from '../../hooks/useSfx';
 
 interface Question {
@@ -25,6 +26,8 @@ interface Props {
   totalSets?: number;
 }
 
+const FAIL_MAX = 2;
+
 export function SentenceBlank1({
   questions = [],
   onNext,
@@ -36,11 +39,14 @@ export function SentenceBlank1({
   const sfx = useSfx();
 
   const [currentIdx, setCurrentIdx] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string | null>(null);
+  const [failCount, setFailCount] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
+  const [showAnswer, setShowAnswer] = useState(false);
 
   const currentQuestion = questions[currentIdx];
+
   if (!currentQuestion) {
     return (
       <View style={s.container}>
@@ -49,119 +55,176 @@ export function SentenceBlank1({
     );
   }
 
-  const handleSelectAnswer = (choice: string) => {
-    setSelectedAnswer(choice);
+  const progressPct = (currentSetNumber / totalSets) * 100;
+
+  // koText의 ___를 앞/뒤로 분리
+  const parts = currentQuestion.koText.split('___');
+  const before = parts[0] ?? '';
+  const after = parts[1] ?? '';
+
+  const choiceState = (word: string): 'default' | 'correct' | 'wrong' | 'revealed' => {
+    if (!selected) return 'default';
+    if (showAnswer && word === currentQuestion.blankWord) return 'revealed';
+    if (word !== selected) return 'default';
+    return isCorrect ? 'correct' : 'wrong';
+  };
+
+  const handleSelect = (word: string) => {
+    if (showModal || showAnswer) return;
+    setSelected(word);
   };
 
   const handleConfirm = () => {
-    if (!selectedAnswer) return;
-
-    const correct = selectedAnswer === currentQuestion.blankWord;
+    if (!selected) return;
+    const correct = selected === currentQuestion.blankWord;
     setIsCorrect(correct);
-    setShowModal(true);
 
     if (correct) {
       sfx.play('correct');
+      setShowModal(true);
     } else {
-      sfx.play('wrong');
+      const newFail = failCount + 1;
+      setFailCount(newFail);
+      if (newFail >= FAIL_MAX) {
+        sfx.play('wrong');
+        setShowAnswer(true);
+        setShowModal(true);
+      } else {
+        sfx.play('incorrect');
+        setShowModal(true);
+      }
     }
   };
 
   const handleNextFromModal = () => {
     setShowModal(false);
 
-    if (isCorrect) {
-      if (currentIdx < questions.length - 1) {
-        setCurrentIdx(currentIdx + 1);
-        setSelectedAnswer(null);
+    if (isCorrect || failCount >= FAIL_MAX) {
+      const next = currentIdx + 1;
+      if (next < questions.length) {
+        setCurrentIdx(next);
+        setSelected(null);
+        setFailCount(0);
+        setIsCorrect(false);
+        setShowAnswer(false);
       } else {
         onNext?.();
       }
+    } else {
+      setSelected(null);
     }
   };
 
-  const progressPct = (currentSetNumber / totalSets) * 100;
+  const isRetry = !isCorrect && failCount > 0 && failCount < FAIL_MAX;
+  const feedbackState = isCorrect ? 'correct' : showAnswer ? 'wrong' : 'retry';
 
   return (
     <View style={s.root}>
-      <ActivityHeader
-        percentage={progressPct}
-        onClose={onBack || (() => {})}
-      />
+      <ActivityHeader percentage={progressPct} onClose={onBack || (() => {})} />
 
       <ScrollView style={s.scroll} contentContainerStyle={s.content}>
-        {/* 질문 제목 */}
-        <View style={s.titleBox}>
-          <Text style={s.title}>
-            {pick(lang, '뜻에 맞는 말을 고르세요', 'Hãy chọn từ phù hợp với nghĩa')}
+        {/* 지시문 */}
+        <Text style={s.instruction}>
+          {pick(lang, '빈칸에 알맞은 단어를 고르세요', 'Chọn từ thích hợp điền vào chỗ trống')}
+        </Text>
+
+        {/* 베트남어 지문 카드 */}
+        <View style={s.viCard}>
+          <Text style={s.viCardLabel}>
+            {pick(lang, '베트남어', 'Tiếng Việt')}
           </Text>
+          <Text style={s.viCardText}>{currentQuestion.viText}</Text>
         </View>
 
-        {/* 베트남어 지문 */}
-        <View style={s.textCard}>
-          <Text style={s.viText}>{currentQuestion.viText}</Text>
-        </View>
-
-        {/* 한국어 문장 (빈칸 슬롯 표시) */}
-        <View style={s.sentenceCard}>
-          <View style={s.sentenceContent}>
-            {currentQuestion.koText.split('___').map((part, idx, arr) => (
-              <View key={idx} style={s.sentencePart}>
-                <Text style={s.koText}>{part}</Text>
-                {idx < arr.length - 1 && (
-                  <View style={[s.blankSlot, selectedAnswer ? s.blankSlotFilled : null]}>
-                    <Text style={s.blankSlotText}>{selectedAnswer || ' '}</Text>
-                  </View>
-                )}
-              </View>
-            ))}
+        {/* 한국어 빈칸 문장 */}
+        <View style={s.sentenceRow}>
+          <Text style={s.sentenceText}>{before}</Text>
+          <View style={[
+            s.blankBox,
+            selected && !showAnswer && (isCorrect ? s.blankCorrect : s.blankFilled),
+            showAnswer && s.blankRevealed,
+          ]}>
+            <Text style={[
+              s.blankText,
+              selected && !showAnswer && (isCorrect ? s.blankTextCorrect : s.blankTextFilled),
+              showAnswer && s.blankTextRevealed,
+            ]}>
+              {showAnswer ? currentQuestion.blankWord : (selected ?? '　　')}
+            </Text>
           </View>
+          <Text style={s.sentenceText}>{after}</Text>
         </View>
 
-        {/* 선택지 목록 */}
-        <View style={s.choicesContainer}>
-          {currentQuestion.choices.map((choice, idx) => (
-            <ChoiceChip
-              key={choice}
-              text={choice}
-              badge={idx + 1}
-              selected={selectedAnswer === choice}
-              onPress={() => handleSelectAnswer(choice)}
-            />
-          ))}
+        {/* 선택지 */}
+        <View style={s.choicesGrid}>
+          {currentQuestion.choices.map((word, idx) => {
+            const state = choiceState(word);
+            return (
+              <TouchableOpacity
+                key={idx}
+                style={[
+                  s.choiceBtn,
+                  selected === word && !showAnswer && s.choiceBtnSelected,
+                  state === 'correct' && s.choiceBtnCorrect,
+                  state === 'wrong' && s.choiceBtnWrong,
+                  state === 'revealed' && s.choiceBtnRevealed,
+                ]}
+                onPress={() => handleSelect(word)}
+                activeOpacity={0.75}
+                disabled={showModal || showAnswer}
+              >
+                <Text style={[
+                  s.choiceText,
+                  selected === word && !showAnswer && s.choiceTextSelected,
+                  state === 'correct' && s.choiceTextCorrect,
+                  state === 'wrong' && s.choiceTextWrong,
+                  state === 'revealed' && s.choiceTextRevealed,
+                ]}>
+                  {word}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
         </View>
+
+        {/* 오답 횟수 안내 */}
+        {failCount > 0 && !isCorrect && !showAnswer && (
+          <Text style={s.retryHint}>
+            {pick(
+              lang,
+              `${FAIL_MAX - failCount}번의 기회가 남았어요`,
+              `Còn ${FAIL_MAX - failCount} lần thử`,
+            )}
+          </Text>
+        )}
       </ScrollView>
 
-      {/* 하단 액션 버튼 바 */}
+      {/* 하단 확인 버튼 */}
       <View style={s.footer}>
         <CtaButton
           title={pick(lang, '확인', 'Xác nhận')}
           onPress={handleConfirm}
-          disabled={!selectedAnswer}
+          disabled={!selected || showModal}
           size="lg"
         />
       </View>
 
-      {/* 공통 정답/오답 피드백 모달 */}
+      {/* 피드백 모달 */}
       <QuizFeedbackModal
         visible={showModal}
-        isCorrect={isCorrect}
+        isCorrect={isCorrect && !isRetry}
         answerText={currentQuestion.blankWord}
+        explanation={currentQuestion.viText}
         onNext={handleNextFromModal}
-        onClose={() => setShowModal(false)}
+        onClose={handleNextFromModal}
       />
     </View>
   );
 }
 
 const s = StyleSheet.create({
-  root: {
-    flex: 1,
-    backgroundColor: colors.surface,
-  },
-  scroll: {
-    flex: 1,
-  },
+  root: { flex: 1, backgroundColor: colors.surface },
+  scroll: { flex: 1 },
   content: {
     paddingHorizontal: spacing.xl,
     paddingTop: spacing.lg,
@@ -173,82 +236,151 @@ const s = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  emptyText: {
-    fontSize: 14,
-    color: colors.muted,
+  emptyText: { fontSize: 14, color: colors.muted, textAlign: 'center' },
+
+  instruction: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: colors.ink,
+    marginBottom: spacing.lg,
     textAlign: 'center',
   },
-  titleBox: {
-    marginBottom: spacing.xl,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: '800',
-    color: colors.ink,
-  },
-  textCard: {
-    backgroundColor: colors.tealSoft,
-    borderRadius: radius.xl,
-    padding: spacing.lg,
-    marginBottom: spacing.lg,
+
+  viCard: {
+    backgroundColor: '#F0FAFA',
     borderWidth: 1.5,
     borderColor: colors.teal,
+    borderRadius: radius.xl,
+    paddingVertical: spacing.lg,
+    paddingHorizontal: spacing.xl,
+    marginBottom: spacing.xl,
+    alignItems: 'center',
     ...shadow.soft,
   },
-  viText: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: colors.ink,
-    textAlign: 'center',
-    lineHeight: 24,
-  },
-  sentenceCard: {
-    backgroundColor: colors.surface,
-    borderRadius: radius.xl,
-    padding: spacing.lg,
-    marginBottom: spacing.xl,
-    borderWidth: 1.5,
-    borderColor: colors.border,
-    ...shadow.card,
-  },
-  sentenceContent: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: spacing.xs,
-  },
-  sentencePart: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.xs,
-  },
-  koText: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: colors.ink,
-  },
-  blankSlot: {
-    borderBottomWidth: 2,
-    borderBottomColor: colors.teal,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xxs,
-    minWidth: 70,
-    alignItems: 'center',
-  },
-  blankSlotFilled: {
-    backgroundColor: colors.tealSoft,
-    borderRadius: radius.xs,
-  },
-  blankSlotText: {
-    fontSize: 16,
+  viCardLabel: {
+    fontSize: 11,
     fontWeight: '700',
     color: colors.teal,
+    marginBottom: spacing.xs,
+    textTransform: 'uppercase',
+    letterSpacing: 0.8,
   },
-  choicesContainer: {
-    gap: spacing.md,
+  viCardText: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: colors.tealDark,
+    textAlign: 'center',
+    lineHeight: 26,
+  },
+
+  sentenceRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    gap: spacing.xs,
     marginBottom: spacing.xl,
+    paddingHorizontal: spacing.sm,
   },
+  sentenceText: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: colors.ink,
+    lineHeight: 32,
+  },
+  blankBox: {
+    minWidth: 72,
+    paddingHorizontal: spacing.md,
+    paddingVertical: 4,
+    borderBottomWidth: 2,
+    borderBottomColor: colors.teal,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  blankFilled: {
+    backgroundColor: colors.tealSoft,
+    borderRadius: radius.sm,
+    borderBottomWidth: 0,
+    borderWidth: 1.5,
+    borderColor: colors.teal,
+  },
+  blankCorrect: {
+    backgroundColor: colors.correctLight,
+    borderRadius: radius.sm,
+    borderBottomWidth: 0,
+    borderWidth: 1.5,
+    borderColor: colors.correct,
+  },
+  blankRevealed: {
+    backgroundColor: '#FFF3F3',
+    borderRadius: radius.sm,
+    borderBottomWidth: 0,
+    borderWidth: 1.5,
+    borderColor: colors.wrong,
+  },
+  blankText: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: colors.muted,
+    lineHeight: 28,
+  },
+  blankTextFilled: { color: colors.tealDark },
+  blankTextCorrect: { color: colors.correct },
+  blankTextRevealed: { color: colors.wrong },
+
+  choicesGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.md,
+    justifyContent: 'center',
+    marginBottom: spacing.lg,
+  },
+  choiceBtn: {
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.md,
+    borderRadius: radius.xl,
+    borderWidth: 1.5,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    minWidth: '44%',
+    alignItems: 'center',
+    ...shadow.soft,
+  },
+  choiceBtnSelected: {
+    borderColor: colors.teal,
+    backgroundColor: colors.tealSoft,
+  },
+  choiceBtnCorrect: {
+    borderColor: colors.correct,
+    backgroundColor: colors.correctLight,
+  },
+  choiceBtnWrong: {
+    borderColor: colors.wrong,
+    backgroundColor: colors.wrongLight,
+  },
+  choiceBtnRevealed: {
+    borderColor: colors.correct,
+    backgroundColor: colors.correctLight,
+  },
+  choiceText: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: colors.textPrimary,
+  },
+  choiceTextSelected: { color: colors.tealDark },
+  choiceTextCorrect: { color: colors.correct },
+  choiceTextWrong: { color: colors.wrong },
+  choiceTextRevealed: { color: colors.correct },
+
+  retryHint: {
+    fontSize: 13,
+    color: colors.wrong,
+    fontWeight: '600',
+    textAlign: 'center',
+    marginTop: -spacing.sm,
+    marginBottom: spacing.md,
+  },
+
   footer: {
     paddingHorizontal: spacing.xl,
     paddingVertical: spacing.lg,
