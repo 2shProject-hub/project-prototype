@@ -13,7 +13,7 @@ import { useSfx } from '../../hooks/useSfx';
 
 interface Question {
   no: number;
-  viText: string;
+  viText?: string;
   koText: string;
   blankWord: string;
   choices: string[];
@@ -131,14 +131,6 @@ export function SentenceBlank1({
           {pick(lang, '빈칸에 알맞은 단어를 고르세요', 'Chọn từ thích hợp điền vào chỗ trống')}
         </Text>
 
-        {/* 베트남어 지문 카드 */}
-        <View style={s.viCard}>
-          <Text style={s.viCardLabel}>
-            {pick(lang, '베트남어', 'Tiếng Việt')}
-          </Text>
-          <Text style={s.viCardText}>{currentQuestion.viText}</Text>
-        </View>
-
         {/* 한국어 빈칸 문장 */}
         <View style={s.sentenceRow}>
           <Text style={s.sentenceText}>{before}</Text>
@@ -219,7 +211,7 @@ export function SentenceBlank1({
         visible={showModal}
         isCorrect={isCorrect && !isRetry}
         answerText={currentQuestion.blankWord}
-        explanation={currentQuestion.viText}
+        explanation={currentQuestion.viText ?? ''}
         onNext={handleNextFromModal}
         onClose={handleNextFromModal}
       />
@@ -249,33 +241,6 @@ const s = StyleSheet.create({
     color: colors.ink,
     marginBottom: spacing.lg,
     textAlign: 'center',
-  },
-
-  viCard: {
-    backgroundColor: '#F0FAFA',
-    borderWidth: 1.5,
-    borderColor: colors.teal,
-    borderRadius: radius.xl,
-    paddingVertical: spacing.lg,
-    paddingHorizontal: spacing.xl,
-    marginBottom: spacing.xl,
-    alignItems: 'center',
-    ...shadow.soft,
-  },
-  viCardLabel: {
-    fontSize: 11,
-    fontWeight: '700',
-    color: colors.teal,
-    marginBottom: spacing.xs,
-    textTransform: 'uppercase',
-    letterSpacing: 0.8,
-  },
-  viCardText: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: colors.tealDark,
-    textAlign: 'center',
-    lineHeight: 26,
   },
 
   sentenceRow: {

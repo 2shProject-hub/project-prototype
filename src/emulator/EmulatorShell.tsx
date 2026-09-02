@@ -547,17 +547,9 @@ function ScreenRenderer({ screenId, onNavigate, flowStep, flowTotal }: { screenI
   const sentenceBlankQuestions = [
     {
       no: 1,
-      viText: 'Tôi thích xem phim.',
-      koText: '나는 ___을 좋아해요.',
-      blankWord: '영화',
-      choices: ['영화', '책', '음악', '게임'],
-    },
-    {
-      no: 2,
-      viText: 'Tôi là người Việt Nam.',
-      koText: '나는 ___ 사람입니다.',
-      blankWord: '베트남',
-      choices: ['베트남', '한국', '일본', '태국'],
+      koText: '저는 베트남 사람 ___.',
+      blankWord: '이에요',
+      choices: ['이에요', '에요', '이예요', '예요'],
     },
   ];
 
@@ -1119,13 +1111,12 @@ function ScreenRenderer({ screenId, onNavigate, flowStep, flowTotal }: { screenI
       return (
         <SentenceBlank1
           questions={[
-            { no: 1, viText: 'Tôi là người Việt Nam.', koText: '저는 _____ 사람이에요.', blankWord: '베트남', choices: ['베트남', '한국', '일본', '중국'] },
-            { no: 2, viText: 'Tôi là học sinh.', koText: '저는 _____ 이에요.', blankWord: '학생', choices: ['학생', '선생님', '의사', '회사원'] },
+            { no: 1, koText: '저는 베트남 사람 ___.', blankWord: '이에요', choices: ['이에요', '에요', '이예요', '예요'] },
           ]}
           onNext={() => onNavigate('home')}
           onBack={() => onNavigate('home')}
           currentSetNumber={1}
-          totalSets={3}
+          totalSets={1}
         />
       );
     case 'word-blank-1':
