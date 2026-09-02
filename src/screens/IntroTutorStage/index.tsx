@@ -67,14 +67,14 @@ export function IntroTutorStage({ onNext, onBack, introData }: Props) {
 
       {/* ── 콘텐츠 (수직 중앙 정렬) ── */}
       <View style={styles.content}>
-        <View style={[styles.card, __mbBig && { alignSelf: 'stretch' as const, flexGrow: 1, justifyContent: 'center' as const, paddingVertical: 34, marginHorizontal: 4 }]}>
+        <View style={[styles.card, __mbBig && { alignSelf: 'stretch' as const, flexGrow: 1, justifyContent: 'center' as const, paddingVertical: 34, marginHorizontal: 4, gap: 24 }]}>
           {/* 1. 배지 */}
           <View style={styles.badge}>
-            <Text style={styles.badgeText}>{pick(lang, intro.badge, intro.badgeVi)}</Text>
+            <Text style={[styles.badgeText, __mbBig && { fontSize: 14 }]}>{pick(lang, intro.badge, intro.badgeVi)}</Text>
           </View>
 
           {/* 2. 아이콘 */}
-          <View style={styles.iconCircle}>
+          <View style={[styles.iconCircle, __mbBig && { width: 92, height: 92 }]}>
             <ThemedGlyph style={[styles.iconEmoji, __mbBig && { fontSize: 46 }]} glyph={intro.icon} />
           </View>
 
@@ -82,7 +82,7 @@ export function IntroTutorStage({ onNext, onBack, introData }: Props) {
           <Text style={[styles.title, __mbBig && { fontSize: 26, lineHeight: 36 }]}>{pick(lang, intro.title, intro.titleVi)}</Text>
 
           {/* 4. 서브타이틀 */}
-          <Text style={styles.subtitle}>{pick(lang, intro.subtitle, intro.subtitleVi)}</Text>
+          <Text style={[styles.subtitle, __mbBig && { fontSize: 17, lineHeight: 26, color: '#4B4660' }]}>{pick(lang, intro.subtitle, intro.subtitleVi)}</Text>
 
           {/* 5. 학습 성과 카드 */}
           <View style={styles.achievementCard}>
@@ -90,8 +90,8 @@ export function IntroTutorStage({ onNext, onBack, introData }: Props) {
               <Text style={styles.checkMark}>✓</Text>
             </View>
             <View style={styles.achievementText}>
-              <Text style={styles.achievementLabel}>{pick(lang, intro.achievement.label, intro.achievement.labelVi)}</Text>
-              <Text style={styles.achievementDesc}>{pick(lang, intro.achievement.desc, intro.achievement.descVi)}</Text>
+              <Text style={[styles.achievementLabel, __mbBig && { fontSize: 16 }]}>{pick(lang, intro.achievement.label, intro.achievement.labelVi)}</Text>
+              <Text style={[styles.achievementDesc, __mbBig && { fontSize: 14.5, lineHeight: 21 }]}>{pick(lang, intro.achievement.desc, intro.achievement.descVi)}</Text>
             </View>
           </View>
         </View>

@@ -67,7 +67,7 @@ export function MbSlideExplain({ onNext, onBack }: Props) {
 // ── 조각들 ───────────────────────────────────────────────────────
 
 /** 음절 카드 — 받침을 빨간 밑줄로 강조 */
-function Syllable({ ch, batchim, size = 56 }: { ch: string; batchim?: boolean; size?: number }) {
+function Syllable({ ch, batchim, size = 66 }: { ch: string; batchim?: boolean; size?: number }) {
   return (
     <View style={{ alignItems: 'center', gap: 4 }}>
       <View
@@ -95,9 +95,9 @@ function NameCard({ name, chs, batchims, tone }: { name: string; chs: string[]; 
       }}
     >
       <View style={{ flexDirection: 'row', gap: 8 }}>
-        {chs.map((c, i) => <Syllable key={i} ch={c} batchim={batchims[i]} size={52} />)}
+        {chs.map((c, i) => <Syllable key={i} ch={c} batchim={batchims[i]} size={60} />)}
       </View>
-      <Text style={mbBody(13, '700')}>{name}</Text>
+      <Text style={mbBody(15, '700')}>{name}</Text>
     </View>
   );
 }
@@ -106,12 +106,13 @@ function Callout({ children, tone = 'violet' }: { children: React.ReactNode; ton
   return (
     <View
       style={{
-        flexDirection: 'row', alignItems: 'center', gap: 9,
-        backgroundColor: tone === 'green' ? '#F1FBF4' : mb.lavender,
-        borderRadius: 13, paddingHorizontal: 13, paddingVertical: 11,
+        flexDirection: 'row', alignItems: 'center', gap: 11,
+        backgroundColor: tone === 'green' ? '#EAF8EF' : '#EFEAFF',
+        borderWidth: 1.5, borderColor: tone === 'green' ? '#C4E9D1' : '#DCD2F5',
+        borderRadius: 15, paddingHorizontal: 16, paddingVertical: 14,
       }}
     >
-      <Image source={{ uri: icon('sparkle', tone === 'green' ? '#1E9E55' : mb.violet, 16, 2) }} style={{ width: 16, height: 16 }} />
+      <Image source={{ uri: icon('sparkle', tone === 'green' ? '#1E9E55' : mb.violet, 19, 2) }} style={{ width: 19, height: 19 }} />
       <View style={{ flex: 1 }}>{children}</View>
     </View>
   );
@@ -121,13 +122,13 @@ function EqChip({ label, filled }: { label: string; filled?: boolean }) {
   return (
     <View
       style={{
-        paddingHorizontal: 16, paddingVertical: 12, borderRadius: 13,
+        paddingHorizontal: 20, paddingVertical: 15, borderRadius: 14,
         backgroundColor: filled ? mb.violet : mb.white,
         borderWidth: filled ? 0 : 1.5, borderColor: mb.lavenderLine,
         shadowColor: filled ? mb.violet : '#3E6D96', shadowOpacity: filled ? 0.3 : 0.07, shadowRadius: 8, shadowOffset: { width: 0, height: 3 },
       }}
     >
-      <Text style={[mbDisplay(19, '800'), filled && { color: mb.white }]}>{label}</Text>
+      <Text style={[mbDisplay(22, '800'), filled && { color: mb.white }]}>{label}</Text>
     </View>
   );
 }
@@ -141,28 +142,27 @@ function BubbleScene({ line, sub }: { line: string; sub: string }) {
           paddingHorizontal: 18, paddingVertical: 15, maxWidth: '92%',
         }}
       >
-        <Text style={[mbDisplay(20, '800'), { color: mb.violetDeep, lineHeight: 30 }]}>{line}</Text>
+        <Text style={[mbDisplay(22, '800'), { color: mb.violetDeep, lineHeight: 33 }]}>{line}</Text>
       </View>
-      <Text style={[mbBody(13, '600'), { textAlign: 'center' }]}>{sub}</Text>
+      <Text style={[mbBody(14.5, '600'), { textAlign: 'center' }]}>{sub}</Text>
     </View>
   );
 }
 
-const Title = ({ t }: { t: string }) => <Text style={[mbDisplay(25, '800'), { marginBottom: 12 }]}>{t}</Text>;
+const Title = ({ t }: { t: string }) => <Text style={[mbDisplay(27, '800'), { marginBottom: 14 }]}>{t}</Text>;
 
 // ── 9장 ─────────────────────────────────────────────────────────
 
 function Slide1() {
   return (
-    <View style={{ flex: 1, gap: 13 }}>
-      <Text style={[mbDisplay(30), { textAlign: 'center', marginTop: 4 }]}>-이에요 / -예요</Text>
+    <View style={{ flex: 1, justifyContent: 'space-evenly' }}>
+      <Text style={[mbDisplay(34), { textAlign: 'center', marginTop: 4 }]}>-이에요 / -예요</Text>
       <View style={{ gap: 9, marginTop: 4 }}>
         <Row k="뜻" v={"'~이다'라는 뜻이에요. 영어의 am / is / are 와 비슷해요."} />
         <Row k="언제" v="이름, 사람, 물건 등을 말할 때 사용해요." />
       </View>
-      <View style={{ flex: 1 }} />
       <Callout>
-        <Text style={[mbBody(13.5, '700'), { color: mb.violetDeep }]}>
+        <Text style={[mbBody(15.5, '700'), { color: mb.violetDeep }]}>
           받침이 있으면 <Text style={{ color: mb.violet }}>-이에요</Text> · 받침이 없으면 <Text style={{ color: mb.violet }}>-예요</Text>
         </Text>
       </Callout>
@@ -176,14 +176,14 @@ function Row({ k, v }: { k: string; v: string }) {
       <View style={{ backgroundColor: '#F6F5FA', borderRadius: 8, paddingHorizontal: 9, paddingVertical: 4, minWidth: 44, alignItems: 'center' }}>
         <Text style={{ fontFamily: mbFont, fontSize: 12, fontWeight: '800', color: mb.sub }}>{k}</Text>
       </View>
-      <Text style={[mbBody(14, '600'), { flex: 1, color: mb.ink }]}>{v}</Text>
+      <Text style={[mbBody(15.5, '600'), { flex: 1, color: mb.ink, lineHeight: 24 }]}>{v}</Text>
     </View>
   );
 }
 
 function Slide2() {
   return (
-    <View style={{ flex: 1, gap: 14 }}>
+    <View style={{ flex: 1, justifyContent: 'space-evenly' }}>
       <Title t="받침이 뭐예요?" />
       <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 14 }}>
         <Syllable ch="유" />
@@ -191,7 +191,6 @@ function Slide2() {
         <Syllable ch="타" />
         <Syllable ch="오" />
       </View>
-      <View style={{ flex: 1 }} />
       <Callout>
         <Text style={[mbBody(13.5, '600'), { color: mb.violetDeep }]}>
           글자 밑 <Text style={{ color: '#FF5A76', fontWeight: '800' }}>빨간 표시</Text>가 받침이에요. 있는 글자도, 없는 글자도 있어요.
@@ -203,13 +202,12 @@ function Slide2() {
 
 function Slide3() {
   return (
-    <View style={{ flex: 1, gap: 14 }}>
+    <View style={{ flex: 1, justifyContent: 'space-evenly' }}>
       <Title t="받침이 있는 이름은?" />
       <View style={{ flexDirection: 'row', gap: 12 }}>
         <NameCard name="유진" chs={['유', '진']} batchims={[false, true]} />
         <NameCard name="타오" chs={['타', '오']} batchims={[false, false]} />
       </View>
-      <View style={{ flex: 1 }} />
       <Callout><Text style={[mbBody(13.5, '600'), { color: mb.violetDeep }]}>두 이름을 잘 살펴보세요!</Text></Callout>
     </View>
   );
@@ -217,19 +215,18 @@ function Slide3() {
 
 function Slide4() {
   return (
-    <View style={{ flex: 1, gap: 14 }}>
+    <View style={{ flex: 1, justifyContent: 'space-evenly' }}>
       <Title t="정답을 볼까요?" />
       <View style={{ flexDirection: 'row', gap: 12 }}>
-        <View style={{ flex: 1, gap: 6 }}>
+        <View style={{ flex: 1, justifyContent: 'space-evenly' }}>
           <NameCard name="받침 있어요" chs={['유', '진']} batchims={[false, true]} tone="ok" />
         </View>
-        <View style={{ flex: 1, gap: 6 }}>
+        <View style={{ flex: 1, justifyContent: 'space-evenly' }}>
           <NameCard name="받침 없어요" chs={['타', '오']} batchims={[false, false]} tone="no" />
         </View>
       </View>
-      <View style={{ flex: 1 }} />
       <Callout tone="green">
-        <Text style={[mbBody(13.5, '700'), { color: '#1E7A44' }]}>"유진"은 받침이 있고, "타오"는 받침이 없어요.</Text>
+        <Text style={[mbBody(15.5, '700'), { color: '#1E7A44' }]}>"유진"은 받침이 있고, "타오"는 받침이 없어요.</Text>
       </Callout>
     </View>
   );
@@ -237,7 +234,7 @@ function Slide4() {
 
 function Slide5() {
   return (
-    <View style={{ flex: 1, gap: 16 }}>
+    <View style={{ flex: 1, justifyContent: 'space-evenly' }}>
       <Title t="받침이 있으면 -이에요" />
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 9, flexWrap: 'wrap' }}>
         <EqChip label="유진" />
@@ -248,24 +245,22 @@ function Slide5() {
       <View style={{ alignItems: 'center' }}>
         <EqChip label="유진이에요" filled />
       </View>
-      <View style={{ flex: 1 }} />
     </View>
   );
 }
 
 function Slide6() {
   return (
-    <View style={{ flex: 1, gap: 16 }}>
+    <View style={{ flex: 1, justifyContent: 'space-evenly' }}>
       <Title t="문장으로 써볼까요?" />
       <BubbleScene line={'안녕하세요?\n저는 유진이에요.'} sub="받침이 있어서 -이에요를 썼어요" />
-      <View style={{ flex: 1 }} />
     </View>
   );
 }
 
 function Slide7() {
   return (
-    <View style={{ flex: 1, gap: 16 }}>
+    <View style={{ flex: 1, justifyContent: 'space-evenly' }}>
       <Title t="받침이 없으면 -예요" />
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 9, flexWrap: 'wrap' }}>
         <EqChip label="타오" />
@@ -276,32 +271,29 @@ function Slide7() {
       <View style={{ alignItems: 'center' }}>
         <EqChip label="타오예요" filled />
       </View>
-      <View style={{ flex: 1 }} />
     </View>
   );
 }
 
 function Slide8() {
   return (
-    <View style={{ flex: 1, gap: 16 }}>
+    <View style={{ flex: 1, justifyContent: 'space-evenly' }}>
       <Title t="문장으로 써볼까요?" />
       <BubbleScene line={'반가워요.\n저는 타오예요.'} sub="받침이 없어서 -예요를 썼어요" />
-      <View style={{ flex: 1 }} />
     </View>
   );
 }
 
 function Slide9() {
   return (
-    <View style={{ flex: 1, gap: 14 }}>
+    <View style={{ flex: 1, justifyContent: 'space-evenly' }}>
       <Title t="정리해요!" />
       <View style={{ flexDirection: 'row', gap: 12 }}>
         <SummaryCol head="받침 있으면" chip="-이에요" example="유진이에요" />
         <SummaryCol head="받침 없으면" chip="-예요" example="타오예요" />
       </View>
-      <View style={{ flex: 1 }} />
       <Callout tone="green">
-        <Text style={[mbBody(13.5, '700'), { color: '#1E7A44' }]}>이제 이름과 국적을 말할 수 있어요!</Text>
+        <Text style={[mbBody(15.5, '700'), { color: '#1E7A44' }]}>이제 이름과 국적을 말할 수 있어요!</Text>
       </Callout>
     </View>
   );

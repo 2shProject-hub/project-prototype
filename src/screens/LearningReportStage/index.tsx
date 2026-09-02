@@ -6,8 +6,10 @@
  * - AI 피드백
  * - 공통 ActivityHeader, CtaButton 적용
  */
+import { svgDataUri } from '../../theme/graphics';
+import { useTheme } from '../../theme/ThemeContext';
 import { ThemedGlyph } from '../../components/ThemedGlyph';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
 import { colors, radius, spacing, shadow } from '../../theme';
 import { useLang, pick, ActivityHeader, CtaButton } from '../../components';
 
@@ -32,8 +34,28 @@ interface Props {
   onBack?: () => void;
 }
 
+// 도넛 차트 — SVG 데이터 URI (라이브러리 없이 코드 렌더)
+function mbReportDonut(pct: number, label: string): string {
+  // svgDataUri 는 btoa(Latin1) — 한글은 숫자 엔티티로 이스케이프해야 한다
+  const esc = (t: string) => t.replace(/[^ -~]/g, (ch) => '&#' + ch.charCodeAt(0) + ';');
+  label = esc(label);
+  const r = 44;
+  const c = 2 * Math.PI * r;
+  const off = c * (1 - pct / 100);
+  return svgDataUri(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="110" height="110" viewBox="0 0 110 110">` +
+    `<circle cx="55" cy="55" r="${r}" fill="none" stroke="#EFEAFF" stroke-width="12"/>` +
+    `<circle cx="55" cy="55" r="${r}" fill="none" stroke="#7B2FF2" stroke-width="12" stroke-linecap="round" stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}" transform="rotate(-90 55 55)"/>` +
+    `<text x="55" y="53" text-anchor="middle" font-family="Pretendard, sans-serif" font-size="23" font-weight="800" fill="#1B1926">${pct}%</text>` +
+    `<text x="55" y="73" text-anchor="middle" font-family="Pretendard, sans-serif" font-size="11.5" font-weight="700" fill="#6D6A7C">${label}</text>` +
+    `</svg>`,
+  );
+}
+
 export function LearningReportStage({ data, onNext, onBack }: Props) {
   const { lang } = useLang();
+  const { theme: __mbRpT, enabled: __mbRpE } = useTheme();
+  const __mbRp = __mbRpE && __mbRpT.id === 'malhaeboka';
 
   if (!data) {
     return (
@@ -58,6 +80,36 @@ export function LearningReportStage({ data, onNext, onBack }: Props) {
           <Text style={s.title}>{pick(lang, data.sessionTitle, data.sessionTitleVi)}</Text>
           <Text style={s.subtitle}>{pick(lang, data.description, data.descriptionVi)}</Text>
         </View>
+
+        {/* 말해보카: 학습 분석 차트 — 도넛(정답률) + 세트별 막대 + 스탯 칩 */}
+        {__mbRp ? (
+          <View style={{ backgroundColor: '#FFFFFF', borderRadius: 18, borderWidth: 1.5, borderColor: '#ECE7FA', padding: 18, gap: 16, marginBottom: 14, shadowColor: '#3E6D96', shadowOpacity: 0.1, shadowRadius: 10, shadowOffset: { width: 0, height: 3 } }}>
+            <Text style={{ fontSize: 16.5, fontWeight: '800', color: '#1B1926', letterSpacing: -0.3 }}>{pick(lang, '학습 분석', 'Phân tích học tập')}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 18 }}>
+              <Image source={{ uri: mbReportDonut(82, pick(lang, '정답률', 'Đúng')) }} style={{ width: 110, height: 110 }} />
+              <View style={{ flex: 1, gap: 11 }}>
+                {([[pick(lang, '세트 1', 'Bộ 1'), 85], [pick(lang, '세트 2', 'Bộ 2'), 78], [pick(lang, '세트 3', 'Bộ 3'), 92]] as Array<[string, number]>).map(([k, v]) => (
+                  <View key={k} style={{ gap: 4 }}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                      <Text style={{ fontSize: 12.5, fontWeight: '700', color: '#4B4660' }}>{k}</Text>
+                      <Text style={{ fontSize: 12.5, fontWeight: '800', color: '#7150F0' }}>{v}%</Text>
+                    </View>
+                    <View style={{ height: 9, borderRadius: 5, backgroundColor: '#EFEAFF', overflow: 'hidden' }}>
+                      <View style={{ width: `${v}%`, height: 9, borderRadius: 5, backgroundColor: '#7B2FF2' }} />
+                    </View>
+                  </View>
+                ))}
+              </View>
+            </View>
+            <View style={{ flexDirection: 'row', gap: 8 }}>
+              {([[pick(lang, '학습 12분', 'Học 12 phút'), '#EFEAFF', '#4C34C2'], [pick(lang, '연속 3일', 'Chuỗi 3 ngày'), '#FFF1E4', '#B45309'], [pick(lang, '별 24개', '24 sao'), '#EAF8EF', '#1E7A45']] as Array<[string, string, string]>).map(([t, bg, fg]) => (
+                <View key={t} style={{ flex: 1, backgroundColor: bg, borderRadius: 12, paddingVertical: 10, alignItems: 'center' }}>
+                  <Text style={{ fontSize: 12.5, fontWeight: '800', color: fg }}>{t}</Text>
+                </View>
+              ))}
+            </View>
+          </View>
+        ) : null}
 
         {/* 학습 요약 카드 */}
         <View style={s.summaryBox}>

@@ -300,18 +300,18 @@ export function SentenceBuildStage({ onComplete, onBack }: Props) {
 
       {/* ── 타일 모드 ── */}
       {!showKeyboard && (
-        <View style={styles.tilesRow}>
+        <View style={[styles.tilesRow, __mbBtn && { justifyContent: 'center' as const, gap: 10, rowGap: 12 }]}>
           {shuffledTiles.map((word, i) => {
             const isUsed = selected.includes(i);
             return (
               <TouchableOpacity
                 key={i}
-                style={[styles.tile, isUsed && styles.tileUsed]}
+                style={[styles.tile, __mbBtn && { paddingVertical: 14, paddingHorizontal: 18, borderRadius: 14, backgroundColor: '#F6F3FF', borderColor: '#DDD2F5', borderWidth: 1.5 }, isUsed && styles.tileUsed]}
                 onPress={() => onTileTap(i)}
                 activeOpacity={isUsed ? 1 : 0.75}
                 disabled={isUsed}
               >
-                <Text style={[styles.tileText, isUsed && styles.tileTextUsed]}>{word}</Text>
+                <Text style={[styles.tileText, __mbBtn && { fontSize: 17, color: '#3D2E86' }, isUsed && styles.tileTextUsed]}>{word}</Text>
               </TouchableOpacity>
             );
           })}

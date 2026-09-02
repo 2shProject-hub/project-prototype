@@ -12,6 +12,7 @@
  * - Source A/B 이식 시: props.data를 통해 외부 CMS/ADMIN API 데이터 주입 가능
  */
 
+import { useTheme } from '../../theme/ThemeContext';
 import { ThemedGlyph } from '../../components/ThemedGlyph';
 import React, { useState } from 'react';
 import {
@@ -42,6 +43,8 @@ export function SpeakingDetailStage({
   onBack,
 }: Props) {
   const { lang } = useLang();
+  const { theme: __mbT, enabled: __mbE } = useTheme();
+  const __mb = __mbE && __mbT.id === 'malhaeboka';
   const [isPlayingAll, setIsPlayingAll] = useState(false);
   const [activeAudioId, setActiveAudioId] = useState<number | null>(null);
 
@@ -161,13 +164,14 @@ export function SpeakingDetailStage({
                     <Text
                       style={[
                         styles.bubbleKo,
+                        __mb && { fontSize: 16, lineHeight: 24 },
                         isUser && styles.bubbleKoUser,
                         isActive && styles.bubbleKoActive,
                       ]}
                     >
                       {line.textKo}
                     </Text>
-                    <Text style={styles.bubbleVi}>{line.textVi}</Text>
+                    <Text style={[styles.bubbleVi, __mb && { fontSize: 13.5, lineHeight: 20 }]}>{line.textVi}</Text>
                   </View>
 
                   <View

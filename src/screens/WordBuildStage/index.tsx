@@ -276,11 +276,11 @@ export function WordBuildStage({ onComplete, onBack }: Props) {
             return (
               <TouchableOpacity
                 key={i}
-                style={[styles.tile, isSelected && styles.tileSelected]}
+                style={[styles.tile, __mbBtn && { width: 56, height: 56, borderRadius: 13 }, isSelected && styles.tileSelected]}
                 onPress={() => onTileTap(i)}
                 activeOpacity={isSelected ? 1 : 0.75}
               >
-                <Text style={[styles.tileText, isSelected && styles.tileTextSelected]}>
+                <Text style={[styles.tileText, __mbBtn && { fontSize: 21 }, isSelected && styles.tileTextSelected]}>
                   {tile}
                 </Text>
               </TouchableOpacity>

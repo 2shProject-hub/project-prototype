@@ -254,9 +254,17 @@ function ArtPiece({ theme, art, size, charImg }: { theme: Theme; art: Art; size:
   const L = theme.layout;
 
   if (art.kind === 'character') {
+    const mbMent = theme.id === 'malhaeboka';
     return (
-      <View style={{ borderRadius: L.radius === 0 ? 0 : Math.max(L.radius, 20), overflow: 'hidden', borderWidth: L.list === 'block' ? 2 : 0, borderColor: c.ink }}>
-        <BlinkImage theme={theme} img={charImg ?? CHARACTER} size={size} />
+      <View style={{ alignItems: 'center', gap: 7 }}>
+        {mbMent ? (
+          <View style={{ backgroundColor: c.surface, borderWidth: 1, borderColor: '#E5DFF7', borderRadius: 13, paddingHorizontal: 12, paddingVertical: 7, shadowColor: '#000', shadowOpacity: 0.08, shadowRadius: 6, shadowOffset: { width: 0, height: 2 } }}>
+            <Text style={{ fontSize: 13, fontWeight: '700', color: c.ink }}>참 잘했어요! 오늘도 해냈어요</Text>
+          </View>
+        ) : null}
+        <View style={{ borderRadius: L.radius === 0 ? 0 : Math.max(L.radius, 20), overflow: 'hidden', borderWidth: L.list === 'block' ? 2 : 0, borderColor: c.ink }}>
+          <BlinkImage theme={theme} img={charImg ?? CHARACTER} size={size} />
+        </View>
       </View>
     );
   }
@@ -452,7 +460,7 @@ function LearnStripReal({ theme, lang, picks }: { theme: Theme; lang: Lang; pick
   const L = theme.layout;
   const s = spacing(L.density);
   const h = 66; // ⚠️ 요청 URL 치수 — 바꾸면 검증된 사진이 뒤바뀐다 (표시 크기는 아래 dispH)
-  const dispH = 104; // 표시 높이 — 시원하게 (원본이 2배 해상도라 확대 여유 있음)
+  const dispH = theme.id === 'malhaeboka' ? 126 : 104; // 표시 높이 — 시원하게 (원본이 2배 해상도라 확대 여유 있음)
   return (
     <View>
       <Text style={[{ fontSize: 10.5, color: c.muted, letterSpacing: theme.type.labelTracking, marginBottom: s.gap }, bodyFont(theme, 700)]}>

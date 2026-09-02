@@ -1,3 +1,4 @@
+import React from 'react';
 import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { useState, useRef, useEffect } from 'react';
 import {
@@ -122,7 +123,7 @@ export function HomeScreen({ sessions, setView, onStartSession }: Props) {
               </View>
               <Text style={[styles.heroTitle, brandCrest && { fontSize: 24, letterSpacing: -0.5 }]}>{LESSON.title}</Text>
               {brandCrest ? (
-                <ReadingPulse text={pick(lang, LESSON.summary, LESSON.summaryVi)} style={[styles.heroSummary, { fontSize: 14.5, lineHeight: 21, color: '#3F3D4D' }]} />
+                <ReadingPulse text={pick(lang, LESSON.summary, LESSON.summaryVi)} style={[styles.heroSummary, { fontSize: 16, lineHeight: 24, fontWeight: '600', color: '#332F45' }]} />
               ) : (
                 <Text style={styles.heroSummary}>
                   {pick(lang, LESSON.summary, LESSON.summaryVi)}
@@ -188,16 +189,19 @@ export function HomeScreen({ sessions, setView, onStartSession }: Props) {
               const frac = sessionProgress(sess, s.id);
               const isLast = idx === SESSIONS.length - 1;
 
+              const nowId = [...SESSIONS].reverse().find((x) => (x.id === 1 || x.id === 2) && !(sessions[x.id]?.completed ?? false))?.id;
+              const showNow = brandRowIcons && unlocked && !completed && s.id === nowId;
               return (
                 <View key={s.id} style={styles.timelineRow}>
                   {/* 세로 연결선 */}
                   {!isLast && <View style={styles.connector} />}
                   {/* 번호 원 — 브랜드 자산 테마는 아이콘 타일 (차시 번호는 카드의 "N차시" 텍스트가 유지) */}
                   {brandRowIcons ? (
-                    <View style={[styles.dot, { backgroundColor: 'transparent' }]}>
+                    <MbNowPulse active={!!showNow}>
+                    <View style={[styles.dot, { backgroundColor: '#FFFFFF', borderWidth: 1.5, borderColor: '#ECE7FA' }, showNow ? { borderColor: '#B9A5F5', borderWidth: 2 } : null]}>
                       <Image
                         source={brandRowIcons[idx % brandRowIcons.length]}
-                        style={{ width: 44, height: 44, borderRadius: 12, opacity: unlocked ? 1 : 0.38 }}
+                        style={{ width: 30, height: 30, borderRadius: 8, opacity: unlocked ? 1 : 0.38 }}
                         resizeMode="contain"
                       />
                       {completed ? (
@@ -205,7 +209,13 @@ export function HomeScreen({ sessions, setView, onStartSession }: Props) {
                           <Text style={{ color: activeTheme.colors.onPrimary, fontSize: 9, fontWeight: '700' }}>✓</Text>
                         </View>
                       ) : null}
+                      {showNow ? (
+                        <View style={{ position: 'absolute', top: -7, alignSelf: 'center', backgroundColor: '#7150F0', borderRadius: 7, paddingHorizontal: 6, paddingVertical: 1.5 }}>
+                          <Text style={{ fontSize: 8.5, fontWeight: '800', color: '#FFFFFF' }}>NOW</Text>
+                        </View>
+                      ) : null}
                     </View>
+                    </MbNowPulse>
                   ) : (
                     <View style={[
                       styles.dot,
@@ -315,6 +325,24 @@ function ReadingPulse({ text, style }: { text: string; style?: any }) {
       ))}
     </View>
   );
+}
+
+// 진행중 차시 아이콘 — 잔잔히 커졌다 작아지며 '지금 여기'를 알린다
+function MbNowPulse({ active, children }: { active: boolean; children: React.ReactNode }) {
+  const sc = useRef(new Animated.Value(1)).current;
+  useEffect(() => {
+    if (!active) { sc.setValue(1); return; }
+    const loop = Animated.loop(
+      Animated.sequence([
+        Animated.timing(sc, { toValue: 1.09, duration: 700, useNativeDriver: false }),
+        Animated.timing(sc, { toValue: 1, duration: 700, useNativeDriver: false }),
+      ]),
+    );
+    loop.start();
+    return () => loop.stop();
+  }, [active, sc]);
+  if (!active) return <>{children}</>;
+  return <Animated.View style={{ transform: [{ scale: sc }] }}>{children}</Animated.View>;
 }
 
 const styles = StyleSheet.create({
@@ -477,10 +505,10 @@ const styles = StyleSheet.create({
   connector: {
     position: 'absolute',
     left: 21, // dot(44px) 정중앙 = 22 - 선폭/2
-    top: 52,
-    bottom: -20,
+    top: 51,
+    bottom: -23, // 다음 아이콘 상단(marginTop 7)까지 끊김 없이 잇는다
     width: 2,
-    backgroundColor: '#D9D9D9',
+    backgroundColor: '#E4E0F2',
     zIndex: 0,
   },
   dot: {

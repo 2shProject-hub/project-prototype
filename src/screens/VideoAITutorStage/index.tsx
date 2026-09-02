@@ -172,7 +172,7 @@ export function VideoAITutorStage({
       </View>
 
       {/* 영상 영역 */}
-      <View style={s.videoCard}>
+      <View style={[s.videoCard, themeOn && { height: 420, borderRadius: 18 }]}>
         {Platform.OS === 'web' && videoSrc ? (
           <WebVideoPlayer src={videoSrc as string} />
         ) : (
@@ -181,13 +181,13 @@ export function VideoAITutorStage({
       </View>
 
       {/* 스페이서 */}
-      <View style={s.spacer} />
+      <View style={[s.spacer, themeOn && { flex: 0, height: 12 }]} />
 
       {/* AI 튜터 영역: 말풍선 + 썸네일 */}
       <View style={s.tutorRow}>
         {/* 말풍선 */}
-        <View style={s.bubble}>
-          <Text style={s.bubbleText}>
+        <View style={[s.bubble, themeOn && { borderRadius: 18, borderColor: '#E9E2FB' }]}>
+          <Text style={[s.bubbleText, themeOn && { fontSize: 15, lineHeight: 23 }]}>
             {pick(lang, data.bubbleKo, data.bubbleVi)}
           </Text>
           {/* 스피커 버튼 */}
@@ -206,7 +206,7 @@ export function VideoAITutorStage({
         {/* AI 튜터 이미지 */}
         <Image
           source={TUTOR_IMAGE as any}
-          style={s.tutorImage}
+          style={[s.tutorImage, themeOn && { width: 92, height: 112 }]}
           resizeMode="contain"
         />
       </View>

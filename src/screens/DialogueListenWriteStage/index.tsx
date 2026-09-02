@@ -224,7 +224,7 @@ export default function DialogueListenWriteStage({ onNext, onBack, data }: Props
           <View style={[styles.introTutorSection, __mbBtn && { paddingBottom: 8 }]}>
             <View style={styles.introTutorRow}>
               <View style={styles.introTutorCard}>
-                <Text style={styles.introTutorText}>{tutorBubble}</Text>
+                <Text style={[styles.introTutorText, __mbBtn && { fontSize: 15, lineHeight: 23 }]}>{tutorBubble}</Text>
                 <TouchableOpacity
                   style={[styles.introSpeakerBtn, tutorPlaying && styles.introSpeakerBtnActive]}
                   onPress={playTutorAudio}

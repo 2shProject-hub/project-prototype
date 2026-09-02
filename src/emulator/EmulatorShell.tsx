@@ -155,6 +155,11 @@ function makeBag(size: number) {
 const drawSticker = makeBag(24);
 const drawCheer = makeBag(60);
 
+// 화면별 고정 캐릭터: s=스티커 인덱스(4=왕관 고양이 — 진한 색이라 어디서든 또렷), cheer=전용 멘트
+const STICKER_PIN: Record<string, { s: number; cheer: [string, string] }> = {
+  'word-vn-ko-select-2': { s: 4, cheer: ['뜻을 떠올리며 골라봐요!', 'Nhớ nghĩa rồi chọn nhé!'] },
+};
+
 // 말해보카: 화면 전환 시 페이드+라이즈 — 상용 앱의 화면 진입 이펙트
 function MbScreenTransition({ enabled, screenKey, children }: { enabled: boolean; screenKey: string; children: React.ReactNode }) {
   const a = useRef(new Animated.Value(1)).current;
@@ -175,6 +180,46 @@ function MbScreenTransition({ enabled, screenKey, children }: { enabled: boolean
       {children}
     </Animated.View>
   );
+}
+
+// 화면 진입 시 학습자가 집중할 본문 핵심 블록(가장 큰 카드/보기 묶음)을 잠깐 키웠다 되돌린다.
+// 시선 유도용 원샷 — 상용 학습앱의 진입 어포던스.
+function MbFocusPulse({ enabled, screenId }: { enabled: boolean; screenId: string }) {
+  useEffect(() => {
+    if (!enabled || Platform.OS !== 'web') return;
+    const t = setTimeout(() => {
+      try {
+        const frame = document.querySelector('[data-device-screen]') as HTMLElement | null;
+        if (!frame) return;
+        const fr = frame.getBoundingClientRect();
+        let bestEl: HTMLElement | null = null;
+        let bestArea = 0;
+        frame.querySelectorAll('div').forEach((n) => {
+          const e = n as HTMLElement;
+          const r = e.getBoundingClientRect();
+          if (r.top < fr.top + 70 || r.bottom > fr.bottom - 54) return; // 헤더/푸터 제외
+          if (r.width < fr.width * 0.55 || r.height < 90 || r.height > fr.height * 0.72) return;
+          const cs = getComputedStyle(e);
+          if (cs.borderRadius === '0px' && cs.backgroundColor === 'rgba(0, 0, 0, 0)') return;
+          const area = r.width * r.height;
+          if (area > bestArea) { bestArea = area; bestEl = e; }
+        });
+        const target = bestEl as HTMLElement | null;
+        if (target && typeof target.animate === 'function') {
+          target.animate(
+            [
+              { transform: 'scale(1)' },
+              { transform: 'scale(1.03)', offset: 0.45 },
+              { transform: 'scale(1)' },
+            ],
+            { duration: 640, easing: 'cubic-bezier(.34,1.3,.5,1)' },
+          );
+        }
+      } catch {}
+    }, 430);
+    return () => clearTimeout(t);
+  }, [enabled, screenId]);
+  return null;
 }
 
 function ScreenSticker({ theme, enabled, screenId }: { theme: Theme; enabled: boolean; screenId: string }) {
@@ -198,7 +243,14 @@ function ScreenSticker({ theme, enabled, screenId }: { theme: Theme; enabled: bo
   const bob = useRef(new Animated.Value(0)).current;
   const squash = useRef(new Animated.Value(1)).current;
   // 방문할 때마다 셔플 백에서 뽑는다 — 풀을 다 돌기 전엔 반복 없음
-  const picked = useMemo(() => ({ s: drawSticker(), c: drawCheer(), tilt: [-6, 0, 6][Math.floor(Math.random() * 3)], size: [0.9, 1, 1.12][Math.floor(Math.random() * 3)] }), [screenId]);
+  // 일부 화면은 배경과 대비가 또렷한 캐릭터를 고정한다 (밝은 사진 카드 위에서 흐린 캐릭터가 묻히는 화면)
+  const pinned = STICKER_PIN[screenId];
+  const picked = useMemo(
+    () => pinned
+      ? { s: pinned.s, c: 0, cheer: pinned.cheer, tilt: 0, size: 1.08 }
+      : { s: drawSticker(), c: drawCheer(), cheer: undefined as [string, string] | undefined, tilt: [-6, 0, 6][Math.floor(Math.random() * 3)], size: [0.9, 1, 1.12][Math.floor(Math.random() * 3)] },
+    [screenId],
+  );
   useEffect(() => {
     charY.setValue(60);
     charOp.setValue(1);
@@ -270,12 +322,19 @@ function ScreenSticker({ theme, enabled, screenId }: { theme: Theme; enabled: bo
           if (r.width < 2 || r.height < 2) return;
           texts.push({ left: r.left, right: r.right, top: r.top, bottom: r.bottom });
         });
+        // 이미지·캔버스(차트/사진)는 약한 가중치로 회피 — 텍스트만큼 절대적이진 않지만 되도록 안 가린다
+        const media: Array<{ left: number; right: number; top: number; bottom: number }> = [];
+        frame.querySelectorAll('img,canvas').forEach((n) => {
+          const r = (n as HTMLElement).getBoundingClientRect();
+          if (r.width < 24 || r.height < 24) return;
+          media.push({ left: r.left, right: r.right, top: r.top, bottom: r.bottom });
+        });
         const sides: Array<'l' | 'r'> = flipped ? ['l', 'r'] : ['r', 'l'];
         const evaluate = (fw: number, fh: number) => {
           let best: { side: 'l' | 'r'; bottom: number; ov: number; ord: number } | null = null;
           let idx = 0;
           for (const side of sides) {
-            for (const bottom of [88, 140, 192, 244, 296, 348, 400]) {
+            for (const bottom of [88, 124, 160, 196, 232, 268, 304, 340, 376, 412]) {
               const x = side === 'l' ? fr.left : fr.right - fw;
               const y = fr.bottom - bottom - fh;
               idx++;
@@ -286,19 +345,23 @@ function ScreenSticker({ theme, enabled, screenId }: { theme: Theme; enabled: bo
                 const iy = Math.max(0, Math.min(y + fh, r.bottom) - Math.max(y, r.top));
                 textOv += ix * iy;
               }
-              if (!best || textOv < best.ov - 0.5 || (Math.abs(textOv - best.ov) <= 0.5 && idx < best.ord)) {
-                best = { side, bottom, ov: textOv, ord: idx };
+              let mediaOv = 0;
+              for (const r of media) {
+                const ix = Math.max(0, Math.min(x + fw, r.right) - Math.max(x, r.left));
+                const iy = Math.max(0, Math.min(y + fh, r.bottom) - Math.max(y, r.top));
+                mediaOv += ix * iy;
+              }
+              const ov = textOv + mediaOv / 400; // 텍스트 1px² = 이미지 400px² 비중
+              if (!best || ov < best.ov - 0.5 || (Math.abs(ov - best.ov) <= 0.5 && idx < best.ord)) {
+                best = { side, bottom, ov, ord: idx };
               }
             }
           }
           return best;
         };
         const full = evaluate(foot.w, foot.h);
-        if (full && full.ov === 0) { setPos({ side: full.side, bottom: full.bottom }); return; }
-        // 말풍선까지 넣을 깨끗한 자리가 없다 — 말풍선을 접고 캐릭터만이라도
-        const solo = evaluate(stk.w * picked.size + 8, stk.h * picked.size + 8);
-        if (solo && solo.ov === 0) { setPos({ side: solo.side, bottom: solo.bottom, noBubble: true }); return; }
-        // 그마저 없으면 이 화면은 캐릭터를 접는다 — 텍스트는 절대 가리지 않는다
+        if (full && full.ov < 40) { setPos({ side: full.side, bottom: full.bottom }); return; } // 텍스트 0 + 이미지 소량까지 허용
+        // 캐릭터는 항상 멘트와 함께 — 깨끗한 자리가 없으면 이 화면은 접는다 (텍스트는 절대 가리지 않는다)
         setPos({ ...fallback, hidden: true });
       } catch {
         setPos(fallback);
@@ -313,7 +376,7 @@ function ScreenSticker({ theme, enabled, screenId }: { theme: Theme; enabled: bo
   if (STICKER_EXCLUDE.has(screenId) || screenId.startsWith('set-wordbook') || screenId.startsWith('completion-')) return null;
   const st = stickers[picked.s % stickers.length];
   const flip = picked.s >= stickers.length; // 후반 10변형은 좌측에서 빼꼼 (좌우 반전)
-  const cheer = CHEERS[picked.c % CHEERS.length];
+  const cheer = picked.cheer ?? CHEERS[picked.c % CHEERS.length];
   const c = theme.colors;
   if (pos && pos.hidden) return null;
   const sideL = pos ? pos.side === 'l' : flip;
@@ -1761,6 +1824,7 @@ function EmulatorShellInner() {
                   flowStep={flowMode ? currentFlowStep + 1 : undefined}
                   flowTotal={flowMode ? LEARNING_FLOW.length : undefined}
                 />
+                <MbFocusPulse enabled={applyTheme && activeTheme.id === 'malhaeboka'} screenId={activeScreenId || screenId} />
                 <ScreenSticker theme={activeTheme} enabled={applyTheme} screenId={activeScreenId || screenId} />
                 </FlowProgressContext.Provider>
               </View>

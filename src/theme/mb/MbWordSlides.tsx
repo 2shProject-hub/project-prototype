@@ -117,32 +117,34 @@ export function MbWordSlides({ onNext, onBack, slides, flowStep, flowTotal }: Pr
             style={{
               flex: 1,
               backgroundColor: mb.white,
-              borderRadius: 16,
-              borderBottomRightRadius: 4,
-              paddingHorizontal: 13,
-              paddingVertical: 10,
+              borderRadius: 18,
+              borderBottomRightRadius: 5,
+              borderWidth: 1.5,
+              borderColor: '#E9E2FB',
+              paddingHorizontal: 16,
+              paddingVertical: 14,
               flexDirection: 'row',
               alignItems: 'center',
-              gap: 10,
-              shadowColor: '#3E6D96', shadowOpacity: 0.14, shadowRadius: 10, shadowOffset: { width: 0, height: 3 },
+              gap: 12,
+              shadowColor: '#3E6D96', shadowOpacity: 0.16, shadowRadius: 12, shadowOffset: { width: 0, height: 4 },
             }}
           >
-            <Text style={[mbBody(12.5, '600'), { flex: 1, color: mb.ink }]} numberOfLines={3}>
+            <Text style={[mbBody(15, '600'), { flex: 1, color: mb.ink, lineHeight: 23 }]} numberOfLines={4}>
               {pick(lang, slide.bubble.ko, slide.bubble.vi)}
             </Text>
             <TouchableOpacity
               onPress={replayAudio}
               activeOpacity={0.7}
               style={{
-                width: 34, height: 34, borderRadius: 17,
+                width: 42, height: 42, borderRadius: 21,
                 backgroundColor: needsTap ? mb.violet : mb.lavender,
                 alignItems: 'center', justifyContent: 'center',
               }}
             >
-              <Image source={{ uri: icon('volume', needsTap ? '#FFFFFF' : mb.violet, 17, 2) }} style={{ width: 17, height: 17 }} />
+              <Image source={{ uri: icon('volume', needsTap ? '#FFFFFF' : mb.violet, 21, 2) }} style={{ width: 21, height: 21 }} />
             </TouchableOpacity>
           </View>
-          <Image source={TUTOR_IMAGE as any} style={{ width: 72, height: 90 }} resizeMode="contain" />
+          <Image source={TUTOR_IMAGE as any} style={{ width: 88, height: 108 }} resizeMode="contain" />
         </View>
       )}
 
@@ -175,7 +177,7 @@ function PhotoCard({ img, ko, vi, fit }: { img: any; ko: string; vi: string; fit
         shadowColor: '#3E6D96', shadowOpacity: 0.08, shadowRadius: 8, shadowOffset: { width: 0, height: 3 },
       }}
     >
-      <Image source={img} style={{ width: '100%', height: 128, borderRadius: 12 }} resizeMode={fit ?? 'cover'} />
+      <Image source={img} style={{ width: '100%', height: 164, borderRadius: 14 }} resizeMode={fit ?? 'cover'} />
       <View style={{ alignItems: 'center', gap: 1, paddingBottom: 2 }}>
         <Text style={mbDisplay(19, '800')}>{ko}</Text>
         <Text style={mbBody(12, '600')}>{vi}</Text>

@@ -127,6 +127,7 @@ export function themedChip(t: Theme, state: 'default' | 'selected' | 'correct' |
     wrong: { border: c.danger, bg: c.dangerSoft, fg: readableOn(c.dangerSoft, [c.danger, c.ink]) },
   }[state];
 
+  const mb = t.id === 'malhaeboka';
   return {
     box: {
       borderRadius: r,
@@ -134,9 +135,10 @@ export function themedChip(t: Theme, state: 'default' | 'selected' | 'correct' |
       borderColor: map.border,
       backgroundColor: map.bg,
       ...(L.shadow === 'none' ? { shadowOpacity: 0, elevation: 0 } : null),
+      ...(mb ? { minHeight: 56 } : null),
     } as ViewStyle,
-    text: { color: map.fg, ...bodyFont(t, 700) } as TextStyle,
-    sub: { color: c.muted, ...bodyFont(t) } as TextStyle,
+    text: { color: map.fg, ...bodyFont(t, 700), ...(mb ? { fontSize: 15.5, lineHeight: 22 } : null) } as TextStyle,
+    sub: { color: c.muted, ...bodyFont(t), ...(mb ? { fontSize: 14, lineHeight: 20 } : null) } as TextStyle,
     badge: {
       backgroundColor: state === 'default' ? c.backdrop : map.border,
       borderRadius: L.radius === 0 ? 2 : 999,

@@ -147,6 +147,7 @@ export function WordSound1({
                 style={[
                   s.soundCard,
                   { width: '100%' },
+                  __mbBtn && { minHeight: 138, borderRadius: 18 },
                   isSelected && s.soundCardSelected,
                   isPlaying && s.soundCardPlaying,
                 ]}

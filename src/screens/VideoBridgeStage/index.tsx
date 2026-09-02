@@ -20,10 +20,11 @@
  *   4. recordQuestionAttempt + completeActivity 완료 후 navigateToNextActivityOrLessonComplete
  */
 
+import { useTheme } from '../../theme/ThemeContext';
 import { ThemedGlyph } from '../../components/ThemedGlyph';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import {
-  View, Text, TouchableOpacity, StyleSheet, Platform,
+  View, Text, TouchableOpacity, StyleSheet, Platform, Animated,
 } from 'react-native';
 import { useLang, pick } from '../../components/LangContext';
 import { MOCK_VIDEO_BRIDGE, type VideoBridgeData } from '../../data/lessonData';
@@ -51,6 +52,19 @@ function WebVideoPlayer({ src, forcePause }: { src: string; forcePause: boolean 
   if (forcePause && videoRef.current) {
     videoRef.current.pause();
   }
+
+  // 진입 즉시 자동재생 — 사운드 재생을 먼저 시도하고, 브라우저 정책에 막히면 음소거로라도 시작한다
+  useEffect(() => {
+    const t = setTimeout(() => {
+      const v = videoRef.current;
+      if (!v) return;
+      v.play().catch(() => {
+        v.muted = true;
+        v.play().catch(() => {});
+      });
+    }, 150);
+    return () => clearTimeout(t);
+  }, [src]);
 
   return React.createElement('video', {
     ref: videoRef,
@@ -96,6 +110,22 @@ const p = StyleSheet.create({
   sub: { fontSize: 12, color: 'rgba(255,255,255,0.5)', textAlign: 'center' },
 });
 
+// 타이틀 카드 오버레이 — delayMs 뒤에 서서히 사라진다 (영상 인트로 자막 느낌)
+function MbFadeOut({ delayMs, children }: { delayMs: number; children: React.ReactNode }) {
+  const op = useRef(new Animated.Value(1)).current;
+  useEffect(() => {
+    const t = setTimeout(() => {
+      Animated.timing(op, { toValue: 0, duration: 600, useNativeDriver: false }).start();
+    }, delayMs);
+    return () => clearTimeout(t);
+  }, [delayMs, op]);
+  return (
+    <Animated.View pointerEvents="none" style={{ position: 'absolute', top: 88, left: 24, right: 24, alignItems: 'center', gap: 10, zIndex: 5, opacity: op }}>
+      {children}
+    </Animated.View>
+  );
+}
+
 // ─── 메인 화면 ────────────────────────────────────────────────────
 export function VideoBridgeStage({
   onPressConfirm,
@@ -103,6 +133,8 @@ export function VideoBridgeStage({
   data = MOCK_VIDEO_BRIDGE,
 }: VideoBridgeStageProps) {
   const { lang } = useLang();
+  const { theme: __mbVbT, enabled: __mbVbE } = useTheme();
+  const __mbVb = __mbVbE && __mbVbT.id === 'malhaeboka';
   const [forcePause, setForcePause] = useState(false);
 
   // 이식 시: data.videoUri → resolveActivityVideoSource() 결과로 교체
@@ -126,6 +158,18 @@ export function VideoBridgeStage({
           <VideoPlaceholder title={pick(lang, data.title, data.titleVi)} />
         )}
       </View>
+
+      {/* ── 말해보카: 영상 위 타이틀 오버레이 — 재생 전 빈 화면을 정보로 채운다 ── */}
+      {__mbVb ? (
+        <MbFadeOut delayMs={2600}>
+          <Text style={{ fontSize: 24, fontWeight: '800', color: '#FFFFFF', textAlign: 'center', lineHeight: 34, letterSpacing: -0.4 }}>
+            {pick(lang, data.title, data.titleVi)}
+          </Text>
+          <Text style={{ fontSize: 14, fontWeight: '600', color: 'rgba(255,255,255,0.72)', textAlign: 'center' }}>
+            {pick(lang, '오늘 배운 문법을 영상으로 정리해요', 'Ôn lại ngữ pháp hôm nay qua video')}
+          </Text>
+        </MbFadeOut>
+      ) : null}
 
       {/* ── X 닫기 버튼 오버레이 ── */}
       {/* 이식 시: MissionSummaryVideoPlayer onPressClose prop으로 전달 */}

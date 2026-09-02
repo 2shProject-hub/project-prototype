@@ -406,6 +406,10 @@ export function ThemedBody(p: ThemedBodyProps) {
       {assets?.peek ? (
         // 화면 우하단에서 빼꼼 — 말해보카 시그니처. 터치를 막지 않도록 pointerEvents 차단
         <View pointerEvents="none" style={{ position: 'absolute', right: 0, bottom: 84, alignItems: 'flex-end' }}>
+          {/* 멘트 — 캐릭터는 항상 말과 함께 */}
+          <View style={{ backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#E5DFF7', borderRadius: 13, paddingHorizontal: 11, paddingVertical: 7, marginRight: 8, marginBottom: 5, maxWidth: 168, shadowColor: '#000', shadowOpacity: 0.08, shadowRadius: 6, shadowOffset: { width: 0, height: 2 } }}>
+            <Text style={{ fontSize: 12.5, fontWeight: '600', color: '#1B1926' }}>{pick(p.lang, '스피커로 발음을 들어봐요!', 'Nghe phát âm bằng loa nhé!')}</Text>
+          </View>
           <Animated.View style={{ transform: [{ translateY: peekBob }] }}>
             <BlinkSprite img={assets.peek} blink={assets.peekBlink} on={peekBlink} w={86} h={100} />
           </Animated.View>

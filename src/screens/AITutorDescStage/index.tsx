@@ -109,14 +109,28 @@ export function AITutorDescStage({
     <View style={s.screen}>
       <ActivityHeader percentage={75} onClose={onBack} />
 
-      {/* 빈 공간 */}
-      <View style={s.spacer} />
+      {/* 본문 — 말해보카는 핵심 안내를 화면 중앙에 크게 세운다 */}
+      {themeOn ? (
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 28, gap: 18 }}>
+          <View style={{ width: 96, height: 96, borderRadius: 48, backgroundColor: '#EFEAFF', alignItems: 'center', justifyContent: 'center' }}>
+            <ThemedGlyph style={{ fontSize: 44 }} glyph="🎧" />
+          </View>
+          <Text style={{ fontSize: 23, fontWeight: '800', color: '#1B1926', textAlign: 'center', lineHeight: 33, letterSpacing: -0.4 }}>
+            {pick(lang, '한국어 자막과 함께\n잘 들어보세요', 'Hãy nghe kỹ cùng\nphụ đề tiếng Hàn')}
+          </Text>
+          <Text style={{ fontSize: 15, fontWeight: '600', color: '#6D6A7C', textAlign: 'center', lineHeight: 23 }}>
+            {pick(lang, '필요하면 베트남어 해석도 같이 볼 수 있어요', 'Nếu cần, bạn có thể xem cả phần dịch tiếng Việt')}
+          </Text>
+        </View>
+      ) : (
+        <View style={s.spacer} />
+      )}
 
       {/* AI 튜터 영역: 말풍선 + 썸네일 */}
       <View style={s.tutorRow}>
         {/* 말풍선 */}
-        <View style={s.bubble}>
-          <Text style={s.bubbleText}>
+        <View style={[s.bubble, themeOn && { borderRadius: 18, borderColor: '#E9E2FB' }]}>
+          <Text style={[s.bubbleText, themeOn && { fontSize: 15, lineHeight: 23 }]}>
             {pick(lang, data.bubbleKo, data.bubbleVi)}
           </Text>
           {/* 스피커 버튼 */}
@@ -135,7 +149,7 @@ export function AITutorDescStage({
         {/* AI 튜터 이미지 */}
         <Image
           source={TUTOR_IMAGE as any}
-          style={s.tutorImage}
+          style={[s.tutorImage, themeOn && { width: 92, height: 112 }]}
           resizeMode="contain"
         />
       </View>

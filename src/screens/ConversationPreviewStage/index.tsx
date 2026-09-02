@@ -284,10 +284,10 @@ export function ConversationPreviewStage({
           </View>
 
           {/* AI 튜터 하단 */}
-          <View style={[s.introTutorSection, __mbBtn && { paddingBottom: 8 }]}>
+          <View style={[s.introTutorSection, __mbBtn && { paddingBottom: 2 }]}>
             <View style={s.introTutorRow}>
-              <View style={s.introTutorCard}>
-                <Text style={s.introTutorText}>{bubbleText}</Text>
+              <View style={[s.introTutorCard, __mbBtn && { borderRadius: 18, borderWidth: 1.5, borderColor: '#E9E2FB' }]}>
+                <Text style={[s.introTutorText, __mbBtn && { fontSize: 15, lineHeight: 23 }]}>{bubbleText}</Text>
                 <TouchableOpacity
                   style={[s.introSpeakerBtn, tutorPlaying && s.introSpeakerBtnActive]}
                   onPress={playTutorAudio}
@@ -307,7 +307,7 @@ export function ConversationPreviewStage({
 
       {/* main phase: 하단 CTA */}
       {phase === 'main' && (
-        <View style={[s.footer, __mbBtn && { paddingBottom: 8, paddingTop: 8 }]}>
+        <View style={[s.footer, __mbBtn && { paddingBottom: 2, paddingTop: 6 }]}>
           <TouchableOpacity style={[s.ctaBtn, __mbBtn]} onPress={handleNext} activeOpacity={0.85}>
             <Text style={s.ctaBtnText}>
               {pick(lang, '다음', 'Tiếp theo')} →
