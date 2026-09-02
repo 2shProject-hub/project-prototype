@@ -1,7 +1,7 @@
 import { useTheme } from '../../theme/ThemeContext';
 import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { useEffect, useRef, useState } from 'react';
-import { View, Text, StyleSheet, Platform } from 'react-native';
+import { View, Text, StyleSheet, Platform, Image } from 'react-native';
 import { colors, radius, spacing, shadow } from '../../theme';
 import { SESSION1 } from '../../data/lessonData';
 import { useLang, pick, ActivityHeader, CtaButton } from '../../components';
@@ -69,8 +69,12 @@ export function IntroEvalStage({ onNext, onBack }: Props) {
 
           {/* 5. 학습 성과 카드 */}
           <View style={styles.achievementCard}>
-            <View style={styles.checkCircle}>
-              <Text style={styles.checkMark}>✓</Text>
+            <View style={[styles.checkCircle, __mbBig && { backgroundColor: 'transparent', width: 44, height: 44, borderWidth: 0 }]}>
+              {__mbBig ? (
+                <Image source={require('../../../assets/themes/malhaeboka/icon-check-egg.png')} style={{ width: 38, height: 38 }} resizeMode="contain" />
+              ) : (
+                <Text style={styles.checkMark}>✓</Text>
+              )}
             </View>
             <View style={styles.achievementText}>
               <Text style={styles.achievementLabel}>{pick(lang, intro.achievement.label, intro.achievement.labelVi)}</Text>
