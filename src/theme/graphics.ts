@@ -38,7 +38,7 @@ function uri(svg: string): string {
 const wrap = (inner: string, size = 24) =>
   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="${size}" height="${size}" fill="none">${inner}</svg>`;
 
-type IconName = 'volume' | 'mic' | 'check' | 'chevron' | 'play' | 'sparkle' | 'bookmark' | 'close' | 'back' | 'headphones' | 'home' | 'chart' | 'crown' | 'bookopen' | 'keyboard' | 'grid' | 'pencil' | 'pause';
+type IconName = 'volume' | 'mic' | 'check' | 'chevron' | 'play' | 'sparkle' | 'bookmark' | 'close' | 'back' | 'headphones' | 'home' | 'chart' | 'crown' | 'bookopen' | 'keyboard' | 'grid' | 'pencil' | 'pause' | 'bulb';
 
 const PATHS: Record<IconName, (c: string, w: number) => string> = {
   // 2026 표준 스트로크 아이콘 (Lucide 계열 라운드 스트로크) — 촌스러운 자작 패스 대체
@@ -81,6 +81,10 @@ const PATHS: Record<IconName, (c: string, w: number) => string> = {
     `<rect x="13" y="3" width="8" height="8" rx="2" stroke="${c}" stroke-width="${w}" fill="none"/>` +
     `<rect x="3" y="13" width="8" height="8" rx="2" stroke="${c}" stroke-width="${w}" fill="none"/>` +
     `<rect x="13" y="13" width="8" height="8" rx="2" stroke="${c}" stroke-width="${w}" fill="none"/>`,
+  bulb: (c, w) =>
+    `<path d="M15.1 14.2c.2-.9.7-1.7 1.4-2.4a5.5 5.5 0 1 0-9 0c.7.7 1.2 1.5 1.4 2.4" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" fill="none"/>` +
+    `<path d="M9.5 17.5h5" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>` +
+    `<path d="M10.5 20.5h3" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`,
   pause: (c) =>
     `<rect x="6.5" y="4.5" width="4" height="15" rx="1.6" fill="${c}"/>` +
     `<rect x="13.5" y="4.5" width="4" height="15" rx="1.6" fill="${c}"/>`,
