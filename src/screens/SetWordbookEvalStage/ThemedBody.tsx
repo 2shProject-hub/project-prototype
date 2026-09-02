@@ -11,6 +11,15 @@
 // 이 서브트리를 건드리지 않게 하는 표시다 — 여기는 이미 테마 값으로 그려서
 // 또 변환하면 이중 적용이 된다.
 import { ThemedGlyph } from '../../components/ThemedGlyph';
+
+// 나라 단어 → 실사 지도 사진. ⚠️ loremflickr 는 (태그, lock, 요청 치수) 3개를 절대 바꾸지 말 것 —
+// 하나라도 바뀌면 전 행의 사진이 통째로 뒤바뀐다. 표시 크기는 스타일로만 조절한다.
+const MB_MAP_TAGS: Record<string, string> = {
+  '베트남': 'map,vietnam?lock=7', '한국': 'map,korea?lock=21', '인도네시아': 'map,indonesia?lock=7',
+  '러시아': 'map,russia?lock=7', '미국': 'map,usa?lock=7', '프랑스': 'map,france?lock=7',
+  '중국': 'map,china?lock=7', '독일': 'map,germany?lock=7',
+};
+
 import { BlinkSprite } from '../../theme/BlinkSprite';
 import React, { useEffect, useRef, useState } from 'react';
 import { ScrollView, View, Text, TouchableOpacity, Image, Animated, type ViewStyle } from 'react-native';
@@ -279,7 +288,15 @@ export function ThemedBody(p: ThemedBodyProps) {
       ]}
     >
       {assets?.rowIcons ? (
-        <Image source={assets.rowIcons[idx % assets.rowIcons.length]} style={{ width: 30, height: 30, borderRadius: Math.min(10, L.radius) }} resizeMode="contain" />
+        MB_MAP_TAGS[w.ko] ? (
+          <Image
+            source={{ uri: `https://loremflickr.com/96/96/${MB_MAP_TAGS[w.ko]}` }}
+            style={{ width: 34, height: 34, borderRadius: 10, backgroundColor: '#EFEDF6' }}
+            resizeMode="cover"
+          />
+        ) : (
+          <Image source={assets.rowIcons[idx % assets.rowIcons.length]} style={{ width: 30, height: 30, borderRadius: Math.min(10, L.radius) }} resizeMode="contain" />
+        )
       ) : null}
       <WordTexts w={w} />
       <Speaker ko={w.ko} small />
@@ -422,7 +439,7 @@ export function ThemedBody(p: ThemedBodyProps) {
           gap: 8,
           paddingHorizontal: L.edge,
           paddingTop: 6,
-          paddingBottom: 2,
+          paddingBottom: 1,
           borderTopWidth: L.shadow === 'none' ? L.hairline : 0,
           borderTopColor: c.line,
           backgroundColor: c.canvas,

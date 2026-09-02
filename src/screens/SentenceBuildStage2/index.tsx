@@ -112,9 +112,11 @@ export function SentenceBuildStage2({ onComplete, onBack }: Props) {
   return (
     <View style={styles.screen}>
       <ActivityHeader percentage={progressPct} onClose={onBack}>
-        <View style={styles.stepBadge}>
-          <Text style={styles.stepText}>{quizIdx + 1} / {QUIZ_LIST.length}</Text>
-        </View>
+        {__mbBtn ? null : (
+          <View style={styles.stepBadge}>
+            <Text style={styles.stepText}>{quizIdx + 1} / {QUIZ_LIST.length}</Text>
+          </View>
+        )}
       </ActivityHeader>
 
       {/* ── 지시문 ── */}
@@ -190,7 +192,7 @@ export function SentenceBuildStage2({ onComplete, onBack }: Props) {
       )}
 
       {/* ── Footer ── */}
-      <View style={[styles.footer, __mbBtn && { paddingBottom: 2, flexDirection: 'row' as const, alignItems: 'center' as const, gap: 8 }]}>
+      <View style={[styles.footer, __mbBtn && { paddingBottom: 1, flexDirection: 'row' as const, alignItems: 'center' as const, gap: 8 }]}>
         <View style={[styles.footerRow, __mbBtn && { flex: 1 }]}>
           <View style={{ flex: 1 }}>
             {inputMode === 'tile' ? (

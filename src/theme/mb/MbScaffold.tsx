@@ -3,7 +3,7 @@
 // 실물 기준: 하늘색 그라디언트 지면 위에 흰 카드가 떠 있고,
 // 상단 진행바는 트로피 배지가 붙은 알약 트랙(막대 안에 n/m 카운터) + 채움/스윕 이펙트.
 // 하단은 [‹ 이전] [n/m] [넘기기 ›] [다음 →] 한 줄 — 버튼은 라운드 사각(12~13px).
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, TouchableOpacity, Image, Animated, StyleSheet } from 'react-native';
 import { icon, svgDataUri } from '../graphics';
 import { mb, mbFont } from './mbTokens';
@@ -52,6 +52,7 @@ export function MbProgressRow({
 
   // "12/43" → 앞은 보라 강조, 뒤는 회색 — 상용 강의 앱의 수강 카운터 문법
   const parts = counter.includes('/') ? counter.split('/') : null;
+  const [trackW, setTrackW] = useState(0);
   const markerLeft = fill.interpolate({ inputRange: [0, 100], outputRange: ['4%', '100%'] });
 
   return (
@@ -59,27 +60,45 @@ export function MbProgressRow({
       {/* 학생 프로필 — 스토리 링 스타일 보라 테두리 */}
       <View
         style={{
-          width: 36, height: 36, borderRadius: 18,
+          width: 44, height: 44, borderRadius: 22,
           borderWidth: 2, borderColor: mb.violet,
           alignItems: 'center', justifyContent: 'center',
-          backgroundColor: mb.white, marginTop: -3,
+          backgroundColor: mb.white, marginTop: -6,
           shadowColor: '#5B3DF5', shadowOpacity: 0.22, shadowRadius: 5, shadowOffset: { width: 0, height: 2 },
         }}
       >
-        <Image source={STUDENT_PROFILE} style={{ width: 29, height: 29, borderRadius: 14.5 }} />
+        <Image source={STUDENT_PROFILE} style={{ width: 37, height: 37, borderRadius: 18.5 }} />
       </View>
       {/* 트랙 + 마커 + 말풍선 */}
       <View style={{ flex: 1, height: 44 }}>
-        <View style={{ position: 'absolute', left: 0, right: 0, top: 8.5, height: 7, borderRadius: 999, backgroundColor: '#EAE8F3', overflow: 'hidden' }}>
+        <View
+          onLayout={(e) => setTrackW(e.nativeEvent.layout.width)}
+          style={{ position: 'absolute', left: 0, right: 0, top: 8.5, height: 7, borderRadius: 999, backgroundColor: '#EAE8F3', overflow: 'hidden' }}
+        >
           <Animated.View
             style={{
               position: 'absolute', left: 0, top: 0, bottom: 0,
               borderRadius: 999,
-              backgroundColor: mb.violet,
+              backgroundColor: '#C9B8F9',
               width: fill.interpolate({ inputRange: [0, 100], outputRange: ['4%', '100%'] }),
               overflow: 'hidden',
             }}
           >
+            {/* 전체 트랙 폭 그라디언트 — 채움 창이 이걸 잘라 보여주므로 진행할수록 끝색이 진해진다 */}
+            {trackW > 0 ? (
+              <Image
+                source={{
+                  uri: svgDataUri(
+                    '<svg xmlns="http://www.w3.org/2000/svg" width="' + Math.round(trackW) + '" height="7">' +
+                    '<defs><linearGradient id="pf" x1="0" y1="0" x2="1" y2="0">' +
+                    '<stop offset="0" stop-color="#CDbcFA"/><stop offset="0.5" stop-color="#9A6BF6"/><stop offset="1" stop-color="#6C1FE0"/>' +
+                    '</linearGradient></defs>' +
+                    '<rect width="' + Math.round(trackW) + '" height="7" fill="url(#pf)"/></svg>',
+                  ),
+                }}
+                style={{ position: 'absolute', left: 0, top: 0, width: trackW, height: 7 }}
+              />
+            ) : null}
             <Animated.View
               style={{
                 position: 'absolute', top: 0, bottom: 0, width: 36,
@@ -112,7 +131,6 @@ export function MbProgressRow({
           style={{
             position: 'absolute', left: markerLeft, top: 27,
             marginLeft: -21, width: 42, alignItems: 'center',
-            transform: [{ scale: pop }],
             zIndex: 2,
           }}
         >
@@ -204,7 +222,7 @@ export function MbNavBar({
         gap: 8,
         paddingHorizontal: 14,
         paddingTop: 5,
-        paddingBottom: 2,
+        paddingBottom: 1,
       }}
     >
       <TouchableOpacity

@@ -308,7 +308,7 @@ export function ConversationPreviewStage({
 
       {/* main phase: 하단 CTA */}
       {phase === 'main' && (
-        <View style={[s.footer, __mbBtn && { paddingBottom: 2, paddingTop: 6 }]}>
+        <View style={[s.footer, __mbBtn && { paddingBottom: 1, paddingTop: 5 }]}>
           <TouchableOpacity style={[s.ctaBtn, __mbBtn]} onPress={handleNext} activeOpacity={0.85}>
             <Text style={s.ctaBtnText}>
               {pick(lang, '다음', 'Tiếp theo')} →

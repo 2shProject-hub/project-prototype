@@ -54,8 +54,8 @@ const styles = StyleSheet.create({
   nav: {
     flexDirection: 'row',
     backgroundColor: colors.surface,
-    paddingTop: 10,
-    paddingBottom: 16,
+    paddingTop: 5,
+    paddingBottom: 6,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.08,

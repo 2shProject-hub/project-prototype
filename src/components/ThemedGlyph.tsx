@@ -19,6 +19,7 @@ const GLYPH_KEY: Record<string, string> = {
   '🎙': 'mic',
   '🎙️': 'mic',
   '💡': 'hint',
+  '⏸': 'pause',
   '⌨': 'kbd',
   '⌨️': 'kbd',
   '🃏': 'cards',

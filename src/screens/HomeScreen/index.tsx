@@ -227,7 +227,8 @@ export function HomeScreen({ sessions, setView, onStartSession }: Props) {
                       </Text>
                     </View>
                   )}
-                  {/* 카드 */}
+                  {/* 카드 — 진행중 차시는 카드도 함께 숨쉰다 */}
+                  <MbNowPulse active={!!showNow} style={{ flex: 1 }}>
                   <TouchableOpacity
                     style={[styles.sessionCard, !unlocked && styles.sessionCardLocked]}
                     onPress={() => unlocked && onStartSession(s.id)}
@@ -259,6 +260,7 @@ export function HomeScreen({ sessions, setView, onStartSession }: Props) {
                       )}
                     </View>
                   </TouchableOpacity>
+                  </MbNowPulse>
                 </View>
               );
             })}
@@ -328,7 +330,7 @@ function ReadingPulse({ text, style }: { text: string; style?: any }) {
 }
 
 // 진행중 차시 아이콘 — 잔잔히 커졌다 작아지며 '지금 여기'를 알린다
-function MbNowPulse({ active, children }: { active: boolean; children: React.ReactNode }) {
+function MbNowPulse({ active, style, children }: { active: boolean; style?: object; children: React.ReactNode }) {
   const sc = useRef(new Animated.Value(1)).current;
   useEffect(() => {
     if (!active) { sc.setValue(1); return; }
@@ -341,8 +343,8 @@ function MbNowPulse({ active, children }: { active: boolean; children: React.Rea
     loop.start();
     return () => loop.stop();
   }, [active, sc]);
-  if (!active) return <>{children}</>;
-  return <Animated.View style={{ transform: [{ scale: sc }] }}>{children}</Animated.View>;
+  if (!active) return <View style={style}>{children}</View>;
+  return <Animated.View style={[style, { transform: [{ scale: sc }] }]}>{children}</Animated.View>;
 }
 
 const styles = StyleSheet.create({

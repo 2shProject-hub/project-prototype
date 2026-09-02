@@ -70,6 +70,7 @@ export const THEME_ASSETS: Record<string, ThemeAssets> = {
       write: require('../../assets/themes/malhaeboka/glyph-keyboard.png'),
       kbd: require('../../assets/themes/malhaeboka/glyph-keyboard.png'),
       cards: { uri: icon('grid', '#4C34C2', 24, 2) },
+      pause: { uri: icon('pause', '#26223A', 24, 2) },
       quest: require('../../assets/themes/malhaeboka/icon-quest.png'),
       dict: require('../../assets/themes/malhaeboka/icon-dict.png'),
     },

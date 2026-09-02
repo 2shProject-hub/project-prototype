@@ -241,7 +241,7 @@ export function ThemedCelebrationBody({
       </ScrollView>
 
       {/* ── 하단 CTA — 실동작 버튼 ── */}
-      <View style={{ paddingHorizontal: L.edge, paddingTop: Math.min(s.gap, 10), paddingBottom: asset ? 2 : s.row + 6 }}>
+      <View style={{ paddingHorizontal: L.edge, paddingTop: Math.min(s.gap, 10), paddingBottom: asset ? 1 : s.row + 6 }}>
         <CtaButton title={pick(lang, ctaKo, ctaVi)} onPress={onNext} size="lg" />
       </View>
     </View>

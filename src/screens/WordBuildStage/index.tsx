@@ -291,7 +291,7 @@ export function WordBuildStage({ onComplete, onBack }: Props) {
 
       {/* ── 확인 + 힌트 ── */}
       {!showKeyboard && (
-        <View style={[styles.footer, __mbBtn && { paddingBottom: 2, flexDirection: 'row' as const, alignItems: 'center' as const, gap: 8 }]}>
+        <View style={[styles.footer, __mbBtn && { paddingBottom: 1, flexDirection: 'row' as const, alignItems: 'center' as const, gap: 8 }]}>
           <View style={[styles.footerRow, __mbBtn && { flex: 1 }]}>
             <TouchableOpacity
               style={[styles.ctaBtn, styles.ctaBtnFlex, __mbBtn, !allFilled && styles.ctaBtnDisabled]}
