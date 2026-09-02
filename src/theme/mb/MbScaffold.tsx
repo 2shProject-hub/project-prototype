@@ -64,14 +64,15 @@ export function MbProgressRow({
         {/* 트로피 배지 — 알약에 겹침 */}
         <View
           style={{
-            width: 34, height: 34, borderRadius: 17, backgroundColor: mb.white,
+            width: 36, height: 36, borderRadius: 18, backgroundColor: mb.white,
             alignItems: 'center', justifyContent: 'center', zIndex: 2,
-            shadowColor: '#5B8CB8', shadowOpacity: 0.25, shadowRadius: 5, shadowOffset: { width: 0, height: 2 },
+            borderWidth: 1, borderColor: '#EEECF5',
+            shadowColor: '#5B8CB8', shadowOpacity: 0.3, shadowRadius: 6, shadowOffset: { width: 0, height: 2 },
           }}
         >
-          <Image source={{ uri: trophy }} style={{ width: 21, height: 21 }} />
+          <Image source={{ uri: trophy }} style={{ width: 25, height: 25 }} />
         </View>
-        <View style={{ flex: 1, height: 22, marginLeft: -10, borderRadius: 999, backgroundColor: '#ECEAF6', overflow: 'hidden', justifyContent: 'center' }}>
+        <View style={{ flex: 1, height: 15, marginLeft: -9, borderRadius: 999, backgroundColor: '#ECEAF6', overflow: 'hidden', justifyContent: 'center' }}>
           <Animated.View
             style={{
               position: 'absolute', left: 0, top: 0, bottom: 0,
@@ -93,7 +94,7 @@ export function MbProgressRow({
             />
           </Animated.View>
           {/* 막대 안 카운터 */}
-          <Text style={{ fontFamily: mbFont, fontSize: 11.5, fontWeight: '800', color: mb.white, marginLeft: 22, zIndex: 2 }}>
+          <Text style={{ fontFamily: mbFont, fontSize: 10.5, fontWeight: '800', color: mb.white, marginLeft: 20, zIndex: 2 }}>
             {counter}
           </Text>
         </View>
@@ -173,7 +174,7 @@ export function MbNavBar({
         gap: 8,
         paddingHorizontal: 14,
         paddingTop: 5,
-        paddingBottom: 7,
+        paddingBottom: 8,
       }}
     >
       <TouchableOpacity

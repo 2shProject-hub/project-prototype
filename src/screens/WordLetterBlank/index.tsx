@@ -189,6 +189,10 @@ export function WordLetterBlank({
       } else {
         onNext?.();
       }
+    } else {
+      // 다시 풀기 — 고른 글자를 초기화하고 처음부터
+      setSelectedTiles([]);
+      setUsedTileIndices(new Set());
     }
   };
 
@@ -312,7 +316,7 @@ export function WordLetterBlank({
       <QuizFeedbackModal
         visible={showModal}
         isCorrect={isCorrect}
-        answerText={currentQuestion.answer}
+        answerText={isCorrect ? currentQuestion.answer : undefined}
         explanation={currentQuestion.desc}
         onNext={handleNextFromModal}
         onClose={() => setShowModal(false)}

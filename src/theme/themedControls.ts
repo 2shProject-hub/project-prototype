@@ -66,7 +66,10 @@ export function themedCta(t: Theme, variant: 'primary' | 'secondary' | 'outline'
 
   if (disabled) {
     return {
-      box: { backgroundColor: c.line, borderRadius: r, borderWidth: 0, borderBottomWidth: 0 } as ViewStyle,
+      box: {
+        backgroundColor: c.line, borderRadius: r, borderWidth: 0, borderBottomWidth: 0,
+        ...(t.id === 'malhaeboka' ? { height: 40, minHeight: 0, paddingVertical: 0, justifyContent: 'center' } : null),
+      } as ViewStyle,
       text: { color: c.muted, ...bodyFont(t, 700) } as TextStyle,
       spinner: c.muted,
     };
@@ -104,7 +107,7 @@ export function themedCta(t: Theme, variant: 'primary' | 'secondary' | 'outline'
   }
   // 말해보카: 버튼 상하 두께를 줄여 시원하게
   if (t.id === 'malhaeboka') {
-    box = { ...box, height: 42, paddingVertical: 0, justifyContent: 'center' };
+    box = { ...box, height: 40, minHeight: 0, paddingVertical: 0, justifyContent: 'center' };
   }
   return { box, text: { color: fg, ...bodyFont(t, 700) } as TextStyle, spinner: fg };
 }

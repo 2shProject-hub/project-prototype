@@ -3,6 +3,7 @@
  * - 프로그레스바 헤더
  * - 공통 ActivityHeader, ChoiceChip, CtaButton, QuizFeedbackModal 적용
  */
+import { useTheme } from '../../theme/ThemeContext';
 import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { useState, useRef, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Platform, ScrollView, Image } from 'react-native';
@@ -41,6 +42,8 @@ export function WordVnKoSelect2({
   totalSets = 1,
 }: Props) {
   const { lang } = useLang();
+  const { enabled: __mbOn, theme: __mbTheme } = useTheme();
+  const mbFill = __mbOn && __mbTheme.id === 'malhaeboka';
   const sfx = useSfx();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const toastAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -242,6 +245,9 @@ export function WordVnKoSelect2({
                   s.imageCard,
                   choiceState === 'correct' && s.imageCard_correct,
                   choiceState === 'wrong' && s.imageCard_wrong,
+                  mbFill && { paddingVertical: 0, paddingHorizontal: 0, borderStyle: 'solid' as const, overflow: 'hidden' as const, borderRadius: 14 },
+                  // 사진은 테두리 없이 시원하게 — 선택/정오답 상태일 때만 컬러 보더
+                  mbFill && choiceState === 'default' && { borderColor: 'transparent', backgroundColor: '#FFFFFF', shadowColor: '#3E6D96', shadowOpacity: 0.14, shadowRadius: 10, shadowOffset: { width: 0, height: 4 } },
                 ]}
                 onPress={() => handleSelect(word, idx)}
                 disabled={showModal}
@@ -250,8 +256,8 @@ export function WordVnKoSelect2({
                 {word.imageUri ? (
                   <Image
                     source={word.imageUri}
-                    style={s.imageCardImg}
-                    resizeMode="contain"
+                    style={mbFill ? { width: '100%', height: 116, borderTopLeftRadius: 12, borderTopRightRadius: 12 } : s.imageCardImg}
+                    resizeMode={mbFill ? 'cover' : 'contain'}
                   />
                 ) : (
                   <View style={s.imageCardPlaceholder} />
@@ -259,12 +265,14 @@ export function WordVnKoSelect2({
                 <Text
                   style={[
                     s.imageCardText,
+                    mbFill && { marginTop: 9 },
                     choiceState === 'correct' && s.imageCardText_correct,
                     choiceState === 'wrong' && s.imageCardText_wrong,
                   ]}
                 >
                   {word.text}
                 </Text>
+                {mbFill ? <View style={{ height: 10 }} /> : null}
               </TouchableOpacity>
             );
           })}

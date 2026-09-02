@@ -1,3 +1,4 @@
+import React from 'react';
 /**
  * 단어를 보고 음원 선택 (WordSound1)
  * - 한국어/베트남어 단어 텍스트 제시
@@ -7,7 +8,7 @@
  */
 import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { useState, useRef, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Platform, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Platform, ScrollView, Animated } from 'react-native';
 import { colors, radius, spacing, shadow } from '../../theme';
 import { useLang, pick, ActivityHeader, CtaButton, QuizFeedbackModal } from '../../components';
 import { useSfx } from '../../hooks/useSfx';
@@ -241,10 +242,11 @@ export function WordSound1({
             const isPlaying = playingValue === item.value;
 
             return (
+              <PulseCard key={item.value} active={isPlaying} style={{ width: '47.5%' }}>
               <TouchableOpacity
-                key={item.value}
                 style={[
                   s.soundCard,
+                  { width: '100%' },
                   isSelected && s.soundCardSelected,
                   isPlaying && s.soundCardPlaying,
                 ]}
@@ -261,6 +263,7 @@ export function WordSound1({
                   {pick(lang, `음원 ${idx + 1}`, `Âm thanh ${idx + 1}`)}
                 </Text>
               </TouchableOpacity>
+              </PulseCard>
             );
           })}
         </View>
@@ -287,6 +290,23 @@ export function WordSound1({
       />
     </View>
   );
+}
+
+// 재생 중인 카드만 커졌다 작아졌다 — transform 이라 옆 카드는 밀리지 않는다
+function PulseCard({ active, children, style }: { active: boolean; children: React.ReactNode; style?: any }) {
+  const scale = React.useRef(new Animated.Value(1)).current;
+  React.useEffect(() => {
+    if (!active) { scale.setValue(1); return; }
+    const loop = Animated.loop(
+      Animated.sequence([
+        Animated.timing(scale, { toValue: 1.06, duration: 320, useNativeDriver: false }),
+        Animated.timing(scale, { toValue: 1, duration: 320, useNativeDriver: false }),
+      ]),
+    );
+    loop.start();
+    return () => { loop.stop(); scale.setValue(1); };
+  }, [active, scale]);
+  return <Animated.View style={[style, { transform: [{ scale }] }]}>{children}</Animated.View>;
 }
 
 const s = StyleSheet.create({

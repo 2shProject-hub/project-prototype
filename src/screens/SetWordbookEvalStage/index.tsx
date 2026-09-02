@@ -185,7 +185,7 @@ export function SetWordbookEvalStage({
     <>
       {/* ─── 단어 발음평가 모달 ──────────────────────────────────────── */}
       <Modal visible={showPronModal} animationType="slide" transparent>
-        <View style={s.modalOverlay}>
+        <View style={[s.modalOverlay, themeEnabled && { backgroundColor: 'rgba(22,20,32,0.06)' }]}>
           <View style={s.modalContainer}>
             <View style={s.modalHeader}>
               <Text style={s.modalTitle}>
@@ -263,7 +263,7 @@ export function SetWordbookEvalStage({
 
       {/* ─── 발음 평가 결과 모달 ──────────────────────────────────── */}
       <Modal visible={showResultModal} animationType="fade" transparent>
-        <View style={s.modalOverlay}>
+        <View style={[s.modalOverlay, themeEnabled && { backgroundColor: 'rgba(22,20,32,0.06)' }]}>
           <View style={s.resultContainer}>
             <Text style={s.resultTitle}>🎉 발음 평가 결과</Text>
             <View style={s.scoreCircle}>

@@ -155,6 +155,7 @@ export function applyThemeToDom(theme: Theme | null): void {
   if (!theme) {
     if (tag) tag.textContent = '';
     restoreInlineStyles();
+    restoreFooterBaseline();
     return;
   }
   if (!tag) {
@@ -210,6 +211,40 @@ export function applyThemeToDom(theme: Theme | null): void {
 
   // react-native-web 은 동적 값을 인라인 style 로 내보낸다. 스타일시트에 없어서 위에서는 못 잡는다.
   patchInlineStyles(replacements, theme);
+
+  // 말해보카: 하단 CTA 바 기준선 통일 — 화면마다 14~32px 로 제각각인 푸터 하단 패딩을
+  // 측정으로 찾아 10px 로 맞춘다 (컨테이너 바닥에 붙은 바 형태만, 복구 가능)
+  if (theme.id === 'malhaeboka') normalizeFooterBaseline();
+}
+
+const FOOTER_ATTR = 'data-kchao-footer-orig';
+
+function normalizeFooterBaseline(): void {
+  document.querySelectorAll('[data-themed="on"]').forEach((root) => {
+    const rootRect = (root as HTMLElement).getBoundingClientRect();
+    if (!rootRect.height) return;
+    (root.querySelectorAll('div') as NodeListOf<HTMLElement>).forEach((el) => {
+      const r = el.getBoundingClientRect();
+      // 컨테이너 바닥에 붙은, 바 높이의 요소만
+      if (rootRect.bottom - r.bottom > 4 || r.height < 48 || r.height > 150 || r.width < rootRect.width * 0.8) return;
+      const cs = getComputedStyle(el);
+      const pb = parseFloat(cs.paddingBottom) || 0;
+      if (pb >= 11 && pb <= 40) {
+        if (!el.hasAttribute(FOOTER_ATTR)) el.setAttribute(FOOTER_ATTR, el.style.paddingBottom || '');
+        el.style.paddingBottom = '8px';
+      }
+      const pt = parseFloat(cs.paddingTop) || 0;
+      if (pt >= 14 && pt <= 32) el.style.paddingTop = '10px';
+    });
+  });
+}
+
+function restoreFooterBaseline(): void {
+  document.querySelectorAll('[' + FOOTER_ATTR + ']').forEach((n) => {
+    const el = n as HTMLElement;
+    el.style.paddingBottom = el.getAttribute(FOOTER_ATTR) || '';
+    el.removeAttribute(FOOTER_ATTR);
+  });
 }
 
 const ORIG_ATTR = 'data-kchao-orig-style';

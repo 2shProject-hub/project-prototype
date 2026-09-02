@@ -92,7 +92,7 @@ export function QuizFeedbackModal({
       onRequestClose={onClose}
     >
       <TouchableWithoutFeedback onPress={onClose}>
-        <View style={styles.backdrop}>
+        <View style={[styles.backdrop, asset && { backgroundColor: 'rgba(22,20,32,0.06)' }]}>
           <TouchableWithoutFeedback>
             <View style={[styles.card, tm && tm.card]} {...(tm ? nativeThemeAttr : null)}>
               {/* 상단 상태 뱃지 / 아이콘 */}

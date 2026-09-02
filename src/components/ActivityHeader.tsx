@@ -83,7 +83,7 @@ function ExitConfirmPopup({
   const sticker = themeOn ? themeAssets(theme.id)?.stickers?.[0] : undefined;
   return (
     <Modal visible={visible} transparent animationType="fade" statusBarTranslucent>
-      <View style={popup.backdrop}>
+      <View style={[popup.backdrop, sticker && { backgroundColor: 'rgba(22,20,32,0.06)' }]}>
         <View style={[popup.card, tp && tp.card]} {...(tp ? nativeThemeAttr : null)}>
           {sticker ? (
             <Image source={sticker.img} style={{ width: 56, height: 64, alignSelf: 'center', marginBottom: 8 }} resizeMode="contain" />

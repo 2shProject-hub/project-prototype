@@ -193,7 +193,7 @@ export function HomeScreen({ sessions, setView, onStartSession }: Props) {
                     <View style={[styles.dot, { backgroundColor: 'transparent' }]}>
                       <Image
                         source={brandRowIcons[idx % brandRowIcons.length]}
-                        style={{ width: 38, height: 38, borderRadius: 11, opacity: unlocked ? 1 : 0.38 }}
+                        style={{ width: 44, height: 44, borderRadius: 12, opacity: unlocked ? 1 : 0.38 }}
                         resizeMode="contain"
                       />
                       {completed ? (
@@ -435,8 +435,8 @@ const styles = StyleSheet.create({
   },
   connector: {
     position: 'absolute',
-    left: 21,
-    top: 51,
+    left: 21, // dot(44px) 정중앙 = 22 - 선폭/2
+    top: 52,
     bottom: -20,
     width: 2,
     backgroundColor: '#D9D9D9',
