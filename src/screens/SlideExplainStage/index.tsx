@@ -109,7 +109,6 @@ const s = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 12,
     paddingBottom: 8,
-    gap: 14,
     justifyContent: 'center',
   },
 
@@ -118,7 +117,7 @@ const s = StyleSheet.create({
     borderRadius: 16,
     overflow: 'hidden',
     width: '100%',
-    marginBottom: -12,
+    marginBottom: 2,
   },
   image: {
     width: '100%',
@@ -151,6 +150,7 @@ const s = StyleSheet.create({
     paddingHorizontal: 16,
     minHeight: 52,
     justifyContent: 'center',
+    marginBottom: 14,
   },
   captionText: {
     fontSize: 14,
