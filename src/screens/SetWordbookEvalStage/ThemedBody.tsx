@@ -195,13 +195,18 @@ export function ThemedBody(p: ThemedBodyProps) {
                 backgroundColor: on ? c.primary : 'transparent',
                 borderWidth: Math.max(1, L.hairline),
                 borderColor: on ? c.primary : c.line,
-                ...(theme.id === 'malhaeboka' && !on ? { backgroundColor: c.surface } : null),
+                // 말해보카: 스피커 서클과 같은 라벤더 문법 — 3D 숫자가 어느 상태에서든 잘 보인다
+                ...(theme.id === 'malhaeboka'
+                  ? on
+                    ? { backgroundColor: '#EFEAFF', borderColor: '#7150F0', borderWidth: 1.5 }
+                    : { backgroundColor: c.surface, borderColor: '#E7E4F0' }
+                  : null),
               }}
             >
               {theme.id === 'malhaeboka' ? (
                 <Image
                   source={SPEED_IMGS[String(spd)].img}
-                  style={{ width: SPEED_IMGS[String(spd)].w, height: 18, opacity: on ? 1 : 0.82 }}
+                  style={{ width: SPEED_IMGS[String(spd)].w, height: 18, opacity: on ? 1 : 0.7 }}
                   resizeMode="contain"
                 />
               ) : (

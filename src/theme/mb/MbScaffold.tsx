@@ -115,15 +115,15 @@ export function MbProgressRow({
         {/* 연필 마커 — 진행 지점 */}
         <Animated.View
           style={{
-            position: 'absolute', left: markerLeft, top: 0,
-            width: 24, height: 24, borderRadius: 12, marginLeft: -12,
+            position: 'absolute', left: markerLeft, top: -2,
+            width: 28, height: 28, borderRadius: 14, marginLeft: -14,
             backgroundColor: mb.white, borderWidth: 1.5, borderColor: '#DCD2F5',
             alignItems: 'center', justifyContent: 'center',
             shadowColor: '#5B3DF5', shadowOpacity: 0.3, shadowRadius: 5, shadowOffset: { width: 0, height: 2 },
             zIndex: 2,
           }}
         >
-          <Image source={require('../../../assets/themes/malhaeboka/icon-pencil-egg.png')} style={{ width: 16, height: 16 }} resizeMode="contain" />
+          <Image source={require('../../../assets/themes/malhaeboka/icon-pencil-egg.png')} style={{ width: 20, height: 20 }} resizeMode="contain" />
         </Animated.View>
 
         {/* % 말풍선 — 마커 아래 */}
