@@ -9,7 +9,7 @@
 import { useTheme } from '../../theme/ThemeContext';
 import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { useState, useRef, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Modal, ScrollView, TextInput, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, TextInput, Platform } from 'react-native';
 import { colors } from '../../theme/colors';
 import { useLang, pick } from '../../components/LangContext';
 import { ActivityHeader } from '../../components/ActivityHeader';
@@ -158,7 +158,8 @@ export function ListenTyping1({ questions = [], onNext, onBack, currentSetNumber
       </View>
 
       {/* 정답/오답 모달 */}
-      <Modal visible={showModal} animationType="fade" transparent>
+      {showModal && (
+        <View style={[StyleSheet.absoluteFill, { zIndex: 200 }]}>
         <View style={s.modalOverlay}>
           <View style={s.modalBox}>
             <Text style={s.modalTitle}>
@@ -179,7 +180,8 @@ export function ListenTyping1({ questions = [], onNext, onBack, currentSetNumber
             </TouchableOpacity>
           </View>
         </View>
-      </Modal>
+        </View>
+      )}
     </View>
   );
 }
