@@ -11,8 +11,8 @@
 // 이 서브트리를 건드리지 않게 하는 표시다 — 여기는 이미 테마 값으로 그려서
 // 또 변환하면 이중 적용이 된다.
 import { ThemedGlyph } from '../../components/ThemedGlyph';
-import React from 'react';
-import { ScrollView, View, Text, TouchableOpacity, Image, type ViewStyle } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { ScrollView, View, Text, TouchableOpacity, Image, Animated, type ViewStyle } from 'react-native';
 import {
   type Theme,
   spacing,
@@ -59,6 +59,19 @@ export function ThemedBody(p: ThemedBodyProps) {
   // 브랜드 자산 테마(말해보카 등): 캐릭터·아이콘을 실자산으로
   const assets = themeAssets(theme.id);
   const flow = useFlowProgress();
+  // 빼꼼 캐릭터 생동감 — 잔잔한 플로팅
+  const peekBob = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    if (!assets?.peek) return;
+    const loop = Animated.loop(
+      Animated.sequence([
+        Animated.timing(peekBob, { toValue: -4, duration: 800, useNativeDriver: false }),
+        Animated.timing(peekBob, { toValue: 0, duration: 800, useNativeDriver: false }),
+      ]),
+    );
+    loop.start();
+    return () => loop.stop();
+  }, [assets, peekBob]);
 
   const boxOf = (focus = false): ViewStyle => {
     switch (L.list) {
@@ -425,7 +438,7 @@ export function ThemedBody(p: ThemedBodyProps) {
       {assets?.peek ? (
         // 화면 우하단에서 빼꼼 — 말해보카 시그니처. 터치를 막지 않도록 pointerEvents 차단
         <View pointerEvents="none" style={{ position: 'absolute', right: 0, bottom: 84, alignItems: 'flex-end' }}>
-          <Image source={assets.peek} style={{ width: 86, height: 100 }} resizeMode="contain" />
+          <Animated.Image source={assets.peek} style={{ width: 86, height: 100, transform: [{ translateY: peekBob }] }} resizeMode="contain" />
         </View>
       ) : null}
 

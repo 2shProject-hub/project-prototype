@@ -5,6 +5,7 @@
 // 새 화면을 BIKO 컨셉으로 옮길 때마다 여기에 추가한다.
 import React from 'react';
 import { MbWordSlides } from './MbWordSlides';
+import { MbSlideExplain } from './MbSlideExplain';
 
 export interface MbScreenProps {
   onNavigate: (id: string) => void;
@@ -14,6 +15,9 @@ export interface MbScreenProps {
 }
 
 export const MB_SCREENS: Record<string, (p: MbScreenProps) => React.ReactElement> = {
+  'slide-explain': ({ onNavigate }) => (
+    <MbSlideExplain onNext={() => onNavigate('home')} onBack={() => onNavigate('home')} />
+  ),
   'word-intro-slides': ({ onNavigate, flowStep, flowTotal }) => (
     <MbWordSlides
       onNext={() => onNavigate('home')}

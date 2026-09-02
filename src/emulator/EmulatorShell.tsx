@@ -121,6 +121,9 @@ function ScreenSticker({ theme, enabled, screenId }: { theme: Theme; enabled: bo
   const charY = useRef(new Animated.Value(60)).current;
   const charOp = useRef(new Animated.Value(1)).current;
   const bubble = useRef(new Animated.Value(0)).current;
+  // 생동감: 살랑이는 플로팅 + 이따금 깜빡(스쿼시)
+  const bob = useRef(new Animated.Value(0)).current;
+  const squash = useRef(new Animated.Value(1)).current;
   // 방문할 때마다 셔플 백에서 뽑는다 — 풀을 다 돌기 전엔 반복 없음
   const picked = useMemo(() => ({ s: drawSticker(), c: drawCheer() }), [screenId]);
   useEffect(() => {
@@ -128,8 +131,11 @@ function ScreenSticker({ theme, enabled, screenId }: { theme: Theme; enabled: bo
     charOp.setValue(1);
     bubble.setValue(0);
     if (!enabled) return;
+    bob.setValue(0);
+    squash.setValue(1);
     const seq = Animated.sequence([
-      Animated.timing(charY, { toValue: 0, duration: 200, useNativeDriver: false }),
+      // 통통 튀며 등장 (스프링)
+      Animated.spring(charY, { toValue: 0, friction: 5, tension: 130, useNativeDriver: false }),
       Animated.timing(bubble, { toValue: 1, duration: 150, useNativeDriver: false }),
       Animated.delay(1500),
       Animated.parallel([
@@ -138,8 +144,24 @@ function ScreenSticker({ theme, enabled, screenId }: { theme: Theme; enabled: bo
         Animated.timing(charOp, { toValue: 0, duration: 260, useNativeDriver: false }),
       ]),
     ]);
+    // 살아있는 느낌 — 잔잔한 플로팅 + 깜빡 스쿼시 (표시되는 동안만)
+    const idle = Animated.loop(
+      Animated.sequence([
+        Animated.timing(bob, { toValue: -4, duration: 700, useNativeDriver: false }),
+        Animated.timing(bob, { toValue: 0, duration: 700, useNativeDriver: false }),
+      ]),
+    );
+    const blink = Animated.loop(
+      Animated.sequence([
+        Animated.delay(1100),
+        Animated.timing(squash, { toValue: 0.9, duration: 80, useNativeDriver: false }),
+        Animated.timing(squash, { toValue: 1, duration: 130, useNativeDriver: false }),
+      ]),
+    );
     seq.start();
-    return () => seq.stop();
+    idle.start();
+    blink.start();
+    return () => { seq.stop(); idle.stop(); blink.stop(); };
   }, [screenId, enabled, theme.id, charY, charOp, bubble]);
 
   const stickers = enabled ? themeAssets(theme.id)?.stickers : undefined;
@@ -199,7 +221,11 @@ function ScreenSticker({ theme, enabled, screenId }: { theme: Theme; enabled: bo
         source={st.img}
         style={{
           width: st.w, height: st.h, opacity: charOp,
-          transform: [{ translateY: charY }, { scaleX: flip ? -1 : 1 }],
+          transform: [
+            { translateY: Animated.add(charY, bob) as any },
+            { scaleX: flip ? -1 : 1 },
+            { scaleY: squash },
+          ],
         }}
         resizeMode="contain"
       />

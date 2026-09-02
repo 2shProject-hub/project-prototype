@@ -172,11 +172,22 @@ function PhotoCard({ img, ko, vi }: { img: any; ko: string; vi: string }) {
 }
 
 function IntroBody() {
+  const bob = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    const loop = Animated.loop(
+      Animated.sequence([
+        Animated.timing(bob, { toValue: -3, duration: 750, useNativeDriver: false }),
+        Animated.timing(bob, { toValue: 0, duration: 750, useNativeDriver: false }),
+      ]),
+    );
+    loop.start();
+    return () => loop.stop();
+  }, [bob]);
   return (
     <View style={{ flex: 1, gap: 14 }}>
       {/* 캐릭터가 오늘의 단어를 소개 — 문구와 배치를 맞춘다 */}
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-        <Image source={CHAR_FISH} style={{ width: 34, height: 36 }} resizeMode="contain" />
+        <Animated.Image source={CHAR_FISH} style={{ width: 34, height: 36, transform: [{ translateY: bob }] }} resizeMode="contain" />
         <View style={{ backgroundColor: mb.lavender, borderRadius: 9, paddingHorizontal: 12, paddingVertical: 6 }}>
           <Text style={{ fontFamily: mbFont, fontSize: 12.5, fontWeight: '800', color: mb.violetDark }}>오늘의 단어</Text>
         </View>
