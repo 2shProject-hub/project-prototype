@@ -117,7 +117,7 @@ const s = StyleSheet.create({
     borderRadius: 16,
     overflow: 'hidden',
     width: '100%',
-    marginBottom: 2,
+    marginBottom: -60,
   },
   image: {
     width: '100%',
