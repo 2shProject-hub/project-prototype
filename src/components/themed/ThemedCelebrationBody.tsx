@@ -153,7 +153,7 @@ export function ThemedCelebrationBody({
           style={{
             flexBasis: 0,
             flexGrow: bandH * 10,
-            minHeight: 150,
+            minHeight: theme.id === 'malhaeboka' ? 146 : 150, // 말해보카: 상하 2px씩 타이트하게
             backgroundColor: bandBg,
             overflow: 'hidden',
             borderBottomWidth: mood === 'quiet' && !photoTop ? L.hairline : 0,

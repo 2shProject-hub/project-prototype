@@ -14,9 +14,9 @@ import { ThemedGlyph } from '../../components/ThemedGlyph';
 
 // 재생 속도 — 3D 숫자+X 조합 (사용자 지정 숫자 시트에서 합성)
 const SPEED_IMGS: Record<string, { img: any; w: number }> = {
-  '0.5': { img: require('../../../assets/themes/malhaeboka/speed-05x.png'), w: 50 },
-  '1': { img: require('../../../assets/themes/malhaeboka/speed-1x.png'), w: 21 },
-  '1.5': { img: require('../../../assets/themes/malhaeboka/speed-15x.png'), w: 42 },
+  '0.5': { img: require('../../../assets/themes/malhaeboka/speed-05x.png'), w: 42 },
+  '1': { img: require('../../../assets/themes/malhaeboka/speed-1x.png'), w: 17 },
+  '1.5': { img: require('../../../assets/themes/malhaeboka/speed-15x.png'), w: 35 },
 };
 
 // 나라 단어 → 해당 나라 국기 (flagcdn — 국가코드 고정이라 사진이 뒤바뀔 일이 없다)
@@ -228,7 +228,7 @@ export function ThemedBody(p: ThemedBodyProps) {
               {theme.id === 'malhaeboka' ? (
                 <Image
                   source={SPEED_IMGS[String(spd)].img}
-                  style={{ width: SPEED_IMGS[String(spd)].w, height: 18, opacity: on ? 1 : 0.7 }}
+                  style={{ width: SPEED_IMGS[String(spd)].w, height: 15, opacity: on ? 1 : 0.7 }}
                   resizeMode="contain"
                 />
               ) : (

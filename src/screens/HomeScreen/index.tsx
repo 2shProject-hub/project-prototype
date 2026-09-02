@@ -1,4 +1,14 @@
 import React from 'react';
+
+// 차시별 타일 — 6차시가 전부 다른 아이콘 (기존 타일 4종 + 듣기/단어 2종)
+const SESSION_TILES: any[] = [
+  require('../../../assets/themes/malhaeboka/icon-shop.png'),
+  require('../../../assets/themes/malhaeboka/icon-quest.png'),
+  require('../../../assets/themes/malhaeboka/icon-dict.png'),
+  require('../../../assets/themes/malhaeboka/icon-boost.png'),
+  require('../../../assets/themes/malhaeboka/nav-listen-on.png'),
+  require('../../../assets/themes/malhaeboka/nav-vocab-on.png'),
+];
 import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { useState, useRef, useEffect } from 'react';
 import {
@@ -76,7 +86,7 @@ export function HomeScreen({ sessions, setView, onStartSession }: Props) {
         </View>
         <View style={styles.boltBadge}>
           {brandCrest ? (
-            <Image source={require('../../../assets/themes/malhaeboka/icon-bolt.png')} style={{ width: 42, height: 42 }} resizeMode="contain" />
+            <Image source={require('../../../assets/themes/malhaeboka/icon-bolt.png')} style={{ width: 32, height: 32 }} resizeMode="contain" />
           ) : (
             <Text style={styles.boltIcon}>⚡</Text>
           )}
@@ -204,8 +214,8 @@ export function HomeScreen({ sessions, setView, onStartSession }: Props) {
                     <MbNowPulse active={!!showNow}>
                     <View style={[styles.dot, { backgroundColor: '#FFFFFF', borderWidth: 2, borderColor: '#ECE7FA' }, showNow ? { borderColor: '#B9A5F5', borderWidth: 2 } : null]}>
                       <Image
-                        source={brandRowIcons[idx % brandRowIcons.length]}
-                        style={{ width: 34, height: 34, borderRadius: 9, marginTop: 1, opacity: unlocked ? 1 : 0.38 }}
+                        source={SESSION_TILES[idx % SESSION_TILES.length]}
+                        style={{ width: 40, height: 40, borderRadius: 11, opacity: unlocked ? 1 : 0.38 }}
                         resizeMode="contain"
                       />
                       {completed ? (
@@ -259,6 +269,8 @@ export function HomeScreen({ sessions, setView, onStartSession }: Props) {
                       </View>
                       {unlocked ? (
                         <SessionRing frac={frac} completed={completed} />
+                      ) : brandCrest ? (
+                        <Image source={require('../../../assets/themes/malhaeboka/icon-lock.png')} style={{ width: 28, height: 28 }} resizeMode="contain" />
                       ) : (
                         <Text style={styles.lockIcon}>🔒</Text>
                       )}
