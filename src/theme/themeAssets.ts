@@ -60,8 +60,8 @@ export const THEME_ASSETS: Record<string, ThemeAssets> = {
     crest: require('../../assets/themes/malhaeboka/char-fish.png'),
     glyphs: {
       // 재생중=검은 해드셋(잘 보이게) / 대기=회색 해드셋 — 2026 벡터 스트로크
-      speakerOn: require('../../assets/themes/malhaeboka/icon-headset-on.png'),
-      speakerOff: require('../../assets/themes/malhaeboka/icon-headset-off.png'),
+      speakerOn: { uri: icon('headphones', '#26223A', 24, 2.1) },
+      speakerOff: { uri: icon('headphones', '#4B4660', 24, 2.1) },
       mic: require('../../assets/themes/malhaeboka/icon-mic-egg.png'),
       hint: require('../../assets/themes/malhaeboka/icon-hint-egg.png'),
       book: { uri: icon('bookopen', '#4C34C2', 24, 2) },
