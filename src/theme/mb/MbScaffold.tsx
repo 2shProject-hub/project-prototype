@@ -172,8 +172,8 @@ export function MbNavBar({
         alignItems: 'center',
         gap: 8,
         paddingHorizontal: 14,
-        paddingTop: 6,
-        paddingBottom: 10,
+        paddingTop: 5,
+        paddingBottom: 7,
       }}
     >
       <TouchableOpacity
@@ -182,7 +182,7 @@ export function MbNavBar({
         activeOpacity={0.7}
         style={{
           flexDirection: 'row', alignItems: 'center', gap: 2,
-          paddingHorizontal: 12, height: 40, borderRadius: 11,
+          paddingHorizontal: 12, height: 36, borderRadius: 10,
           backgroundColor: mb.white,
           shadowColor: '#3E6D96', shadowOpacity: 0.12, shadowRadius: 6, shadowOffset: { width: 0, height: 2 },
           opacity: isFirst ? 0.45 : 1,
@@ -204,7 +204,7 @@ export function MbNavBar({
         activeOpacity={0.7}
         style={{
           flexDirection: 'row', alignItems: 'center', gap: 2,
-          paddingHorizontal: 12, height: 40, borderRadius: 11,
+          paddingHorizontal: 12, height: 36, borderRadius: 10,
           backgroundColor: mb.white,
           shadowColor: '#3E6D96', shadowOpacity: 0.12, shadowRadius: 6, shadowOffset: { width: 0, height: 2 },
           opacity: isLast ? 0.45 : 1,
@@ -220,8 +220,8 @@ export function MbNavBar({
         activeOpacity={0.85}
         style={{
           flex: 1,
-          height: 44,
-          borderRadius: 12,
+          height: 40,
+          borderRadius: 11,
           overflow: 'hidden',
           alignItems: 'center',
           justifyContent: 'center',

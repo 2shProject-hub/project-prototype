@@ -392,7 +392,7 @@ export function ThemedBody(p: ThemedBodyProps) {
         };
     const fg = primary ? (L.button === 'outline' ? c.primaryDark : c.onPrimary) : c.textSecondary;
     return (
-      <TouchableOpacity onPress={onPress} activeOpacity={0.8} style={[{ flex: 1, height: theme.id === 'malhaeboka' ? 44 : L.density === 'open' ? 52 : 48, borderRadius: r, alignItems: 'center', justifyContent: 'center' }, deco]}>
+      <TouchableOpacity onPress={onPress} activeOpacity={0.8} style={[{ flex: 1, height: theme.id === 'malhaeboka' ? 40 : L.density === 'open' ? 52 : 48, borderRadius: r, alignItems: 'center', justifyContent: 'center' }, deco]}>
         <Text numberOfLines={1} style={[{ fontSize: t.bodySize, color: fg }, bodyFont(theme, 700)]}>{label}</Text>
       </TouchableOpacity>
     );
@@ -447,8 +447,8 @@ export function ThemedBody(p: ThemedBodyProps) {
           flexDirection: 'row',
           gap: 8,
           paddingHorizontal: L.edge,
-          paddingTop: 8,
-          paddingBottom: 12,
+          paddingTop: 6,
+          paddingBottom: 8,
           borderTopWidth: L.shadow === 'none' ? L.hairline : 0,
           borderTopColor: c.line,
           backgroundColor: c.canvas,

@@ -26,6 +26,8 @@ export interface ThemeAssets {
   navIcons?: Record<string, { on: any; off: any }>;
   /** 홈 코스 카드의 삽화(기본 🏫 이모지 대체) */
   crest?: any;
+  /** 완료 화면 캐릭터의 감은 눈 프레임 — 깜빡임 연출용 */
+  characterBlink?: any;
   /** 이모지 아이콘 대체 글리프 (ThemedGlyph 가 조회) */
   glyphs?: Record<string, any>;
   /** 화면 구석에 얹는 캐릭터 이모티콘(투명 배경). edge=원본이 한쪽이 잘린 빼꼼 포즈 → 화면 가장자리에 밀착 */
@@ -35,6 +37,7 @@ export interface ThemeAssets {
 export const THEME_ASSETS: Record<string, ThemeAssets> = {
   malhaeboka: {
     character: require('../../assets/themes/malhaeboka/char-cat.png'),
+    characterBlink: require('../../assets/themes/malhaeboka/char-cat-blink.png'),
     characterAlt: require('../../assets/themes/malhaeboka/char-owl.png'),
     peek: require('../../assets/themes/malhaeboka/char-rabbit.png'),
     bubble: require('../../assets/themes/malhaeboka/char-fish.png'),
@@ -77,6 +80,8 @@ export const THEME_ASSETS: Record<string, ThemeAssets> = {
       { img: require('../../assets/themes/malhaeboka/sticker-monster.png'), w: 66, h: 74 },
       { img: require('../../assets/themes/malhaeboka/sticker-nana.png'), w: 58, h: 79 },
       { img: require('../../assets/themes/malhaeboka/sticker-goldfish.png'), w: 72, h: 76 },
+      { img: require('../../assets/themes/malhaeboka/sticker-fish2.png'), w: 68, h: 69 },
+      { img: require('../../assets/themes/malhaeboka/sticker-fish3.png'), w: 72, h: 60 },
     ],
   },
 };

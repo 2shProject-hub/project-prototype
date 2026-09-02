@@ -96,6 +96,29 @@ const CHEERS: Array<[string, string]> = [
   ['포기하지 않는 게 실력!', 'Không bỏ cuộc chính là thực lực!'],
   ['좋은 흐름이에요!', 'Đang vào guồng tốt lắm!'],
   ['쉬어가도 괜찮아요', 'Nghỉ một chút cũng được mà'],
+  ['발음이 점점 좋아져요!', 'Phát âm ngày càng hay!'],
+  ['귀가 트이고 있어요!', 'Tai bạn đang mở ra đó!'],
+  ['단어가 머리에 쏙쏙!', 'Từ vựng vào đầu vèo vèo!'],
+  ['오늘의 나, 칭찬해요!', 'Hôm nay bạn thật đáng khen!'],
+  ['한 문장이 큰 한 걸음!', 'Một câu là một bước lớn!'],
+  ['틀려도 배우는 중!', 'Sai cũng là đang học!'],
+  ['목소리가 자신감 있어요!', 'Giọng bạn thật tự tin!'],
+  ['꾸준함이 이겨요!', 'Kiên trì sẽ thắng!'],
+  ['뇌가 좋아하고 있어요!', 'Não bạn đang thích lắm!'],
+  ['오, 감각 있는데요?', 'Ồ, có năng khiếu đấy!'],
+  ['이 페이스 최고예요!', 'Nhịp độ này tuyệt vời!'],
+  ['복습이 실력을 만들어요', 'Ôn tập tạo nên thực lực'],
+  ['조금씩, 매일매일!', 'Từng chút một, mỗi ngày!'],
+  ['벌써 습관이 됐어요!', 'Đã thành thói quen rồi!'],
+  ['다음 문제도 문제없죠!', 'Câu sau cũng không thành vấn đề!'],
+  ['집중 모드 발동!', 'Chế độ tập trung bật!'],
+  ['어휘 부자 되는 중!', 'Đang thành phú ông từ vựng!'],
+  ['들리는 만큼 말해져요!', 'Nghe được bao nhiêu, nói được bấy nhiêu!'],
+  ['시작이 반, 이미 반!', 'Bắt đầu là một nửa rồi!'],
+  ['멋진 도전이에요!', 'Thử thách tuyệt vời!'],
+  ['배움에 늦음은 없어요', 'Học không bao giờ là muộn'],
+  ['내 페이스대로 가요', 'Đi theo nhịp của mình'],
+  ['오늘도 한 뼘 성장!', 'Hôm nay lại lớn thêm một chút!'],
 ];
 // 반복 방지용 셔플 백 — 풀 전체를 다 쓰기 전에는 같은 것이 다시 나오지 않는다
 function makeBag(size: number) {
@@ -111,9 +134,9 @@ function makeBag(size: number) {
     return bag.pop()!;
   };
 }
-// 캐릭터는 원본 10종 × 좌/우 빼꼼 = 20변형
-const drawSticker = makeBag(20);
-const drawCheer = makeBag(20);
+// 캐릭터는 원본 12종 × 좌/우 빼꼼 = 24변형 (+틸트 미세 변주)
+const drawSticker = makeBag(24);
+const drawCheer = makeBag(44);
 
 function ScreenSticker({ theme, enabled, screenId }: { theme: Theme; enabled: boolean; screenId: string }) {
   const { lang } = useLang();
@@ -125,7 +148,7 @@ function ScreenSticker({ theme, enabled, screenId }: { theme: Theme; enabled: bo
   const bob = useRef(new Animated.Value(0)).current;
   const squash = useRef(new Animated.Value(1)).current;
   // 방문할 때마다 셔플 백에서 뽑는다 — 풀을 다 돌기 전엔 반복 없음
-  const picked = useMemo(() => ({ s: drawSticker(), c: drawCheer() }), [screenId]);
+  const picked = useMemo(() => ({ s: drawSticker(), c: drawCheer(), tilt: [-6, 0, 6][Math.floor(Math.random() * 3)] }), [screenId]);
   useEffect(() => {
     charY.setValue(60);
     charOp.setValue(1);
@@ -225,6 +248,7 @@ function ScreenSticker({ theme, enabled, screenId }: { theme: Theme; enabled: bo
             { translateY: Animated.add(charY, bob) as any },
             { scaleX: flip ? -1 : 1 },
             { scaleY: squash },
+            { rotate: `${picked.tilt}deg` },
           ],
         }}
         resizeMode="contain"
@@ -1567,7 +1591,7 @@ function EmulatorShellInner() {
             {/* OS 상단 노치/Dynamic Island 표시 */}
             <View style={[shell.statusBar, { width: frameW }, lightFrame && { backgroundColor: '#FFFFFF' }]}>
               <Text style={[shell.statusBarText, lightFrame && { color: '#1A1A20' }]}>9:41</Text>
-              <View style={[shell.notch, lightFrame && { backgroundColor: '#EFEDF6' }]} />
+              <View style={[shell.notch, lightFrame && { backgroundColor: '#FFFFFF' }]} />
               <Text style={[shell.statusBarText, lightFrame && { color: '#1A1A20' }]}>● ● ●</Text>
             </View>
             {/* 화면 렌더링 영역 */}

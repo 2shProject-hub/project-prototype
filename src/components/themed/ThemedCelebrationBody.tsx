@@ -6,7 +6,7 @@
 // 구조(structure)마다 화면 구성이 다르고, 축하의 얼굴(캐릭터/실사/마크/점수)과
 // 폭죽 연출 세기도 테마마다 다르다 — 규칙은 갤러리 목업과 같은 것을 쓴다.
 // 튜터 아바타는 원본 화면이 원본 스타일 그대로 넘겨준다(tutor prop) — 여기서 변형하지 않는다.
-import { useState, type ReactNode } from 'react';
+import { useState, useEffect, useRef, type ReactNode } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, type ViewStyle, type LayoutChangeEvent } from 'react-native';
 import {
   type Theme,
@@ -247,7 +247,7 @@ function ArtPiece({ theme, art, size, charImg }: { theme: Theme; art: Art; size:
   if (art.kind === 'character') {
     return (
       <View style={{ borderRadius: L.radius === 0 ? 0 : Math.max(L.radius, 20), overflow: 'hidden', borderWidth: L.list === 'block' ? 2 : 0, borderColor: c.ink }}>
-        <Image source={charImg ?? CHARACTER} style={{ width: size, height: size }} resizeMode="cover" />
+        <BlinkImage theme={theme} img={charImg ?? CHARACTER} size={size} />
       </View>
     );
   }
@@ -262,6 +262,28 @@ function ArtPiece({ theme, art, size, charImg }: { theme: Theme; art: Art; size:
     );
   }
   return <Image source={{ uri: markUri(art.mark ?? 'check-circle', c.primary, c.accent, size) }} style={{ width: size, height: size }} />;
+}
+
+/** 캐릭터 깜빡임 — 감은 눈 프레임이 있으면 2.4~3.4초마다 130ms 교차 */
+function BlinkImage({ theme, img, size }: { theme: Theme; img: any; size: number }) {
+  const blinkFrame = themeAssets(theme.id)?.characterBlink;
+  const [closed, setClosed] = useState(false);
+  useEffect(() => {
+    if (!blinkFrame) return;
+    let alive = true;
+    let t: ReturnType<typeof setTimeout>;
+    const tick = () => {
+      if (!alive) return;
+      t = setTimeout(() => {
+        if (!alive) return;
+        setClosed(true);
+        t = setTimeout(() => { if (alive) { setClosed(false); tick(); } }, 130);
+      }, 2400 + Math.random() * 1000);
+    };
+    tick();
+    return () => { alive = false; clearTimeout(t); };
+  }, [blinkFrame]);
+  return <Image source={closed && blinkFrame ? blinkFrame : img} style={{ width: size, height: size }} resizeMode="cover" />;
 }
 
 function TitleText({ theme, color, text, size = 1, align = 'center' }: { theme: Theme; color: string; text: string; size?: number; align?: 'left' | 'center' }) {
