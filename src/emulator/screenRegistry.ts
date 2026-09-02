@@ -542,6 +542,21 @@ kcho-dev 이식 시:
     sourceBRef: 'PracWrite / WordBoxes',
   },
   {
+    id: 'grammar-complete',
+    label: '완료-8. 문법 학습 완료',
+    category: '신규',
+    description: '문법 학습 단원 완료 화면. 체크마크 아이콘 + 완료 메시지.',
+    devNotes: `
+- kcho-dev 목적지: src/screens/activity/preview/PreviewGrammarComplete.tsx
+- templateCd: grammar_complete (TBD)
+- ActivityHeader → ActivityLayout (step/totalSteps)
+- pick(lang, ko, vi) → useTranslation() + i18n 키
+- onNext → navigateToNextActivityOrLessonComplete`,
+    designNotes: '체크마크 원형 아이콘(correctLight + correct border) → 한국어 타이틀 → 베트남어 서브텍스트(muted) → 고정 footer [다음].',
+    sourceAFile: 'TBD',
+    sourceBRef: 'TBD',
+  },
+  {
     id: 'practice-check',
     label: '대화-4. 실전 확인',
     category: '신규',

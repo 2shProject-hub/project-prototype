@@ -48,6 +48,7 @@ import { PracticalSpeakingStage } from '../screens/PracticalSpeakingStage';
 import { CompletionCelebrationVocabStage } from '../screens/CompletionCelebrationVocabStage';
 import { CompletionCelebrationGrammarStage } from '../screens/CompletionCelebrationGrammarStage';
 import { CompletionCelebrationClassStage } from '../screens/CompletionCelebrationClassStage';
+import { GrammarCompleteStage } from '../screens/GrammarCompleteStage';
 import { WordIntroSlidesStage } from '../screens/WordIntroSlidesStage';
 import { VideoAITutorStage } from '../screens/VideoAITutorStage';
 import { AITutorDescStage } from '../screens/AITutorDescStage';
@@ -1283,6 +1284,14 @@ function ScreenRenderer({ screenId, onNavigate, flowStep, flowTotal }: { screenI
     case 'practice-check':
       return (
         <PracticeCheckStage
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'grammar-complete':
+      return (
+        <GrammarCompleteStage
+          percentage={40}
           onNext={() => onNavigate('home')}
           onBack={() => onNavigate('home')}
         />
