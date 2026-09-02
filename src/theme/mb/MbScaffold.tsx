@@ -26,6 +26,8 @@ export function MbCanvas({ children }: { children: React.ReactNode }) {
 
 /** 트로피 배지가 붙은 진행 알약 — 막대 안 카운터, 채움 애니메이션 + 하이라이트 스윕.
  *  말해보카 테마의 모든 화면 상단이 이 바로 통일된다. */
+const STUDENT_PROFILE = require('../../../assets/themes/malhaeboka/profile-student.png');
+
 export function MbProgressRow({
   percentage,
   counter,
@@ -53,7 +55,19 @@ export function MbProgressRow({
   const markerLeft = fill.interpolate({ inputRange: [0, 100], outputRange: ['4%', '100%'] });
 
   return (
-    <View style={{ paddingHorizontal: 16, paddingTop: 12, paddingBottom: 2, flexDirection: 'row', alignItems: 'flex-start', gap: 12 }}>
+    <View style={{ paddingHorizontal: 16, paddingTop: 6, paddingBottom: 2, flexDirection: 'row', alignItems: 'flex-start', gap: 10 }}>
+      {/* 학생 프로필 — 스토리 링 스타일 보라 테두리 */}
+      <View
+        style={{
+          width: 36, height: 36, borderRadius: 18,
+          borderWidth: 2, borderColor: mb.violet,
+          alignItems: 'center', justifyContent: 'center',
+          backgroundColor: mb.white, marginTop: -3,
+          shadowColor: '#5B3DF5', shadowOpacity: 0.22, shadowRadius: 5, shadowOffset: { width: 0, height: 2 },
+        }}
+      >
+        <Image source={STUDENT_PROFILE} style={{ width: 29, height: 29, borderRadius: 14.5 }} />
+      </View>
       {/* 트랙 + 마커 + 말풍선 */}
       <View style={{ flex: 1, height: 44 }}>
         <View style={{ position: 'absolute', left: 0, right: 0, top: 8.5, height: 7, borderRadius: 999, backgroundColor: '#EAE8F3', overflow: 'hidden' }}>
