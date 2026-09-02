@@ -82,11 +82,11 @@ export function IntroTutorStage({ onNext, onBack, introData }: Props) {
           </View>
 
           {/* 2. 아이콘 */}
-          <View style={[styles.iconCircle, __mbBig && { width: 92, height: 92, overflow: 'hidden' as const }]}>
+          <View style={[styles.iconCircle, __mbBig && { width: 128, height: 128, borderRadius: 64, overflow: 'hidden' as const }]}>
             {__mbBig && MB_ICON_PHOTOS[intro.icon] ? (
               <Image
                 source={MB_ICON_PHOTOS[intro.icon].img}
-                style={MB_ICON_PHOTOS[intro.icon].fit === 'contain' ? { width: '86%', height: '86%' } : { width: '100%', height: '100%' }}
+                style={MB_ICON_PHOTOS[intro.icon].fit === 'contain' ? { width: '92%', height: '92%' } : { width: '100%', height: '100%' }}
                 resizeMode={MB_ICON_PHOTOS[intro.icon].fit}
               />
             ) : (

@@ -3,7 +3,8 @@
  * - 체크마크 아이콘 + 완료 메시지 (한국어/베트남어)
  * - 공통 ActivityHeader, CtaButton 적용
  */
-import { View, Text, StyleSheet } from 'react-native';
+import { useTheme } from '../../theme/ThemeContext';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import { colors, radius, spacing, shadow } from '../../theme';
 import { useLang, pick, ActivityHeader, CtaButton } from '../../components';
 
@@ -19,6 +20,8 @@ export function GrammarCompleteStage({
   onBack,
 }: Props) {
   const { lang } = useLang();
+  const { theme: __mbT, enabled: __mbE } = useTheme();
+  const __mb = __mbE && __mbT.id === 'malhaeboka';
 
   return (
     <View style={s.root}>
@@ -30,8 +33,12 @@ export function GrammarCompleteStage({
       <View style={s.container}>
         {/* 체크마크 아이콘 */}
         <View style={s.iconContainer}>
-          <View style={s.iconCircle}>
-            <Text style={s.icon}>✓</Text>
+          <View style={[s.iconCircle, __mb && { backgroundColor: 'transparent', borderWidth: 0 }]}>
+            {__mb ? (
+              <Image source={require('../../../assets/themes/malhaeboka/icon-check-egg.png')} style={{ width: 108, height: 108 }} resizeMode="contain" />
+            ) : (
+              <Text style={s.icon}>✓</Text>
+            )}
           </View>
         </View>
 

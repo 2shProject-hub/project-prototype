@@ -77,9 +77,14 @@ export function LearningReportStage({ data, onNext, onBack }: Props) {
         </View>
 
         {/* 제목 */}
-        <View style={s.titleBox}>
-          <Text style={s.title}>{pick(lang, data.sessionTitle, data.sessionTitleVi)}</Text>
-          <Text style={s.subtitle}>{pick(lang, data.description, data.descriptionVi)}</Text>
+        <View style={[s.titleBox, __mbRp && { flexDirection: 'row', alignItems: 'center', gap: 10 }]}>
+          <View style={__mbRp ? { flex: 1 } : undefined}>
+            <Text style={s.title}>{pick(lang, data.sessionTitle, data.sessionTitleVi)}</Text>
+            <Text style={s.subtitle}>{pick(lang, data.description, data.descriptionVi)}</Text>
+          </View>
+          {__mbRp ? (
+            <Image source={require('../../../assets/themes/malhaeboka/icon-graduation.png')} style={{ width: 96, height: 92 }} resizeMode="contain" />
+          ) : null}
         </View>
 
         {/* 말해보카: 학습 분석 차트 — 도넛(정답률) + 세트별 막대 + 스탯 칩 */}
