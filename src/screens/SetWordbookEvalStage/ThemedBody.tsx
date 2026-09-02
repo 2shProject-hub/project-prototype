@@ -255,9 +255,9 @@ export function ThemedBody(p: ThemedBodyProps) {
       onPress={() => p.speakKo(ko)}
       activeOpacity={0.7}
       style={{
-        width: small ? 34 : 40,
-        height: small ? 34 : 40,
-        borderRadius: L.radius === 0 ? 2 : small ? 17 : 20,
+        width: small ? 42 : 48,
+        height: small ? 42 : 48,
+        borderRadius: L.radius === 0 ? 2 : small ? 21 : 24,
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: c.primarySoft,
@@ -265,7 +265,7 @@ export function ThemedBody(p: ThemedBodyProps) {
         borderColor: c.ink,
       }}
     >
-      <ThemedGlyph style={{ fontSize: small ? 14 : 16 }} glyph="🔊" />
+      <ThemedGlyph style={{ fontSize: small ? 22 : 25 }} glyph="🔊" />
     </TouchableOpacity>
   );
 

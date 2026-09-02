@@ -162,7 +162,7 @@ export function WordSound1({
                     {idx + 1}
                   </Text>
                 </View>
-                <ThemedGlyph style={s.soundIcon} glyph={isPlaying ? '⏸' : '🔊'} />
+                <ThemedGlyph style={[s.soundIcon, __mbBtn && { fontSize: 46 }]} glyph={isPlaying ? '⏸' : '🔊'} />
                 <Text style={[s.soundLabel, isSelected && s.soundLabelSelected]}>
                   {pick(lang, `음원 ${idx + 1}`, `Âm thanh ${idx + 1}`)}
                 </Text>
