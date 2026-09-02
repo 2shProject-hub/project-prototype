@@ -1,14 +1,4 @@
 import React from 'react';
-
-// 차시별 실사 — 타일 로테이션 대신 차시 내용에 맞는 사진
-const SESSION_PHOTOS: any[] = [
-  require('../../../assets/SetWordbookEvalStage/nara.png'),        // 1차시 나라와 국적 소개
-  require('../../../assets/SetWordbookEvalStage/6_employee.png'),  // 2차시 직업 묻고 답하기
-  require('../../../assets/SetWordbookEvalStage/1_student.png'),   // 3차시 국적 문장 만들기(필기)
-  require('../../../assets/SetWordbookEvalStage/2_teacher.png'),   // 4차시
-  require('../../../assets/classroom.jpg'),                        // 5차시
-  require('../../../assets/SetWordbookEvalStage/preson.png'),      // 6차시
-];
 import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { useState, useRef, useEffect } from 'react';
 import {
@@ -86,7 +76,7 @@ export function HomeScreen({ sessions, setView, onStartSession }: Props) {
         </View>
         <View style={styles.boltBadge}>
           {brandCrest ? (
-            <Image source={require('../../../assets/themes/malhaeboka/icon-bolt.png')} style={{ width: 22, height: 22 }} resizeMode="contain" />
+            <Image source={require('../../../assets/themes/malhaeboka/icon-bolt.png')} style={{ width: 32, height: 32 }} resizeMode="contain" />
           ) : (
             <Text style={styles.boltIcon}>⚡</Text>
           )}
@@ -214,9 +204,9 @@ export function HomeScreen({ sessions, setView, onStartSession }: Props) {
                     <MbNowPulse active={!!showNow}>
                     <View style={[styles.dot, { backgroundColor: '#FFFFFF', borderWidth: 2, borderColor: '#ECE7FA' }, showNow ? { borderColor: '#B9A5F5', borderWidth: 2 } : null]}>
                       <Image
-                        source={SESSION_PHOTOS[idx % SESSION_PHOTOS.length]}
-                        style={{ width: 40, height: 40, borderRadius: 20, opacity: unlocked ? 1 : 0.38 }}
-                        resizeMode="cover"
+                        source={brandRowIcons[idx % brandRowIcons.length]}
+                        style={{ width: 34, height: 34, borderRadius: 9, marginTop: 1, opacity: unlocked ? 1 : 0.38 }}
+                        resizeMode="contain"
                       />
                       {completed ? (
                         <View style={{ position: 'absolute', right: 0, bottom: 0, width: 16, height: 16, borderRadius: 8, backgroundColor: activeTheme.colors.primary, alignItems: 'center', justifyContent: 'center' }}>
