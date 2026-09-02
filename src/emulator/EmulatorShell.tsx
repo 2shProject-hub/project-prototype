@@ -10,6 +10,7 @@ import { SCREEN_REGISTRY, getScreen } from './screenRegistry';
 import { ThemeProvider, useTheme } from '../theme/ThemeContext';
 import { ThemeGalleryScreen } from '../screens/ThemeGalleryScreen';
 import { applyThemeToDom } from '../theme/applyThemeToDom';
+import { BlinkSprite } from '../theme/BlinkSprite';
 import { themeAssets } from '../theme/themeAssets';
 import { MB_SCREENS } from '../theme/mb/registry';
 import { FlowProgressContext } from '../theme/mb/FlowContext';
@@ -236,6 +237,76 @@ function ScreenSticker({ theme, enabled, screenId }: { theme: Theme; enabled: bo
     return () => { seq.stop(); idle.stop(); blink.stop(); };
   }, [screenId, enabled, theme.id, charY, charOp, bubble]);
 
+  // 콘텐츠를 안 가리는 자리 찾기 — 화면의 텍스트 리프 실측과 겹침 0 인 후보를 고른다.
+  // 텍스트 겹침은 절대 금지(가중 1000), 그 외에는 기본 위치(하단 구석)를 선호한다.
+  const wrapRef = useRef<any>(null);
+  const [pos, setPos] = useState<{ side: 'l' | 'r'; bottom: number; noBubble?: boolean; hidden?: boolean } | null>(null);
+  useEffect(() => {
+    setPos(null);
+    if (!enabled || Platform.OS !== 'web') return;
+    if (STICKER_EXCLUDE.has(screenId) || screenId.startsWith('set-wordbook') || screenId.startsWith('completion-')) return;
+    const all = themeAssets(theme.id)?.stickers;
+    if (!all || !all.length) return;
+    const stk = all[picked.s % all.length];
+    const flipped = picked.s >= all.length;
+    const fallback = { side: (flipped ? 'l' : 'r') as 'l' | 'r', bottom: 88 };
+    const t = setTimeout(() => {
+      try {
+        const node = wrapRef.current as unknown as HTMLElement | null;
+        const frame = node && node.closest ? (node.closest('[data-device-screen]') as HTMLElement | null) : null;
+        if (!frame) { setPos(fallback); return; }
+        const fr = frame.getBoundingClientRect();
+        // 실루엣은 실측 — 자리만 옮기므로 크기는 위치와 무관하게 유효하다 (숨긴 채 렌더돼 있음)
+        const selfR = node!.getBoundingClientRect();
+        const foot = selfR.width > 40 && selfR.height > 40
+          ? { w: selfR.width, h: selfR.height }
+          : { w: Math.max(stk.w * picked.size, 170), h: stk.h * picked.size + 58 };
+        const texts: Array<{ left: number; right: number; top: number; bottom: number }> = [];
+        frame.querySelectorAll('div,span,p').forEach((n) => {
+          const e = n as HTMLElement;
+          if (e.children.length) return;
+          if (!(e.textContent || '').trim()) return;
+          const r = e.getBoundingClientRect();
+          if (r.width < 2 || r.height < 2) return;
+          texts.push({ left: r.left, right: r.right, top: r.top, bottom: r.bottom });
+        });
+        const sides: Array<'l' | 'r'> = flipped ? ['l', 'r'] : ['r', 'l'];
+        const evaluate = (fw: number, fh: number) => {
+          let best: { side: 'l' | 'r'; bottom: number; ov: number; ord: number } | null = null;
+          let idx = 0;
+          for (const side of sides) {
+            for (const bottom of [88, 140, 192, 244, 296, 348, 400]) {
+              const x = side === 'l' ? fr.left : fr.right - fw;
+              const y = fr.bottom - bottom - fh;
+              idx++;
+              if (y < fr.top + 70) continue; // 헤더/진행바는 피한다
+              let textOv = 0;
+              for (const r of texts) {
+                const ix = Math.max(0, Math.min(x + fw, r.right) - Math.max(x, r.left));
+                const iy = Math.max(0, Math.min(y + fh, r.bottom) - Math.max(y, r.top));
+                textOv += ix * iy;
+              }
+              if (!best || textOv < best.ov - 0.5 || (Math.abs(textOv - best.ov) <= 0.5 && idx < best.ord)) {
+                best = { side, bottom, ov: textOv, ord: idx };
+              }
+            }
+          }
+          return best;
+        };
+        const full = evaluate(foot.w, foot.h);
+        if (full && full.ov === 0) { setPos({ side: full.side, bottom: full.bottom }); return; }
+        // 말풍선까지 넣을 깨끗한 자리가 없다 — 말풍선을 접고 캐릭터만이라도
+        const solo = evaluate(stk.w * picked.size + 8, stk.h * picked.size + 8);
+        if (solo && solo.ov === 0) { setPos({ side: solo.side, bottom: solo.bottom, noBubble: true }); return; }
+        // 그마저 없으면 이 화면은 캐릭터를 접는다 — 텍스트는 절대 가리지 않는다
+        setPos({ ...fallback, hidden: true });
+      } catch {
+        setPos(fallback);
+      }
+    }, 260);
+    return () => clearTimeout(t);
+  }, [screenId, enabled, theme.id, picked]);
+
   const stickers = enabled ? themeAssets(theme.id)?.stickers : undefined;
   if (!stickers || !stickers.length) return null;
   // 아바타 화면·자체 캐릭터 화면(홈·5-2·축하) 제외. 세트 완료(step 9·15…)에는 나온다.
@@ -244,23 +315,27 @@ function ScreenSticker({ theme, enabled, screenId }: { theme: Theme; enabled: bo
   const flip = picked.s >= stickers.length; // 후반 10변형은 좌측에서 빼꼼 (좌우 반전)
   const cheer = CHEERS[picked.c % CHEERS.length];
   const c = theme.colors;
+  if (pos && pos.hidden) return null;
+  const sideL = pos ? pos.side === 'l' : flip;
   return (
     <View
+      ref={wrapRef}
       pointerEvents="none"
       style={{
         position: 'absolute',
-        bottom: 88,
+        bottom: pos ? pos.bottom : 88,
+        opacity: Platform.OS === 'web' && !pos ? 0 : 1,
         // 원본이 잘린 빼꼼 포즈(edge)는 가장자리 밀착, 완전한 스프라이트는 8px 띄운다
-        ...(flip
+        ...(sideL
           ? { left: st.edge ? 0 : 8, alignItems: 'flex-start' as const }
           : { right: st.edge ? 0 : 8, alignItems: 'flex-end' as const }),
       }}
     >
-      {/* 응원 말풍선 */}
-      <Animated.View
+      {/* 응원 말풍선 — 깨끗한 자리가 없으면 접고 캐릭터만 나온다 */}
+      {pos && pos.noBubble ? null : <Animated.View
         style={{
           maxWidth: 190,
-          ...(flip ? { marginLeft: st.w - 14 } : { marginRight: st.w - 14 }),
+          ...(sideL ? { marginLeft: st.w - 14 } : { marginRight: st.w - 14 }),
           marginBottom: -6,
           opacity: bubble,
           transform: [{ translateY: bubble.interpolate({ inputRange: [0, 1], outputRange: [8, 0] }) }],
@@ -274,6 +349,7 @@ function ScreenSticker({ theme, enabled, screenId }: { theme: Theme; enabled: bo
             borderRadius: 14,
             paddingHorizontal: 11,
             paddingVertical: 7,
+            maxWidth: 168,
             shadowColor: '#000', shadowOpacity: 0.08, shadowRadius: 6, shadowOffset: { width: 0, height: 2 },
           }}
         >
@@ -281,28 +357,28 @@ function ScreenSticker({ theme, enabled, screenId }: { theme: Theme; enabled: bo
         </View>
         <View
           style={{
-            ...(flip ? { alignSelf: 'flex-start', marginLeft: 10 } : { alignSelf: 'flex-end', marginRight: 10 }),
+            ...(sideL ? { alignSelf: 'flex-start', marginLeft: 10 } : { alignSelf: 'flex-end', marginRight: 10 }),
             marginTop: -1,
             width: 10, height: 10, backgroundColor: c.surface,
             borderRightWidth: 1, borderBottomWidth: 1, borderColor: c.line,
             transform: [{ rotate: '45deg' }],
           }}
         />
-      </Animated.View>
-      <Animated.Image
-        source={blinkOn && st.blink ? st.blink : st.img}
+      </Animated.View>}
+      <Animated.View
         style={{
           width: st.w, height: st.h, opacity: charOp,
           transform: [
             { translateY: Animated.add(charY, bob) as any },
-            { scaleX: flip ? -1 : 1 },
+            { scaleX: sideL ? -1 : 1 },
             { scaleY: squash },
             { rotate: `${picked.tilt}deg` },
             { scale: picked.size },
           ],
         }}
-        resizeMode="contain"
-      />
+      >
+        <BlinkSprite img={st.img} blink={st.blink} on={blinkOn} w={st.w} h={st.h} />
+      </Animated.View>
     </View>
   );
 }

@@ -288,13 +288,11 @@ export function SentenceBuildStage({ onComplete, onBack }: Props) {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.keyboardBtn, __mbBtn, __mbBtn && { paddingHorizontal: 12, flexShrink: 1, marginTop: 0, alignSelf: 'auto' as const }]}
+            style={[styles.keyboardBtn, __mbBtn, __mbBtn && { width: 40, height: 40, borderRadius: 20, paddingHorizontal: 0, paddingVertical: 0, alignItems: 'center' as const, justifyContent: 'center' as const, backgroundColor: '#EFEAFF', borderColor: '#DDD2F7', flexShrink: 0, marginTop: 0, alignSelf: 'auto' as const }]}
             onPress={() => { setShowKeyboard(false); setSelected([]); }}
             activeOpacity={0.7}
           >
-            <Text style={[styles.keyboardBtnText, __mbBtn, __mbBtn]}>
-              🃏 {pick(lang, '단어 카드로 풀기', 'Quay lại thẻ từ')}
-            </Text>
+            {__mbBtn ? <ThemedGlyph glyph="🃏" style={{ fontSize: 20 }} /> : <Text style={styles.keyboardBtnText}>🃏 {pick(lang, '단어 카드로 풀기', 'Quay lại thẻ từ')}</Text>}
           </TouchableOpacity>
           </View>
         </View>
@@ -322,7 +320,7 @@ export function SentenceBuildStage({ onComplete, onBack }: Props) {
 
       {/* ── Footer ── */}
       {!showKeyboard && (
-        <View style={[styles.footer, __mbBtn && { paddingBottom: 6, flexDirection: 'row' as const, alignItems: 'center' as const, gap: 8 }]}>
+        <View style={[styles.footer, __mbBtn && { paddingBottom: 2, flexDirection: 'row' as const, alignItems: 'center' as const, gap: 8 }]}>
           <View style={[styles.footerRow, __mbBtn && { flex: 1 }]}>
             <View style={{ flex: 1 }}>
               <CtaButton
@@ -334,7 +332,7 @@ export function SentenceBuildStage({ onComplete, onBack }: Props) {
             </View>
 
             <TouchableOpacity
-              style={[styles.hintBtn, __mbBtn && { height: 40 }]}
+              style={[styles.hintBtn, __mbBtn && { height: 40, width: 40, borderRadius: 20, backgroundColor: '#EFEAFF', borderColor: '#DDD2F7' }]}
               onPress={() => setShowHint(h => !h)}
               activeOpacity={0.8}
             >
@@ -344,13 +342,11 @@ export function SentenceBuildStage({ onComplete, onBack }: Props) {
           </View>
 
           <TouchableOpacity
-            style={[styles.keyboardBtn, __mbBtn, __mbBtn && { paddingHorizontal: 12, flexShrink: 1, marginTop: 0, alignSelf: 'auto' as const }]}
+            style={[styles.keyboardBtn, __mbBtn, __mbBtn && { width: 40, height: 40, borderRadius: 20, paddingHorizontal: 0, paddingVertical: 0, alignItems: 'center' as const, justifyContent: 'center' as const, backgroundColor: '#EFEAFF', borderColor: '#DDD2F7', flexShrink: 0, marginTop: 0, alignSelf: 'auto' as const }]}
             onPress={() => setShowKeyboard(true)}
             activeOpacity={0.7}
           >
-            <Text style={[styles.keyboardBtnText, __mbBtn, __mbBtn]}>
-              ⌨ {pick(lang, '키보드 사용하기', 'Dùng bàn phím')}
-            </Text>
+            {__mbBtn ? <ThemedGlyph glyph="⌨" style={{ fontSize: 20 }} /> : <Text style={styles.keyboardBtnText}>⌨ {pick(lang, '키보드 사용하기', 'Dùng bàn phím')}</Text>}
           </TouchableOpacity>
         </View>
       )}

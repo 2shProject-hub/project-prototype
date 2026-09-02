@@ -11,6 +11,7 @@
 // 이 서브트리를 건드리지 않게 하는 표시다 — 여기는 이미 테마 값으로 그려서
 // 또 변환하면 이중 적용이 된다.
 import { ThemedGlyph } from '../../components/ThemedGlyph';
+import { BlinkSprite } from '../../theme/BlinkSprite';
 import React, { useEffect, useRef, useState } from 'react';
 import { ScrollView, View, Text, TouchableOpacity, Image, Animated, type ViewStyle } from 'react-native';
 import {
@@ -449,7 +450,9 @@ export function ThemedBody(p: ThemedBodyProps) {
       {assets?.peek ? (
         // 화면 우하단에서 빼꼼 — 말해보카 시그니처. 터치를 막지 않도록 pointerEvents 차단
         <View pointerEvents="none" style={{ position: 'absolute', right: 0, bottom: 84, alignItems: 'flex-end' }}>
-          <Animated.Image source={peekBlink && assets.peekBlink ? assets.peekBlink : assets.peek} style={{ width: 86, height: 100, transform: [{ translateY: peekBob }] }} resizeMode="contain" />
+          <Animated.View style={{ transform: [{ translateY: peekBob }] }}>
+            <BlinkSprite img={assets.peek} blink={assets.peekBlink} on={peekBlink} w={86} h={100} />
+          </Animated.View>
         </View>
       ) : null}
 
@@ -459,7 +462,7 @@ export function ThemedBody(p: ThemedBodyProps) {
           gap: 8,
           paddingHorizontal: L.edge,
           paddingTop: 6,
-          paddingBottom: 6,
+          paddingBottom: 2,
           borderTopWidth: L.shadow === 'none' ? L.hairline : 0,
           borderTopColor: c.line,
           backgroundColor: c.canvas,

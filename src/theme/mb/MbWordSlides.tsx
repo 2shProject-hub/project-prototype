@@ -10,6 +10,7 @@ import { MOCK_WORD_SLIDES, type WordSlide } from '../../data/lessonData';
 import { icon } from '../graphics';
 import { mb, mbFont, mbDisplay, mbBody } from './mbTokens';
 import { MbCanvas, MbHeader, MbCard, MbNavBar } from './MbScaffold';
+import { BlinkSprite } from '../BlinkSprite';
 
 const TUTOR_IMAGE = require('../../../assets/word-slides/tutor.png') as string;
 const IMG_FLAG = require('../../../assets/word-slides/vietnam-flag.png');
@@ -200,7 +201,9 @@ function IntroBody() {
     <View style={{ flex: 1, gap: 14 }}>
       {/* 캐릭터가 오늘의 단어를 소개 — 문구와 배치를 맞춘다 */}
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-        <Animated.Image source={fishBlink ? CHAR_FISH_BLINK : CHAR_FISH} style={{ width: 34, height: 36, transform: [{ translateY: bob }] }} resizeMode="contain" />
+        <Animated.View style={{ transform: [{ translateY: bob }] }}>
+          <BlinkSprite img={CHAR_FISH} blink={CHAR_FISH_BLINK} on={fishBlink} w={34} h={36} />
+        </Animated.View>
         <View style={{ backgroundColor: mb.lavender, borderRadius: 9, paddingHorizontal: 12, paddingVertical: 6 }}>
           <Text style={{ fontFamily: mbFont, fontSize: 12.5, fontWeight: '800', color: mb.violetDark }}>오늘의 단어</Text>
         </View>
@@ -267,7 +270,7 @@ function OutroBody() {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 10 }}>
       {/* 캐릭터가 축하 — 문구와 짝 */}
-      <Image source={fishBlink2 ? CHAR_FISH_BLINK : CHAR_FISH} style={{ width: 88, height: 92 }} resizeMode="contain" />
+      <BlinkSprite img={CHAR_FISH} blink={CHAR_FISH_BLINK} on={fishBlink2} w={88} h={92} />
       <Text style={mbDisplay(28)}>훌륭해요!</Text>
       <Text style={[mbBody(14, '600'), { textAlign: 'center' }]}>이제 더 많은 단어를 배워봐요.</Text>
     </View>

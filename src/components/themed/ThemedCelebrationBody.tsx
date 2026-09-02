@@ -7,6 +7,7 @@
 // 폭죽 연출 세기도 테마마다 다르다 — 규칙은 갤러리 목업과 같은 것을 쓴다.
 // 튜터 아바타는 원본 화면이 원본 스타일 그대로 넘겨준다(tutor prop) — 여기서 변형하지 않는다.
 import { useState, useEffect, useRef, type ReactNode } from 'react';
+import { BlinkSprite } from '../../theme/BlinkSprite';
 import { View, Text, Image, StyleSheet, ScrollView, type ViewStyle, type LayoutChangeEvent } from 'react-native';
 import {
   type Theme,
@@ -240,7 +241,7 @@ export function ThemedCelebrationBody({
       </ScrollView>
 
       {/* ── 하단 CTA — 실동작 버튼 ── */}
-      <View style={{ paddingHorizontal: L.edge, paddingTop: Math.min(s.gap, 10), paddingBottom: asset ? 6 : s.row + 6 }}>
+      <View style={{ paddingHorizontal: L.edge, paddingTop: Math.min(s.gap, 10), paddingBottom: asset ? 2 : s.row + 6 }}>
         <CtaButton title={pick(lang, ctaKo, ctaVi)} onPress={onNext} size="lg" />
       </View>
     </View>
@@ -291,7 +292,7 @@ function BlinkImage({ theme, img, size }: { theme: Theme; img: any; size: number
     tick();
     return () => { alive = false; clearTimeout(t); };
   }, [blinkFrame]);
-  return <Image source={closed && blinkFrame ? blinkFrame : img} style={{ width: size, height: size }} resizeMode="cover" />;
+  return <BlinkSprite img={img} blink={blinkFrame} on={closed} w={size} h={size} resizeMode="cover" />;
 }
 
 function TitleText({ theme, color, text, size = 1, align = 'center' }: { theme: Theme; color: string; text: string; size?: number; align?: 'left' | 'center' }) {

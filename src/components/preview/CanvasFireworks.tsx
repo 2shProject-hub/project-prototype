@@ -63,32 +63,26 @@ class Particle {
     // 수명 후반에는 반짝임(트윙클) — 게임 폭죽의 잔불 느낌
     const twinkle = a < 0.55 ? 0.55 + 0.45 * Math.random() : 1;
 
-    // 블룸 글로우 — 요즘 게임 VFX 의 핵심. 색 발광을 shadow 로 얹는다
-    ctx.save();
-    ctx.shadowColor = this.color;
-    ctx.shadowBlur = this.size * 5;
-
+    // 글로우는 넓은 저알파 스트로크로 흉내낸다 — shadowBlur 는 파티클 수 × 블러 반경만큼
+    // 프레임을 잡아먹어 저사양(소프트웨어 캔버스)에서 뚝뚝 끊긴다
     ctx.beginPath();
     ctx.moveTo(last.x, last.y);
     ctx.lineTo(this.x, this.y);
     ctx.strokeStyle = this.color;
+    ctx.lineCap = 'round';
+    ctx.globalAlpha = a * 0.3;
+    ctx.lineWidth = this.size * 2.6;
+    ctx.stroke();
     ctx.globalAlpha = a * twinkle;
     ctx.lineWidth = this.size;
-    ctx.lineCap = 'round';
     ctx.stroke();
 
     // 화이트핫 코어 — 머리는 흰색에 가깝게 타오른다
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.size * 0.66, 0, Math.PI * 2);
-    ctx.fillStyle = this.color;
-    ctx.fill();
     ctx.globalAlpha = a * twinkle * 0.85;
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.size * 0.3, 0, Math.PI * 2);
     ctx.fillStyle = '#FFFFFF';
     ctx.fill();
-
-    ctx.restore();
     ctx.globalAlpha = 1;
   }
 }
@@ -97,12 +91,14 @@ const KINDS = ['peony', 'ring', 'palm', 'willow', 'chrysanthemum', 'crossette', 
 
 /** variant 마다 터지는 성격이 다르다 */
 function profileOf(v: number, power: number, thick: number) {
+  // 파티클마다 블룸(shadowBlur)을 얹는 구조라 수가 곧 프레임 비용이다 — 밀도를 낮춰 연출은 유지하고 비용만 줄인다
+  power *= 0.62;
   const V = ((v % 20) + 20) % 20;
   const kind = KINDS[V % 10];
   const big = V >= 10;
   const b = {
     kind,
-    shots: 5 + (V % 3), // 5~7발
+    shots: 3 + (V % 2), // 3~4발
     count: Math.round((big ? 44 : 32) * power),
     speed: [1.4, 6.4] as [number, number],
     gravity: 0.85,
@@ -146,12 +142,15 @@ export function CanvasFireworks({ width, height, colors, variant, power = 1, ble
     const ctx = cv.getContext('2d');
     if (!ctx) return;
 
-    const dpr = Math.min(2, (globalThis as any).devicePixelRatio || 1);
+    const dpr = Math.min(1.25, (globalThis as any).devicePixelRatio || 1);
     cv.width = Math.round(width * dpr);
     cv.height = Math.round(height * dpr);
     ctx.scale(dpr, dpr);
 
     const P = profileOf(variant, power, blend === 'add' ? 2.4 : 4.0);
+    // 한 번에 확 터지고 빨리 사그라드는 스냅감 — 수명·트레일을 짧게 조인다
+    P.decay = [P.decay[0] * 1.6, P.decay[1] * 1.6];
+    P.trail = Math.min(P.trail, 6);
     const palette = colors.length ? colors : ['#ffffff'];
     const parts: Particle[] = [];
     const flashes: { x: number; y: number; r: number; a: number; color: string }[] = [];
@@ -163,7 +162,7 @@ export function CanvasFireworks({ width, height, colors, variant, power = 1, ble
       return {
         x: width * (0.2 + t * 0.6 + jitterX * 0.07),
         y: height * (0.16 + (((variant * 17 + i * 29) % 100) / 100) * 0.3),
-        delay: i * (90 + (variant % 4) * 35), // 살짝씩 시차를 두고 연달아
+        delay: i * (55 + (variant % 4) * 20), // 살짝씩 시차를 두고 연달아 — 빠르게 몰아친다
         color: palette[i % palette.length],
       };
     });
@@ -180,7 +179,7 @@ export function CanvasFireworks({ width, height, colors, variant, power = 1, ble
 
     // 2차 크래클 — 일부 파티클이 사그라들며 잔불 스파크를 한 번 더 터뜨린다 (모던 폭죽 연출)
     const crackle = (px: number, py: number, color: string) => {
-      const n = 4 + Math.floor(Math.random() * 3);
+      const n = 3 + Math.floor(Math.random() * 2);
       for (let i = 0; i < n; i++) {
         parts.push(
           new Particle(px, py, Math.random() < 0.4 ? '#FFFFFF' : color, 0.9, P.gravity * 0.6,
@@ -221,7 +220,7 @@ export function CanvasFireworks({ width, height, colors, variant, power = 1, ble
         parts[i].draw(ctx);
         if (parts[i].step()) {
           // 큰 파티클 일부는 사라지며 잔불 크래클을 남긴다
-          if (parts[i].size >= 2 && Math.random() < 0.22 && parts.length < 260) {
+          if (parts[i].size >= 2 && Math.random() < 0.12 && parts.length < 150) {
             crackle(parts[i].x, parts[i].y, parts[i].color);
           }
           parts.splice(i, 1);

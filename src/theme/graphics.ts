@@ -38,7 +38,7 @@ function uri(svg: string): string {
 const wrap = (inner: string, size = 24) =>
   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="${size}" height="${size}" fill="none">${inner}</svg>`;
 
-type IconName = 'volume' | 'mic' | 'check' | 'chevron' | 'play' | 'sparkle' | 'bookmark' | 'close' | 'back' | 'headphones' | 'home' | 'chart' | 'crown' | 'bookopen';
+type IconName = 'volume' | 'mic' | 'check' | 'chevron' | 'play' | 'sparkle' | 'bookmark' | 'close' | 'back' | 'headphones' | 'home' | 'chart' | 'crown' | 'bookopen' | 'keyboard' | 'grid';
 
 const PATHS: Record<IconName, (c: string, w: number) => string> = {
   // 2026 표준 스트로크 아이콘 (Lucide 계열 라운드 스트로크) — 촌스러운 자작 패스 대체
@@ -73,6 +73,14 @@ const PATHS: Record<IconName, (c: string, w: number) => string> = {
   bookopen: (c, w) =>
     `<path d="M12 7v14" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>` +
     `<path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" stroke="${c}" stroke-width="${w}" stroke-linejoin="round" fill="none"/>`,
+  keyboard: (c, w) =>
+    `<rect x="2" y="5" width="20" height="14" rx="2.4" stroke="${c}" stroke-width="${w}" fill="none"/>` +
+    `<path d="M6 9.5h.01M10 9.5h.01M14 9.5h.01M18 9.5h.01M6 13h.01M18 13h.01M8.5 15.5h7" stroke="${c}" stroke-width="${w + 0.3}" stroke-linecap="round"/>`,
+  grid: (c, w) =>
+    `<rect x="3" y="3" width="8" height="8" rx="2" stroke="${c}" stroke-width="${w}" fill="none"/>` +
+    `<rect x="13" y="3" width="8" height="8" rx="2" stroke="${c}" stroke-width="${w}" fill="none"/>` +
+    `<rect x="3" y="13" width="8" height="8" rx="2" stroke="${c}" stroke-width="${w}" fill="none"/>` +
+    `<rect x="13" y="13" width="8" height="8" rx="2" stroke="${c}" stroke-width="${w}" fill="none"/>`,
 };
 
 export function icon(name: IconName, color: string, size = 20, strokeWidth = 1.7): string {

@@ -237,10 +237,10 @@ function normalizeFooterBaseline(): void {
       const pb = parseFloat(cs.paddingBottom) || 0;
       if (pb >= 11 && pb <= 40) {
         if (!el.hasAttribute(FOOTER_ATTR)) el.setAttribute(FOOTER_ATTR, el.style.paddingBottom || '');
-        el.style.paddingBottom = '6px';
+        el.style.paddingBottom = '2px';
       }
       const pt = parseFloat(cs.paddingTop) || 0;
-      if (pt >= 14 && pt <= 32) el.style.paddingTop = '10px';
+      if (pt >= 14 && pt <= 32) el.style.paddingTop = '6px';
       // 바 안의 CTA 버튼 두께도 40px 로 통일 (화면별 자체 버튼 포함)
       (el.querySelectorAll('div') as NodeListOf<HTMLElement>).forEach((btn) => {
         const br = btn.getBoundingClientRect();
