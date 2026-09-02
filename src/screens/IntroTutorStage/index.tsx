@@ -75,7 +75,7 @@ export function IntroTutorStage({ onNext, onBack, introData }: Props) {
 
       {/* ── 콘텐츠 (수직 중앙 정렬) ── */}
       <View style={styles.content}>
-        <View style={[styles.card, __mbBig && { alignSelf: 'stretch' as const, flexGrow: 1, justifyContent: 'center' as const, paddingVertical: 34, marginHorizontal: 4, gap: 24 }]}>
+        <View style={[styles.card, __mbBig && { alignSelf: 'stretch' as const, flexGrow: 1, justifyContent: 'center' as const, paddingVertical: 30, paddingHorizontal: 18, marginHorizontal: 0, gap: 24 }]}>
           {/* 1. 배지 */}
           <View style={styles.badge}>
             <Text style={[styles.badgeText, __mbBig && { fontSize: 14 }]}>{pick(lang, intro.badge, intro.badgeVi)}</Text>

@@ -12,13 +12,6 @@
 // 또 변환하면 이중 적용이 된다.
 import { ThemedGlyph } from '../../components/ThemedGlyph';
 
-// 재생 속도 — 3D 숫자+X 조합 (사용자 지정 숫자 시트에서 합성)
-const SPEED_IMGS: Record<string, { img: any; w: number }> = {
-  '0.5': { img: require('../../../assets/themes/malhaeboka/speed-05x.png'), w: 42 },
-  '1': { img: require('../../../assets/themes/malhaeboka/speed-1x.png'), w: 17 },
-  '1.5': { img: require('../../../assets/themes/malhaeboka/speed-15x.png'), w: 35 },
-};
-
 // 나라 단어 → 해당 나라 국기 (flagcdn — 국가코드 고정이라 사진이 뒤바뀔 일이 없다)
 const MB_FLAGS: Record<string, string> = {
   '베트남': 'vn', '한국': 'kr', '인도네시아': 'id', '러시아': 'ru',
@@ -217,23 +210,21 @@ export function ThemedBody(p: ThemedBodyProps) {
                 backgroundColor: on ? c.primary : 'transparent',
                 borderWidth: Math.max(1, L.hairline),
                 borderColor: on ? c.primary : c.line,
-                // 말해보카: 스피커 서클과 같은 라벤더 문법 — 3D 숫자가 어느 상태에서든 잘 보인다
+                // 말해보카: 활성 = 보라 필 + 흰 굵은 숫자, 비활성 = 흰 칩
                 ...(theme.id === 'malhaeboka'
                   ? on
-                    ? { backgroundColor: '#EFEAFF', borderColor: '#7150F0', borderWidth: 1.5 }
-                    : { backgroundColor: c.surface, borderColor: '#E7E4F0' }
+                    ? { backgroundColor: '#7150F0', borderColor: '#7150F0', paddingHorizontal: 13 }
+                    : { backgroundColor: c.surface, borderColor: '#E7E4F0', paddingHorizontal: 13 }
                   : null),
               }}
             >
-              {theme.id === 'malhaeboka' ? (
-                <Image
-                  source={SPEED_IMGS[String(spd)].img}
-                  style={{ width: SPEED_IMGS[String(spd)].w, height: 15, opacity: on ? 1 : 0.7 }}
-                  resizeMode="contain"
-                />
-              ) : (
-                <Text style={[{ fontSize: t.bodySize - 2, color: on ? c.onPrimary : c.muted }, bodyFont(theme, on ? 700 : 500)]}>{spd}x</Text>
-              )}
+              <Text
+                style={[
+                  { fontSize: t.bodySize - 2, color: on ? c.onPrimary : c.muted },
+                  bodyFont(theme, on ? 700 : 500),
+                  theme.id === 'malhaeboka' && { fontSize: 15, fontWeight: '800' as const, color: on ? '#FFFFFF' : '#6D6A7C', letterSpacing: 0.2 },
+                ]}
+              >{spd}x</Text>
             </TouchableOpacity>
           );
         })}

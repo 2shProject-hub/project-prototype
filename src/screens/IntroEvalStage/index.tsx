@@ -50,15 +50,15 @@ export function IntroEvalStage({ onNext, onBack }: Props) {
 
       {/* ── 콘텐츠 (수직 중앙 정렬) ── */}
       <View style={styles.content}>
-        <View style={[styles.card, __mbBig && { alignSelf: 'stretch' as const, flexGrow: 1, justifyContent: 'center' as const, paddingVertical: 34, marginHorizontal: 4 }]}>
+        <View style={[styles.card, __mbBig && { alignSelf: 'stretch' as const, flexGrow: 1, justifyContent: 'center' as const, paddingVertical: 30, paddingHorizontal: 18, marginHorizontal: 0, gap: 22 }]}>
           {/* 1. 배지 */}
           <View style={styles.badge}>
             <Text style={styles.badgeText}>{pick(lang, intro.badge, intro.badgeVi)}</Text>
           </View>
 
           {/* 2. 아이콘 */}
-          <View style={styles.iconCircle}>
-            <ThemedGlyph style={[styles.iconEmoji, __mbBig && { fontSize: 46 }]} glyph={intro.icon} />
+          <View style={[styles.iconCircle, __mbBig && { width: 118, height: 118, borderRadius: 59 }]}>
+            <ThemedGlyph style={[styles.iconEmoji, __mbBig && { fontSize: 58 }]} glyph={intro.icon} />
           </View>
 
           {/* 3. 타이틀 */}

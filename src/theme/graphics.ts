@@ -89,6 +89,20 @@ const PATHS: Record<IconName, (c: string, w: number) => string> = {
     `<path d="M15 5l4 4" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`,
 };
 
+/** 라운드 사각 타일 + 흰 글리프 — 홈 차시 아이콘용. 벡터라 어떤 크기에서도 또렷하다. */
+export function tileIcon(name: IconName, bg: string, size = 96): string {
+  const inner = PATHS[name]('#FFFFFF', 2.2);
+  return uri(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 96 96">` +
+      `<defs><linearGradient id="tg" x1="0" y1="0" x2="0" y2="1">` +
+      `<stop offset="0" stop-color="${bg}" stop-opacity="1"/><stop offset="1" stop-color="${bg}" stop-opacity="0.82"/>` +
+      `</linearGradient></defs>` +
+      `<rect width="96" height="96" rx="26" fill="url(#tg)"/>` +
+      `<g transform="translate(24,24) scale(2)">${inner}</g>` +
+    `</svg>`,
+  );
+}
+
 export function icon(name: IconName, color: string, size = 20, strokeWidth = 1.7): string {
   return uri(wrap(PATHS[name](color, strokeWidth), size));
 }

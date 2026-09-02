@@ -1,13 +1,14 @@
 import React from 'react';
+import { tileIcon } from '../../theme/graphics';
 
-// 차시별 타일 — 6차시가 전부 다른 아이콘 (기존 타일 4종 + 듣기/단어 2종)
-const SESSION_TILES: any[] = [
-  require('../../../assets/themes/malhaeboka/icon-shop.png'),
-  require('../../../assets/themes/malhaeboka/icon-quest.png'),
-  require('../../../assets/themes/malhaeboka/icon-dict.png'),
-  require('../../../assets/themes/malhaeboka/icon-boost.png'),
-  require('../../../assets/themes/malhaeboka/nav-listen-on.png'),
-  require('../../../assets/themes/malhaeboka/nav-vocab-on.png'),
+// 차시별 타일 — 벡터 생성이라 원 어느 크기에서도 또렷하다. 차시 내용과 의미를 맞춘 6종.
+const SESSION_TILES: string[] = [
+  tileIcon('bookopen', '#F59E0B'),    // 1차시 나라와 국적 소개
+  tileIcon('mic', '#14B8A6'),         // 2차시 직업 묻고 답하기
+  tileIcon('pencil', '#8B5CF6'),      // 3차시 국적 문장 만들기
+  tileIcon('check', '#3B82F6'),       // 4차시 틀린 정보 정정하기
+  tileIcon('bookmark', '#EC4899'),    // 5차시 통합 연습 1 (읽고 쓰기)
+  tileIcon('headphones', '#10B981'),  // 6차시 통합 연습 2 (듣고 말하기)
 ];
 import { ThemedGlyph } from '../../components/ThemedGlyph';
 import { useState, useRef, useEffect } from 'react';
@@ -214,8 +215,8 @@ export function HomeScreen({ sessions, setView, onStartSession }: Props) {
                     <MbNowPulse active={!!showNow}>
                     <View style={[styles.dot, { backgroundColor: '#FFFFFF', borderWidth: 2, borderColor: '#ECE7FA' }, showNow ? { borderColor: '#B9A5F5', borderWidth: 2 } : null]}>
                       <Image
-                        source={SESSION_TILES[idx % SESSION_TILES.length]}
-                        style={{ width: 40, height: 40, borderRadius: 11, opacity: unlocked ? 1 : 0.38 }}
+                        source={{ uri: SESSION_TILES[idx % SESSION_TILES.length] }}
+                        style={{ width: 36, height: 36, borderRadius: 10, opacity: unlocked ? 1 : 0.38 }}
                         resizeMode="contain"
                       />
                       {completed ? (

@@ -8,6 +8,20 @@
 // 튜터 아바타는 원본 화면이 원본 스타일 그대로 넘겨준다(tutor prop) — 여기서 변형하지 않는다.
 import { useState, useEffect, useRef, type ReactNode } from 'react';
 
+// 말해보카 '오늘의 학습' 스트립 — 외부 랜덤 소스 대신 검증된 로컬 학습 사진 풀.
+// 화면(세트)마다 시작 위치가 달라져 항상 다른 3장이 나온다.
+const MB_LEARN_POOL: any[] = [
+  require('../../../assets/SetWordbookEvalStage/1_student.png'),
+  require('../../../assets/SetWordbookEvalStage/2_teacher.png'),
+  require('../../../assets/classroom.jpg'),
+  require('../../../assets/SetWordbookEvalStage/friend.png'),
+  require('../../../assets/SetWordbookEvalStage/preson.png'),
+  require('../../../assets/SetWordbookEvalStage/6_employee.png'),
+  require('../../../assets/SetWordbookEvalStage/4_doctor.png'),
+  require('../../../assets/SetWordbookEvalStage/8_chef.png'),
+  require('../../../assets/SetWordbookEvalStage/nara.png'),
+];
+
 // 세트 완료 도트의 체크 — 사용자 지정 레드 브러시 체크박스
 const CHECK_RED = require('../../../assets/themes/malhaeboka/icon-check-red.png');
 import { BlinkSprite } from '../../theme/BlinkSprite';
@@ -89,6 +103,11 @@ export function ThemedCelebrationBody({
   for (let i = 0; i < titleKo.length; i++) titleHash = (titleHash * 31 + titleKo.charCodeAt(i)) >>> 0;
   const variant = Math.max(0, THEMES.findIndex((x) => x.id === theme.id)) + (titleHash % 9);
   const learnPicks = LEARN_PICKS[theme.id] ?? LEARN_FALLBACK;
+  // 말해보카: 로컬 학습 사진 풀에서 화면(세트)별로 다른 3장
+  const mbLearnStart = (titleHash + (setNumber ?? 0) * 4) % MB_LEARN_POOL.length;
+  const mbLearnPhotos = theme.id === 'malhaeboka'
+    ? [0, 1, 2].map((i) => MB_LEARN_POOL[(mbLearnStart + i * 3) % MB_LEARN_POOL.length])
+    : null;
   const bandPick = BAND_PICKS[theme.id] ?? { t: learnPicks[0].t, l: theme.photo.lock + 3 };
 
   // 실기기 폭은 디바이스 프레임마다 다르다 — 밴드를 실측해서 폭죽 캔버스를 맞춘다
@@ -234,7 +253,7 @@ export function ThemedCelebrationBody({
 
         {tutor ? <View style={{ alignItems: 'center' }}>{tutor}</View> : null}
 
-        {st !== 'grid' && !tutor ? <LearnStripReal theme={theme} lang={lang} picks={learnPicks} /> : null}
+        {st !== 'grid' && !tutor ? <LearnStripReal theme={theme} lang={lang} picks={learnPicks} localPhotos={mbLearnPhotos} /> : null}
 
         {note ? (
           <Text style={[{ fontSize: theme.type.bodySize - 1, color: c.muted, textAlign: 'center' }, bodyFont(theme)]}>
@@ -462,26 +481,35 @@ function SetTrack({ theme, lang, setNumber, totalSets }: { theme: Theme; lang: L
 }
 
 /** 오늘 공부한 흔적 — 학습 장면 실사 3장 (목업과 같은 검증된 태그·lock) */
-function LearnStripReal({ theme, lang, picks }: { theme: Theme; lang: Lang; picks: PhotoPick[] }) {
+function LearnStripReal({ theme, lang, picks, localPhotos }: { theme: Theme; lang: Lang; picks: PhotoPick[]; localPhotos?: any[] | null }) {
   const c = theme.colors;
   const L = theme.layout;
   const s = spacing(L.density);
   const h = 66; // ⚠️ 요청 URL 치수 — 바꾸면 검증된 사진이 뒤바뀐다 (표시 크기는 아래 dispH)
-  const dispH = theme.id === 'malhaeboka' ? 126 : 104; // 표시 높이 — 시원하게 (원본이 2배 해상도라 확대 여유 있음)
+  const dispH = theme.id === 'malhaeboka' ? 138 : 104; // 표시 높이 — 시원하게 (원본이 2배 해상도라 확대 여유 있음)
   return (
     <View>
       <Text style={[{ fontSize: 10.5, color: c.muted, letterSpacing: theme.type.labelTracking, marginBottom: s.gap }, bodyFont(theme, 700)]}>
         {pick(lang, '오늘의 학습', 'Bài học hôm nay')}
       </Text>
       <View style={{ flexDirection: 'row', gap: s.gap }}>
-        {picks.map((p) => (
-          <Image
-            key={p.t + p.l}
-            source={{ uri: coverPhoto(p.t, 200, h, p.l) }}
-            style={{ flex: 1, height: dispH, borderRadius: L.radius === 0 ? 0 : Math.min(L.radius, 14) }}
-            resizeMode="cover"
-          />
-        ))}
+        {localPhotos
+          ? localPhotos.map((src, i) => (
+              <Image
+                key={i}
+                source={src}
+                style={{ flex: 1, height: dispH, borderRadius: Math.min(L.radius, 14) }}
+                resizeMode="cover"
+              />
+            ))
+          : picks.map((p) => (
+              <Image
+                key={p.t + p.l}
+                source={{ uri: coverPhoto(p.t, 200, h, p.l) }}
+                style={{ flex: 1, height: dispH, borderRadius: L.radius === 0 ? 0 : Math.min(L.radius, 14) }}
+                resizeMode="cover"
+              />
+            ))}
       </View>
     </View>
   );

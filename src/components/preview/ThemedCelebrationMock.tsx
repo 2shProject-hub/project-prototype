@@ -61,7 +61,7 @@ export const LEARN_PICKS: Record<string, PhotoPick[]> = {
   cake: [{ t: 'study,notes,yellow', l: 213 }, { t: 'notebook,highlighter', l: 224 }, { t: 'books,desk', l: 235 }],
   speak: [{ t: 'books,stack', l: 219 }, { t: 'pen,minimal', l: 531 }, { t: 'handwriting,notebook', l: 241 }],
   santa: [{ t: 'exam,paper', l: 532 }, { t: 'books,stack', l: 242 }, { t: 'notebook,pencil,desk', l: 253 }],
-  malhaeboka: [{ t: 'notebook,writing', l: 851 }, { t: 'study,desk', l: 651 }, { t: 'notebook,pencil,desk', l: 881 }],
+  malhaeboka: [{ t: 'classroom,students', l: 21 }, { t: 'books,study', l: 34 }, { t: 'notebook,writing', l: 851 }],
 };
 export const LEARN_FALLBACK: PhotoPick[] = [
   { t: 'notebook,pencil,desk', l: 63 }, { t: 'books,stack', l: 74 }, { t: 'study,desk', l: 795 },
