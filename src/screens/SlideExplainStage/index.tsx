@@ -117,12 +117,11 @@ const s = StyleSheet.create({
   imageCard: {
     borderRadius: 16,
     overflow: 'hidden',
-    aspectRatio: 4 / 3,
     width: '100%',
   },
   image: {
     width: '100%',
-    height: '100%',
+    height: undefined,
   },
   placeholder: {
     flex: 1,
