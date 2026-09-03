@@ -7,6 +7,7 @@ import { SESSION1, STAGE_ORDER, STAGE_LABELS } from '../../data/lessonData';
 import { useLang, pick } from '../../components/LangContext';
 import { ActivityHeader } from '../../components/ActivityHeader';
 
+import { isMb } from '../../theme/mb/mbSkin';
 const TUTOR_AUDIO = require('../../../assets/sounds/tutor_mission_prev.wav') as string;
 const TUTOR_THUMB = require('../../../assets/tutor_thumb_w.png');
 const BUBBLE_LINES = [
@@ -26,7 +27,7 @@ const TOTAL_STAGES = STAGE_ORDER.length;
 export function MissionTutorPrevStage({ sessionId, onNext, onBack }: Props) {
   const { lang } = useLang();
   const { theme: __mbT, enabled: __mbE } = useTheme();
-  const __mb = __mbE && __mbT.id === 'malhaeboka';
+  const __mb = __mbE && isMb(__mbT.id);
   const mission = SESSION1.mission;
   const progressPct = (1 / TOTAL_STAGES) * 100;
 

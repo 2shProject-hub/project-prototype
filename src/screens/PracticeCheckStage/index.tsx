@@ -14,6 +14,7 @@ import {
 import { ActivityHeader } from '../../components/ActivityHeader';
 import { useLang, pick } from '../../components/LangContext';
 import { colors, spacing, radius, shadow } from '../../theme';
+import { isMb } from '../../theme/mb/mbSkin';
 import {
   PracticeCheckData,
   PracticeCheckPart,
@@ -109,7 +110,7 @@ export default function PracticeCheckStage({ onNext, onBack, data }: Props) {
   const d = data ?? MOCK_PRACTICE_CHECK;
   const { lang } = useLang();
   const { theme: __mbBT, enabled: __mbBE } = useTheme();
-  const __mbBtn = __mbBE && __mbBT.id === 'malhaeboka' ? { height: 40, minHeight: 0, paddingVertical: 0, justifyContent: 'center' as const } : null;
+  const __mbBtn = __mbBE && isMb(__mbBT.id) ? { height: 40, minHeight: 0, paddingVertical: 0, justifyContent: 'center' as const } : null;
 
   const [screenIndex, setScreenIndex] = useState(0);
   const [picks, setPicks] = useState<Picks>({});

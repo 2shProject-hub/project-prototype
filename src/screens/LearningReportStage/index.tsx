@@ -13,6 +13,7 @@ import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
 import { colors, radius, spacing, shadow } from '../../theme';
 import { useLang, pick, ActivityHeader, CtaButton } from '../../components';
 
+import { isMb } from '../../theme/mb/mbSkin';
 interface ReportData {
   sessionNumber: number;
   sessionTitle: string;
@@ -56,7 +57,7 @@ function mbReportDonut(pct: number, label: string): string {
 export function LearningReportStage({ data, onNext, onBack }: Props) {
   const { lang } = useLang();
   const { theme: __mbRpT, enabled: __mbRpE } = useTheme();
-  const __mbRp = __mbRpE && __mbRpT.id === 'malhaeboka';
+  const __mbRp = __mbRpE && isMb(__mbRpT.id);
 
   if (!data) {
     return (

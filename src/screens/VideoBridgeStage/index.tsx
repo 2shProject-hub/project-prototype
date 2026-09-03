@@ -29,6 +29,7 @@ import {
 import { useLang, pick } from '../../components/LangContext';
 import { MOCK_VIDEO_BRIDGE, type VideoBridgeData } from '../../data/lessonData';
 
+import { isMb } from '../../theme/mb/mbSkin';
 // 이식 시: resolveActivityVideoSource() 반환값으로 교체
 let LOCAL_VIDEO_ASSET: string | null = null;
 try {
@@ -134,7 +135,7 @@ export function VideoBridgeStage({
 }: VideoBridgeStageProps) {
   const { lang } = useLang();
   const { theme: __mbVbT, enabled: __mbVbE } = useTheme();
-  const __mbVb = __mbVbE && __mbVbT.id === 'malhaeboka';
+  const __mbVb = __mbVbE && isMb(__mbVbT.id);
   const [forcePause, setForcePause] = useState(false);
 
   // 이식 시: data.videoUri → resolveActivityVideoSource() 결과로 교체

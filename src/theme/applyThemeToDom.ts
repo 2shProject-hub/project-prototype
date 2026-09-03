@@ -13,6 +13,7 @@
 //    형태까지 바꾸려면 화면 컴포넌트가 테마를 직접 읽어야 한다(테마 확정 후 작업).
 import type { Theme } from './themeTypes';
 import { fontStack } from './fonts';
+import { isMb, isMbBlue, applyMbBlueSkin, transposeColors } from './mb/mbSkin';
 
 const STYLE_ID = 'kchao-theme-override';
 
@@ -111,6 +112,12 @@ function transformDeclarations(cssText: string, replacements: Array<[string, str
       }
     }
 
+    // 말해보카 블루: 보라 계열만 파랑으로 옮긴다. 클래스 규칙(StyleSheet)·인라인 양쪽에 걸린다.
+    if (isMbBlue(theme.id)) {
+      const blue = transposeColors(val);
+      if (blue !== val) { val = blue; changed = true; }
+    }
+
     // 모서리 — 테마의 radius 를 따른다
     if (prop.includes('radius')) {
       const next = val.replace(/(\d+(?:\.\d+)?)px/g, (_m, n) => {
@@ -130,13 +137,13 @@ function transformDeclarations(cssText: string, replacements: Array<[string, str
     }
 
     // 말해보카: 카드 음영을 입체적으로 통일 — 얕고 흐릿한 그림자를 떠 있는 느낌으로
-    if (theme.id === 'malhaeboka' && prop === 'box-shadow' && val.trim() !== 'none') {
+    if (isMb(theme.id) && prop === 'box-shadow' && val.trim() !== 'none') {
       val = ' 0 6px 18px rgba(52,62,105,0.14)';
       changed = true;
     }
 
     // 말해보카: 큰 글자(제목류)는 트래킹을 타이트하게 — 2026 타이포 트렌드
-    if (theme.id === 'malhaeboka' && prop === 'font-size') {
+    if (isMb(theme.id) && prop === 'font-size') {
       const m = val.match(/(\d+(?:\.\d+)?)px/);
       if (m && parseFloat(m[1]) >= 17) {
         extraDecls.push('letter-spacing:-0.4px');
@@ -162,6 +169,7 @@ export function applyThemeToDom(theme: Theme | null): void {
     if (tag) tag.textContent = '';
     restoreInlineStyles();
     restoreFooterBaseline();
+    applyMbBlueSkin(false);
     return;
   }
   if (!tag) {
@@ -220,7 +228,10 @@ export function applyThemeToDom(theme: Theme | null): void {
 
   // 말해보카: 하단 CTA 바 기준선 통일 — 화면마다 14~32px 로 제각각인 푸터 하단 패딩을
   // 측정으로 찾아 10px 로 맞춘다 (컨테이너 바닥에 붙은 바 형태만, 복구 가능)
-  if (theme.id === 'malhaeboka') normalizeFooterBaseline();
+  if (isMb(theme.id)) normalizeFooterBaseline();
+
+  // 말해보카 블루: 기기 화면 안쪽의 보라 계열만 파랑으로 옮긴다(원본 보라 테마는 무영향)
+  applyMbBlueSkin(isMbBlue(theme.id));
 }
 
 const FOOTER_ATTR = 'data-kchao-footer-orig';

@@ -10,6 +10,7 @@ import { useLang, pick, ActivityHeader, CtaButton, QuizFeedbackModal } from '../
 import { useSfx } from '../../hooks/useSfx';
 import { useTheme } from '../../theme/ThemeContext';
 
+import { isMb } from '../../theme/mb/mbSkin';
 interface Word {
   text: string;
   textVi: string;
@@ -42,7 +43,7 @@ export function WordVnKoSelect2({
 }: Props) {
   const { lang } = useLang();
   const { enabled: __mbOn, theme: __mbTheme } = useTheme();
-  const mbFill = __mbOn && __mbTheme.id === 'malhaeboka';
+  const mbFill = __mbOn && isMb(__mbTheme.id);
   const sfx = useSfx();
   const audioRef = useRef<HTMLAudioElement | null>(null);
 

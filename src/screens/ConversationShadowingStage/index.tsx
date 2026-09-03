@@ -42,6 +42,7 @@ import { useLang, pick } from '../../components/LangContext';
 import { colors, spacing, radius, shadow } from '../../theme';
 import { MOCK_CONVERSATION_SHADOWING, type ConversationData } from '../../data/lessonData';
 
+import { isMb } from '../../theme/mb/mbSkin';
 let FALLBACK_AUDIO: string | null = null;
 try {
   FALLBACK_AUDIO = Platform.OS === 'web'
@@ -189,7 +190,7 @@ export function ConversationShadowingStage({
 }: Props) {
   const { lang } = useLang();
   const { theme: __mbBT, enabled: __mbBE } = useTheme();
-  const __mbBtn = __mbBE && __mbBT.id === 'malhaeboka' ? { height: 40, minHeight: 0, paddingVertical: 0, justifyContent: 'center' as const } : null;
+  const __mbBtn = __mbBE && isMb(__mbBT.id) ? { height: 40, minHeight: 0, paddingVertical: 0, justifyContent: 'center' as const } : null;
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const micTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const tutorAudioRef = useRef<HTMLAudioElement | null>(null);

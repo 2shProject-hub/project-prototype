@@ -25,6 +25,7 @@ import {
 import { colors, shadow } from '../../theme/colors';
 import { ActivityHeader } from '../../components/ActivityHeader';
 import { useLang, pick } from '../../components/LangContext';
+import { isMb } from '../../theme/mb/mbSkin';
 import {
   MOCK_SPEAKING_EXPLAIN,
   type SpeakingExplainData,
@@ -44,7 +45,7 @@ export function SpeakingDetailStage({
 }: Props) {
   const { lang } = useLang();
   const { theme: __mbT, enabled: __mbE } = useTheme();
-  const __mb = __mbE && __mbT.id === 'malhaeboka';
+  const __mb = __mbE && isMb(__mbT.id);
   const [isPlayingAll, setIsPlayingAll] = useState(false);
   const [activeAudioId, setActiveAudioId] = useState<number | null>(null);
 

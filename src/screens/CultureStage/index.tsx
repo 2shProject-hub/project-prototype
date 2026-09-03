@@ -10,6 +10,7 @@ import { MOCK_CULTURE_ACTIVITY, type CultureActivityData, type CultureSubItem } 
 import { ActivityHeader } from '../../components/ActivityHeader';
 import { useLang, pick } from '../../components/LangContext';
 
+import { isMb } from '../../theme/mb/mbSkin';
 // ─── Props — Source A ActivityLayout 이식 기준 네이밍 ────────────────
 // 이식 시: onPressConfirm → ActivityLayout.onPressConfirm
 //          onClose       → ActivityLayout.onClose
@@ -50,7 +51,7 @@ function mbCultureHero(): string {
 
 function HeroMedia({ heroMedia }: { heroMedia: CultureActivityData['heroMedia'] }) {
   const { theme: __hmT, enabled: __hmE } = useTheme();
-  const __hm = __hmE && __hmT.id === 'malhaeboka';
+  const __hm = __hmE && isMb(__hmT.id);
   if (!heroMedia) return null;
 
   const imageSource = heroMedia.source ?? (heroMedia.uri ? { uri: heroMedia.uri } : null);
@@ -145,7 +146,7 @@ const sub = StyleSheet.create({
 // ─── 콘텐츠 카드 ─────────────────────────────────────────────────────
 function ContentCard({ item, lang }: { item: CultureActivityData['contents'][number]; lang: string }) {
   const { theme: __ccT, enabled: __ccE } = useTheme();
-  const __cc = __ccE && __ccT.id === 'malhaeboka';
+  const __cc = __ccE && isMb(__ccT.id);
   return (
     <View style={cc.wrap}>
       {/* [questionContent] — Source A: questionContent 슬롯에 해당 */}

@@ -8,6 +8,7 @@ import { View, Text, StyleSheet, Image } from 'react-native';
 import { colors, radius, spacing, shadow } from '../../theme';
 import { useLang, pick, ActivityHeader, CtaButton } from '../../components';
 
+import { isMb } from '../../theme/mb/mbSkin';
 interface Props {
   percentage?: number;
   onNext?: () => void;
@@ -21,7 +22,7 @@ export function GrammarCompleteStage({
 }: Props) {
   const { lang } = useLang();
   const { theme: __mbT, enabled: __mbE } = useTheme();
-  const __mb = __mbE && __mbT.id === 'malhaeboka';
+  const __mb = __mbE && isMb(__mbT.id);
 
   return (
     <View style={s.root}>

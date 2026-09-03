@@ -13,6 +13,7 @@ import { useLang, pick, ActivityHeader, CtaButton, QuizFeedbackModal } from '../
 import { useSfx } from '../../hooks/useSfx';
 import { playExclusive, stopExclusive } from '../../utils/audioPlayer';
 
+import { isMb } from '../../theme/mb/mbSkin';
 interface SoundItem {
   value: number;
   audioSrc: string;
@@ -43,7 +44,7 @@ export function WordSound1({
 }: Props) {
   const { lang } = useLang();
   const { theme: __mbBT, enabled: __mbBE } = useTheme();
-  const __mbBtn = __mbBE && __mbBT.id === 'malhaeboka';
+  const __mbBtn = __mbBE && isMb(__mbBT.id);
   const sfx = useSfx();
   const [currentIdx, setCurrentIdx] = useState(0);
   const [selectedItemValue, setSelectedItemValue] = useState<number | null>(null);

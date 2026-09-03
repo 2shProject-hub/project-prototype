@@ -14,6 +14,7 @@ import { colors, radius, spacing, shadow } from '../../theme';
 import { SESSION1 } from '../../data/lessonData';
 import { useLang, pick, ActivityHeader, CtaButton } from '../../components';
 
+import { isMb } from '../../theme/mb/mbSkin';
 const TUTOR_AUDIO = require('../../../assets/sounds/word-2.wav') as string;
 
 interface IntroData {
@@ -41,7 +42,7 @@ interface Props {
 export function IntroTutorStage({ onNext, onBack, introData }: Props) {
   const { lang } = useLang();
   const { theme: __mbT, enabled: __mbE } = useTheme();
-  const __mbBig = __mbE && __mbT.id === 'malhaeboka';
+  const __mbBig = __mbE && isMb(__mbT.id);
   const intro = introData ?? SESSION1.intro;
 
   const [isAudioPlaying, setIsAudioPlaying] = useState(true);

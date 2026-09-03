@@ -55,6 +55,7 @@ import { ActivityHeader } from '../ActivityHeader';
 import { CtaButton } from '../CtaButton';
 import { pick, type Lang } from '../LangContext';
 
+import { isMb } from '../../theme/mb/mbSkin';
 const CHARACTER = require('../../../assets/character-kchao.png');
 
 interface Props {
@@ -105,7 +106,7 @@ export function ThemedCelebrationBody({
   const learnPicks = LEARN_PICKS[theme.id] ?? LEARN_FALLBACK;
   // 말해보카: 로컬 학습 사진 풀에서 화면(세트)별로 다른 3장
   const mbLearnStart = (titleHash + (setNumber ?? 0) * 4) % MB_LEARN_POOL.length;
-  const mbLearnPhotos = theme.id === 'malhaeboka'
+  const mbLearnPhotos = isMb(theme.id)
     ? [0, 1, 2].map((i) => MB_LEARN_POOL[(mbLearnStart + i * 3) % MB_LEARN_POOL.length])
     : null;
   const bandPick = BAND_PICKS[theme.id] ?? { t: learnPicks[0].t, l: theme.photo.lock + 3 };
@@ -172,8 +173,8 @@ export function ThemedCelebrationBody({
           style={{
             flexBasis: 0,
             flexGrow: bandH * 10,
-            marginTop: theme.id === 'malhaeboka' ? 5 : 0, // 말해보카: 밴드 위쪽만 5px 깎는다
-            minHeight: theme.id === 'malhaeboka' ? 141 : 150, // 말해보카: 상하 2px씩 타이트하게
+            marginTop: isMb(theme.id) ? 5 : 0, // 말해보카: 밴드 위쪽만 5px 깎는다
+            minHeight: isMb(theme.id) ? 141 : 150, // 말해보카: 상하 2px씩 타이트하게
             backgroundColor: bandBg,
             overflow: 'hidden',
             borderBottomWidth: mood === 'quiet' && !photoTop ? L.hairline : 0,
@@ -277,7 +278,7 @@ function ArtPiece({ theme, art, size, charImg }: { theme: Theme; art: Art; size:
   const L = theme.layout;
 
   if (art.kind === 'character') {
-    const mbMent = theme.id === 'malhaeboka';
+    const mbMent = isMb(theme.id);
     return (
       <View style={{ alignItems: 'center', gap: 7 }}>
         {mbMent ? (
@@ -462,13 +463,13 @@ function SetTrack({ theme, lang, setNumber, totalSets }: { theme: Theme; lang: L
           style={{
             width: 44, height: 44,
             borderRadius: L.radius === 0 ? 4 : 999,
-            backgroundColor: done(n) ? (theme.id === 'malhaeboka' ? c.surface : c.primary) : c.backdrop,
-            borderWidth: done(n) ? (theme.id === 'malhaeboka' ? 1.5 : 0) : L.hairline,
-            borderColor: theme.id === 'malhaeboka' && done(n) ? '#E5DFF7' : c.line,
+            backgroundColor: done(n) ? (isMb(theme.id) ? c.surface : c.primary) : c.backdrop,
+            borderWidth: done(n) ? (isMb(theme.id) ? 1.5 : 0) : L.hairline,
+            borderColor: isMb(theme.id) && done(n) ? '#E5DFF7' : c.line,
             alignItems: 'center', justifyContent: 'center',
           }}
         >
-          {theme.id === 'malhaeboka' && done(n) ? (
+          {isMb(theme.id) && done(n) ? (
             <Image source={CHECK_RED} style={{ width: 26, height: 26 }} resizeMode="contain" />
           ) : (
             <Text style={[{ fontSize: theme.type.bodySize + 1, color: done(n) ? c.onPrimary : c.muted }, bodyFont(theme, 700)]}>
@@ -487,7 +488,7 @@ function LearnStripReal({ theme, lang, picks, localPhotos }: { theme: Theme; lan
   const L = theme.layout;
   const s = spacing(L.density);
   const h = 66; // ⚠️ 요청 URL 치수 — 바꾸면 검증된 사진이 뒤바뀐다 (표시 크기는 아래 dispH)
-  const dispH = theme.id === 'malhaeboka' ? 138 : 104; // 표시 높이 — 시원하게 (원본이 2배 해상도라 확대 여유 있음)
+  const dispH = isMb(theme.id) ? 138 : 104; // 표시 높이 — 시원하게 (원본이 2배 해상도라 확대 여유 있음)
   return (
     <View>
       <Text style={[{ fontSize: 10.5, color: c.muted, letterSpacing: theme.type.labelTracking, marginBottom: s.gap }, bodyFont(theme, 700)]}>

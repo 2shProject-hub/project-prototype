@@ -59,6 +59,7 @@ import PracticeCheckStage from '../screens/PracticeCheckStage';
 import { defaultSessionState, LEARNING_FLOW } from '../data/lessonData';
 import { useLang, pick, type Lang } from '../components/LangContext';
 
+import { isMb } from '../theme/mb/mbSkin';
 // ─── 디바이스 프리셋 ───────────────────────────────────────────────
 const DEVICES = [
   { id: 'iphone15', label: 'iPhone 15', os: 'iOS', w: 390, h: 844 },
@@ -454,7 +455,7 @@ function ScreenRenderer({ screenId, onNavigate, flowStep, flowTotal }: { screenI
   const { theme: mbTheme, enabled: mbEnabled } = useTheme();
 
   // 말해보카 테마 전용 화면 — 등록된 화면은 완전히 다른 소스로 렌더 (타 테마 무영향)
-  if (mbEnabled && mbTheme.id === 'malhaeboka' && MB_SCREENS[screenId]) {
+  if (mbEnabled && isMb(mbTheme.id) && MB_SCREENS[screenId]) {
     return MB_SCREENS[screenId]({ onNavigate, flowStep, flowTotal });
   }
 
@@ -1624,7 +1625,7 @@ function EmulatorShellInner() {
 
   // onNavigate 콜백 - flow 모드에 따라 다르게 처리
   // 말해보카 테마: 검은 베젤 대신 흰 프레임 — 화면이 가득 차 보이게
-  const lightFrame = applyTheme && activeTheme.id === 'malhaeboka';
+  const lightFrame = applyTheme && isMb(activeTheme.id);
 
   // 모바일 목업 안에서는 스크롤이 동작하되 스크롤바는 보이지 않는다
   useEffect(() => {
@@ -1856,7 +1857,7 @@ function EmulatorShellInner() {
                   flowStep={flowMode ? currentFlowStep + 1 : undefined}
                   flowTotal={flowMode ? LEARNING_FLOW.length : undefined}
                 />
-                <MbFocusPulse enabled={applyTheme && activeTheme.id === 'malhaeboka'} screenId={activeScreenId || screenId} />
+                <MbFocusPulse enabled={applyTheme && isMb(activeTheme.id)} screenId={activeScreenId || screenId} />
                 <ScreenSticker theme={activeTheme} enabled={applyTheme} screenId={activeScreenId || screenId} />
                 </FlowProgressContext.Provider>
               </View>

@@ -10,6 +10,7 @@ import { colors, radius, spacing, shadow } from '../../theme';
 import { useLang, pick, ActivityHeader, CtaButton, QuizFeedbackModal, ChoiceChip } from '../../components';
 import { useSfx } from '../../hooks/useSfx';
 
+import { isMb } from '../../theme/mb/mbSkin';
 interface Question {
   no: number;
   viSentence: string;
@@ -34,7 +35,7 @@ export function SentenceSelect1({
 }: Props) {
   const { lang } = useLang();
   const { theme: __mbBtnT, enabled: __mbBtnE } = useTheme();
-  const __mbBtn = __mbBtnE && __mbBtnT.id === 'malhaeboka';
+  const __mbBtn = __mbBtnE && isMb(__mbBtnT.id);
   const sfx = useSfx();
 
   const [currentIdx, setCurrentIdx] = useState(0);

@@ -6,6 +6,7 @@
 import type { TextStyle, ViewStyle } from 'react-native';
 import { type Theme, buttonRadius, bodyFont, shadowFor, readableOn } from './themeTypes';
 
+import { isMb } from './mb/mbSkin';
 /** 진행바 + 닫기 헤더 */
 export function themedHeader(t: Theme) {
   const c = t.colors;
@@ -68,7 +69,7 @@ export function themedCta(t: Theme, variant: 'primary' | 'secondary' | 'outline'
     return {
       box: {
         backgroundColor: c.line, borderRadius: r, borderWidth: 0, borderBottomWidth: 0,
-        ...(t.id === 'malhaeboka' ? { height: 40, minHeight: 0, paddingVertical: 0, justifyContent: 'center' } : null),
+        ...(isMb(t.id) ? { height: 40, minHeight: 0, paddingVertical: 0, justifyContent: 'center' } : null),
       } as ViewStyle,
       text: { color: c.muted, ...bodyFont(t, 700) } as TextStyle,
       spinner: c.muted,
@@ -106,7 +107,7 @@ export function themedCta(t: Theme, variant: 'primary' | 'secondary' | 'outline'
       break;
   }
   // 말해보카: 버튼 상하 두께를 줄여 시원하게
-  if (t.id === 'malhaeboka') {
+  if (isMb(t.id)) {
     box = { ...box, height: 40, minHeight: 0, paddingVertical: 0, justifyContent: 'center' };
   }
   return { box, text: { color: fg, ...bodyFont(t, 700) } as TextStyle, spinner: fg };
@@ -120,7 +121,7 @@ export function themedChip(t: Theme, state: 'default' | 'selected' | 'correct' |
   const blocky = L.list === 'block';
   const hair = blocky ? Math.max(1.5, L.hairline * 2) : Math.max(1, L.hairline);
 
-  const mb = t.id === 'malhaeboka';
+  const mb = isMb(t.id);
   const map = {
     // 말해보카: 기본 상태도 흰 카드 — 회색 인셋은 프로토타입처럼 보인다
     default: mb

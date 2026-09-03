@@ -10,6 +10,7 @@ import { SESSION1 } from '../../data/lessonData';
 import { useLang, pick, ActivityHeader, CtaButton } from '../../components';
 import { useSfx } from '../../hooks/useSfx';
 
+import { isMb } from '../../theme/mb/mbSkin';
 interface Props {
   sessionId?: number;
   onComplete: () => void;
@@ -34,7 +35,7 @@ function shuffle<T>(arr: T[]): T[] {
 export function SentenceBuildStage({ onComplete, onBack }: Props) {
   const { lang } = useLang();
   const { theme: __mbBT, enabled: __mbBE } = useTheme();
-  const __mbBtn = __mbBE && __mbBT.id === 'malhaeboka' ? { height: 40, minHeight: 0, paddingVertical: 0, justifyContent: 'center' as const } : null;
+  const __mbBtn = __mbBE && isMb(__mbBT.id) ? { height: 40, minHeight: 0, paddingVertical: 0, justifyContent: 'center' as const } : null;
   const sfx = useSfx();
 
   const [quizIdx, setQuizIdx] = useState(0);

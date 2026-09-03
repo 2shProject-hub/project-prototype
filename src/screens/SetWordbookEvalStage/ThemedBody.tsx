@@ -49,6 +49,7 @@ import { themeAssets } from '../../theme/themeAssets';
 import { MbProgressRow } from '../../theme/mb/MbScaffold';
 import { useFlowProgress } from '../../theme/mb/FlowContext';
 
+import { isMb } from '../../theme/mb/mbSkin';
 export interface ThemedBodyProps {
   theme: Theme;
   lang: Lang;
@@ -137,7 +138,7 @@ export function ThemedBody(p: ThemedBodyProps) {
 
   // ── 조각들 ──────────────────────────────────────────────────────
   // 말해보카: 상단을 트로피 진행 알약으로 통일 (플로우면 STEP n/총)
-  const Header = theme.id === 'malhaeboka' ? (
+  const Header = isMb(theme.id) ? (
     <MbProgressRow
       percentage={flow ? (flow.step / flow.total) * 100 : p.progressPct}
       counter={flow ? `${flow.step}/${flow.total}` : `${Math.round(p.progressPct)}%`}
@@ -190,10 +191,10 @@ export function ThemedBody(p: ThemedBodyProps) {
       ]}
     >
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-        {theme.id === 'malhaeboka' ? (
+        {isMb(theme.id) ? (
           <Image source={require('../../../assets/themes/malhaeboka/icon-speedo.png')} style={{ width: 30, height: 30 }} resizeMode="contain" />
         ) : null}
-        <Text style={[{ fontSize: t.bodySize - 1, color: c.textSecondary }, bodyFont(theme, 600), theme.id === 'malhaeboka' && { fontSize: 17, fontWeight: '800' as const, color: '#4C34C2' }]}>재생 속도</Text>
+        <Text style={[{ fontSize: t.bodySize - 1, color: c.textSecondary }, bodyFont(theme, 600), isMb(theme.id) && { fontSize: 17, fontWeight: '800' as const, color: '#4C34C2' }]}>재생 속도</Text>
       </View>
       <View style={{ flexDirection: 'row', gap: 6 }}>
         {([0.5, 1.0, 1.5] as const).map((spd) => {
@@ -205,13 +206,13 @@ export function ThemedBody(p: ThemedBodyProps) {
               activeOpacity={0.7}
               style={{
                 paddingHorizontal: 10,
-                paddingVertical: theme.id === 'malhaeboka' ? 6 : 4,
+                paddingVertical: isMb(theme.id) ? 6 : 4,
                 borderRadius: L.button === 'pill' ? pillR : L.radius,
                 backgroundColor: on ? c.primary : 'transparent',
                 borderWidth: Math.max(1, L.hairline),
                 borderColor: on ? c.primary : c.line,
                 // 말해보카: 활성 = 보라 필 + 흰 굵은 숫자, 비활성 = 흰 칩
-                ...(theme.id === 'malhaeboka'
+                ...(isMb(theme.id)
                   ? on
                     ? { backgroundColor: '#7150F0', borderColor: '#7150F0', paddingHorizontal: 13 }
                     : { backgroundColor: c.surface, borderColor: '#E7E4F0', paddingHorizontal: 13 }
@@ -222,7 +223,7 @@ export function ThemedBody(p: ThemedBodyProps) {
                 style={[
                   { fontSize: t.bodySize - 2, color: on ? c.onPrimary : c.muted },
                   bodyFont(theme, on ? 700 : 500),
-                  theme.id === 'malhaeboka' && { fontSize: 15, fontWeight: '800' as const, color: on ? '#FFFFFF' : '#6D6A7C', letterSpacing: 0.2 },
+                  isMb(theme.id) && { fontSize: 15, fontWeight: '800' as const, color: on ? '#FFFFFF' : '#6D6A7C', letterSpacing: 0.2 },
                 ]}
               >{spd}x</Text>
             </TouchableOpacity>
@@ -429,7 +430,7 @@ export function ThemedBody(p: ThemedBodyProps) {
         };
     const fg = primary ? (L.button === 'outline' ? c.primaryDark : c.onPrimary) : c.textSecondary;
     return (
-      <TouchableOpacity onPress={onPress} activeOpacity={0.8} style={[{ flex: 1, height: theme.id === 'malhaeboka' ? 40 : L.density === 'open' ? 52 : 48, borderRadius: r, alignItems: 'center', justifyContent: 'center' }, deco]}>
+      <TouchableOpacity onPress={onPress} activeOpacity={0.8} style={[{ flex: 1, height: isMb(theme.id) ? 40 : L.density === 'open' ? 52 : 48, borderRadius: r, alignItems: 'center', justifyContent: 'center' }, deco]}>
         <Text numberOfLines={1} style={[{ fontSize: t.bodySize, color: fg }, bodyFont(theme, 700)]}>{label}</Text>
       </TouchableOpacity>
     );

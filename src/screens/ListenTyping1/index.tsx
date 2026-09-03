@@ -14,6 +14,7 @@ import { colors } from '../../theme/colors';
 import { useLang, pick } from '../../components/LangContext';
 import { ActivityHeader } from '../../components/ActivityHeader';
 
+import { isMb } from '../../theme/mb/mbSkin';
 interface Question {
   no: number;
   audioUrl: string;
@@ -33,7 +34,7 @@ interface Props {
 export function ListenTyping1({ questions = [], onNext, onBack, currentSetNumber = 1, totalSets = 1 }: Props) {
   const { lang } = useLang();
   const { theme: __mbBtnT, enabled: __mbBtnE } = useTheme();
-  const __mbBtn = __mbBtnE && __mbBtnT.id === 'malhaeboka';
+  const __mbBtn = __mbBtnE && isMb(__mbBtnT.id);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const [currentIdx, setCurrentIdx] = useState(0);

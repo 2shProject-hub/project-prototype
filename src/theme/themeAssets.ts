@@ -93,6 +93,63 @@ export const THEME_ASSETS: Record<string, ThemeAssets> = {
       { img: require('../../assets/themes/malhaeboka/sticker-fish3.png'), blink: require('../../assets/themes/malhaeboka/blink-sticker-fish3.png'), w: 72, h: 60 },
     ],
   },
+  // 말해보카 블루 — 보라 원본의 자매 테마. PNG 는 보라가 구워져 있어 색을 옮긴 사본을
+  // assets/themes/malhaeboka-blue/ 에 따로 두고, 사진(thumb-/photo-/profile-)은 원본을 그대로 쓴다.
+  // 벡터 글리프는 icon() 색만 파랑으로 바꿨다. 나머지 보라는 런타임 변환(mbSkin)이 맡는다.
+  'malhaeboka-blue': {
+    character: require('../../assets/themes/malhaeboka-blue/char-cat.png'),
+    characterBlink: require('../../assets/themes/malhaeboka-blue/char-cat-blink.png'),
+    characterAlt: require('../../assets/themes/malhaeboka-blue/char-owl.png'),
+    peek: require('../../assets/themes/malhaeboka-blue/char-rabbit.png'),
+    peekBlink: require('../../assets/themes/malhaeboka-blue/blink-char-rabbit.png'),
+    bubble: require('../../assets/themes/malhaeboka/char-fish.png'),
+    rowIcons: [
+      require('../../assets/themes/malhaeboka/icon-shop.png'),
+      require('../../assets/themes/malhaeboka/icon-quest.png'),
+      require('../../assets/themes/malhaeboka-blue/icon-dict.png'),
+      require('../../assets/themes/malhaeboka/icon-boost.png'),
+    ],
+    // 말해보카 하단 내비 글리프(어휘·리스닝·리그·프리미엄)를 우리 탭에 대응
+    // 하단 내비 — 상용 수준 선명도를 위해 벡터 스트로크로 (활성 보라 / 비활성 회색)
+    navIcons: {
+      home: { on: require('../../assets/themes/malhaeboka-blue/nav-home-on.png'), off: require('../../assets/themes/malhaeboka-blue/nav-home-off.png') },
+      report: { on: require('../../assets/themes/malhaeboka/nav-report-on.png'), off: require('../../assets/themes/malhaeboka/nav-report-off.png') },
+      'ai-talk': { on: require('../../assets/themes/malhaeboka/nav-chat-on.png'), off: require('../../assets/themes/malhaeboka/nav-chat-off.png') },
+      'my-info': { on: require('../../assets/themes/malhaeboka/nav-people-on.png'), off: require('../../assets/themes/malhaeboka/nav-people-off.png') },
+    },
+    crest: require('../../assets/themes/malhaeboka/char-fish.png'),
+    logo: { uri: MB_BRAND_LOGO },
+    glyphs: {
+      // 재생중=검은 해드셋(잘 보이게) / 대기=회색 해드셋 — 2026 벡터 스트로크
+      speakerOn: { uri: icon('headphones', '#222F3A', 24, 2.1) },
+      speakerOff: { uri: icon('headphones', '#465460', 24, 2.1) },
+      mic: require('../../assets/themes/malhaeboka-blue/icon-mic-egg.png'),
+      hint: { uri: icon('bulb', '#222F3A', 24, 2) },
+      book: { uri: icon('bookopen', '#3480C2', 24, 2) },
+      play: { uri: icon('play', '#50A5F0', 24, 2) },
+      school: require('../../assets/themes/malhaeboka/char-fish.png'),
+      write: require('../../assets/themes/malhaeboka-blue/glyph-keyboard.png'),
+      kbd: { uri: icon('keyboard', '#222F3A', 24, 1.8) },
+      cards: { uri: icon('grid', '#3480C2', 24, 2) },
+      pause: { uri: icon('pause', '#222F3A', 24, 2) },
+      quest: require('../../assets/themes/malhaeboka/icon-quest.png'),
+      dict: require('../../assets/themes/malhaeboka-blue/icon-dict.png'),
+    },
+    stickers: [
+      { img: require('../../assets/themes/malhaeboka-blue/char-rabbit.png'), blink: require('../../assets/themes/malhaeboka-blue/blink-char-rabbit.png'), w: 79, h: 90, edge: true },
+      { img: require('../../assets/themes/malhaeboka-blue/sticker-cat.png'), w: 76, h: 90 },
+      { img: require('../../assets/themes/malhaeboka/char-fish.png'), w: 58, h: 77 },
+      { img: require('../../assets/themes/malhaeboka-blue/sticker-mouse.png'), w: 78, h: 67 },
+      { img: require('../../assets/themes/malhaeboka-blue/sticker-crowncat.png'), blink: require('../../assets/themes/malhaeboka-blue/blink-sticker-crowncat.png'), w: 75, h: 96 },
+      { img: require('../../assets/themes/malhaeboka/sticker-owl.png'), blink: require('../../assets/themes/malhaeboka/blink-sticker-owl.png'), w: 78, h: 72 },
+      { img: require('../../assets/themes/malhaeboka/sticker-chu.png'), blink: require('../../assets/themes/malhaeboka/blink-sticker-chu.png'), w: 88, h: 72 },
+      { img: require('../../assets/themes/malhaeboka-blue/sticker-monster.png'), w: 66, h: 74 },
+      { img: require('../../assets/themes/malhaeboka-blue/sticker-nana.png'), blink: require('../../assets/themes/malhaeboka-blue/blink-sticker-nana.png'), w: 58, h: 79 },
+      { img: require('../../assets/themes/malhaeboka/sticker-goldfish.png'), blink: require('../../assets/themes/malhaeboka/blink-sticker-goldfish.png'), w: 72, h: 76 },
+      { img: require('../../assets/themes/malhaeboka-blue/sticker-fish2.png'), w: 68, h: 69 },
+      { img: require('../../assets/themes/malhaeboka-blue/sticker-fish3.png'), blink: require('../../assets/themes/malhaeboka/blink-sticker-fish3.png'), w: 72, h: 60 },
+    ],
+  },
 };
 
 export function themeAssets(themeId: string): ThemeAssets | null {

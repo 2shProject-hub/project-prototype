@@ -6,6 +6,7 @@ import { SESSION1 } from '../../data/lessonData';
 import { useLang, pick } from '../../components/LangContext';
 import { ActivityHeader } from '../../components/ActivityHeader';
 
+import { isMb } from '../../theme/mb/mbSkin';
 interface Props {
   onNext: () => void;
   onBack: () => void;
@@ -14,7 +15,7 @@ interface Props {
 export function IntroStage({ onNext, onBack }: Props) {
   const { lang } = useLang();
   const { theme: __mbT, enabled: __mbE } = useTheme();
-  const __mbBig = __mbE && __mbT.id === 'malhaeboka';
+  const __mbBig = __mbE && isMb(__mbT.id);
   const intro = SESSION1.intro;
 
   return (

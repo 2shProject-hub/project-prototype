@@ -11,6 +11,7 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView, TextInput, Platfo
 import { colors, radius, spacing, shadow } from '../../theme';
 import { useLang, pick, ActivityHeader, CtaButton } from '../../components';
 
+import { isMb } from '../../theme/mb/mbSkin';
 interface BlankField {
   placeholder: string;
   placeholderVi: string;
@@ -41,7 +42,7 @@ export function SpeakingEvalStage({
 }: Props) {
   const { lang } = useLang();
   const { theme: __mbBT, enabled: __mbBE } = useTheme();
-  const __mbBtn = __mbBE && __mbBT.id === 'malhaeboka';
+  const __mbBtn = __mbBE && isMb(__mbBT.id);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [inputs, setInputs] = useState<string[]>([]);
   const [isRecording, setIsRecording] = useState(false);

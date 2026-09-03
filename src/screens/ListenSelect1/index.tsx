@@ -17,6 +17,7 @@ import { useLang, pick, ActivityHeader, CtaButton, QuizFeedbackModal, ChoiceChip
 import { useSfx } from '../../hooks/useSfx';
 import { playExclusive, stopExclusive } from '../../utils/audioPlayer';
 
+import { isMb } from '../../theme/mb/mbSkin';
 interface Question {
   no: number;
   desc: string;
@@ -43,7 +44,7 @@ export function ListenSelect1({
 }: Props) {
   const { lang } = useLang();
   const { theme: __mbBT, enabled: __mbBE } = useTheme();
-  const __mbBtn = __mbBE && __mbBT.id === 'malhaeboka';
+  const __mbBtn = __mbBE && isMb(__mbBT.id);
   const sfx = useSfx();
   const [currentIdx, setCurrentIdx] = useState(0);
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);

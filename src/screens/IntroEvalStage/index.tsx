@@ -6,6 +6,7 @@ import { colors, radius, spacing, shadow } from '../../theme';
 import { SESSION1 } from '../../data/lessonData';
 import { useLang, pick, ActivityHeader, CtaButton } from '../../components';
 
+import { isMb } from '../../theme/mb/mbSkin';
 const TUTOR_AUDIO = require('../../../assets/sounds/grammer-speak.wav') as string;
 
 interface Props {
@@ -16,7 +17,7 @@ interface Props {
 export function IntroEvalStage({ onNext, onBack }: Props) {
   const { lang } = useLang();
   const { theme: __mbT, enabled: __mbE } = useTheme();
-  const __mbBig = __mbE && __mbT.id === 'malhaeboka';
+  const __mbBig = __mbE && isMb(__mbT.id);
   const intro = SESSION1.introEvaluation;
 
   const [isAudioPlaying, setIsAudioPlaying] = useState(true);

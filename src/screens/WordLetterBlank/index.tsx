@@ -11,6 +11,7 @@ import { colors, radius, spacing, shadow } from '../../theme';
 import { useLang, pick, ActivityHeader, CtaButton, QuizFeedbackModal, AudioPlayButton } from '../../components';
 import { useSfx } from '../../hooks/useSfx';
 
+import { isMb } from '../../theme/mb/mbSkin';
 interface Question {
   no: number;
   desc: string;
@@ -39,7 +40,7 @@ export function WordLetterBlank({
 }: Props) {
   const { lang } = useLang();
   const { theme: __mbBT, enabled: __mbBE } = useTheme();
-  const __mbBtn = __mbBE && __mbBT.id === 'malhaeboka';
+  const __mbBtn = __mbBE && isMb(__mbBT.id);
   const sfx = useSfx();
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
