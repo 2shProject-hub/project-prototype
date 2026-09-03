@@ -10,6 +10,7 @@
 // ⚠️ 디자인 시안 비교용 참조 자산이다 — 실서비스 출시물에 쓰면 안 된다(타사 저작물).
 
 import { icon } from './graphics';
+import { MB_BRAND_LOGO } from './mb/brandLogo';
 
 export interface ThemeAssets {
   /** 완료(축하) 화면의 얼굴 — 메인 마스코트 */
@@ -27,6 +28,8 @@ export interface ThemeAssets {
   navIcons?: Record<string, { on: any; off: any }>;
   /** 홈 코스 카드의 삽화(기본 🏫 이모지 대체) */
   crest?: any;
+  /** 브랜드 로고(가로형 워드마크) — 홈 헤더 좌측 */
+  logo?: any;
   /** 완료 화면 캐릭터의 감은 눈 프레임 — 깜빡임 연출용 */
   characterBlink?: any;
   /** 이모지 아이콘 대체 글리프 (ThemedGlyph 가 조회) */
@@ -58,6 +61,7 @@ export const THEME_ASSETS: Record<string, ThemeAssets> = {
       'my-info': { on: require('../../assets/themes/malhaeboka/nav-people-on.png'), off: require('../../assets/themes/malhaeboka/nav-people-off.png') },
     },
     crest: require('../../assets/themes/malhaeboka/char-fish.png'),
+    logo: { uri: MB_BRAND_LOGO },
     glyphs: {
       // 재생중=검은 해드셋(잘 보이게) / 대기=회색 해드셋 — 2026 벡터 스트로크
       speakerOn: { uri: icon('headphones', '#26223A', 24, 2.1) },

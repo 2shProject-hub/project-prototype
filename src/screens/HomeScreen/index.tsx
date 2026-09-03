@@ -58,6 +58,7 @@ export function HomeScreen({ sessions, setView, onStartSession }: Props) {
   const { theme: activeTheme, enabled: themeOn } = useTheme();
   const brandCrest = themeOn ? themeAssets(activeTheme.id)?.crest : undefined;
   const brandRowIcons = themeOn ? themeAssets(activeTheme.id)?.rowIcons : undefined;
+  const brandLogo = themeOn ? themeAssets(activeTheme.id)?.logo : undefined;
   const { lang } = useLang();
   const [subTab, setSubTab] = useState<SubTab>('my');
 
@@ -77,12 +78,16 @@ export function HomeScreen({ sessions, setView, onStartSession }: Props) {
     <View style={styles.screen}>
       {/* ── 상단 헤더 ── */}
       <View style={styles.header}>
-        <View style={styles.headerLeft}>
+        <View style={[styles.headerLeft, brandLogo && { gap: 18 }]}>
+          {/* 브랜드 로고 — 탭보다 앞선다 */}
+          {brandLogo ? (
+            <Image source={brandLogo} style={{ width: 104, height: 26 }} resizeMode="contain" />
+          ) : null}
           <TouchableOpacity activeOpacity={0.8}>
-            <Text style={styles.headerTabActive}>{pick(lang, '홈', 'Trang chủ')}</Text>
+            <Text style={[styles.headerTabActive, brandLogo && { fontSize: 18 }]}>{pick(lang, '홈', 'Trang chủ')}</Text>
           </TouchableOpacity>
           <TouchableOpacity activeOpacity={0.8}>
-            <Text style={styles.headerTabInactive}>{pick(lang, '코스', 'Khóa học')}</Text>
+            <Text style={[styles.headerTabInactive, brandLogo && { fontSize: 18 }]}>{pick(lang, '코스', 'Khóa học')}</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.boltBadge}>
