@@ -1955,6 +1955,11 @@ const shell = StyleSheet.create({
   topBar: {
     height: 58, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     paddingHorizontal: 20,
+    // ⚠️ react-native-web 은 모든 View 에 position:relative + z-index:0 을 찍는다 → View 마다 스택
+    // 컨텍스트가 생긴다. 그래서 topBar 안쪽(ts.wrap/ts.dropdown)의 zIndex 는 아무리 올려도 형제인
+    // body 를 넘지 못하고, 열린 테마 목록이 좌측 패널 아래로 깔려 클릭조차 먹지 않았다.
+    // 겹치는 영역이 없으니 시각적 부작용 없이 바(bar) 자체를 올려 해결한다.
+    zIndex: 100,
     backgroundColor: '#FFFFFF', borderBottomWidth: 1, borderBottomColor: '#ECEAF4',
   },
   topBarBrand: { flexDirection: 'row', alignItems: 'center', gap: 10 },
