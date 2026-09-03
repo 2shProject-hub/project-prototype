@@ -81,7 +81,7 @@ export function HomeScreen({ sessions, setView, onStartSession }: Props) {
         <View style={[styles.headerLeft, brandLogo && { gap: 18 }]}>
           {/* 브랜드 로고 — 탭보다 앞선다 */}
           {brandLogo ? (
-            <Image source={brandLogo} style={{ width: 96, height: 26 }} resizeMode="contain" />
+            <Image source={brandLogo} style={{ width: 97, height: 26 }} resizeMode="contain" />
           ) : null}
           <TouchableOpacity activeOpacity={0.8}>
             <Text style={[styles.headerTabActive, brandLogo && { fontSize: 18 }]}>{pick(lang, '홈', 'Trang chủ')}</Text>
