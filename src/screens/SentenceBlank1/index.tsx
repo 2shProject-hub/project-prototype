@@ -125,15 +125,15 @@ export function SentenceBlank1({
     <View style={s.root}>
       <ActivityHeader percentage={progressPct} onClose={onBack || (() => {})} />
 
-      <ScrollView style={s.scroll} contentContainerStyle={s.content}>
+      <ScrollView style={s.scroll} contentContainerStyle={[s.content, __mbBtn && { flexGrow: 1 }]}>
         {/* 지시문 */}
-        <Text style={s.instruction}>
+        <Text style={[s.instruction, __mbBtn && { fontSize: 18, fontWeight: '800', marginTop: 6 }]}>
           {pick(lang, '빈칸에 알맞은 단어를 고르세요', 'Chọn từ thích hợp điền vào chỗ trống')}
         </Text>
 
         {/* 한국어 빈칸 문장 */}
         <View style={s.sentenceRow}>
-          <Text style={s.sentenceText}>{before}</Text>
+          <Text style={[s.sentenceText, __mbBtn && { fontSize: 21 }]}>{before}</Text>
           <View style={[
             s.blankBox,
             selected && !showAnswer && (isCorrect ? s.blankCorrect : s.blankFilled),
@@ -147,11 +147,12 @@ export function SentenceBlank1({
               {showAnswer ? currentQuestion.blankWord : (selected ?? '　　')}
             </Text>
           </View>
-          <Text style={s.sentenceText}>{after}</Text>
+          <Text style={[s.sentenceText, __mbBtn && { fontSize: 21 }]}>{after}</Text>
         </View>
 
-        {/* 선택지 */}
-        <View style={s.choicesGrid}>
+        {/* 선택지 — MB 는 남는 세로 공간 가운데 크게 배치 */}
+        {__mbBtn ? <View style={{ flex: 0.55 }} /> : null}
+        <View style={[s.choicesGrid, __mbBtn && { rowGap: 14, columnGap: 14 }]}>
           {currentQuestion.choices.map((word, idx) => {
             const state = choiceState(word);
             return (
@@ -159,7 +160,7 @@ export function SentenceBlank1({
                 key={idx}
                 style={[
                   s.choiceBtn,
-                  __mbBtn && { minHeight: 54, paddingHorizontal: 20, borderRadius: 16, borderColor: '#E5DFF7' },
+                  __mbBtn && { minHeight: 72, minWidth: '44%' as any, borderRadius: 18, borderColor: '#E5DFF7', justifyContent: 'center', alignItems: 'center' },
                   selected === word && !showAnswer && s.choiceBtnSelected,
                   state === 'correct' && s.choiceBtnCorrect,
                   state === 'wrong' && s.choiceBtnWrong,
@@ -171,7 +172,7 @@ export function SentenceBlank1({
               >
                 <Text style={[
                   s.choiceText,
-                  __mbBtn && { fontSize: 16.5 },
+                  __mbBtn && { fontSize: 18.5 },
                   selected === word && !showAnswer && s.choiceTextSelected,
                   state === 'correct' && s.choiceTextCorrect,
                   state === 'wrong' && s.choiceTextWrong,
@@ -183,6 +184,7 @@ export function SentenceBlank1({
             );
           })}
         </View>
+        {__mbBtn ? <View style={{ flex: 1.8 }} /> : null}
 
         {/* 오답 횟수 안내 */}
         {failCount > 0 && !isCorrect && !showAnswer && (

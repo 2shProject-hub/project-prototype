@@ -13,7 +13,7 @@ import { useState, useEffect, useRef, type ReactNode } from 'react';
 const MB_LEARN_POOL: any[] = [
   require('../../../assets/SetWordbookEvalStage/1_student.png'),
   require('../../../assets/SetWordbookEvalStage/2_teacher.png'),
-  require('../../../assets/classroom.jpg'),
+  require('../../../assets/themes/malhaeboka/photo-mic.png'), // 교실 일러스트 → 실사(스피킹)
   require('../../../assets/SetWordbookEvalStage/friend.png'),
   require('../../../assets/SetWordbookEvalStage/preson.png'),
   require('../../../assets/SetWordbookEvalStage/6_employee.png'),

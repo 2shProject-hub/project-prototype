@@ -106,7 +106,7 @@ export function MbWordSlides({ onNext, onBack, slides, flowStep, flowTotal }: Pr
         <MbCard style={{ flex: 1 }}>
           {index === 0 && <IntroBody />}
           {index === 1 && <QuizBody a="베트남" aImg={IMG_FLAG} answer="베트남 사람" ansImg={IMG_PERSON} />}
-          {index === 2 && <QuizBody a="한국" aImg={IMG_KOREA} answer="한국 사람" ansImg={IMG_SARAM} />}
+          {index === 2 && <QuizBody a="한국" aImg={IMG_KOREA} aFit="contain" answer="한국 사람" ansImg={IMG_SARAM} />}
           {index === 3 && <OutroBody />}
         </MbCard>
       </Animated.View>
@@ -237,7 +237,7 @@ function IntroBody() {
   );
 }
 
-function QuizBody({ a, aImg, answer, ansImg }: { a: string; aImg: any; answer: string; ansImg: any }) {
+function QuizBody({ a, aImg, answer, ansImg, aFit }: { a: string; aImg: any; answer: string; ansImg: any; aFit?: 'cover' | 'contain' }) {
   return (
     <View style={{ flex: 1, gap: 12 }}>
       <View style={{ alignSelf: 'flex-start', backgroundColor: '#FFE8F1', borderRadius: 8, paddingHorizontal: 9, paddingVertical: 4 }}>
@@ -248,7 +248,11 @@ function QuizBody({ a, aImg, answer, ansImg }: { a: string; aImg: any; answer: s
       <View style={{ flex: 1, justifyContent: 'center', gap: 30 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
           <View style={{ flex: 1, alignItems: 'center', gap: 7 }}>
-            <Image source={aImg} style={{ width: '100%', height: 148, borderRadius: 14 }} resizeMode="cover" />
+            <Image
+              source={aImg}
+              style={{ width: '100%', height: 148, borderRadius: 14, backgroundColor: '#FFFFFF', borderWidth: aFit === 'contain' ? 1.5 : 0, borderColor: '#EEE9F8' }}
+              resizeMode={aFit ?? 'cover'}
+            />
             <Text style={mbDisplay(17, '800')}>{a}</Text>
           </View>
           <Text style={[mbDisplay(28, '900'), { color: mb.violet }]}>+</Text>
