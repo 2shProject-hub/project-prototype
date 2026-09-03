@@ -1323,6 +1323,66 @@ export const THEMES: Theme[] = [
       "heroTags": "study,desk",
       "lock": 197
     }
+  },
+  {
+    "id": "malhaeboka-deep",
+    "name": "말해보카 딥블루",
+    "nameEn": "MalhaeVoca Deep",
+    "reference": "말해보카 — 흰 지면 위에 라벤더 알약(pill) 행과 보라 필 버튼. 캐릭터가 앞에 서고, 출석 점·카운트 배지 같은 작은 장치가 목록을 채운다. 하늘·분홍 파스텔 포인트.",
+    "idea": "지면은 희게 비우고, 만지는 것마다 라벤더 알약으로 말랑하게 감싼다.",
+    "rationale": "말해보카 — 흰 바탕에 보라는 필 버튼과 배지에만. 목록 행은 라벤더 인셋 알약, 진행은 출석 점. 마스코트가 화면의 초점.",
+    "avoid": "보라를 지면에 칠하지 않는다(지면은 흰색). 알약 밖 그림자 남발 금지. 파스텔 포인트는 배지·배너에만.",
+    "colors": {
+      "canvas": "#FFFFFF",
+      "surface": "#FFFFFF",
+      "ink": "#171D28",
+      "textSecondary": "#3C434F",
+      "muted": "#68707E",
+      "line": "#E8EBF1",
+      "primary": "#4187FF",
+      "primaryDark": "#2263D4",
+      "primarySoft": "#EAF2FF",
+      "accent": "#F06EAC",
+      "onPrimary": "#FFFFFF",
+      "success": "#2E9560",
+      "warning": "#A8720E",
+      "danger": "#D14A6B",
+      "backdrop": "#F4F7FB",
+      "accentSoft": "#FBE7F1",
+      "successSoft": "#E3F2EA",
+      "warningSoft": "#F6F0DE",
+      "dangerSoft": "#F8E4EC"
+    },
+    "type": {
+      "display": "Pretendard",
+      "body": "Pretendard",
+      "displayWeight": 800,
+      "bodyWeight": 500,
+      "displaySize": 30,
+      "bodySize": 15,
+      "displayTracking": -0.4,
+      "displayLine": 1.26,
+      "bodyLine": 1.55,
+      "labelTracking": 0.4,
+      "labelCase": "normal"
+    },
+    "layout": {
+      "structure": "focus-list",
+      "header": "stacked",
+      "list": "inset",
+      "button": "rect",
+      "progress": "dots",
+      "photo": "rounded",
+      "density": "open",
+      "radius": 14,
+      "hairline": 1,
+      "shadow": "soft",
+      "edge": 20
+    },
+    "photo": {
+      "heroTags": "study,desk",
+      "lock": 197
+    }
   }
 ];
 

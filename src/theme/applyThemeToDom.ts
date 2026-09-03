@@ -13,7 +13,7 @@
 //    형태까지 바꾸려면 화면 컴포넌트가 테마를 직접 읽어야 한다(테마 확정 후 작업).
 import type { Theme } from './themeTypes';
 import { fontStack } from './fonts';
-import { isMb, isMbBlue, applyMbBlueSkin, transposeColors } from './mb/mbSkin';
+import { isMb, isMbBlue, applyMbBlueSkin, transposeColors, setBlueTarget } from './mb/mbSkin';
 
 const STYLE_ID = 'kchao-theme-override';
 
@@ -178,6 +178,7 @@ export function applyThemeToDom(theme: Theme | null): void {
     document.head.appendChild(tag);
   }
 
+  setBlueTarget(theme.id);
   const map = buildMap(theme);
   // 색 문자열 → 바꿀 색. 표기 변형을 모두 키로 넣어 한 번에 치환한다.
   const replacements: Array<[string, string]> = [];

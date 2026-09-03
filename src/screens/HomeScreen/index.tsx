@@ -59,6 +59,7 @@ export function HomeScreen({ sessions, setView, onStartSession }: Props) {
   const brandCrest = themeOn ? themeAssets(activeTheme.id)?.crest : undefined;
   const brandRowIcons = themeOn ? themeAssets(activeTheme.id)?.rowIcons : undefined;
   const brandLogo = themeOn ? themeAssets(activeTheme.id)?.logo : undefined;
+  const brandLogoW = Math.round(26 * (themeOn ? themeAssets(activeTheme.id)?.logoRatio ?? 3.727 : 3.727));
   const { lang } = useLang();
   const [subTab, setSubTab] = useState<SubTab>('my');
 
@@ -81,7 +82,7 @@ export function HomeScreen({ sessions, setView, onStartSession }: Props) {
         <View style={[styles.headerLeft, brandLogo && { gap: 18 }]}>
           {/* 브랜드 로고 — 탭보다 앞선다 */}
           {brandLogo ? (
-            <Image source={brandLogo} style={{ width: 97, height: 26 }} resizeMode="contain" />
+            <Image source={brandLogo} style={{ width: brandLogoW, height: 26 }} resizeMode="contain" />
           ) : null}
           <TouchableOpacity activeOpacity={0.8}>
             <Text style={[styles.headerTabActive, brandLogo && { fontSize: 18 }]}>{pick(lang, '홈', 'Trang chủ')}</Text>

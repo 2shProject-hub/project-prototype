@@ -11,6 +11,7 @@
 
 import { icon } from './graphics';
 import { MB_BRAND_LOGO } from './mb/brandLogo';
+import { MB_WORD_LOGO, MB_WORD_LOGO_RATIO } from './mb/brandLogoWord';
 
 export interface ThemeAssets {
   /** 완료(축하) 화면의 얼굴 — 메인 마스코트 */
@@ -30,6 +31,8 @@ export interface ThemeAssets {
   crest?: any;
   /** 브랜드 로고(가로형 워드마크) — 홈 헤더 좌측 */
   logo?: any;
+  /** 로고 가로:세로 비 (없으면 3.727) */
+  logoRatio?: number;
   /** 완료 화면 캐릭터의 감은 눈 프레임 — 깜빡임 연출용 */
   characterBlink?: any;
   /** 이모지 아이콘 대체 글리프 (ThemedGlyph 가 조회) */
@@ -91,6 +94,62 @@ export const THEME_ASSETS: Record<string, ThemeAssets> = {
       { img: require('../../assets/themes/malhaeboka/sticker-goldfish.png'), blink: require('../../assets/themes/malhaeboka/blink-sticker-goldfish.png'), w: 72, h: 76 },
       { img: require('../../assets/themes/malhaeboka/sticker-fish2.png'), w: 68, h: 69 },
       { img: require('../../assets/themes/malhaeboka/sticker-fish3.png'), blink: require('../../assets/themes/malhaeboka/blink-sticker-fish3.png'), w: 72, h: 60 },
+    ],
+  },
+  // 말해보카 딥블루 — 더 파랗고 진한 변형. 로고는 A 타입 워드마크(KChao).
+  'malhaeboka-deep': {
+    character: require('../../assets/themes/malhaeboka-deep/char-cat.png'),
+    characterBlink: require('../../assets/themes/malhaeboka-deep/char-cat-blink.png'),
+    characterAlt: require('../../assets/themes/malhaeboka-deep/char-owl.png'),
+    peek: require('../../assets/themes/malhaeboka-deep/char-rabbit.png'),
+    peekBlink: require('../../assets/themes/malhaeboka-deep/blink-char-rabbit.png'),
+    bubble: require('../../assets/themes/malhaeboka/char-fish.png'),
+    rowIcons: [
+      require('../../assets/themes/malhaeboka/icon-shop.png'),
+      require('../../assets/themes/malhaeboka/icon-quest.png'),
+      require('../../assets/themes/malhaeboka-deep/icon-dict.png'),
+      require('../../assets/themes/malhaeboka/icon-boost.png'),
+    ],
+    // 말해보카 하단 내비 글리프(어휘·리스닝·리그·프리미엄)를 우리 탭에 대응
+    // 하단 내비 — 상용 수준 선명도를 위해 벡터 스트로크로 (활성 보라 / 비활성 회색)
+    navIcons: {
+      home: { on: require('../../assets/themes/malhaeboka-deep/nav-home-on.png'), off: require('../../assets/themes/malhaeboka-deep/nav-home-off.png') },
+      report: { on: require('../../assets/themes/malhaeboka/nav-report-on.png'), off: require('../../assets/themes/malhaeboka/nav-report-off.png') },
+      'ai-talk': { on: require('../../assets/themes/malhaeboka/nav-chat-on.png'), off: require('../../assets/themes/malhaeboka/nav-chat-off.png') },
+      'my-info': { on: require('../../assets/themes/malhaeboka/nav-people-on.png'), off: require('../../assets/themes/malhaeboka/nav-people-off.png') },
+    },
+    crest: require('../../assets/themes/malhaeboka/char-fish.png'),
+    logo: { uri: MB_WORD_LOGO },
+    logoRatio: MB_WORD_LOGO_RATIO,
+    glyphs: {
+      // 재생중=검은 해드셋(잘 보이게) / 대기=회색 해드셋 — 2026 벡터 스트로크
+      speakerOn: { uri: icon('headphones', '#1F2A3D', 24, 2.1) },
+      speakerOff: { uri: icon('headphones', '#434F63', 24, 2.1) },
+      mic: require('../../assets/themes/malhaeboka-deep/icon-mic-egg.png'),
+      hint: { uri: icon('bulb', '#1F2A3D', 24, 2) },
+      book: { uri: icon('bookopen', '#2263D4', 24, 2) },
+      play: { uri: icon('play', '#4187FF', 24, 2) },
+      school: require('../../assets/themes/malhaeboka/char-fish.png'),
+      write: require('../../assets/themes/malhaeboka-deep/glyph-keyboard.png'),
+      kbd: { uri: icon('keyboard', '#1F2A3D', 24, 1.8) },
+      cards: { uri: icon('grid', '#2263D4', 24, 2) },
+      pause: { uri: icon('pause', '#1F2A3D', 24, 2) },
+      quest: require('../../assets/themes/malhaeboka/icon-quest.png'),
+      dict: require('../../assets/themes/malhaeboka-deep/icon-dict.png'),
+    },
+    stickers: [
+      { img: require('../../assets/themes/malhaeboka-deep/char-rabbit.png'), blink: require('../../assets/themes/malhaeboka-deep/blink-char-rabbit.png'), w: 79, h: 90, edge: true },
+      { img: require('../../assets/themes/malhaeboka-deep/sticker-cat.png'), w: 76, h: 90 },
+      { img: require('../../assets/themes/malhaeboka/char-fish.png'), w: 58, h: 77 },
+      { img: require('../../assets/themes/malhaeboka-deep/sticker-mouse.png'), w: 78, h: 67 },
+      { img: require('../../assets/themes/malhaeboka-deep/sticker-crowncat.png'), blink: require('../../assets/themes/malhaeboka-deep/blink-sticker-crowncat.png'), w: 75, h: 96 },
+      { img: require('../../assets/themes/malhaeboka/sticker-owl.png'), blink: require('../../assets/themes/malhaeboka/blink-sticker-owl.png'), w: 78, h: 72 },
+      { img: require('../../assets/themes/malhaeboka/sticker-chu.png'), blink: require('../../assets/themes/malhaeboka/blink-sticker-chu.png'), w: 88, h: 72 },
+      { img: require('../../assets/themes/malhaeboka-deep/sticker-monster.png'), w: 66, h: 74 },
+      { img: require('../../assets/themes/malhaeboka-deep/sticker-nana.png'), blink: require('../../assets/themes/malhaeboka-deep/blink-sticker-nana.png'), w: 58, h: 79 },
+      { img: require('../../assets/themes/malhaeboka/sticker-goldfish.png'), blink: require('../../assets/themes/malhaeboka/blink-sticker-goldfish.png'), w: 72, h: 76 },
+      { img: require('../../assets/themes/malhaeboka-deep/sticker-fish2.png'), w: 68, h: 69 },
+      { img: require('../../assets/themes/malhaeboka-deep/sticker-fish3.png'), blink: require('../../assets/themes/malhaeboka/blink-sticker-fish3.png'), w: 72, h: 60 },
     ],
   },
   // 말해보카 블루 — 보라 원본의 자매 테마. PNG 는 보라가 구워져 있어 색을 옮긴 사본을

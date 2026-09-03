@@ -10,13 +10,23 @@
 // 그래서 대비·가독성이 원본과 동일하게 유지된다. 분홍 포인트(330~340°)·하늘색 지면(205°)·
 // 국기 사진 같은 건 범위 밖이라 그대로 남는다.
 
-export const isMb = (id?: string | null): boolean => id === 'malhaeboka' || id === 'malhaeboka-blue';
-export const isMbBlue = (id?: string | null): boolean => id === 'malhaeboka-blue';
+export const isMb = (id?: string | null): boolean => !!id && id.indexOf('malhaeboka') === 0;
+
+/** 파랑 변형별 목표: 색상(도)과 채도 배율. 여기 숫자만 바꾸면 테마 전체 톤이 같이 움직인다. */
+const BLUE_TARGETS: Record<string, { h: number; s: number }> = {
+  'malhaeboka-blue': { h: 208, s: 1 },      // 브랜드 블루(#139AFF) 계열
+  'malhaeboka-deep': { h: 218, s: 1.25 },   // 더 파랗고 진한 쪽
+};
+export const isMbBlue = (id?: string | null): boolean => !!id && !!BLUE_TARGETS[id];
+
+let TARGET = BLUE_TARGETS['malhaeboka-blue'];
+export function setBlueTarget(id?: string | null): void {
+  TARGET = BLUE_TARGETS[id || ''] || BLUE_TARGETS['malhaeboka-blue'];
+}
 
 const HUE_MIN = 232;   // 남보라 시작
 const HUE_MAX = 302;   // 자주 끝
 const SAT_MIN = 0.05;  // 무채색(회색·검정·흰색)은 건드리지 않는다
-const TARGET_HUE = 208;
 
 function rgbToHsl(r: number, g: number, b: number): [number, number, number] {
   const R = r / 255, G = g / 255, B = b / 255;
@@ -51,7 +61,7 @@ function hslToRgb(h: number, s: number, l: number): [number, number, number] {
 export function blueify(r: number, g: number, b: number): [number, number, number] | null {
   const [h, s, l] = rgbToHsl(r, g, b);
   if (s < SAT_MIN || h < HUE_MIN || h > HUE_MAX) return null;
-  return hslToRgb(TARGET_HUE, s, l);
+  return hslToRgb(TARGET.h, Math.min(1, s * TARGET.s), l);
 }
 
 const hex2 = (n: number) => n.toString(16).padStart(2, '0');
