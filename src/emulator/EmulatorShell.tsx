@@ -1517,6 +1517,10 @@ function ThemeSelect() {
   const { themes, themeId, setThemeId, theme } = useTheme();
   const [open, setOpen] = useState(false);
 
+  // 셀렉터에는 말해보카 계열만 노출한다(나머지 20종은 테마 갤러리에서 계속 볼 수 있다).
+  // 저장된 테마가 말해보카가 아니면 그 항목만 추가로 남겨 선택 상태가 목록에서 사라지지 않게 한다.
+  const list = themes.filter((t) => isMb(t.id) || t.id === themeId);
+
   return (
     <View style={ts.wrap}>
       <TouchableOpacity style={[ts.trigger, open && ts.triggerOpen]} onPress={() => setOpen(!open)} activeOpacity={0.75}>
@@ -1528,7 +1532,7 @@ function ThemeSelect() {
       {open && (
         <View style={ts.dropdown}>
           <ScrollView style={{ maxHeight: 420 }} nestedScrollEnabled showsVerticalScrollIndicator>
-            {themes.map((t, i) => {
+            {list.map((t, i) => {
               const sel = t.id === themeId;
               return (
                 <TouchableOpacity
