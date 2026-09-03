@@ -1628,7 +1628,7 @@ export const MOCK_CONVERSATION: ConversationData = {
       side: 'left',
       textKo: '안녕하세요? 어느 나라 사람이에요?',
       textVi: 'Xin chào? Bạn là người nước nào vậy?',
-      audioSrc: undefined,
+      audioSrc: require('../../assets/sounds/con-1.mp3') as string,
       avatarUri: require('../../assets/WordVnKoSelect2/sena.png'),
     },
     {
@@ -1637,7 +1637,7 @@ export const MOCK_CONVERSATION: ConversationData = {
       side: 'right',
       textKo: '만나서 반가워요. 저는 유키예요.',
       textVi: 'Rất vui được gặp bạn. Tôi là Yuki.',
-      audioSrc: undefined,
+      audioSrc: require('../../assets/sounds/con-2.mp3') as string,
       avatarUri: require('../../assets/WordVnKoSelect2/yuki.png'),
     },
     {
@@ -1646,7 +1646,7 @@ export const MOCK_CONVERSATION: ConversationData = {
       side: 'left',
       textKo: '아, 그렇군요! 직업이 뭐예요?',
       textVi: 'À, vậy à! Bạn làm nghề gì vậy?',
-      audioSrc: undefined,
+      audioSrc: require('../../assets/sounds/con-3.mp3') as string,
       avatarUri: require('../../assets/WordVnKoSelect2/sena.png'),
     },
     {
@@ -1655,7 +1655,7 @@ export const MOCK_CONVERSATION: ConversationData = {
       side: 'right',
       textKo: '저는 일본 사람이에요.',
       textVi: 'Tôi là người Nhật Bản.',
-      audioSrc: undefined,
+      audioSrc: require('../../assets/sounds/con-4.mp3') as string,
       avatarUri: require('../../assets/WordVnKoSelect2/yuki.png'),
     },
   ],

@@ -14,7 +14,7 @@ import { colors, radius, spacing, shadow } from '../../theme';
 import { SESSION1 } from '../../data/lessonData';
 import { useLang, pick, ActivityHeader, CtaButton } from '../../components';
 
-const TUTOR_AUDIO = require('../../../assets/sounds/tutor_intro_5.wav') as string;
+const TUTOR_AUDIO = require('../../../assets/sounds/word-2.wav') as string;
 
 interface IntroData {
   badge: string;
