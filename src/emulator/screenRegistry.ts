@@ -342,12 +342,12 @@ export const BASE_SCREEN_REGISTRY: ScreenMeta[] = [
   },
   {
     id: 'learning-report',
-    label: '16. 학습 리포트',
-    category: '신규',
-    description: '1차시 학습 완료 후 전체 학습 성과를 요약하는 최종 리포트. 어휘, 발음평가, 문제 현황 및 AI 피드백을 포함한다.',
-    devNotes: 'LearningReportStage / props: data, onNext, onBack / 학습 성과 요약(어휘 수, 발음평가 점수, 확인 문제 점수) / 재학습 섹션(단어, 문법, 음성) / AI 피드백 영역 / 다국어 지원',
-    designNotes: '상단: 배지(학습 리포트) + 프로그레스바 / 제목 및 설명 / 요약 카드(3개 항목: 어휘, 발음평가, 확인문제) / 재학습 섹션(3개 항목) / AI 피드백 영역(노란 배경) / 하단: 학습 완료 버튼',
-    sourceAFile: 'src/screens/LearningReportStage/index.tsx',
+    label: '16. 학습 리포트 (개편)',
+    category: '수정',
+    description: '1차시 학습 완료 후 전체 학습 성과를 요약하는 최종 리포트. 정답률 도넛 차트, 4대 영역별 성취도(어휘/듣기/발음/문법), 1차시 요약, 발음평가 3축(정확도/완성도/유창성) 방사형 레이더 차트 및 5단계 정답률 구간별 자동 총평(다국어 KO/VI 지원)을 포함한다.',
+    devNotes: 'LearningReportStage / props: data, onNext, onBack / 도넛 차트(ReportDonutChart), 3축 레이더 차트(ReportRadarChart) SVG 컴포넌트 탑재 / 5단계 정답률 구간 총평 헬퍼(feedbackUtils) / 다국어(KO/VI) 100% 지원',
+    designNotes: '상단: ActivityHeader + 학습 리포트 배지 + 3D 학사모 / 학습 분석 카드(도넛+4개영역+3단스탯칩) / 1차시 요약 그리드 / 발음평가 3축 방사형 차트 / AI 튜터 총평 카드 / 하단: 학습 완료 CTA',
+    sourceAFile: 'src/screens/activity/lessoncomplete/LessonReportModal.tsx',
     sourceBRef: 'LearningReportStage',
   },
   {

@@ -599,13 +599,21 @@ function ScreenRenderer({ screenId, onNavigate, flowStep, flowTotal }: { screenI
     sessionTitleVi: 'Tôi là Hương',
     description: '나라와 국적 표현을 배웠습니다.',
     descriptionVi: 'Bạn đã học về cách diễn đạt quốc gia và quốc tịch.',
+    totalAccuracy: 86,
+    vocabScore: 92,
+    pronScore: 78,
+    grammarScore: 88,
+    studyMinutes: 12,
+    streakDays: 3,
+    starsEarned: 24,
     vocabCount: 12,
     speakingScore: 3,
     speakingTotal: 4,
     testScore: 5,
     testTotal: 6,
-    aiFeedback: '좋은 발음으로 완성했습니다!',
-    aiFeedbackVi: 'Bạn đã hoàn thành với phát âm tốt!',
+    accuracyScore: 34,
+    fluencyScore: 60,
+    completenessScore: 96,
   };
 
   // 기본 프로토타입 화면 분기
@@ -1224,17 +1232,25 @@ function ScreenRenderer({ screenId, onNavigate, flowStep, flowTotal }: { screenI
         <LearningReportStage
           data={{
             sessionNumber: 1,
-            sessionTitle: '나라와 국적 소개',
-            sessionTitleVi: 'Giới thiệu quốc gia và quốc tịch',
-            description: '오늘 학습한 단어, 문법, 발음기 결정해 확인해 보세요.',
-            descriptionVi: 'Hãy xem lại từ vựng, ngữ pháp, phát âm mà bạn học hôm nay.',
-            vocabCount: 15,
-            speakingScore: 4,
+            sessionTitle: '저는 흐엉이에요',
+            sessionTitleVi: 'Tôi là Hương',
+            description: '나라와 국적 표현을 배웠습니다.',
+            descriptionVi: 'Bạn đã học về cách diễn đạt quốc gia và quốc tịch.',
+            totalAccuracy: 86,
+            vocabScore: 92,
+            pronScore: 78,
+            grammarScore: 88,
+            studyMinutes: 12,
+            streakDays: 3,
+            starsEarned: 24,
+            vocabCount: 12,
+            speakingScore: 3,
             speakingTotal: 4,
-            testScore: 6,
+            testScore: 5,
             testTotal: 6,
-            aiFeedback: '오늘의 자기소개 발음을 완성했어요. 다음에는 받침 있는 단어를 정확하게 구분해 말해봅시다.',
-            aiFeedbackVi: 'Bạn đã hoàn thành bài tự giới thiệu hôm nay. Lần sau, hãy phân biệt chính xác các từ có phụ âm cuối.'
+            accuracyScore: 34,
+            fluencyScore: 60,
+            completenessScore: 96,
           }}
           onNext={() => onNavigate('home')}
           onBack={() => onNavigate('home')}
