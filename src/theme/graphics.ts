@@ -3,15 +3,24 @@
 
 const B64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
-/** 의존성 없는 base64 (SVG 는 전부 ASCII 라 latin1 만으로 충분) */
+/** 의존성 없는 base64 (UTF-8 다국어 안전 인코딩 지원) */
 function toBase64(str: string): string {
   const g = globalThis as any;
-  if (typeof g.btoa === 'function') return g.btoa(str);
+  if (typeof g.btoa === 'function') {
+    try {
+      return g.btoa(unescape(encodeURIComponent(str)));
+    } catch {
+      // fallback to manual encoding
+    }
+  }
+  const utf8 = encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (_, p1) =>
+    String.fromCharCode(parseInt(p1, 16))
+  );
   let out = '';
-  for (let i = 0; i < str.length; i += 3) {
-    const c1 = str.charCodeAt(i);
-    const c2 = str.charCodeAt(i + 1);
-    const c3 = str.charCodeAt(i + 2);
+  for (let i = 0; i < utf8.length; i += 3) {
+    const c1 = utf8.charCodeAt(i);
+    const c2 = utf8.charCodeAt(i + 1);
+    const c3 = utf8.charCodeAt(i + 2);
     const e1 = c1 >> 2;
     const e2 = ((c1 & 3) << 4) | (isNaN(c2) ? 0 : c2 >> 4);
     const e3 = isNaN(c2) ? 64 : ((c2 & 15) << 2) | (isNaN(c3) ? 0 : c3 >> 6);

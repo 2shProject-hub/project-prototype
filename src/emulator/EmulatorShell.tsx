@@ -18,6 +18,7 @@ import { FlowProgressContext } from '../theme/mb/FlowContext';
 import type { Theme } from '../theme/themeTypes';
 
 // 화면 컴포넌트 임포트
+import { AgeVerificationScreen } from '../screens/AgeVerificationScreen';
 import { HomeScreen } from '../screens/HomeScreen';
 import { MissionTutorStage } from '../screens/MissionTutorStage';
 import { IntroTutorStage } from '../screens/IntroTutorStage';
@@ -618,6 +619,21 @@ function ScreenRenderer({ screenId, onNavigate, flowStep, flowTotal }: { screenI
 
   // 기본 프로토타입 화면 분기
   switch (screenId) {
+    case 'age-verification':
+      return (
+        <AgeVerificationScreen
+          onNext={data => {
+            alert(
+              `만 14세 이상 확인 완료!\n생년월일: ${data.birthDate} (만 ${data.age}세)\n온보딩(LevelSelectFlow)으로 진입합니다.`,
+            );
+            onNavigate('home');
+          }}
+          onBack={() => {
+            alert('로그인 화면으로 복귀합니다 (소셜 세션 정리).');
+            onNavigate('home');
+          }}
+        />
+      );
     case 'set-wordbook-eval':
       return (
         <SetWordbookEvalStage

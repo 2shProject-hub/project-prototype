@@ -14,6 +14,16 @@ export interface ScreenMeta {
 
 export const BASE_SCREEN_REGISTRY: ScreenMeta[] = [
   {
+    id: 'age-verification',
+    label: '0. 연령 확인 (만 14세 미만 제한)',
+    category: '신규',
+    description: '소셜 로그인 직후 만 14세 미만 가입 제한 정책에 따라 생년월일을 확인하고 분기 처리하는 진입 게이트 화면입니다.\n\n[진입 및 분기 Flow]\n① 소셜 로그인 (Google / Apple / Facebook OAuth)\n   ↓\n② 연령 확인 (생년월일 8자리 입력 + 필수 약관 동의)\n   ↓\n③ 만 14세 판정\n   ├─ Yes (만 14세 이상) ──> 통과 팝업 ──> 레벨 선택(온보딩) ──> 홈\n   └─ No  (만 14세 미만) ──> 차단 팝업 ──> 세션 초기화 후 소셜 로그인 복귀',
+    devNotes: '참고 파일: src/screens/AgeVerificationScreen/index.tsx\n- checkAgeRestriction 유틸 기반 윤년/월별일수/생일 경과 만 나이 계산\n- 확인 버튼 탭 시 결과 팝업(KO/VI 상하 병기) 노출 후 분기 라우팅\n  * 통과: onNext() -> 레벨 선택 화면 이동\n  * 차단: onBack() -> 세션 정리 후 소셜 로그인 복귀\n- 우측 ✕ 버튼 탭 시 소셜 로그인 복귀',
+    designNotes: '테마 적용 OFF (기본/뉴트럴 스타일)\n- 상단: 타이틀 "연령 확인" + 우측 ✕ 버튼 (뒤로가기/언어탭 제거)\n- 인풋: YYYY.MM.DD 자동 마스킹 (인라인 피드백 배너 제거)\n- 하단: "확인" 단일 버튼 (유효 입력 시 활성화)\n- 팝업: 한국어/베트남어 상하 병기 모달',
+    sourceAFile: 'src/screens/login/AgeVerificationScreen.tsx',
+    sourceBRef: 'AgeVerificationScreen',
+  },
+  {
     id: 'home',
     label: '1. 홈 화면 / 코스 안내',
     category: '수정',
