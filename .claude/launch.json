@@ -4,7 +4,7 @@
     {
       "name": "kchao-prototype",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["expo", "start", "--web"],
+      "runtimeArgs": ["expo", "start", "--web", "--clear"],
       "port": 8082,
       "autoPort": true
     }
