@@ -1625,6 +1625,35 @@ const ts = StyleSheet.create({
   optionSub: { fontSize: 9.5, color: colors.muted, marginTop: 1 },
 });
 
+// 마크다운 **bold** 문법 파서 컴포넌트
+function FormattedInfoText({ text, style }: { text: string; style?: any }) {
+  if (!text) return null;
+
+  const lines = text.split('\n');
+  const elements: React.ReactNode[] = [];
+
+  lines.forEach((line, lineIdx) => {
+    const parts = line.split(/(\*\*[^*]+\*\*)/g);
+    parts.forEach((part, partIdx) => {
+      if (part.startsWith('**') && part.endsWith('**') && part.length >= 4) {
+        elements.push(
+          <Text key={`b-${lineIdx}-${partIdx}`} style={{ fontWeight: '800', color: '#17151F' }}>
+            {part.slice(2, -2)}
+          </Text>
+        );
+      } else if (part.length > 0) {
+        elements.push(part);
+      }
+    });
+
+    if (lineIdx < lines.length - 1) {
+      elements.push('\n');
+    }
+  });
+
+  return <Text style={style}>{elements}</Text>;
+}
+
 function EmulatorShellInner() {
   const [deviceId, setDeviceId] = useState('iphone15');
   const [screenId, setScreenId] = useState('set-wordbook-eval');
@@ -1938,7 +1967,7 @@ function EmulatorShellInner() {
               <ScrollView style={shell.tabContent} showsVerticalScrollIndicator={false}>
                 {infoTab === 'desc' && (
                   <View style={shell.infoBlock}>
-                    <Text style={shell.infoText}>{screen.description}</Text>
+                    <FormattedInfoText text={screen.description} style={shell.infoText} />
                   </View>
                 )}
                 {infoTab === 'dev' && (
@@ -1955,12 +1984,12 @@ function EmulatorShellInner() {
                         <Text style={shell.codeChipValue}>{screen.sourceBRef}</Text>
                       </View>
                     )}
-                    <Text style={shell.infoText}>{screen.devNotes}</Text>
+                    <FormattedInfoText text={screen.devNotes} style={shell.infoText} />
                   </View>
                 )}
                 {infoTab === 'design' && (
                   <View style={shell.infoBlock}>
-                    <Text style={shell.infoText}>{screen.designNotes}</Text>
+                    <FormattedInfoText text={screen.designNotes} style={shell.infoText} />
                   </View>
                 )}
               </ScrollView>
