@@ -13,9 +13,13 @@
 export const isMb = (id?: string | null): boolean => !!id && id.indexOf('malhaeboka') === 0;
 
 /** 파랑 변형별 목표: 색상(도)과 채도 배율. 여기 숫자만 바꾸면 테마 전체 톤이 같이 움직인다. */
-const BLUE_TARGETS: Record<string, { h: number; s: number }> = {
+// 이름은 BLUE_ 지만 레드 계열도 같은 테이블로 다룬다. l 은 중간·어두운 톤(l<0.75)에만 곱하는 명도 배율.
+const BLUE_TARGETS: Record<string, { h: number; s: number; l?: number }> = {
   'malhaeboka-blue': { h: 208, s: 1 },      // 브랜드 블루(#139AFF) 계열
   'malhaeboka-deep': { h: 218, s: 1.25 },   // 더 파랗고 진한 쪽
+  'malhaeboka-red': { h: 10, s: 1.00, l: 1.00 },   // 말해보카 레드
+  'malhaeboka-crimson': { h: 358, s: 1.25, l: 0.95 },   // 말해보카 크림슨
+  'malhaeboka-maroon': { h: 354, s: 0.90, l: 0.72 },   // 말해보카 마룬
 };
 export const isMbBlue = (id?: string | null): boolean => !!id && !!BLUE_TARGETS[id];
 
@@ -61,7 +65,8 @@ function hslToRgb(h: number, s: number, l: number): [number, number, number] {
 export function blueify(r: number, g: number, b: number): [number, number, number] | null {
   const [h, s, l] = rgbToHsl(r, g, b);
   if (s < SAT_MIN || h < HUE_MIN || h > HUE_MAX) return null;
-  return hslToRgb(TARGET.h, Math.min(1, s * TARGET.s), l);
+  const l2 = TARGET.l && l < 0.75 ? l * TARGET.l : l;
+  return hslToRgb(TARGET.h, Math.min(1, s * TARGET.s), l2);
 }
 
 const hex2 = (n: number) => n.toString(16).padStart(2, '0');
