@@ -57,6 +57,7 @@ import { ConversationPreviewStage } from '../screens/ConversationPreviewStage';
 import { ConversationShadowingStage } from '../screens/ConversationShadowingStage';
 import DialogueListenWriteStage from '../screens/DialogueListenWriteStage';
 import PracticeCheckStage from '../screens/PracticeCheckStage';
+import { PracticalReadingViewerStage } from '../screens/PracticalReadingViewerStage';
 import { defaultSessionState, LEARNING_FLOW } from '../data/lessonData';
 import { useLang, pick, type Lang } from '../components/LangContext';
 
@@ -1319,6 +1320,13 @@ function ScreenRenderer({ screenId, onNavigate, flowStep, flowTotal }: { screenI
         <PracticeCheckStage
           onNext={() => onNavigate('home')}
           onBack={() => onNavigate('home')}
+        />
+      );
+    case 'practical-reading-viewer':
+      return (
+        <PracticalReadingViewerStage
+          onNext={() => onNavigate('home')}
+          onClose={() => onNavigate('home')}
         />
       );
     case 'grammar-complete':

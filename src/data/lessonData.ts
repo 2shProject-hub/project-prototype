@@ -676,6 +676,12 @@ export interface VideoBridgeData {
   videoUri?: string;
   // 자막 SRT URL (선택). 미등록 시 자막 없음.
   subtitleUri?: string;
+  // AI 튜터 인트로 레이어 관련 옵셔널 속성 (백오피스 데이터 연동)
+  badgeText?: string;          // 예: '실전 듣기'
+  aiTutorText?: string;        // 말풍선 텍스트 (한국어)
+  aiTutorTextVi?: string;      // 말풍선 텍스트 (베트남어)
+  aiTutorAudioUri?: string;    // 인트로 음원 URL/경로
+  showAiTutorIntro?: boolean;  // 인트로 레이어 노출 여부
 }
 
 export const MOCK_VIDEO_BRIDGE: VideoBridgeData = {
@@ -683,6 +689,16 @@ export const MOCK_VIDEO_BRIDGE: VideoBridgeData = {
   title: '오늘의 학습을 시작해볼까요?',
   titleVi: 'Hãy bắt đầu bài học hôm nay nhé!',
   // videoUri 미설정 → 프로토타입에서 로컬 MP4 에셋 사용
+};
+
+export const MOCK_VIDEO_BRIDGE_WITH_INTRO: VideoBridgeData = {
+  activityNo: 1,
+  title: '오늘의 학습을 시작해볼까요?',
+  titleVi: 'Hãy bắt đầu bài học hôm nay nhé!',
+  badgeText: '실전 듣기',
+  aiTutorText: '먼저 대화를 자막 없이 잘 들어보세요.',
+  aiTutorTextVi: 'Trước tiên hãy lắng nghe đoạn thoại mà không có phụ đề.',
+  showAiTutorIntro: true,
 };
 
 // ─── 설명 슬라이드 데이터 ────────────────────────────────────────────
@@ -2220,5 +2236,61 @@ export const MOCK_CONVERSATION_SHADOWING: ConversationData = {
     { ...MOCK_CONVERSATION.lines[3], audioSrc: require('../../assets/sounds/con-4.mp3') as string },
   ],
 };
+
+// ─── PracticalReadingViewerStage 전용 Mock & Interface ────────────────────────
+export interface PracticalReadingViewerData {
+  activityNo?: number;
+  badgeKo?: string;
+  badgeVi?: string;
+  intro?: {
+    titleKo?: string;
+    titleVi?: string;
+    tutorThumbUrl?: string | any;
+    bubbleTextKo: string;
+    bubbleTextVi?: string;
+    audioUrl?: string | any;
+    showIntro?: boolean;
+  };
+  mainContent: {
+    title: {
+      ko?: string;
+      vi?: string;
+    };
+    imageUrl?: string | any;
+    sentences: Array<{
+      ko?: string;
+      vi?: string;
+    }>;
+  };
+}
+
+export const MOCK_PRACTICAL_READING_VIEWER: PracticalReadingViewerData = {
+  activityNo: 37,
+  badgeKo: '종합 읽기',
+  badgeVi: 'Đọc tổng hợp',
+  intro: {
+    titleKo: '종합 읽기',
+    titleVi: 'Đọc tổng hợp',
+    bubbleTextKo: '다음 내용을 잘 읽고 제대로 이해했는지 확인 문제를 풀어 보세요.\n그 다음에는 쓰기 연습과 쓰기 실전을 천천히 해보세요.',
+    bubbleTextVi: 'Hãy đọc kỹ nội dung sau và làm bài tập xác nhận xem bạn đã hiểu đúng chưa nhé.\nSau đó hãy từ từ thực hành luyện viết 및 viết thực tế.',
+    audioUrl: require('../../assets/ai-dec/ai-dec-1.mp3'),
+    showIntro: true,
+  },
+  mainContent: {
+    title: {
+      ko: '다음 내용을 잘 읽어 보세요.',
+      vi: 'Hãy chọn câu trả lời phù hợp với câu hỏi.',
+    },
+    imageUrl: require('../../assets/SetWordbookEvalStage/2_teacher.png'),
+    sentences: [
+      { ko: '안녕하세요?', vi: 'Xin chào!' },
+      { ko: '저는 세나예요.', vi: 'Tôi là Sena.' },
+      { ko: '저는 한국 사람이에요.', vi: 'Tôi là người Hàn Quốc.' },
+      { ko: '저는 선생님이에요.', vi: 'Tôi là giáo viên.' },
+      { ko: '만나서 반가워요.', vi: 'Rất vui được gặp bạn.' },
+    ],
+  },
+};
+
 
 

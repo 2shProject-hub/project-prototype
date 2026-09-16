@@ -13,7 +13,7 @@ import { useLang, pick } from './LangContext';
 import { isMb } from '../theme/mb/mbSkin';
 interface Props {
   /** 0-100 사이 진행 퍼센트 */
-  percentage: number;
+  percentage?: number;
   /** 팝업에서 "종료하기" 확인 후 호출 */
   onClose: () => void;
   /** X 버튼 왼쪽에 추가할 요소 (예: step badge) — absolute 포지셔닝 권장 */
@@ -21,16 +21,17 @@ interface Props {
 }
 
 // ── Animated ProgressBar (Source A 동일 동작: 500ms timing) ──
-function ProgressBar({ percentage, themed }: { percentage: number; themed: ReturnType<typeof themedHeader> | null }) {
-  const anim = useRef(new Animated.Value(percentage)).current;
+function ProgressBar({ percentage = 50, themed }: { percentage?: number; themed: ReturnType<typeof themedHeader> | null }) {
+  const safePercentage = typeof percentage === 'number' && !isNaN(percentage) ? percentage : 50;
+  const anim = useRef(new Animated.Value(safePercentage)).current;
 
   useEffect(() => {
     Animated.timing(anim, {
-      toValue: percentage,
+      toValue: safePercentage,
       duration: 500,
       useNativeDriver: false,
     }).start();
-  }, [percentage, anim]);
+  }, [safePercentage, anim]);
 
   const width = anim.interpolate({
     inputRange: [0, 100],
@@ -137,7 +138,7 @@ const popup = StyleSheet.create({
 });
 
 // ── ActivityHeader (공유 컴포넌트) ──
-export function ActivityHeader({ percentage, onClose, children }: Props) {
+export function ActivityHeader({ percentage = 50, onClose, children }: Props) {
   const [showPopup, setShowPopup] = useState(false);
   const { theme, enabled: themeOn } = useTheme();
   const th = themeOn ? themedHeader(theme) : null;
@@ -146,8 +147,9 @@ export function ActivityHeader({ percentage, onClose, children }: Props) {
   // 말해보카: 모든 화면의 상단을 트로피 진행 알약으로 통일.
   // 플로우 모드면 STEP n/총, 아니면 화면 자체 퍼센트. ✕ 는 기존 종료 확인 팝업 그대로.
   if (themeOn && isMb(theme.id)) {
-    const pct = flow ? (flow.step / flow.total) * 100 : percentage;
-    const counter = flow ? `${flow.step}/${flow.total}` : `${Math.round(percentage)}%`;
+    const safePct = typeof percentage === 'number' && !isNaN(percentage) ? percentage : 50;
+    const pct = flow ? (flow.step / flow.total) * 100 : safePct;
+    const counter = flow ? `${flow.step}/${flow.total}` : `${Math.round(safePct)}%`;
     return (
       <View>
         <MbProgressRow percentage={pct} counter={counter} onClose={() => setShowPopup(true)} />
