@@ -1225,6 +1225,107 @@ kcho-dev 이식 시:
     sourceAFile: 'TBD',
     sourceBRef: 'TBD',
   },
+  {
+    id: 'sentence-writing-practice',
+    label: '쓰기-1. 쓰기 연습',
+    category: '신규',
+    description:
+      '이전 학습(예: \'종합 읽기\')에서 접한 문장을 베트남어 번역 힌트를 참고하여 직접 단어 칩으로 조립해보는 복습형 쓰기 활동입니다.\n\n' +
+      '**1. 개요 및 흐름**\n' +
+      '- **활동 목적:** 이전 학습에서 접한 문장을 베트남어 번역 힌트를 참고하여 직접 단어 칩으로 조립해보는 복습형 쓰기 활동입니다.\n' +
+      '- **진행 방식:** 하단 보기 칩을 선택해 1번 문장부터 순차적으로 빈칸을 채우고, 전체 문장 작성이 완료되면 [다음] 버튼을 눌러 정/오답 피드백을 확인합니다.\n' +
+      '- **화면 이동:** 상단 \'화면선택\' 콤보박스의 가장 마지막 항목에서 본 템플릿을 선택하여 확인할 수 있습니다.\n\n' +
+      '**2. 세부 동작 명세**\n' +
+      '1. **상단 타이틀:** 백오피스 등록 상태에 따라 한국어와 베트남어가 병기되거나, 1개 언어만 등록된 경우 해당 언어만 노출됩니다.\n' +
+      '2. **문장 작성 영역 (N개 라인):** 조립해야 할 문장 개수(N개)만큼 빈 줄(슬롯)이 제공됩니다. 문장 부호(마침표, 물음표 등)는 라인 끝에 기본 고정되어 있습니다. 1번 문장이 완성되면 자동으로 다음 문장 입력으로 이어집니다. 입력된 단어 칩을 클릭하면 선택이 취소되어 보기 영역으로 복귀합니다.\n' +
+      '3. **참고(힌트) 영역:** 각 문장 라인과 1:1로 매칭되는 베트남어 번역 힌트(노란색 배경)가 함께 표시됩니다.\n' +
+      '4. **보기 영역:** 문장을 구성하는 단어 칩이 N개 제공되며, 선택 시 상단 슬롯으로 이동합니다.\n' +
+      '5. **[다음] 버튼 및 채점:** 모든 문장 조립이 끝나면 [다음] 버튼이 활성화됩니다. 버튼 선택 시 정/오답 판정 피드백이 제공됩니다.',
+    devNotes: '- WritingPracticeStage\n- SentenceBuildStage (문장 만들기 1) 인터랙션 준용\n- data: WritingPracticeData (lessonData.ts)\n- onComplete(isCorrect: boolean): 전체 정답 시 true\n- onBack: ActivityHeader X 버튼 핸들러',
+    designNotes: '상단: ActivityHeader + 다국어 타이틀\n문장 라인: 언더라인 슬롯 + 활성 라인 teal 하이라이트\n힌트 박스: 노란색 배경(colors.hintBg), 베트남어 번역 1:1 매핑\n보기 칩: 아웃라인 pill 스타일\n채워진 슬롯: teal 배경 pill + × 취소 버튼\n하단 [다음]: 전체 완성 전 비활성화',
+    sourceAFile: 'TBD',
+    sourceBRef: 'WritingPracticeStage',
+  },
+  {
+    id: 'sentence-writing-practical-1',
+    label: '쓰기-2. 쓰기 실전 1',
+    category: '신규',
+    description:
+      '제시된 베트남어 문장을 확인하고, 하단 단어 칩을 올바른 순서로 조합하여 한국어 문장을 완성하는 실전 쓰기 활동입니다.\n\n' +
+      '**1. 개요 및 흐름**\n' +
+      '- **활동 목적:** 제시된 베트남어 문장을 보고 하단 단어 칩으로 한국어 문장을 1번부터 순서대로 완성하는 실전 쓰기 활동입니다.\n' +
+      '- **진행 방식:** VI 프롬프트를 보고 빈칸을 채운 후 [다음] 버튼으로 정/오답 피드백을 확인합니다.\n' +
+      '- **화면 이동:** 상단 \'화면선택\' 콤보박스의 가장 마지막 항목에서 선택하여 확인할 수 있습니다.\n\n' +
+      '**2. 세부 동작 명세**\n' +
+      '1. **상단 타이틀:** 한국어/베트남어 병기, 단일 언어 등록 시 단독 노출.\n' +
+      '2. **문제 영역:** 완성할 문장의 기준이 되는 베트남어 텍스트가 KO 슬롯 라인 위에 1:1로 표시됩니다.\n' +
+      '3. **문장 작성 영역 (N개 라인):** 빈 줄(슬롯)에 단어 칩을 삽입하며, 문장 부호는 끝에 고정 노출. 1번 완성 시 다음 라인으로 자동 이동. 입력된 칩 탭 시 보기 영역으로 복귀.\n' +
+      '4. **보기 영역:** 한국어 단어 칩 N개 제공, 선택 시 슬롯으로 이동.\n' +
+      '5. **[다음] 버튼 및 채점:** 전체 완성 시 활성화, 탭 시 정/오답 피드백 제공.',
+    devNotes: '- PracticalWritingStage\n- WritingPracticeStage (쓰기 연습) 인터랙션 준용\n- data: PracticalWritingData (lessonData.ts)\n- onComplete(isCorrect: boolean): 전체 정답 시 true\n- onBack: ActivityHeader X 버튼 핸들러\n- 레이아웃: VI 텍스트 위 + KO 슬롯 아래 (1:1 쌍)',
+    designNotes: '상단: ActivityHeader + 다국어 타이틀\n문제 영역: viTargetSentence (14px, textSecondary) + KO 슬롯 라인 (쌍으로 배치)\n활성 라인: teal 언더라인\n채워진 슬롯: teal pill + × 취소\n보기 칩: 아웃라인 pill\n하단 [다음]: 전체 완성 전 비활성화',
+    sourceAFile: 'TBD',
+    sourceBRef: 'PracticalWritingStage',
+  },
+  {
+    id: 'sentence-writing-practical-2',
+    label: '쓰기-3. 쓰기 실전 2',
+    category: '신규',
+    description:
+      '제시된 베트남어 문장을 확인하고, 디바이스 키보드를 이용해 한국어 문장을 직접 타이핑하여 작성하는 심화 쓰기 활동입니다.\n\n' +
+      '**1. 개요 및 흐름**\n' +
+      '- **활동 목적:** 제시된 베트남어 문장을 보고 빈 줄을 탭하여 키보드로 한국어 문장을 직접 입력한 후, [확인] 버튼을 눌러 정/오답 채점 결과를 확인합니다.\n' +
+      '- **진행 방식:** 기준 베트남어 문장을 보고 빈 줄을 탭하여 키보드로 한국어 문장을 직접 입력한 후, [확인] 버튼을 눌러 정/오답 채점 결과를 확인합니다.\n' +
+      '- **화면 이동:** 상단 \'화면선택\' 콤보박스의 가장 마지막(최하단) 항목에서 \'쓰기 실전 2\'를 선택하여 확인할 수 있습니다.\n\n' +
+      '**2. 세부 동작 명세**\n' +
+      '1. **상단 타이틀:** 백오피스 등록 상태에 따라 한국어와 베트남어가 병기되거나, 1개 언어만 등록된 경우 단독 노출됩니다.\n' +
+      '2. **문제 영역:** 작성해야 하는 기준 문장인 베트남어 텍스트가 노출됩니다. 입력할 빈 줄과 1:1로 매칭되어 나란히 배치됩니다.\n' +
+      '3. **활동 화면 (직접 입력 라인):** 작성할 문장 개수(N개)만큼 빈 줄(입력 필드)이 제공됩니다. 빈 줄을 터치/클릭하면 디바이스의 가상 키보드가 활성화됩니다. 마침표(`.`), 물음표(`?`) 등의 문장 부호는 라인 끝에 기본 고정되어 있어 별도 입력이 필요 없습니다.\n' +
+      '4. **힌트 영역:** 우하단 [💡] 버튼을 선택하면 백오피스에 등록된 힌트 정보(전체 문장 묶음)가 화면에 토글 표시됩니다.\n' +
+      '5. **[확인] 버튼 및 채점:** 모든 문장 입력이 완료되면 [확인] 버튼이 활성화됩니다. 버튼 클릭 시 입력한 문장과 정답을 비교하여 정/오답 판정 피드백이 제공됩니다.',
+    devNotes: '- DirectWritingStage\n- data: DirectWritingData (lessonData.ts)\n- onComplete(isCorrect: boolean): 전체 정답 시 true\n- onBack: ActivityHeader X 버튼 핸들러\n- 채점: koCorrectAnswer.trim() vs input.trim() exact match\n- 힌트: hintLines[] 전체 묶음, 💡 버튼 토글\n- 키보드: "⌨️ 키보드 사용하기" 버튼으로 현재 빈 라인 focus',
+    designNotes: '상단: ActivityHeader + 다국어 타이틀\nVI 박스: teal 테두리 (쓰기 실전 1과 동일)\n입력 라인: TextInput + 언더라인, 포커스 시 teal\n힌트 박스: 노란색 배경(hintBg), 갈색 텍스트(hintText), 토글 노출\n하단: [확인] + [💡] 나란히, [⌨️ 키보드 사용하기] 하단\n[확인]: 전체 입력 완료 전 비활성화',
+    sourceAFile: 'TBD',
+    sourceBRef: 'DirectWritingStage',
+  },
+  {
+    id: 'comprehensive-speaking',
+    label: '말하기-1. 종합 말하기',
+    category: '신규',
+    description:
+      '상대방의 대화를 듣고 주어진 내용으로 한국어 발화를 연습하는 STT 기반 종합 말하기 활동입니다.\n\n' +
+      '**1. 개요 및 흐름 (3단계)**\n' +
+      '① Step 1 (미션 인트로): 배지 + AI 튜터 + 안내 말풍선 + 🔊 + [확인] 버튼\n' +
+      '② Step 2 (말하기): 대화문 카드 + teal 미션 카드(정답 VI 문장 + 참고 칩) + 🎤 마이크 탭 버튼\n' +
+      '③ Step 3 (피드백 오버레이): 내 답변(보라) + 정답(오렌지) + 일치율% + [다시풀기] / [다음 →]\n\n' +
+      '**2. 세부 동작**\n' +
+      '- 마이크 탭 시 Web Speech API (ko-KR) STT 시작\n' +
+      '- 인식 완료 시 문자 단위 유사도(similarity) 계산 → Step 3로 전환\n' +
+      '- 다시풀기: Step 2로 복귀\n' +
+      '- 다음: onComplete(similarity >= 80)',
+    devNotes: '- ComprehensiveSpeakingStage\n- data: ComprehensiveSpeakingData (lessonData.ts)\n- STT: Platform.OS === \'web\' 가드, window.SpeechRecognition || webkitSpeechRecognition\n- 유사도: 문자 단위 교집합 / 정답 길이 × 100\n- onComplete(isCorrect): similarity >= 80 → true\n- Step 3는 absoluteFillObject 오버레이 (dim + 바텀시트)',
+    designNotes: 'Step 1: ActivityHeader + 흰 pill 배지(teal border) + 대형 튜터 아바타 + 말풍선 + 🔊\nStep 2: 소형 튜터 + 대화문 카드(회색 테두리) + teal 테두리 미션 카드 + teal 원형 마이크 버튼\nStep 3: 반투명 dim + 바텀시트(연보라 내 답변 / 연살구 정답 / 일치율 텍스트)',
+    sourceAFile: 'TBD',
+    sourceBRef: 'ComprehensiveSpeakingStage',
+  },
+  {
+    id: 'culture-learning-viewer',
+    label: '문화-1. 문화 학습 뷰어',
+    category: '신규',
+    description: '한국 문화 콘텐츠(이미지+텍스트+오디오)를 열람하는 뷰어 화면입니다.',
+    devNotes:
+      '- CultureLearningViewerStage\n' +
+      '- data: CultureLearningViewerData (lessonData.ts)\n' +
+      '- Step 1: AI 튜터 dim 오버레이 (VideoBridgeStage 패턴)\n' +
+      '- Step 2: 이미지 + 텍스트+오디오 통합 카드\n' +
+      '- 오디오: Platform.OS === \'web\' 가드, 탭 토글 방식\n' +
+      '- kcho-dev: ActivityLayout, useAudioPlayer(), i18n 교체 필요',
+    designNotes:
+      'Step 1: dim 오버레이 + 배지("문화") + 말풍선(🔊) + 튜터 이미지 + [확인]\n' +
+      'Step 2: 타이틀(ko bold + vi muted) + 연보라 테두리 이미지 + 연보라 텍스트 카드(🔊 절대 위치) + [다음 →]',
+    sourceAFile: 'TBD',
+    sourceBRef: 'CultureLearningViewerStage',
+  },
 ];
 
 export const SCREEN_REGISTRY: ScreenMeta[] = [

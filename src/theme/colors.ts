@@ -38,6 +38,21 @@ export const colors = {
   bgSubtle: '#F0F4F8',
   bgCard: '#ffffff',
   bgDisabled: '#E0E4E8',
+
+  // ── 힌트 박스 전용 (쓰기 연습 등 노란색 힌트 영역) ──
+  hintBg: '#FEF9C3',
+  hintBorder: '#FDE047',
+  hintText: '#854D0E',
+
+  // ── 문화 학습 뷰어 전용 ──
+  cultureBorder: '#C8C3E8',   // 이미지 컨테이너 테두리 (연보라)
+  cultureBg: '#F0ECFA',       // 텍스트+오디오 카드 배경 (연보라)
+
+  // ── 종합 말하기 Step 3 피드백 전용 ──
+  speechResultBg: '#F3F0FF',    // 내 발화 결과 박스 (연보라)
+  speechResultText: '#7C3AED',  // 내 발화 레이블/강조 (보라)
+  modelAnswerBg: '#FFF3E8',     // 정답 박스 (연살구)
+  modelAnswerText: '#EA580C',   // 정답 레이블/일치율 (오렌지)
 } as const;
 
 export const shadow = {

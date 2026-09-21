@@ -58,6 +58,11 @@ import { ConversationShadowingStage } from '../screens/ConversationShadowingStag
 import DialogueListenWriteStage from '../screens/DialogueListenWriteStage';
 import PracticeCheckStage from '../screens/PracticeCheckStage';
 import { PracticalReadingViewerStage } from '../screens/PracticalReadingViewerStage';
+import { WritingPracticeStage } from '../screens/WritingPracticeStage';
+import { PracticalWritingStage } from '../screens/PracticalWritingStage';
+import { DirectWritingStage } from '../screens/DirectWritingStage';
+import { ComprehensiveSpeakingStage } from '../screens/ComprehensiveSpeakingStage';
+import { CultureLearningViewerStage } from '../screens/CultureLearningViewerStage';
 import { defaultSessionState, LEARNING_FLOW } from '../data/lessonData';
 import { useLang, pick, type Lang } from '../components/LangContext';
 
@@ -1337,6 +1342,41 @@ function ScreenRenderer({ screenId, onNavigate, flowStep, flowTotal }: { screenI
           onBack={() => onNavigate('home')}
         />
       );
+    case 'sentence-writing-practice':
+      return (
+        <WritingPracticeStage
+          onComplete={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'sentence-writing-practical-1':
+      return (
+        <PracticalWritingStage
+          onComplete={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'sentence-writing-practical-2':
+      return (
+        <DirectWritingStage
+          onComplete={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'comprehensive-speaking':
+      return (
+        <ComprehensiveSpeakingStage
+          onComplete={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
+    case 'culture-learning-viewer':
+      return (
+        <CultureLearningViewerStage
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
     default:
       return (
         <View style={placeholder.wrap}>
@@ -1399,7 +1439,17 @@ function ScreenComboBox({
   const [isOpen, setIsOpen] = useState(false);
   const currentScreen = getScreen(currentScreenId) ?? SCREEN_REGISTRY[0];
 
+  const BOTTOM_IDS = new Set([
+    'sentence-writing-practice',
+    'sentence-writing-practical-1',
+    'sentence-writing-practical-2',
+    'comprehensive-speaking',
+    'culture-learning-viewer',
+  ]);
   const sortedRegistry = [...SCREEN_REGISTRY].sort((a, b) => {
+    const bottomA = BOTTOM_IDS.has(a.id) ? 1 : 0;
+    const bottomB = BOTTOM_IDS.has(b.id) ? 1 : 0;
+    if (bottomA !== bottomB) return bottomA - bottomB;
     const numA = parseFloat(a.label.match(/^[\d.]+/)?.[0] ?? '9999');
     const numB = parseFloat(b.label.match(/^[\d.]+/)?.[0] ?? '9999');
     if (numA !== numB) return numA - numB;

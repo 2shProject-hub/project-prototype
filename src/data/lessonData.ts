@@ -2264,6 +2264,164 @@ export interface PracticalReadingViewerData {
   };
 }
 
+// ─── PracticalWritingStage 전용 Interface & Mock ─────────────────────────────
+export interface PracticalWritingSentenceItem {
+  id: string | number;
+  viTargetSentence: string;
+  koCorrectTokens: string[];
+  punctuation?: string;
+}
+
+export interface PracticalWritingData {
+  title: { ko?: string; vi?: string };
+  sentences: PracticalWritingSentenceItem[];
+  wordBank: Array<{ id: string | number; text: string }>;
+}
+
+export const MOCK_PRACTICAL_WRITING: PracticalWritingData = {
+  title: {
+    ko: '주어진 단어를 활용하여 다음을 써보세요.',
+    vi: 'Hãy dùng các từ cho sẵn để viết các câu sau.',
+  },
+  sentences: [
+    { id: 'pw-1', viTargetSentence: 'Xin chào!', koCorrectTokens: ['안녕하세요'], punctuation: '!' },
+    { id: 'pw-2', viTargetSentence: 'Tôi là Michael.', koCorrectTokens: ['저는', '마이클이에요'], punctuation: '.' },
+    { id: 'pw-3', viTargetSentence: 'Tôi là người Mỹ.', koCorrectTokens: ['저는', '미국', '사람이에요'], punctuation: '.' },
+    { id: 'pw-4', viTargetSentence: 'Tôi là đầu bếp.', koCorrectTokens: ['저는', '요리사예요'], punctuation: '.' },
+    { id: 'pw-5', viTargetSentence: 'Rất vui được gặp bạn.', koCorrectTokens: ['만나서', '반가워요'], punctuation: '.' },
+  ],
+  wordBank: [
+    { id: 'pw-wb-1', text: '안녕하세요' },
+    { id: 'pw-wb-2', text: '저는' },
+    { id: 'pw-wb-3', text: '마이클이에요' },
+    { id: 'pw-wb-4', text: '저는' },
+    { id: 'pw-wb-5', text: '미국' },
+    { id: 'pw-wb-6', text: '사람이에요' },
+    { id: 'pw-wb-7', text: '저는' },
+    { id: 'pw-wb-8', text: '요리사예요' },
+    { id: 'pw-wb-9', text: '만나서' },
+    { id: 'pw-wb-10', text: '반가워요' },
+  ],
+};
+
+// ─── WritingPracticeStage 전용 Interface & Mock ──────────────────────────────
+export interface WritingSentenceItem {
+  id: string | number;
+  koTokens: string[];
+  punctuation?: string;
+  viTranslation: string;
+}
+
+export interface WritingPracticeData {
+  title: { ko?: string; vi?: string };
+  sentences: WritingSentenceItem[];
+  wordBank: Array<{ id: string | number; text: string }>;
+}
+
+export const MOCK_WRITING_PRACTICE: WritingPracticeData = {
+  title: {
+    ko: '읽은 내용을 한 번 써보세요.',
+    vi: 'Hãy chọn câu trả lời phù hợp với câu hỏi.',
+  },
+  sentences: [
+    { id: 'ws-1', koTokens: ['안녕하세요'], punctuation: '!', viTranslation: 'Xin chào!' },
+    { id: 'ws-2', koTokens: ['저는', '세나예요'], punctuation: '.', viTranslation: 'Tôi là Sena.' },
+    { id: 'ws-3', koTokens: ['저는', '한국', '사람이에요'], punctuation: '.', viTranslation: 'Tôi là người Hàn Quốc.' },
+    { id: 'ws-4', koTokens: ['저는', '선생님이에요'], punctuation: '.', viTranslation: 'Tôi là giáo viên.' },
+    { id: 'ws-5', koTokens: ['만나서', '반가워요'], punctuation: '.', viTranslation: 'Rất vui được gặp bạn.' },
+  ],
+  wordBank: [
+    { id: 'wb-1', text: '안녕하세요' },
+    { id: 'wb-2', text: '저는' },
+    { id: 'wb-3', text: '세나예요' },
+    { id: 'wb-4', text: '저는' },
+    { id: 'wb-5', text: '한국' },
+    { id: 'wb-6', text: '사람이에요' },
+    { id: 'wb-7', text: '저는' },
+    { id: 'wb-8', text: '선생님이에요' },
+    { id: 'wb-9', text: '만나서' },
+    { id: 'wb-10', text: '반가워요' },
+  ],
+};
+
+// ─── DirectWritingStage 전용 Interface & Mock ────────────────────────────────
+export interface DirectWritingSentenceItem {
+  id: string | number;
+  viTargetSentence: string;
+  koCorrectAnswer: string;   // 채점용 정답 (punctuation 제외, trim 후 exact match)
+  punctuation?: string;
+}
+
+export interface DirectWritingData {
+  title: { ko?: string; vi?: string };
+  sentences: DirectWritingSentenceItem[];
+  hintLines: string[];       // 힌트 박스 전체 텍스트 (전체 묶음, 토글 표시)
+}
+
+export const MOCK_DIRECT_WRITING: DirectWritingData = {
+  title: {
+    ko: '다음을 내용을 직접 타이핑하여 써보세요.',
+    vi: 'Hãy chọn câu trả lời phù hợp với câu hỏi.',
+  },
+  sentences: [
+    { id: 'dw-1', viTargetSentence: 'Xin chào!', koCorrectAnswer: '안녕하세요', punctuation: '!' },
+    { id: 'dw-2', viTargetSentence: 'Tôi là Michael.', koCorrectAnswer: '저는 마이클이에요', punctuation: '.' },
+    { id: 'dw-3', viTargetSentence: 'Tôi là người Mỹ.', koCorrectAnswer: '저는 미국 사람이에요', punctuation: '.' },
+    { id: 'dw-4', viTargetSentence: 'Tôi là đầu bếp.', koCorrectAnswer: '저는 요리사예요', punctuation: '.' },
+    { id: 'dw-5', viTargetSentence: 'Rất vui được gặp bạn.', koCorrectAnswer: '만나서 반가워요', punctuation: '.' },
+  ],
+  hintLines: [
+    '안녕하세요!',
+    '저는 세나입니다.',
+    '한국 사람이에요.',
+    '선생님입니다.',
+    '만나서 반가워요.',
+  ],
+};
+
+// ──────────────────────────────────────────────────────────────────
+// 종합 말하기 (ComprehensiveSpeakingStage)
+// ──────────────────────────────────────────────────────────────────
+export interface ComprehensiveSpeakingData {
+  tutorText: { ko?: string; vi?: string };
+  tutorAudioUri?: any;
+  dialogue: {
+    ko: string;
+    vi: string;
+    audioUri?: any;
+  };
+  missionTitle: { ko?: string; vi?: string };
+  answerViLines: string[];
+  answerChips: Array<{ id: string | number; text: string }>;
+  correctAnswer: string;
+}
+
+export const MOCK_COMPREHENSIVE_SPEAKING: ComprehensiveSpeakingData = {
+  tutorText: {
+    ko: '상대방의 대화에 따라 주어진\n대답을 한국어로 말해 보세요.',
+    vi: 'Hãy nói câu trả lời bằng tiếng Hàn\ntheo cuộc hội thoại.',
+  },
+  dialogue: {
+    ko: '안녕하세요? 저는 하영이에요.\n이름이 뭐예요?',
+    vi: 'Xin chào. Tôi tên là Hayoung.\nBạn tên là gì?',
+  },
+  missionTitle: {
+    ko: '대화문에 맞는 답변을 말해보세요.',
+    vi: 'Hãy thử đưa ra một câu trả lời phù hợp với cuộc trò chuyện.',
+  },
+  answerViLines: [
+    'Tôi là Yuna.',
+    'Rất vui được gặp bạn.',
+  ],
+  answerChips: [
+    { id: 'cs-1', text: '저는' },
+    { id: 'cs-2', text: '유나예요.' },
+    { id: 'cs-3', text: '만나서' },
+    { id: 'cs-4', text: '반가워요.' },
+  ],
+  correctAnswer: '저는 유나예요. 만나서 반가워요.',
+};
+
 export const MOCK_PRACTICAL_READING_VIEWER: PracticalReadingViewerData = {
   activityNo: 37,
   badgeKo: '종합 읽기',
@@ -2289,6 +2447,42 @@ export const MOCK_PRACTICAL_READING_VIEWER: PracticalReadingViewerData = {
       { ko: '저는 선생님이에요.', vi: 'Tôi là giáo viên.' },
       { ko: '만나서 반가워요.', vi: 'Rất vui được gặp bạn.' },
     ],
+  },
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 문화 학습 뷰어 (CultureLearningViewerStage)
+// ─────────────────────────────────────────────────────────────────────────────
+export interface CultureLearningViewerData {
+  intro: {
+    bubbleText: string;
+    audioUri?: any;
+  };
+  content: {
+    title: { ko?: string; vi?: string; firstLang: 'ko' | 'vi' };
+    imageUri: any;
+    audioUri?: any;
+    text: { ko: string; vi: string };
+  };
+}
+
+export const MOCK_CULTURE_LEARNING_VIEWER: CultureLearningViewerData = {
+  intro: {
+    bubbleText: '이제 한국의 문화에 대해\n알아보고 베트남과의 차이점도\n같이 생각해 봐요.\n먼저 내용을 이해하고\n간단한 퀴즈도 풀어봐요.',
+    audioUri: require('../../assets/sounds/cluture-1.mp3'),
+  },
+  content: {
+    title: {
+      ko: '상황별 인사말',
+      vi: 'Lời chào trong các tình huống khác nhau',
+      firstLang: 'ko',
+    },
+    imageUri: require('../../assets/sample/cluture-1.jpeg'),
+    audioUri: require('../../assets/sounds/cluture-2.mp3'),
+    text: {
+      ko: '한국에서는 처음 만나는 사람에게 고개를 숙여 인사해요. 이것을 "절"이라고 해요. 가볍게 숙이는 것은 일상적인 인사이고, 깊이 숙이는 것은 존경을 표현해요.',
+      vi: 'Ở Hàn Quốc, người ta cúi đầu chào khi gặp người lần đầu. Cúi nhẹ là lời chào thông thường, còn cúi sâu thể hiện sự tôn trọng.',
+    },
   },
 };
 
