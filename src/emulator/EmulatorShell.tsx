@@ -63,6 +63,7 @@ import { PracticalWritingStage } from '../screens/PracticalWritingStage';
 import { DirectWritingStage } from '../screens/DirectWritingStage';
 import { ComprehensiveSpeakingStage } from '../screens/ComprehensiveSpeakingStage';
 import { CultureLearningViewerStage } from '../screens/CultureLearningViewerStage';
+import { WordTextBlankStage } from '../screens/WordTextBlankStage';
 import { defaultSessionState, LEARNING_FLOW } from '../data/lessonData';
 import { useLang, pick, type Lang } from '../components/LangContext';
 
@@ -1377,6 +1378,13 @@ function ScreenRenderer({ screenId, onNavigate, flowStep, flowTotal }: { screenI
           onBack={() => onNavigate('home')}
         />
       );
+    case 'word-text-blank':
+      return (
+        <WordTextBlankStage
+          onNext={() => onNavigate('home')}
+          onBack={() => onNavigate('home')}
+        />
+      );
     default:
       return (
         <View style={placeholder.wrap}>
@@ -1445,6 +1453,7 @@ function ScreenComboBox({
     'sentence-writing-practical-2',
     'comprehensive-speaking',
     'culture-learning-viewer',
+    'word-text-blank',
   ]);
   const sortedRegistry = [...SCREEN_REGISTRY].sort((a, b) => {
     const bottomA = BOTTOM_IDS.has(a.id) ? 1 : 0;

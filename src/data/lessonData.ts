@@ -2486,5 +2486,48 @@ export const MOCK_CULTURE_LEARNING_VIEWER: CultureLearningViewerData = {
   },
 };
 
+// ─────────────────────────────────────────────────────────────────────────────
+// 단어에 맞는 한국어 쓰기 (WordTextBlankStage)
+// ─────────────────────────────────────────────────────────────────────────────
+export interface WordTextBlankQuestion {
+  no: number;
+  desc: string;           // 피드백 모달 설명
+  displayText: string;    // 카드에 노출할 단어 (KO 또는 VI)
+  displayLang: 'ko' | 'vi';
+  answer: string;         // 정답 한국어 단어
+  slots: string[];        // 빈칸 슬롯 (정답 글자 수)
+  tiles: string[];        // 보기 글자 타일 (항상 한국어)
+}
+
+export const MOCK_WORD_TEXT_BLANK: WordTextBlankQuestion[] = [
+  {
+    no: 1,
+    desc: '미국 — 미(美) + 국(國)',
+    displayText: '미국',
+    displayLang: 'ko',
+    answer: '미국',
+    slots: ['', ''],
+    tiles: ['베', '트', '남', '한', '국', '일', '미', '본'],
+  },
+  {
+    no: 2,
+    desc: 'Việt Nam → 베트남',
+    displayText: 'Việt Nam',
+    displayLang: 'vi',
+    answer: '베트남',
+    slots: ['', '', ''],
+    tiles: ['미', '트', '남', '이', '한', '국', '베', '나'],
+  },
+  {
+    no: 3,
+    desc: '한국 — 韓國',
+    displayText: '한국',
+    displayLang: 'ko',
+    answer: '한국',
+    slots: ['', ''],
+    tiles: ['베', '트', '남', '한', '국', '일'],
+  },
+];
+
 
 
